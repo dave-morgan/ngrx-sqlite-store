@@ -17,13 +17,29 @@
     "@angular/forms": "^22.2.0",
     "@angular/platform-browser": "^22.2.0",
     "@angular/router": "^22.2.0",
+    "@capacitor-community/sqlite": "^8.1.1",
+    "@capacitor/core": "^8.5.3",
+    "@ngrx/effects": "^22.0.1",
+    "@ngrx/entity": "^22.0.1",
+    "@ngrx/router-store": "^22.0.1",
+    "@ngrx/store": "^22.0.1",
+    "@ngrx/store-devtools": "^22.0.1",
+    "jeep-sqlite": "^2.8.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@angular/build": "^22.2.3",
     "@angular/cli": "^22.2.3",
     "@angular/compiler-cli": "^22.2.0",
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/cli": "^8.5.3",
+    "@types/sql.js": "^1.4.11",
+    "jsdom": "^30.0.0",
+    "ng-packagr": "^22.2.0",
     "prettier": "^3.8.1",
-    "typescript": "~6.0.2"
+    "sql.js": "^1.15.1",
+    "typescript": "~6.0.2",
+    "vitest": "^5.0.0"
   }
 }

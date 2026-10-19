@@ -7,6 +7,9 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "ngrx-sqlite-store": ["./dist/ngrx-sqlite-store"]
+    },
     "skipLibCheck": true,
     "isolatedModules": true,
     "experimentalDecorators": true,
@@ -19,5 +22,19 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true
   },
-  "files": []
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/ngrx-sqlite-store/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ngrx-sqlite-store/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/harness/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/harness/tsconfig.spec.json"
+    }
+  ]
 }

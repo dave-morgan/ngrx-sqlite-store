@@ -15,7 +15,7 @@ A JS comparator can't run inside SQLite.
 ### Q2. Promotion threshold rules. Status: **Provisional**
 When does nested data move from a JSON column to child rows (beyond the hard 1 MB cap, ADR-0008)?
 - Options: a size threshold; per-feature config hints (`paths: { 'items': 'collection' }`); access frequency; dynamic promotion/demotion at runtime.
-- Current: a 16 KB serialized threshold plus config hints. Promotion happens on write. No demotion.
+- Current: a 16 KB serialized threshold plus config hints. Promotion and demotion happen on changed writes (Phase 3 brief, ADR-0016). The hard row cap always wins over inline hints.
 - Resolves when: spike Q3 gives read/write costs by size, and a migration story for changing promotion exists (with Q10).
 
 ### Q3. Nested structure spike. Status: **Open (spike, phase 8)**

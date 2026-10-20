@@ -16,7 +16,7 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 ## Progress
 - [x] Phase 1 docs
 - [x] Phase 2 storage core (driver abstraction, serial write queue, tx, post-commit notifications)
-- [ ] Phase 3 schema engine
+- [x] Phase 3 schema engine (v2 migration, range/CTE reads, capped full/diff writes, entities)
 - [ ] Phase 4 store contract
 - [ ] Phase 5 selectors
 - [ ] Phase 6 entity
@@ -28,7 +28,7 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - None. Q6 → ADR-0013/0014; schema v1 → ADR-0015.
 
 ## Next steps
-- Phase 3 schema engine, after on-disk schema approval.
+- Phase 4 store contract, using NodeStore and the transaction identity cache.
 
 ## Storage core notes
 - Tests load sql.js through Node's native createRequire and resolve its WASM from node_modules; no copied WASM or test helper is needed.
@@ -37,3 +37,12 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - DEADLOCK RULE: `changes$` emits and `afterCommit` runs INSIDE the queue task. Never await `engine.read/transaction` there; phase 4 must trigger selector re-queries + ScannedActions emission outside the task (after `transaction()` resolves).
 - Extra migrations via `STORAGE_ENGINE_OPTIONS` token or constructor `{ migrations }`.
 - Internal migration v1 creates only nss_meta. Post-commit callback failures reject after commit and cannot undo persisted data.
+
+## Schema engine notes
+- Register `SCHEMA_MIGRATIONS` via StorageEngine `{ migrations }` or `STORAGE_ENGINE_OPTIONS`; v2 adds the approved v1-format schema tables.
+- `NodeStore` takes the supplied executor and ChangeSet; it never nests engine queue operations.
+- All schema mutations pass through RowWriter; inserts batch at 999 parameters and every value is UTF-8 capped.
+- Reads attach WeakMap metadata and freeze recursively in dev mode. Diff inputs must preserve immutable references; entity replacements must retain the brand or use an entity hint.
+- Object children use pos too. Arrays/entities retain LIS positions and renormalise when gaps fall below 1e-9.
+- Oversized entity data uses `data = ''` and promoted nodes at `coll/~2<escaped typed id>` (ADR-0016).
+- Windows PowerShell may block npx.ps1; use npx.cmd for the same npm CLI commands.

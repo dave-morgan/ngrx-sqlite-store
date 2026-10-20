@@ -21,13 +21,14 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0013](0013-reducer-api-on-tx.md) | `on()` = tx reducer; `onState()` / `fromSyncReducer()` classic | User | 2026-10-20 | Accepted |
 | [0014](0014-tx-write-style-both.md) | tx reducers write imperatively and/or return partial (diffed) | User | 2026-10-20 | Accepted |
 | [0015](0015-on-disk-schema-v1.md) | Generic on-disk schema v1 | User | 2026-10-20 | Accepted |
+| [0016](0016-schema-engine-encoding.md) | Schema engine ordering, encoding, hints and opt-in migration | Phase 3 brief / Agent | 2026-10-20 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 
 | Q | Current choice | Decided by |
 | --- | --- | --- |
 | Q1 | `sortComparer` applied in JS on read, dev warning; `sortkey` column reserved | Agent |
-| Q2 | 16 KB promotion threshold + path hints; depth-1 props always rows; no demotion | Agent |
+| Q2 | 16 KB promotion threshold + path hints; depth-1 props always rows; changed values may demote (Phase 3 brief) | Agent |
 | Q4 | Lazy whole-state view; devtools display-only mode (no time travel) | Agent |
 | Q5 | `select` waits for first load; `selectSignal` falls back to `initialState`; LRU 32 | Agent |
 | Q7 | No in-memory slices; classic reducers via SQLite-backed bridge | Agent |

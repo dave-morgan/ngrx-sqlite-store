@@ -55,7 +55,7 @@ type SqlValue = string | number | null | Uint8Array;
 
 Phase 2 implements `StorageEngine` with one FIFO queue shared by lifecycle operations, transactions, and reads. Reads are queued because a single SQLite connection can see its own uncommitted writes. Inside a transaction or queued callback, use its supplied executor; awaiting another queued engine operation from there would deadlock. Non-empty change sets emit after commit, followed by awaited `afterCommit` callbacks, before the transaction promise resolves. Callback failures reject the promise without rolling back committed data.
 
-Internal migrations run atomically at open, ordered by version, with `schema_version` in `nss_meta`. Built-in migration v1 creates only `nss_meta`; additional migrations extend v1 with unique positive integer versions. Failed opens roll back and close the connection, exposing `error` status. Node/entity/chunk tables remain deferred to phase 3 and still require schema approval.
+Internal migrations run atomically at open, ordered by version, with `schema_version` in `nss_meta`. Built-in migration v1 creates only `nss_meta`; additional migrations extend v1 with unique positive integer versions. Failed opens roll back and close the connection, exposing `error` status. Phase 3 exports `SCHEMA_MIGRATIONS` (v2), registered through the existing `migrations` option or `STORAGE_ENGINE_OPTIONS`, to create the approved node/entity/chunk tables.
 
 ### 3.1 Dispatch pipeline
 
@@ -121,7 +121,7 @@ The `tx` handle is scoped to one feature. Paths are relative to the feature key.
 - `next === prev` → skip the subtree.
 - Scalar change → `UPDATE` one row.
 - Object → recurse by key. Keys that were added or removed become inserts or prefix deletes.
-- Array → match elements by reference first, then by `selectId` for entity collections. Unchanged elements keep their hidden row ID. Moved or new elements get fresh fractional positions. Removed elements are deleted.
+- Array → match objects by reference and primitives by value, greedily in order. Entity collections match typed ids. A longest increasing subsequence keeps existing positions; moved or new elements get fractional positions. Removed elements are deleted. Exhausted position precision triggers integer renormalisation.
 - All resulting SQL is buffered and flushed as prepared statement batches at the end of the reducer.
 
 ## 4. Schema engine (D4–D8)
@@ -130,13 +130,14 @@ The `tx` handle is scoped to one feature. Paths are relative to the feature key.
 
 ```sql
 CREATE TABLE nss_meta   (key TEXT PRIMARY KEY, value TEXT NOT NULL);
--- 'schema_version' = '1'; 'feature:<key>:version' = '<n>'
+-- 'schema_version' = '2' after the schema engine migration; format remains v1
+-- 'feature:<key>:version' = '<n>'
 
 CREATE TABLE nss_node (
   path    TEXT PRIMARY KEY,           -- 'todos/filters/status' (JSON-Pointer escaped segments)
   parent  TEXT,                       -- parent path; NULL for a feature root
   kind    INTEGER NOT NULL,           -- see kind table
-  pos     REAL,                       -- array element position (fractional), else NULL
+  pos     REAL,                       -- object/array child order (fractional); root NULL
   value   TEXT                        -- scalar (JSON-encoded) or JSON blob; NULL for pointer rows
 ) WITHOUT ROWID;
 CREATE INDEX nss_node_parent ON nss_node(parent, pos);
@@ -149,7 +150,7 @@ CREATE TABLE nss_entity (
   id      TEXT NOT NULL,              -- selectId(entity), stringified with a type prefix
   pos     REAL NOT NULL,              -- ids[] order (insertion / fractional)
   sortkey TEXT,                       -- reserved for Q1 (sortComparer)
-  data    TEXT NOT NULL,              -- JSON of the entity (≤ 1 MB, else promoted)
+  data    TEXT NOT NULL,              -- JSON ≤ 1 MB; '' marks a promoted entity value
   PRIMARY KEY (coll, id)
 ) WITHOUT ROWID;
 CREATE INDEX nss_entity_order ON nss_entity(coll, pos);
@@ -158,9 +159,9 @@ CREATE INDEX nss_entity_order ON nss_entity(coll, pos);
 | kind | meaning | `value` |
 | --- | --- | --- |
 | 0 | null | NULL |
-| 1 | boolean | `0`/`1` |
+| 1 | boolean | JSON `false`/`true` |
 | 2 | number | numeric text |
-| 3 | string | text |
+| 3 | string | JSON-encoded text |
 | 4 | inline JSON (small object/array, D7) | JSON text |
 | 5 | object pointer (children are rows) | NULL |
 | 6 | array pointer (children are rows with `pos`) | NULL |
@@ -169,23 +170,52 @@ CREATE INDEX nss_entity_order ON nss_entity(coll, pos);
 
 **Paths.** A path is `feature/seg/seg`. Each segment is escaped JSON-Pointer style (`~` → `~0`, `/` → `~1`). Array elements use a hidden, stable segment `#<base36 id>`, never their index, so reordering never rewrites paths. A subtree is `path = :p OR path >= :p || '/' AND path < :p || '0'`. The `'0'` bound works because `'0'` is the character after `'/'`, so this is an index range scan.
 
+Object children also have positions, preserving key insertion order. Diff writes ignore
+reordering existing keys and append new keys after existing positions. Entity ids use
+`s:`/`n:` prefixes to distinguish strings and numbers. Oversized entity data uses an
+empty-string marker in `nss_entity.data` and normal promoted nodes at
+`coll/~2<escaped typed id>`; the reserved `~2` prefix cannot collide with escaped extra
+property keys. Entity extra properties remain ordinary child nodes. See ADR-0016.
+
 **Why one generic node table instead of a table per feature?** Feature registration stays DDL-free, which matters for lazy features and Q9. Path prefixes become cheap. Migrations become data-only (Q10). Entities get their own table because they have a natural PK and an order column (D5).
 
 ### 4.2 Storage policy
 
-- The feature root is an object pointer (kind 5). Each top-level property is its own row. This is the unit of change-notification granularity (§6).
+- The feature root is an object pointer (kind 5), or an explicitly branded entity. Root arrays are rejected; subtree arrays retain their array kind. Each top-level property is its own scalar, object, array, or entity row. This is the unit of change-notification granularity (§6).
 - Nested objects stay inline JSON (kind 4) until either:
   - their serialized UTF-8 size exceeds the **promotion threshold** (default 16 KB, provisional Q2), or
-  - the feature config marks the path as `collection`/`hot`.
-  Promoted values become pointer rows (adjacency list, D7) and are read back with a recursive CTE.
+  - the feature config marks the path as `collection`.
+  Promoted values become pointer rows (adjacency list, D7). Phase 3 recomputes policy
+  on changed values, including demotion. Feature-relative path hints accept exact
+  escaped paths, `*` (one segment), and `**` (any depth). `inline` overrides the
+  threshold but never the hard row cap. `entity` opts in to structural EntityState
+  detection; otherwise detection requires the non-enumerable `NSS_ENTITY_BRAND`.
 - Arrays that are rows (top-level or promoted) are stored as element rows with fractional `pos` (D6). Arrays *inside* inline JSON stay JSON.
 - An `EntityState`-shaped value created via `adapter.getInitialState()` is detected by a brand in its initial state and stored in `nss_entity` (D5).
 - **1 MB cap (D8).** Every row write measures `utf8ByteLength(value)`. If an object/array is over the cap, it is promoted. If a single string is over the cap, it is split into ≤ 1 MB chunks in `nss_chunk` (kind 7). This is enforced in one place, `RowWriter`, so no code path can skip it.
+- Policies may lower the cap to at least 32 bytes (enough for non-string scalars),
+  but cannot raise it above 1,048,576 bytes.
+- Strings are chunked as JSON-encoded text, retaining Unicode and lone surrogates.
+  `serializedSize` validates and memoizes immutable objects in one recursive walk,
+  without constructing JSON text. Invalid values, cycles, accessors, class instances,
+  and custom `toJSON` hooks fail with `NonSerializableStateError` naming their path.
 
 ### 4.3 Reads
 
-- `readSubtree(path)` runs one recursive CTE over `nss_node`, plus `nss_entity`/`nss_chunk` lookups for the kind 7/8 nodes it finds. It reassembles plain JS in a single pass, sorting children by `pos`.
+- `readSubtree(exec, path)` runs one prefix range query over `nss_node`, plus ordered
+  `nss_entity`/`nss_chunk` lookups. It allocates containers and links each child once
+  in `(parent, pos)` order. `readSubtreeCte` provides equivalent recursive-CTE reads
+  for the Q3 comparison. Results are branded where applicable, carry WeakMap node
+  metadata, and are recursively frozen in dev mode.
 - Reads go through the **PathCache**, which gives structural sharing: an unchanged subtree returns the same reference across reads.
+
+Phase 3's `NodeStore` takes the supplied `SqlExecutor` and `ChangeSet` directly;
+the Phase 4 transaction identity cache and Phase 5 PathCache remain to be built.
+All schema INSERT/UPDATE/DELETE statements originate in `RowWriter`, which records
+paths and batches inserts with at most 999 parameters. Never await a nested engine
+operation in an engine callback, `changes$` subscriber, or `afterCommit` callback:
+they execute inside the FIFO task. Selector re-queries must start after the outer
+transaction resolves.
 
 ## 5. Read side: selectors (D2)
 

@@ -25,6 +25,8 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0017](0017-store-composition.md) | Store composition: reuse NgRx subjects, 1 tx/action, scanned ordering, seeding, removeReducer keeps data, meta-reducers on bridge only | Agent | 2026-10-20 | Accepted |
 | [0018](0018-selector-engine.md) | Selector engine: reuse NgRx memoize + metadata, PathCache w/ staleness, view state, feature-level dynamic tracking | Agent | 2026-10-20 | Accepted |
 | [0019](0019-entity-adapter.md) | Entity adapter: dual-form ops (classic pure / tx SQL), `adapter.at(tx, path)`, write-time sort order via binary search (Q1) | Agent | 2026-10-20 | Accepted |
+| [0020](0020-router-json-snapshots.md) | Persist default router-store snapshots as JSON in the classic bridge | Agent | 2026-10-20 | Accepted |
+| [0021](0021-selector-reference-replacements.md) | Preserve reference-only reducer replacements with transient commit hints | Agent | 2026-10-20 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

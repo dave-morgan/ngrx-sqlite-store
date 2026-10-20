@@ -31,8 +31,10 @@ import {
   DEFAULT_META_REDUCER,
   POST_COMMIT_HOOK,
   STORE_CONFIGURATION,
+  SELECTION_ENGINE,
 } from './tokens';
 import type { RegisteredFeature } from './tokens';
+import { Injector } from '@angular/core';
 
 export const nssReducerError = createAction(
   '[ngrx-sqlite-store] Reducer Error',
@@ -46,6 +48,7 @@ interface Feature extends RegisteredFeature {
 
 @Injectable()
 export class SqliteStoreCore {
+  private readonly injector = inject(Injector);
   readonly engine = inject(StorageEngine);
   private readonly actions = inject(ActionsSubject);
   private readonly scanned = inject(ScannedActionsSubject);
@@ -103,6 +106,7 @@ export class SqliteStoreCore {
         registrations = this.work;
         await registrations;
       } while (registrations !== this.work);
+      await this.injector.get(SELECTION_ENGINE).preload(this.config.sqlite?.eager ?? []);
       this.state.set('ready');
       this.started = true;
       for (const { action, validationError } of this.pending.splice(0))
@@ -152,6 +156,27 @@ export class SqliteStoreCore {
     return registered;
   }
   private warnedMeta = false;
+  /** Internal registry/default snapshot for the read side, including pre-bootstrap roots. */
+  selectionFeatures(): Record<string, unknown> {
+    const result = Object.fromEntries(
+      [...this.features].map(([key, feature]) => [key, feature.seed]),
+    );
+    if (!this.started)
+      for (const [key, reducer] of Object.entries(this.reducers)) {
+        if (!Object.hasOwn(result, key))
+          Object.defineProperty(result, key, {
+            value:
+              this.initial?.[key] ??
+              (isTxReducer(reducer)
+                ? getTxReducerMetadata(reducer)!.initialState
+                : reducer(undefined, { type: '@ngrx/feature/init' })),
+            enumerable: true,
+            configurable: true,
+            writable: true,
+          });
+      }
+    return result;
+  }
   private async seed(features: Feature[]): Promise<void> {
     const { changes } = await this.engine.transaction(async (tx) => {
       for (const feature of features) {

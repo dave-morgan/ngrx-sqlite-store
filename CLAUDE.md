@@ -17,9 +17,10 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - [x] Phase 1 docs
 - [x] Phase 2 storage core (driver abstraction, serial write queue, tx, post-commit notifications)
 - [x] Phase 3 schema engine (v2 migration, range/CTE reads, capped full/diff writes, entities)
-- [ ] Phase 4 store contract
+- [x] Phase 4 store contract
 - [x] Phase 4a store write side and DI (ADR-0017)
-- [ ] Phase 5 selectors
+- [x] Phase 4b selector read side (ADR-0018/0020/0021)
+- [x] Phase 5 selectors
 - [ ] Phase 6 entity
 - [ ] Phase 7 compat tests + harness e2e
 - [ ] Phase 8 spikes Q1/Q2/Q3/Q4
@@ -35,7 +36,7 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - None. Q6 → ADR-0013/0014; schema v1 → ADR-0015.
 
 ## Next steps
-- Phase 4b read side: selector sources, committed cache, select/selectSignal and selector authoring helpers.
+- Phase 6 entity adapter, then Phase 7 compatibility tests and harness e2e.
 
 ## Storage core notes
 - Tests load sql.js through Node's native createRequire and resolve its WASM from node_modules; no copied WASM or test helper is needed.
@@ -59,5 +60,12 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - Each action runs every feature handler in one transaction. Scanned emissions and awaited refresh hooks run after transaction resolution, outside the engine FIFO. dispatchAsync rejects reducer failures; plain dispatch reports nssReducerError and continues.
 - StoreTx shares an identity cache across features. Writes drop overlapping cached ancestors/descendants and reload containers to preserve hidden array IDs. Unknown paths under inline nodes resolve through the owning container.
 - Removing/destroying features keeps their data. purgeFeature deletes the subtree and version marker; settle includes purge work, refresh hooks and the engine queue.
-- Foreign reducers with undefined initial state (routerReducer) seed only their version marker; reset/reseed deletes their subtree. State is still a placeholder, and Store selection methods explicitly throw until phase 4b.
-- Phase 4b hooks: internal ɵSELECTION_ENGINE, ɵCOMMITTED_CACHE, and multi ɵPOST_COMMIT_HOOK. NgRx selector creation helpers are temporary re-exports.
+- Foreign reducers with undefined initial state (routerReducer) seed only their version marker; reset/reseed deletes their subtree. Default router-store snapshots are converted to JSON before persistence (ADR-0020).
+- Phase 4b hooks: internal ɵSELECTION_ENGINE, ɵCOMMITTED_CACHE, and multi ɵPOST_COMMIT_HOOK. Selector helpers wrap NgRx with hidden metadata and exact typings.
+
+## Selector notes
+- PathCache marks stale entries synchronously in changes$; committed peek excludes stale data. Refresh reads run after transaction resolution and preserve untouched siblings.
+- Fresh cached dependencies emit synchronously on subscribe. Unloaded select waits; selectSignal starts from initial defaults and honors equal. Signal leases follow the caller's injection context, or store lifetime outside a context.
+- Whole-store subscriptions pin registered features; materialize() reads all features. sqlite.eager preloads and pins names; sqlite.lruSize defaults to 32 inactive entries.
+- Foreign selectors track feature accesses on each evaluation; new conditional branches load before ScannedActions. Logical array indices cache their physical owning container.
+- StoreTx adds transient reference-replacement hints so equal-content immutable replacements retain NgRx projector-count behavior (ADR-0021). No schema change.

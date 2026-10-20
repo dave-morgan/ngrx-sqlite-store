@@ -32,7 +32,7 @@ Devtools, router-store, and some meta-reducers expect one full state object.
 
 ### Q5. Selector loading semantics. Status: **Provisional**
 - Options: emit nothing until loaded; emit `initialState` defaults; serve the last value from an LRU.
-- Current: `select()` emits nothing until loaded. `selectSignal()` computes from `initialState` defaults until loaded. An app initializer opens and seeds the DB before bootstrap and preloads `eager` features. Released sources stay in a small LRU (default 32 entries), so re-subscribing emits immediately while a refresh runs.
+- Current: `select()` emits nothing until loaded. `selectSignal()` computes from `initialState` defaults until loaded. An app initializer opens and seeds the DB before bootstrap and preloads/pins `eager` features. Released sources stay in a small LRU (default 32 inactive entries). Re-subscribing emits synchronously if fresh; stale entries refresh before emitting (ADR-0018 and the Phase 4b addendum).
 - Resolves when: harness UX on device is acceptable, with no flash-of-default for eager features.
 
 ### Q6. Reducer API shape. Status: **Resolved → ADR-0013, ADR-0014**

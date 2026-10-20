@@ -28,7 +28,15 @@ import { SqliteStoreCore, resolveInitial } from './core';
 import { ReducerManager } from './reducer-manager';
 import { State } from './state';
 import { Store } from './store';
-import { DEFAULT_META_REDUCER, STORE_CONFIGURATION } from './tokens';
+import {
+  COMMITTED_CACHE,
+  DEFAULT_META_REDUCER,
+  POST_COMMIT_HOOK,
+  SELECTION_ENGINE,
+  STORE_CONFIGURATION,
+} from './tokens';
+import { PathCache } from '../selectors/path-cache';
+import { SqliteSelectionEngine } from '../selectors/selection-engine';
 import type { SqliteFeatureConfig, SqliteStoreConfig } from './tokens';
 import type { RegisteredFeature } from './tokens';
 
@@ -75,6 +83,18 @@ function rootProviders<T, A extends Action>(
     { provide: STORAGE_ENGINE_OPTIONS, useValue: { migrations: SCHEMA_MIGRATIONS } },
     StorageEngine,
     SqliteStoreCore,
+    PathCache,
+    SqliteSelectionEngine,
+    { provide: COMMITTED_CACHE, useExisting: PathCache },
+    { provide: SELECTION_ENGINE, useExisting: SqliteSelectionEngine },
+    {
+      provide: POST_COMMIT_HOOK,
+      multi: true,
+      useFactory: () => {
+        const selection = inject(SqliteSelectionEngine);
+        return () => selection.refresh();
+      },
+    },
     Store,
     State,
     ReducerManager,

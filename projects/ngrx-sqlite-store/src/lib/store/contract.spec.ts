@@ -351,10 +351,10 @@ describe('phase 4a integration contract', () => {
     expect(manager.value(undefined, { type: ngrx.INIT })).toEqual({ counter: { count: 0 } });
   });
 
-  it('keeps the default selection seam explicit', async () => {
+  it('provides the phase 4b selection engine through the original store', async () => {
     const { store } = await boot({ counter });
-    expect(() => store.select((state) => state)).toThrow('select is implemented in phase 4b');
-    expect(() => store.selectSignal((state) => state)).toThrow('select is implemented in phase 4b');
+    expect(store.select((state) => state)).toBeDefined();
+    expect(store.selectSignal((state) => state)()).toEqual({ counter: { count: 0 } });
   });
 
   it('reactively dispatches from a signal with an explicit injector', async () => {

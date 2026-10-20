@@ -210,8 +210,8 @@ property keys. Entity extra properties remain ordinary child nodes. See ADR-0016
 - Reads go through the **PathCache**, which gives structural sharing: an unchanged subtree returns the same reference across reads.
 
 Phase 3's `NodeStore` takes the supplied `SqlExecutor` and `ChangeSet` directly;
-Phase 4a adds the shared transaction identity cache; the committed PathCache remains
-for phase 4b. Repeated reads reuse references, including descendants derived from
+Phase 4a adds the shared transaction identity cache; Phase 4b adds the committed
+PathCache. Repeated reads reuse references, including descendants derived from
 cached containers and hidden array ids. Writes invalidate overlapping ancestors
 and descendants; containers are reloaded to retain generated ids and positions.
 All schema INSERT/UPDATE/DELETE statements originate in `RowWriter`, which records
@@ -224,18 +224,21 @@ transaction resolves.
 
 ### 5.1 SelectorSource
 
-A `SelectorSource` is a refcounted, resource-like object keyed by path (`todos` or `todos/items`):
-
-- `value: Signal<T | undefined>`, `value$: Observable<T>`, and `status: 'idle' | 'loading' | 'ready' | 'error'`.
-- On first subscribe it queries SQLite. It re-queries after any commit whose change set overlaps its path (§6).
-- Once the refcount reaches 0, it drops its value after a grace period and goes into a small LRU (Q5), so the memory is released.
+Selector sources are represented internally by refcounted PathCache entries keyed
+by path (`todos` or `todos/items`), subscription leases, and a generation signal.
+On first subscription they query SQLite; no public resource object is exposed.
+After a commit, active overlapping entries refresh only their changed branches.
+Released entries stay in the inactive LRU (default 32); entries beyond the limit
+are evicted immediately. A fresh entry emits synchronously when resubscribed.
+Logical array indices and inline/entity children cache their nearest physical
+container so physical row changes also invalidate logical dependencies.
 
 ### 5.2 Selector composition
 
 - `createFeatureSelector('todos')` and the selectors that `createFeature` generates per property (`selectItems` → `todos/items`) are **source selectors**. They carry a hidden `[NSS_SOURCE]` path.
 - `createSelector(...inputs, projector)` is the ordinary NgRx memoized selector (same `defaultMemoize`, `resultMemoize`, `release`, `projector`, `setResult`, `clearResult`). It also records the union of its inputs' source paths.
-- `store.select(sel)` / `store.selectSignal(sel)` evaluate `sel(virtualState)`. `virtualState` is a lazy object whose properties resolve from the PathCache (structurally shared, reference-stable). That lets plain NgRx memoization keep working.
-- **Foreign selectors** (built with the real `@ngrx/store`, for example router-store's `getRouterSelectors`, or plain `state => state.x` lambdas) have no metadata. Their dependencies are *recorded at call time* through a tracking `virtualState` proxy, which notes which top-level and nested keys were read (Q8).
+- `store.select(sel)` / `store.selectSignal(sel)` evaluate selectors against a plain frozen view containing exactly the loaded paths. The view is rebuilt with structural sharing, preserving plain NgRx memoization. Reference-only immutable replacements carry transient commit hints so they also cause the appropriate projector calls (ADR-0021).
+- **Foreign selectors** (built with the real `@ngrx/store`, for example router-store's `getRouterSelectors`, or plain `state => state.x` lambdas) have no metadata. A tracking proxy records feature-level dependencies on every evaluation (Q8). Newly discovered conditional branches load before the scanned action is emitted. Identity selectors pin all registered features and return the plain view.
 - **Before the first load (provisional, Q5).** `select()` emits nothing until the sources are ready. `selectSignal()` returns the value computed from `initialState` defaults until then. `provideStore` registers an app initializer that opens the DB, runs migrations, seeds, and preloads root features that are marked `eager`.
 
 ## 6. Change notification (Q8, provisional)
@@ -257,7 +260,7 @@ The library implements every class and token that ecosystem libraries inject, an
 | `ReducerManager`, `ReducerObservable`, `ReducerManagerDispatcher` | `SqliteReducerManager`: feature registry + compat |
 | `INITIAL_STATE`, `INIT`, `UPDATE`, `ROOT_STORE_PROVIDER`, `FEATURE_STATE_PROVIDER`, `ACTIVE_RUNTIME_CHECKS`, ... | same tokens, our values |
 
-Pure helpers (`createAction`, `props`, `createActionGroup`, `union`, `emptyProps`, `select`, `compose`, `combineReducers`) are re-exported so that action creators are interchangeable with ones built by the real package. Effects' `ofType` matches on `type` strings, so they work across both.
+Pure helpers (`createAction`, `props`, `createActionGroup`, `union`, `emptyProps`, `compose`, `combineReducers`) are re-exported so that action creators are interchangeable with ones built by the real package. The pipeable `select` routes direct store selections through the selection engine and delegates ordinary Observable pipelines to NgRx. Effects' `ofType` matches on `type` strings, so they work across both.
 
 Phase 4a implements the write side and original DI token aliases. Root bootstrap
 opens and migrates the database, seeds versioned features, then releases buffered
@@ -278,11 +281,13 @@ The opt-in action-type uniqueness check delegates to NgRx's private action
 registry through a temporary empty store using its public providers, at root and
 feature registration. No private NgRx symbols are imported.
 
-The phase 4b seams are internal `ɵSELECTION_ENGINE`, `ɵCOMMITTED_CACHE`, and the
-multi-provider `ɵPOST_COMMIT_HOOK`. Refresh hooks run after transactions resolve,
-including seeding and purge transactions. `State` currently holds `{}` and store
-selection methods throw `select is implemented in phase 4b`; selector creation
-helpers are temporarily re-exported unchanged from NgRx.
+The phase 4b implementation uses internal `ɵSELECTION_ENGINE`, `ɵCOMMITTED_CACHE`,
+and multi-provider `ɵPOST_COMMIT_HOOK`. Cache invalidation is synchronous inside
+`changes$`; refresh hooks query after transactions resolve, including seeding and
+purge transactions. `State`/`StateObservable` emit the loaded view. Whole-store
+subscriptions pin registered features; `materialize()` reads all features for
+debugging. Default minimal router-store snapshots are normalized to JSON in the
+classic bridge (ADR-0020), preserving default router navigation integration.
 
 ### 7.1 Import strategies
 

@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 export class State<T = object> extends BehaviorSubject<T> {
   static readonly INIT = INIT;
   constructor() {
-    super({} as T);
+    super(Object.freeze({}) as T);
   }
   ngOnDestroy(): void {
     this.complete();

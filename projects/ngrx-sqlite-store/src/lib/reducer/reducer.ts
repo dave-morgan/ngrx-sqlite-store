@@ -3,6 +3,7 @@ import { INIT } from '@ngrx/store';
 import type { Action, ActionCreator, ActionReducer, ActionType } from '@ngrx/store';
 import { escapeSegment } from '../storage/path';
 import type { StoreTx } from './store-tx';
+import { routerSnapshot } from './router-snapshot';
 
 export const NSS_TX_REDUCER = Symbol('NSS_TX_REDUCER');
 export interface Handler<S> {
@@ -107,7 +108,8 @@ export function fromSyncReducer<S, A extends Action = Action>(
   reducer[NSS_TX_REDUCER].fallback = {
     kind: 'state',
     reducer: async (tx, action) => {
-      await tx.set('', classic(await tx.get(), action as A));
+      const previous = await tx.get();
+      await tx.set('', routerSnapshot(previous, classic(previous, action as A), action));
     },
   };
   return reducer;

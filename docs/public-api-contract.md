@@ -4,10 +4,24 @@ Verified against **@ngrx/store 22.0.1** (`types/ngrx-store.d.ts`, `ngrx-store-te
 
 Legend: **=** re-exported unchanged from `@ngrx/store` · **R** reimplemented with identical signature and semantics · **R\*** reimplemented with a documented difference · **T** provided under the original DI token (ADR-0010) · **—** out of scope (noted).
 
-Implementation checkpoint: phase 4a provides the write-side contract and DI.
-`Store.select`/`selectSignal` remain explicit phase 4b seams, `State` holds `{}`,
-and selector authoring helpers are temporary NgRx re-exports. Internal schema and
-storage implementation values are no longer public unprefixed exports.
+Implementation checkpoint: phases 4a/4b provide the store contract, original DI
+tokens and selector read side (ADR-0017/0018). Selector helpers wrap the real NgRx
+functions with hidden dependency metadata and retain their exact overloads.
+Internal schema and storage implementation values have no public unprefixed exports.
+
+`Store.materialize(): Promise<object>` reads every registered feature for debugging.
+Whole-store subscriptions pin all registered features for their subscription lifetime.
+`sqlite.eager` pins and preloads named features before bootstrap releases actions;
+`sqlite.lruSize` defaults to 32 inactive cache entries. `select()` emits synchronously
+on subscription when its dependencies are loaded and fresh, including LRU hits.
+Stale entries wait for their refresh before emitting. `selectSignal()` uses initial
+defaults for unloaded branches and releases its leases with the calling injection
+context (or the store lifetime when called outside a context).
+
+Default router-store snapshots are persisted as JSON (ADR-0020): undefined fields
+are omitted and Angular UrlSegments become plain data. Cyclic full snapshots need
+a custom JSON-safe serializer. Reference-only immutable replacements retain NgRx
+projector-count semantics through transient commit hints (ADR-0021).
 
 ## 1. `@ngrx/store` runtime exports
 

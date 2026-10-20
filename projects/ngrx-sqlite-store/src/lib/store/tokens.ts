@@ -15,6 +15,7 @@ export interface SqliteStoreConfig {
   driver?: SqlDriver | (() => SqlDriver);
   features?: Record<string, SqliteFeatureConfig>;
   eager?: string[];
+  lruSize?: number;
   actionHooks?: Array<
     (action: Action, tx: import('../reducer/store-tx').StoreTx<unknown>) => void | Promise<void>
   >;
@@ -22,20 +23,14 @@ export interface SqliteStoreConfig {
 export interface SelectionEngine {
   select<T>(...args: unknown[]): Observable<T>;
   selectSignal<T>(...args: unknown[]): Signal<T>;
+  pinAll(): () => void;
+  materialize(): Promise<object>;
+  preload(paths: string[]): Promise<void>;
 }
 export interface CommittedCache {
   peek(fullPath: string): unknown | undefined;
 }
-export const SELECTION_ENGINE = new InjectionToken<SelectionEngine>('NSS selection engine', {
-  factory: () => ({
-    select: () => {
-      throw new Error('select is implemented in phase 4b');
-    },
-    selectSignal: () => {
-      throw new Error('select is implemented in phase 4b');
-    },
-  }),
-});
+export const SELECTION_ENGINE = new InjectionToken<SelectionEngine>('NSS selection engine');
 export const COMMITTED_CACHE = new InjectionToken<CommittedCache>('NSS committed cache', {
   factory: () => ({ peek: () => undefined }),
 });

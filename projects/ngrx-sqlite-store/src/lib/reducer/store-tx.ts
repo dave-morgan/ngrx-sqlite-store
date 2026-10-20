@@ -4,6 +4,7 @@ import type { NodeStore } from '../schema/node-store';
 import type { ChangeSet } from '../storage/change-set';
 import { escapeSegment, isAncestorOrSelf, parentPath, unescapeSegment } from '../storage/path';
 import type { SqlExecutor } from '../storage/storage-engine';
+import { recordReferences } from '../storage/reference-changes';
 
 export interface CommittedCache {
   peek(fullPath: string): unknown | undefined;
@@ -121,6 +122,7 @@ export class StoreTx<S = unknown> {
       return;
     }
     await this.nodes.diffWrite(this.sql, full, previous, value, this.changes);
+    recordReferences(this.changes, full, previous, value);
     // Re-read containers to retain generated array ids and current position metadata.
     // Descendants expire on replacement, so references remain stable until a write.
     this.invalidate(

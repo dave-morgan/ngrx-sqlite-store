@@ -1,12 +1,14 @@
 import { Injectable, Injector, effect, inject, untracked } from '@angular/core';
 import type { EffectRef, Signal } from '@angular/core';
 import { ActionsSubject, StateObservable } from '@ngrx/store';
+import { select as ngrxSelect } from '@ngrx/store';
 import type { Action, ActionCreator, ActionReducer, SelectSignalOptions } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import type { Observer, Operator } from 'rxjs';
 import { SqliteStoreCore } from './core';
 import { ReducerManager } from './reducer-manager';
 import { SELECTION_ENGINE } from './tokens';
+import { SELECT_OPERATOR } from '../selectors/metadata';
 
 type NotCreator<T> = T extends ActionCreator
   ? 'Action creator is not allowed to be dispatched. Did you forget to call it?'
@@ -21,7 +23,15 @@ export class Store<T = object> extends Observable<T> implements Observer<Action>
   readonly status = this.core.status;
   constructor() {
     super();
-    this.source = inject(StateObservable);
+    const state = inject(StateObservable);
+    this.source = new Observable<T>((subscriber) => {
+      const release = this.selection.pinAll();
+      const subscription = state.subscribe(subscriber);
+      return () => {
+        subscription.unsubscribe();
+        release();
+      };
+    });
   }
   select<K>(selector: (state: T) => K): Observable<K>;
   select<K, P>(selector: (state: T, props: P) => K, props: P): Observable<K>;
@@ -63,7 +73,14 @@ export class Store<T = object> extends Observable<T> implements Observer<Action>
     ...rest: string[]
   ): Observable<K>;
   select<K>(...args: unknown[]): Observable<K> {
+    if (this.operator)
+      return (ngrxSelect as (...args: unknown[]) => (source: Observable<T>) => Observable<K>)(
+        ...args,
+      )(this);
     return this.selection.select<K>(this, ...args);
+  }
+  [SELECT_OPERATOR](...args: unknown[]): Observable<unknown> {
+    return this.selection.select(this, ...args);
   }
   selectSignal<K>(selector: (state: T) => K, options?: SelectSignalOptions<K>): Signal<K> {
     return this.selection.selectSignal<K>(this, selector, options);
@@ -116,6 +133,9 @@ export class Store<T = object> extends Observable<T> implements Observer<Action>
   }
   settle(): Promise<void> {
     return this.core.settle();
+  }
+  materialize(): Promise<object> {
+    return this.selection.materialize();
   }
 }
 function callerInjector(): Injector | undefined {

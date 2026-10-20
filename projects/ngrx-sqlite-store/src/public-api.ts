@@ -62,7 +62,6 @@ export {
   setNgrxMockEnvironment,
   union,
 } from '@ngrx/store';
-// replaced in phase 4b
 export {
   createSelector,
   createSelectorFactory,
@@ -71,7 +70,7 @@ export {
   createFeatureSelector,
   select,
   createFeature,
-} from '@ngrx/store';
+} from './lib/selectors/selectors';
 export type {
   Action,
   ActionCreator,

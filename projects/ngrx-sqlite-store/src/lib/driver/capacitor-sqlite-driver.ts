@@ -38,9 +38,20 @@ export class CapacitorSqliteDriver implements SqlDriver {
       version = 1,
       readonly = false,
     } = this.options;
-    const db = await this.sqlite.createConnection(database, encrypted, mode, version, readonly);
+    // Native connections outlive the WebView: after a page reload (location.reload, live
+    // reload, devtools refresh) the plugin still holds the previous connection, and
+    // createConnection would throw "Connection ... already exists". Re-sync the JS and
+    // native connection registries, then reuse the existing connection if present.
+    const consistent = (await this.sqlite.checkConnectionsConsistency()).result ?? false;
+    const exists = (await this.sqlite.isConnection(database, readonly)).result ?? false;
+    const db =
+      consistent && exists
+        ? await this.sqlite.retrieveConnection(database, readonly)
+        : await this.sqlite.createConnection(database, encrypted, mode, version, readonly);
     try {
-      await db.open();
+      if (!((await db.isDBOpen()).result ?? false)) await db.open();
+      // A reload can interrupt a transaction mid-flight; never inherit it.
+      if ((await db.isTransactionActive()).result) await db.rollbackTransaction();
       this.db = db;
     } catch (error) {
       await this.sqlite.closeConnection(database, readonly);

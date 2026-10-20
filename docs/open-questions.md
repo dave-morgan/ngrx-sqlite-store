@@ -65,3 +65,6 @@ Can small UI slices stay fully in memory with classic sync reducers?
 - Our library imports the real `@ngrx/store` for tokens (ADR-0010). A global alias could redirect those imports to us.
 - Options: (a) verify that esbuild's tsconfig `paths` don't apply inside `node_modules` (likely) and ship the library prebuilt in `node_modules`; (b) ship an internal re-export of the needed tokens via a separate specifier; (c) recommend changing imports only.
 - Resolves when: tested in a sample app with a published (packed) build of the library.
+
+### Q16. Aggregates over large collections. Status: **Resolved → ADR-0027**
+Selectors derived from `selectAll` materialize and pin the whole collection (found while designing the phase 9 benchmark). Counts, pages and filters move into SQL as query selectors.

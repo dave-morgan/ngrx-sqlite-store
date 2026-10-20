@@ -24,7 +24,8 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - [x] Phase 6 entity (ADR-0019 dual-form adapter and `/entity` entry point)
 - [x] Phase 7 compat tests + harness e2e
 - [x] Phase 8 spikes Q1/Q2/Q3/Q4
-- [ ] Phase 9 Android benchmarks
+- [ ] Phase 9 Android benchmarks (tools/android-bench.mjs)
+- [ ] Phase 10 query selectors (ADR-0027) + entity sortKey (ADR-0024); brief docs/briefs/phase-10-query-and-sortkey.md
 
 ## Harness (orchestrator-owned; agents don't touch unless briefed)
 - `projects/harness`: README there. Aliases `@store`, `@store/entity`, `@impl` per build config (`-c classic|sqlite`). Shared code in `src/app/state`, pages in `src/app/pages`; only reducers differ (`store-impl/{classic,sqlite}`).

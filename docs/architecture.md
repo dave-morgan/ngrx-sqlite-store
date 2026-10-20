@@ -298,6 +298,25 @@ Foreign reducers whose seed is `undefined`, including `routerReducer`, retain on
 the feature version marker until they produce state. Reset/reseed removes their
 persisted subtree rather than writing an invalid JSON value.
 
+ADR-0030 adds `sqlite.features[key].persist` (default `true`). A value of `false`
+re-seeds the feature from its initial state during registration on every store
+open, regardless of its stored version. Root and bootstrap feature seeds finish
+before INIT and buffered actions; lazy `provideState` registration queues its seed
+before UPDATE and subsequent actions. Writes use the existing NodeStore/RowWriter
+path and ChangeSet notifications, so selectors never receive stale session data.
+Session feature reads remain gated until their registration seed commits, including
+when a lazy seed waits behind an earlier action's commit and refresh.
+The feature remains SQLite-backed and transactional throughout the session.
+Feature-local SQLite options override the corresponding root feature options.
+
+A foreign/bridge reducer under the default key `router` defaults to
+`persist: false`, without importing the optional router-store peer. This removes
+the previous router subtree before router-store can navigate to a stale URL.
+Explicit `persist: true` opts into route restoration; explicit `false` also works
+for other slices. Transaction reducers named `router` retain the normal `true`
+default. A custom router-store state key requires explicit configuration, for
+example `sqlite: { features: { myRouter: { persist: false } } }`.
+
 `StoreTx` scopes paths to one feature. Action hooks run once before feature
 handlers, receiving the first registered feature's handle; `resetAll()` on that
 handle resets every registered feature in the same transaction. Classic reducer

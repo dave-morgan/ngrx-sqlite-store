@@ -165,6 +165,17 @@ test.describe('ngrx harness', () => {
     await expect(page.getByTestId('visible-count')).toHaveText(`${persisted ? 1 : 0} shown`);
   });
 
+  test('a fresh start begins at the launch URL, not the last visited route (ADR-0030)', async ({ page }) => {
+    await boot(page, '/users');
+    await expect(page.getByTestId('user-grid')).toBeVisible();
+    await settle(page);
+    // Fresh load of a different URL: router-store must not "restore" /users from persisted state.
+    await page.goto(`/todos?seed=${SEED}`);
+    await expect(page.getByTestId('todo-summary')).toContainText('total');
+    await page.waitForTimeout(500);
+    await expect(page).toHaveURL(/\/todos/);
+  });
+
   test('diagnostics benchmark completes', async ({ page }) => {
     await boot(page, '/diagnostics');
     await page.locator('#runs').fill('50');

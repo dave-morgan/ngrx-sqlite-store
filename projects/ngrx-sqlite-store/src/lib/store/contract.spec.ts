@@ -16,8 +16,9 @@ import type { Action, ActionReducer } from '@ngrx/store';
 import { mergeMap } from 'rxjs';
 import { afterEach, describe, expect, it } from 'vitest';
 import { SqlJsDriver } from '../driver/sqljs-driver';
-import { createReducer, on, onState } from '../reducer/reducer';
+import { createReducer, fromSyncReducer, on, onState } from '../reducer/reducer';
 import { NodeStore } from '../schema/node-store';
+import { createQuerySelector } from '../selectors/query-selector';
 import { StorageEngine } from '../storage/storage-engine';
 import { nssReducerError, SqliteStoreCore } from './core';
 import {
@@ -116,6 +117,175 @@ describe('phase 4a integration contract', () => {
       { initialState: { counter: { count: 100 } }, sqlite: { driver: new SqlJsDriver({ data }) } },
     );
     expect(await read(second.engine, 'counter')).toEqual({ count: 9 });
+  });
+
+  it('reseeds session features before INIT and buffered actions while retaining persistent features', async () => {
+    const driver = new SqlJsDriver();
+    const features = { session: { persist: false }, saved: { persist: true } };
+    const first = await boot({ session: counter, saved: counter }, { sqlite: { driver, features } });
+    await first.store.dispatchAsync(increment({ amount: 9 }));
+    const data = driver.export();
+    TestBed.resetTestingModule();
+    await first.engine.close();
+    engines.delete(first.engine);
+
+    const observed: unknown[] = [];
+    const observeInit: ngrx.MetaReducer = (reducer) => (state, action) => {
+      if (action.type === ngrx.INIT && state !== undefined) observed.push(state);
+      return reducer(state, action);
+    };
+    TestBed.configureTestingModule({
+      providers: [provideStore({ session: counter, saved: counter }, {
+        initialState: { session: { count: 20 }, saved: { count: 100 } },
+        metaReducers: [observeInit],
+        sqlite: { driver: new SqlJsDriver({ data }), features },
+      })],
+    });
+    const store = TestBed.inject(Store);
+    const engine = TestBed.inject(StorageEngine);
+    engines.add(engine);
+    const values: unknown[] = [];
+    const subscription = store.select((state: { session: { count: number } }) => state.session)
+      .subscribe((value) => values.push(value));
+    store.dispatch(increment({ amount: 1 }));
+    await store.settle();
+    subscription.unsubscribe();
+    expect(observed).toEqual([{ count: 20 }, { count: 9 }]);
+    expect(await read(engine, 'session')).toEqual({ count: 21 });
+    expect(await read(engine, 'saved')).toEqual({ count: 10 });
+    expect(values).not.toContainEqual({ count: 9 });
+  });
+
+  it('reseeds lazy provideState features before their UPDATE and immediately dispatched actions', async () => {
+    const driver = new SqlJsDriver();
+    const first = await boot({}, { sqlite: { driver } }, [provideState('lazy', counter)]);
+    await first.store.dispatchAsync(increment({ amount: 9 }));
+    const data = driver.export();
+    TestBed.resetTestingModule();
+    await first.engine.close();
+    engines.delete(first.engine);
+    const { store, engine } = await boot({}, {
+      sqlite: { driver: new SqlJsDriver({ data }), features: { lazy: { persist: false } } },
+    });
+    // A feature-local option must not hide the root persistence setting.
+    const child = createEnvironmentInjector([
+      provideState('lazy', counter, { initialState: { count: 30 }, sqlite: { hints: {} } }),
+    ], TestBed.inject(EnvironmentInjector));
+    try {
+      store.dispatch(increment({ amount: 2 }));
+      await store.settle();
+      expect(await read(engine, 'lazy')).toEqual({ count: 32 });
+    } finally {
+      child.destroy();
+    }
+  });
+
+  it('hides stale lazy state while an earlier action delays registration seeding', async () => {
+    const driver = new SqlJsDriver();
+    const first = await boot({}, { sqlite: { driver } }, [provideState('lazy', counter)]);
+    await first.store.dispatchAsync(increment({ amount: 9 }));
+    const data = driver.export();
+    TestBed.resetTestingModule();
+    await first.engine.close();
+    engines.delete(first.engine);
+    let release!: () => void;
+    let entered!: () => void;
+    const waiting = new Promise<void>((resolve) => { entered = resolve; });
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const { store } = await boot({ active: counter }, { sqlite: {
+      driver: new SqlJsDriver({ data }),
+      features: { lazy: { persist: false } },
+      actionHooks: [async (action) => {
+        if (action.type === '[contract] hold') { entered(); await gate; }
+      }],
+    } });
+    const action = store.dispatchAsync({ type: '[contract] hold' });
+    await waiting;
+    const child = createEnvironmentInjector([provideState('lazy', counter)],
+      TestBed.inject(EnvironmentInjector));
+    const values: unknown[] = [];
+    const selected = store.select((state: { lazy: { count: number } }) => state.lazy);
+    const subscription = selected.subscribe((value) => values.push(value));
+    const counts: unknown[] = [];
+    const countSubscription = store.select('lazy', 'count').subscribe((value) => counts.push(value));
+    const whole: unknown[] = [];
+    const wholeSubscription = store.subscribe((value) => whole.push(value));
+    const queryValues: unknown[] = [];
+    const query = createQuerySelector({ path: '', key: 'lazy-count', initial: { count: -1 } },
+      async (sql) => {
+        const [row] = await sql.query<{ value: string }>(
+          'SELECT value FROM nss_node WHERE path = ?', ['lazy/count']);
+        return { count: Number(row.value) };
+      });
+    const querySubscription = store.select(query).subscribe((value) => queryValues.push(value));
+    try {
+      release();
+      await action;
+      await store.settle();
+      expect(values).toEqual([{ count: 0 }]);
+      expect(counts).toEqual([0]);
+      expect(queryValues).toEqual([{ count: 0 }]);
+      expect(whole).not.toContainEqual(expect.objectContaining({ lazy: { count: 9 } }));
+    } finally {
+      release();
+      subscription.unsubscribe();
+      countSubscription.unsubscribe();
+      wholeSubscription.unsubscribe();
+      querySubscription.unsubscribe();
+      child.destroy();
+    }
+  });
+
+  it('defaults explicitly wrapped bridge reducers under router to session scope', async () => {
+    const router = fromSyncReducer(counter);
+    const driver = new SqlJsDriver();
+    const first = await boot({ router }, { sqlite: { driver } });
+    await first.store.dispatchAsync(increment({ amount: 9 }));
+    const data = driver.export();
+    TestBed.resetTestingModule();
+    await first.engine.close();
+    engines.delete(first.engine);
+    const second = await boot({ router }, { sqlite: { driver: new SqlJsDriver({ data }) } });
+    expect(await read(second.engine, 'router')).toEqual({ count: 0 });
+  });
+
+  it('keeps transaction router and custom bridge features persistent by default', async () => {
+    const router = createReducer({ count: 0 }, onState(increment,
+      (state, { amount }) => ({ count: state.count + amount })));
+    const driver = new SqlJsDriver();
+    const first = await boot({ router, customRouter: counter }, { sqlite: { driver } });
+    await first.store.dispatchAsync(increment({ amount: 9 }));
+    const data = driver.export();
+    TestBed.resetTestingModule();
+    await first.engine.close();
+    engines.delete(first.engine);
+    const second = await boot({ router, customRouter: counter }, {
+      sqlite: { driver: new SqlJsDriver({ data }) },
+    });
+    expect(await read(second.engine, 'router')).toEqual({ count: 9 });
+    expect(await read(second.engine, 'customRouter')).toEqual({ count: 9 });
+  });
+
+  it('honors feature-local persist overrides and reseeds bootstrap provideState across versions', async () => {
+    const driver = new SqlJsDriver();
+    const first = await boot({}, { sqlite: { driver } }, [
+      provideState('session', counter), provideState('saved', counter),
+    ]);
+    await first.store.dispatchAsync(increment({ amount: 9 }));
+    const data = driver.export();
+    TestBed.resetTestingModule();
+    await first.engine.close();
+    engines.delete(first.engine);
+    const next = await boot({}, {
+      sqlite: { driver: new SqlJsDriver({ data }), features: {
+        session: { persist: true }, saved: { persist: false },
+      } },
+    }, [
+      provideState('session', counter, { sqlite: { persist: false, version: 2 } }),
+      provideState('saved', counter, { sqlite: { persist: true } }),
+    ]);
+    expect(await read(next.engine, 'session')).toEqual({ count: 0 });
+    expect(await read(next.engine, 'saved')).toEqual({ count: 9 });
   });
 
   it('rejects a persisted version mismatch and sets error status', async () => {

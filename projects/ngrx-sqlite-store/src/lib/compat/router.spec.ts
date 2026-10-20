@@ -1,6 +1,6 @@
 import { Component, Injectable, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Router, provideRouter } from '@angular/router';
+import { NavigationStart, Router, provideRouter } from '@angular/router';
 import type { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { Actions, createEffect, provideEffects } from '@ngrx/effects';
@@ -208,6 +208,60 @@ async function runRouterScenario(
 }
 
 describe('router-store compatibility with real NgRx', () => {
+  for (const persist of [undefined, false, true]) {
+    it(`restarts with ${persist === true ? 'the saved URL' : 'the launch URL'} when router persist is ${persist}`, async () => {
+      let data: Uint8Array | undefined;
+      for (const restart of [false, true]) {
+        const driver = new SqlJsDriver({ data });
+        let core: SqliteStoreCore | undefined;
+        const subscriptions = new Subscription();
+        try {
+          TestBed.configureTestingModule({
+            providers: [
+              provideStore({ router: routerReducer }, { sqlite: {
+                driver,
+                features: { router: { ...(persist === undefined ? {} : { persist }) } },
+              } }),
+              provideRouter([
+                { path: '', component: Page },
+                { path: 'saved', component: Page },
+                { path: 'launch', component: Page },
+              ]),
+              provideRouterStore(),
+            ],
+          });
+          core = TestBed.inject(SqliteStoreCore);
+          const router = TestBed.inject(Router);
+          const starts: string[] = [];
+          subscriptions.add(router.events.subscribe((event) => {
+            if (event instanceof NavigationStart) starts.push(event.url);
+          }));
+          const store = TestBed.inject(Store);
+          await store.settle();
+          const harness = await RouterTestingHarness.create();
+          if (!restart) {
+            await harness.navigateByUrl('/saved');
+            await store.settle();
+            data = driver.export();
+          } else if (persist === true) {
+            await expect.poll(() => router.url).toBe('/saved');
+            await store.settle();
+            expect(starts).toContain('/saved');
+          } else {
+            await harness.navigateByUrl('/launch');
+            await store.settle();
+            expect(router.url).toBe('/launch');
+            expect(starts).not.toContain('/saved');
+          }
+        } finally {
+          subscriptions.unsubscribe();
+          TestBed.resetTestingModule();
+          await core?.engine.close();
+        }
+      }
+    });
+  }
+
   for (const navigationActionTiming of [
     NavigationActionTiming.PreActivation,
     NavigationActionTiming.PostActivation,

@@ -18,10 +18,35 @@ Stale entries wait for their refresh before emitting. `selectSignal()` uses init
 defaults for unloaded branches and releases its leases with the calling injection
 context (or the store lifetime when called outside a context).
 
-Default router-store snapshots are persisted as JSON (ADR-0020): undefined fields
+Default router-store snapshots are stored as JSON within the session (ADR-0020): undefined fields
 are omitted and Angular UrlSegments become plain data. Cyclic full snapshots need
 a custom JSON-safe serializer. Reference-only immutable replacements retain NgRx
 projector-count semantics through transient commit hints (ADR-0021).
+
+### SQLite options
+
+`provideStore(reducers, { sqlite })` accepts these options. Feature options also
+apply through `provideState(name, reducer, { sqlite })` and
+`StoreModule.forFeature`; explicitly supplied feature-local values override the
+corresponding root feature options.
+
+| Option | Default | Behaviour |
+| --- | --- | --- |
+| `driver` | Capacitor SQLite driver | Driver instance or factory. |
+| `eager` | `[]` | Features to preload and pin before releasing buffered actions. |
+| `lruSize` | `32` | Maximum inactive cache entries. |
+| `actionHooks` | `[]` | Awaited hooks before feature handlers in each action transaction. |
+| `features[key].hints` | none | Storage policy hints for the feature. |
+| `features[key].version` | `1` | Feature version recorded in `nss_meta`. |
+| `features[key].onVersionMismatch` | `'error'` | Persistent features reject mismatches; `'reseed'` replaces their state. |
+| `features[key].persist` | `true`; `false` for a foreign/bridge reducer under `router` | `false` re-seeds initial state during registration on every store open, before INIT and buffered actions (ADR-0030). Within the session the feature remains SQLite-backed and transactional. An explicit value overrides the router default. |
+
+Session-scoped features always re-seed and record the configured version, even
+when the previous session used a different version. Lazy features re-seed when
+registered, before their UPDATE and subsequent actions. Seeding participates in
+normal change tracking, so selectors cannot observe the previous session's state.
+For router-store with a custom `stateKey`, configure it explicitly:
+`sqlite: { features: { myRouter: { persist: false } } }`.
 
 ## 1. `@ngrx/store` runtime exports
 
@@ -162,7 +187,7 @@ Do not mix keyed and non-keyed adapters for the same persisted collection.
 | Package | Imports from `@ngrx/store` | Injects | Requirement for us |
 | --- | --- | --- | --- |
 | `@ngrx/effects` | `ScannedActionsSubject`, `createAction`, `ROOT_STORE_PROVIDER`, `FEATURE_STATE_PROVIDER`, `Store` | `Actions` (built on `ScannedActionsSubject`), `Store` | Post-commit `ScannedActionsSubject`. Provide both tokens so that `provideEffects` initialization runs after the store. Effects dispatch through `Store`. |
-| `@ngrx/router-store` | `createAction`, `props`, `isNgrxMockEnvironment`, `select`, `ACTIVE_RUNTIME_CHECKS`, `createFeatureSelector`, `createSelector` | `Store`, `Router`, `RouterStateSerializer`, `ACTIVE_RUNTIME_CHECKS` | `store.pipe(select(featureSelector))` must work with selectors built by the *real* `createFeatureSelector` (foreign selectors, Q8). `routerReducer` is classic (compat bridge). `RouterState.Minimal` is recommended, because the full serializer is not JSON-safe. |
+| `@ngrx/router-store` | `createAction`, `props`, `isNgrxMockEnvironment`, `select`, `ACTIVE_RUNTIME_CHECKS`, `createFeatureSelector`, `createSelector` | `Store`, `Router`, `RouterStateSerializer`, `ACTIVE_RUNTIME_CHECKS` | `store.pipe(select(featureSelector))` must work with selectors built by the *real* `createFeatureSelector` (foreign selectors, Q8). `routerReducer` is classic (compat bridge). A bridged `router` feature defaults to `persist: false` so restarts begin at the launch URL; `sqlite.features.router.persist: true` opts into route restoration (ADR-0030). Custom state keys require explicit configuration. `RouterState.Minimal` is recommended, because the full serializer is not JSON-safe. |
 | `@ngrx/store-devtools` | `ActionsSubject`, `UPDATE`, `INIT`, `INITIAL_STATE`, `StateObservable`, `ReducerManagerDispatcher` | plus `ReducerObservable`, `ScannedActionsSubject` | Verified display-only compatibility (ADR-0022). Guarded scanned subject guarantees exactly-once post-commit effects; compat reducer returns our committed loaded view. |
 | `@ngrx/entity` | `createSelector` | — | Replaced by `/entity`. |
 

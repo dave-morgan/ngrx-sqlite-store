@@ -25,7 +25,7 @@ import { StoreTx } from '../reducer/store-tx';
 import { NodeStore } from '../schema/node-store';
 import { StoragePolicy } from '../schema/policy';
 import { serializedSize } from '../schema/size';
-import { escapeSegment } from '../storage/path';
+import { escapeSegment, splitPath } from '../storage/path';
 import { StorageEngine } from '../storage/storage-engine';
 import {
   COMMITTED_CACHE,
@@ -47,6 +47,8 @@ interface Feature extends RegisteredFeature {
   reducer: ActionReducer<any>;
   nodes: NodeStore;
   seed: unknown;
+  persist: boolean;
+  seeded: boolean;
 }
 
 @Injectable()
@@ -146,6 +148,8 @@ export class SqliteStoreCore {
       typeof feature.reducers === 'function'
         ? feature.reducers
         : (feature.reducerFactory ?? combineReducers)(feature.reducers);
+    const bridge = !isTxReducer(reducer) || !!getTxReducerMetadata(reducer).fallback;
+    const sqlite = { ...this.config.sqlite?.features?.[feature.key], ...feature.sqlite };
     const metas = [...this.metas, ...(feature.metaReducers ?? [])];
     if (isTxReducer(reducer)) {
       if (metas.length && isDevMode() && !this.warnedMeta) {
@@ -159,9 +163,12 @@ export class SqliteStoreCore {
     const registered = {
       ...feature,
       reducer,
+      sqlite,
+      persist: sqlite.persist ?? !(feature.key === 'router' && bridge),
+      seeded: false,
       nodes: new NodeStore(
         new StoragePolicy({
-          hints: (feature.sqlite ?? this.config.sqlite?.features?.[feature.key])?.hints,
+          hints: sqlite.hints,
         }),
       ),
       seed:
@@ -173,6 +180,13 @@ export class SqliteStoreCore {
     return registered;
   }
   private warnedMeta = false;
+  /** Session state is invisible to readers until its registration seed commits. */
+  selectionReady(path: string): boolean {
+    if (path === '')
+      return [...this.features.values()].every((feature) => feature.persist || feature.seeded);
+    const feature = this.features.get(splitPath(path)[0]);
+    return !feature || feature.persist || feature.seeded;
+  }
   /** Internal registry/default snapshot for the read side, including pre-bootstrap roots. */
   selectionFeatures(): Record<string, unknown> {
     const result = Object.fromEntries(
@@ -204,19 +218,21 @@ export class SqliteStoreCore {
           'SELECT value FROM nss_meta WHERE key = ?',
           [key],
         );
-        if (row && row.value === String(version)) continue;
-        if (row && options?.onVersionMismatch !== 'reseed')
+        if (feature.persist && row && row.value === String(version)) continue;
+        if (feature.persist && row && options?.onVersionMismatch !== 'reseed')
           throw new Error(`Feature version mismatch: ${feature.key}`);
         // Some foreign reducers (notably routerReducer) have no state until their first action.
         if (feature.seed !== undefined)
           await feature.nodes.write(tx, escapeSegment(feature.key), feature.seed, tx.changes);
-        else if (row) await feature.nodes.delete(tx, escapeSegment(feature.key), tx.changes);
+        else if (row || !feature.persist)
+          await feature.nodes.delete(tx, escapeSegment(feature.key), tx.changes);
         await tx.run('INSERT OR REPLACE INTO nss_meta (key, value) VALUES (?, ?)', [
           key,
           String(version),
         ]);
       }
     });
+    for (const feature of features) feature.seeded = true;
     await Promise.all(this.hooks.map((hook) => hook(changes)));
   }
   addFeatures(features: RegisteredFeature[]): void {

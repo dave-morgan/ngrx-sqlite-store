@@ -109,6 +109,8 @@ export class SqliteSelectionEngine implements SelectionEngine {
   ): () => void {
     const queries = querySources(selector);
     this.cache.registerQueries(queries);
+    const available = (path: string) =>
+      this.core.selectionReady(queries.find((query) => query.id === path)?.path ?? path);
     const leases = new Map<string, () => void>();
     const loading = new Set<string>();
     let stopped = false;
@@ -125,7 +127,7 @@ export class SqliteSelectionEngine implements SelectionEngine {
         }
       for (const path of required) if (!leases.has(path)) leases.set(path, this.cache.retain(path));
       for (const path of required)
-        if (!this.cache.ready(path) && !loading.has(path)) {
+        if (available(path) && !this.cache.ready(path) && !loading.has(path)) {
           loading.add(path);
           void this.load(path).then(
             () => {
@@ -146,14 +148,22 @@ export class SqliteSelectionEngine implements SelectionEngine {
         let view = this.viewState;
         if (defaults) {
           // Merge only unloaded branches; loaded null/undefined values are authoritative.
-          const filled = this.cache.withDefaults(this.core.selectionFeatures());
+          const initial = this.core.selectionFeatures();
+          const filled = { ...this.cache.withDefaults(initial) };
+          // Cached data from a removed feature must not override a session seed.
+          for (const [key, seed] of Object.entries(initial))
+            if (!this.core.selectionReady(escapeSegment(key)))
+              Object.defineProperty(filled, key, { value: seed, enumerable: true });
           defaultView = share(defaultView, filled);
           view = defaultView as object;
         }
-        if (queries.length) {
+        const queryValues = queries.length
+          ? new Map([...this.cache.queryValues()].filter(([id]) => available(id)))
+          : undefined;
+        if (queryValues) {
           // A new view identity lets NgRx memoization observe query-only generations.
           view = { ...view };
-          queryViews.set(view, this.cache.queryValues());
+          queryViews.set(view, queryValues);
         }
         const required = new Set<string>(
           paths === 'dynamic' ? queries.map((query) => query.id) : paths,
@@ -184,7 +194,7 @@ export class SqliteSelectionEngine implements SelectionEngine {
               return [...keys];
             },
           });
-          if (queries.length) queryViews.set(proxy, this.cache.queryValues());
+          if (queryValues) queryViews.set(proxy, queryValues);
           try {
             result = selector(proxy, props);
             if (result === proxy) {
@@ -197,7 +207,7 @@ export class SqliteSelectionEngine implements SelectionEngine {
           }
         }
         update(required);
-        const ready = [...required].every((path) => this.cache.ready(path));
+        const ready = [...required].every((path) => available(path) && this.cache.ready(path));
         if (!ready && !defaults) return;
         if (didThrow) {
           // A missing feature may make an arbitrary lambda throw on the discovery pass.
@@ -225,6 +235,9 @@ export class SqliteSelectionEngine implements SelectionEngine {
     };
   }
   private load(path: string): Promise<void> {
+    // Refresh after the seed commit starts any deferred loads. Awaiting the seed
+    // here would deadlock the preceding action's post-commit refresh.
+    if (!this.core.selectionReady(path)) return Promise.resolve();
     const operation = this.core.initialize().then(() => this.cache.ensure(path));
     this.loads.add(operation);
     void operation.then(
@@ -238,7 +251,9 @@ export class SqliteSelectionEngine implements SelectionEngine {
     this.registered = new Set(Object.keys(this.core.selectionFeatures()));
     for (const leases of this.wholeSubscribers) this.pinRegistered(leases);
     const pinned = new Set([...this.wholeSubscribers].flatMap((leases) => [...leases.keys()]));
-    await Promise.all([...pinned].map((path) => this.cache.ensure(path)));
+    await Promise.all([...pinned]
+      .filter((path) => this.core.selectionReady(path))
+      .map((path) => this.cache.ensure(path)));
     await this.cache.refresh();
     this.cache.notify();
     // A conditional dynamic selector can discover another feature during refresh.
@@ -246,11 +261,11 @@ export class SqliteSelectionEngine implements SelectionEngine {
     if (this.core.status() === 'ready') while (this.loads.size) await Promise.all([...this.loads]);
   }
   private publishView(): void {
-    const next = this.registered
-      ? Object.fromEntries(
-          Object.entries(this.cache.view).filter(([key]) => this.registered!.has(key)),
-        )
-      : this.cache.view;
+    const next = Object.fromEntries(
+      Object.entries(this.cache.view).filter(([key]) =>
+        (!this.registered || this.registered.has(key)) &&
+        this.core.selectionReady(escapeSegment(key))),
+    );
     const view = share(this.viewState, next) as object;
     if (view !== this.viewState) {
       this.viewState = view;

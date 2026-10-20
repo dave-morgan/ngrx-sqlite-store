@@ -7,6 +7,8 @@ import type { StorageHint } from '../schema/policy';
 import type { ChangeSet } from '../storage/change-set';
 
 export interface SqliteFeatureConfig {
+  /** Reuse state across store opens; defaults to false for a bridged `router` feature. */
+  persist?: boolean;
   hints?: Record<string, StorageHint>;
   version?: number;
   onVersionMismatch?: 'error' | 'reseed';

@@ -12,9 +12,10 @@ import { matchElements, reorderedPositions } from './ordering';
 import { StoragePolicy } from './policy';
 import { initial } from './positions';
 import { RowWriter } from './row-writer';
+import type { EntityRow } from './row-writer';
 import { serializedSize } from './size';
 
-interface Location {
+export interface Location {
   parent: string | null;
   pos: number | null;
 }
@@ -208,9 +209,16 @@ class SubtreeWriter {
     const matched = new Set(matches);
     const oldPositions = meta.elementIds!.map((id) => meta.childPos!.get(id)!);
     const positions = reorderedPositions(matches, oldPositions);
+    const leaves: string[] = [];
     for (let i = 0; i < prev.length; i++) {
-      if (!matched.has(i)) await this.remove(`${path}/${meta.elementIds![i]}`, prev[i], changePath);
+      if (matched.has(i)) continue;
+      const child = `${path}/${meta.elementIds![i]}`;
+      const kind =
+        getNodeMeta(prev[i])?.kind ?? this.policy.decideKind(child, prev[i], depth(child));
+      if (kind <= NodeKind.Json) leaves.push(child);
+      else await this.remove(child, prev[i], changePath);
     }
+    await this.rows.deleteLeaves(leaves, changePath);
     for (let i = 0; i < next.length; i++) {
       const old = matches[i];
       if (old < 0)
@@ -247,13 +255,17 @@ class SubtreeWriter {
       ? nextIds.map((id) => order.positions.get(id)!)
       : reorderedPositions(matches, oldPositions);
     const kept = new Set(nextIds);
+    const removed: string[] = [];
+    const updated: EntityRow[] = [];
     for (let i = 0; i < oldIds.length; i++) {
       if (kept.has(oldIds[i])) continue;
       if (serializedSize(prev.entities[String(prev.ids[i])]) > this.policy.rowCap) {
         await this.rows.deletePrefix(entityValuePath(path, oldIds[i]), changePath ?? path);
       }
-      await this.rows.deleteEntity(path, oldIds[i]);
+      removed.push(oldIds[i]);
     }
+    if (removed.length)
+      await this.rows.deleteEntities(path, nextIds.length === 0 ? undefined : removed);
     for (let i = 0; i < nextIds.length; i++) {
       const id = nextIds[i];
       const data = next.entities[String(next.ids[i])];
@@ -272,8 +284,8 @@ class SubtreeWriter {
           this.insert(entityPath, data, { parent: path, pos: null }, changePath ?? path);
       } else {
         const sortkey = order?.keys.get(id);
-        if (sortkey != null && sortkey !== getEntityOrder(prev)?.keys.get(id))
-          await this.rows.updateEntitySortKey(path, id, sortkey);
+        const keyChanged = sortkey != null && sortkey !== getEntityOrder(prev)?.keys.get(id);
+        let dataUpdated = false;
         const oldData = prev.entities[String(prev.ids[old])];
         if (oldData !== data) {
           const wasOversized = serializedSize(oldData) > this.policy.rowCap;
@@ -289,13 +301,32 @@ class SubtreeWriter {
             if (wasOversized) await this.rows.deletePrefix(entityPath, changePath ?? path);
             if (oversized)
               this.insert(entityPath, data, { parent: path, pos: null }, changePath ?? path);
-            await this.rows.updateEntity(path, id, oversized ? '' : JSON.stringify(data));
+            dataUpdated = true;
+            updated.push({
+              coll: path,
+              id,
+              pos: positions[i],
+              sortkey: sortkey ?? getEntityOrder(prev)?.keys.get(id),
+              data: oversized ? '' : JSON.stringify(data),
+            });
           }
         }
-        if (positions[i] !== oldPositions[old])
-          await this.rows.updateEntityPosition(path, id, positions[i]);
+        if (!dataUpdated) {
+          if (keyChanged) await this.rows.updateEntitySortKey(path, id, sortkey!);
+          if (positions[i] !== oldPositions[old])
+            await this.rows.updateEntityPosition(path, id, positions[i]);
+        }
       }
     }
+    if (updated.length === 1) {
+      const row = updated[0];
+      await this.rows.updateEntity(path, row.id, row.data);
+      const old = oldIndex.get(row.id)!;
+      if (row.sortkey != null && row.sortkey !== getEntityOrder(prev)?.keys.get(row.id))
+        await this.rows.updateEntitySortKey(path, row.id, row.sortkey);
+      if (row.pos !== oldPositions[old])
+        await this.rows.updateEntityPosition(path, row.id, row.pos);
+    } else if (updated.length) await this.rows.writeEntityRows(updated, true);
     await this.diffObject(path, prev, next, meta, true, changePath);
   }
 }
@@ -327,15 +358,21 @@ export async function diffWrite(
   next: unknown,
   changes: ChangeSet,
   policy = new StoragePolicy(),
+  knownLocation?: Location,
 ): Promise<void> {
   if (prev === next) return;
-  if (prev === undefined || !getNodeMeta(prev) || getNodeMeta(prev)!.path !== path) {
+  if (
+    prev === undefined ||
+    (prev !== null &&
+      typeof prev === 'object' &&
+      (!getNodeMeta(prev) || getNodeMeta(prev)!.path !== path))
+  ) {
     await writeSubtree(exec, path, next, changes, policy);
     return;
   }
   policy.decideKind(path, next, depth(path));
   const writer = new SubtreeWriter(new RowWriter(exec, changes, policy.rowCap), policy);
-  await writer.diff(path, prev, next, await location(exec, path));
+  await writer.diff(path, prev, next, knownLocation ?? (await location(exec, path)));
   await writer.rows.flush();
 }
 

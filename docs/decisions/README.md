@@ -34,6 +34,7 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0026](0026-adjacency-readers-and-array-identity.md) | Retain range reads and hidden array ids; object moves rewrite subtree paths (resolves Q3) | Agent / Phase 8 spike | 2026-10-20 | Accepted |
 | [0027](0027-query-selectors.md) | SQL-backed query selectors (count/page/ids/exists, declarative where, createQuerySelector) | Agent | 2026-10-20 | Accepted |
 | [0028](0028-query-filter-and-classic-order-semantics.md) | Two-valued scalar query filters, accessor paths, generic fallback and classic ordering metadata | Agent / Phase 10 | 2026-10-20 | Accepted |
+| [0029](0029-batched-bridge-transport.md) | Batch independent writes, combine subtree transport and reuse fresh transaction metadata | Agent / Phase 11 brief | 2026-10-20 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

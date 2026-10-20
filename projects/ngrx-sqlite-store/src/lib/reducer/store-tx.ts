@@ -1,10 +1,12 @@
 import { isDevMode } from '@angular/core';
+import { NodeKind } from '../schema/kinds';
 import { getNodeMeta } from '../schema/meta';
 import type { NodeStore } from '../schema/node-store';
 import type { ChangeSet } from '../storage/change-set';
 import { escapeSegment, isAncestorOrSelf, parentPath, unescapeSegment } from '../storage/path';
 import type { SqlExecutor } from '../storage/storage-engine';
-import { recordReferences } from '../storage/reference-changes';
+import { recordReferences, recordReplacement } from '../storage/reference-changes';
+import type { NodeRow } from '../schema/row-writer';
 import { EntityTx } from './entity-tx';
 
 export const STORE_TX_BRAND = Symbol.for('ngrx-sqlite-store/StoreTx');
@@ -46,6 +48,7 @@ export class StoreTx<S = unknown> {
   readonly [STORE_TX_BRAND] = true;
   private readonly entityCollections = new Map<string, EntityTx<unknown>>();
   private readonly root: string;
+  private readonly locations = new Map<string, NodeRow>();
   constructor(
     featureKey: string,
     private readonly nodes: NodeStore,
@@ -67,14 +70,25 @@ export class StoreTx<S = unknown> {
     const full = this.fullPath(path);
     let collection = this.entityCollections.get(full);
     if (!collection) {
-      collection = new EntityTx(this.sql, this.nodes, this.changes, full, () => {
-        for (const key of this.cache.keys()) {
-          if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) this.cache.delete(key);
-        }
-        for (const [key, other] of this.entityCollections) {
-          if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) other.invalidate();
-        }
-      });
+      collection = new EntityTx(
+        this.sql,
+        this.nodes,
+        this.changes,
+        full,
+        () => {
+          for (const key of this.locations.keys()) {
+            if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full))
+              this.locations.delete(key);
+          }
+          for (const key of this.cache.keys()) {
+            if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) this.cache.delete(key);
+          }
+          for (const [key, other] of this.entityCollections) {
+            if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) other.invalidate();
+          }
+        },
+        this.changes.overlaps(full) ? undefined : this.committedCache.peek(full),
+      );
       this.entityCollections.set(full, collection);
     }
     return collection as EntityTx<T>;
@@ -105,7 +119,10 @@ export class StoreTx<S = unknown> {
       ancestor = parentPath(ancestor);
     }
     let value = this.changes.overlaps(full) ? undefined : this.committedCache.peek(full);
-    if (value === undefined) value = await this.nodes.read(this.sql, full);
+    if (value === undefined)
+      value = await this.nodes.read(this.sql, full, (rows) => {
+        for (const row of rows) this.locations.set(row.path, row);
+      });
     // Inline JSON children have no separate SQL row. Resolve through their parent.
     if (value === undefined && full !== this.root) {
       const parent = parentPath(path);
@@ -118,7 +135,10 @@ export class StoreTx<S = unknown> {
   }
 
   /** Ancestors are dropped after writes and reloaded on demand; descendants expire. */
-  private invalidate(full: string, value: unknown): void {
+  private invalidate(full: string, value: unknown, cacheValue = true): void {
+    for (const key of this.locations.keys()) {
+      if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) this.locations.delete(key);
+    }
     for (const [key, collection] of this.entityCollections) {
       if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) collection.invalidate();
     }
@@ -126,17 +146,34 @@ export class StoreTx<S = unknown> {
       if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) this.cache.delete(key);
     }
     if (isDevMode()) freeze(value);
-    this.cache.set(full, value);
+    if (cacheValue) this.cache.set(full, value);
   }
 
   async set(path: string, value: unknown): Promise<void> {
     const full = this.fullPath(path);
     const previous = await this.get(path);
     if (previous === value) return;
-    const [row] = await this.sql.query<{ path: string }>(
-      'SELECT path FROM nss_node WHERE path = ?',
-      [full],
+    const parent = parentPath(full);
+    const ownerMeta = getNodeMeta(
+      this.cache.get(parent) ??
+        (this.changes.overlaps(parent) ? undefined : this.committedCache.peek(parent)),
     );
+    const segment = full.slice(full.lastIndexOf('/') + 1);
+    // Parent metadata identifies physical children, including scalar leaves.
+    const physical =
+      ownerMeta && ownerMeta.kind !== NodeKind.Json && ownerMeta.childPos?.has(segment);
+    const row =
+      this.locations.get(full) ??
+      (physical
+        ? { parent, pos: ownerMeta.childPos!.get(segment)! }
+        : path === '' && getNodeMeta(previous)
+          ? { parent: null, pos: null }
+          : (
+              await this.sql.query<{ parent: string | null; pos: number | null }>(
+                'SELECT parent, pos FROM nss_node WHERE path = ?',
+                [full],
+              )
+            )[0]);
     if (!row && path !== '') {
       // New keys and descendants of inline nodes must update their owning container.
       const parent = parentPath(path);
@@ -153,14 +190,11 @@ export class StoreTx<S = unknown> {
       } else await this.set(parent, { ...owner, [unescapeSegment(segment)]: value });
       return;
     }
-    await this.nodes.diffWrite(this.sql, full, previous, value, this.changes);
+    await this.nodes.diffWrite(this.sql, full, previous, value, this.changes, row);
     recordReferences(this.changes, full, previous, value);
-    // Re-read containers to retain generated array ids and current position metadata.
-    // Descendants expire on replacement, so references remain stable until a write.
-    this.invalidate(
-      full,
-      value !== null && typeof value === 'object' ? await this.nodes.read(this.sql, full) : value,
-    );
+    // Reload container metadata only if a later read needs it. This preserves
+    // generated array ids without an unconditional sibling/container round trip.
+    this.invalidate(full, value, value === null || typeof value !== 'object');
   }
 
   async patch(path: string, partial: Record<string, unknown>): Promise<void> {
@@ -236,7 +270,11 @@ export class StoreTx<S = unknown> {
   }
   async resetFeature(): Promise<void> {
     if (this.initialState === undefined) await this.delete('');
-    else await this.set('', this.initialState);
+    else {
+      await this.nodes.write(this.sql, this.root, this.initialState, this.changes);
+      recordReplacement(this.changes, this.root, this.initialState);
+      this.invalidate(this.root, undefined, false);
+    }
   }
   async resetAll(): Promise<void> {
     if (this.resetAllFeatures) await this.resetAllFeatures();

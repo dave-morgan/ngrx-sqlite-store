@@ -181,6 +181,18 @@ export class RowWriter {
     this.changes.add(changePath);
   }
 
+  async deleteLeaves(paths: readonly string[], changePath?: string): Promise<void> {
+    await this.flush();
+    for (let i = 0; i < paths.length; i += 900) {
+      const batch = paths.slice(i, i + 900);
+      await this.exec.run(
+        `DELETE FROM nss_node WHERE path IN (${batch.map(() => '?').join(',')})`,
+        batch,
+      );
+      for (const path of batch) this.changes.add(changePath ?? path);
+    }
+  }
+
   async deleteChunks(path: string, changePath = path): Promise<void> {
     await this.flush();
     await this.exec.run('DELETE FROM nss_chunk WHERE path = ?', [path]);

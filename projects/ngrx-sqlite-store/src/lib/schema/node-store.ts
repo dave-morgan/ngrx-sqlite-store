@@ -1,6 +1,8 @@
 import type { ChangeSet } from '../storage/change-set';
 import type { SqlExecutor } from '../storage/storage-engine';
 import { readSubtree } from './node-reader';
+import type { NodeRow } from './row-writer';
+import type { Location } from './node-writer';
 import { deleteSubtree, diffWrite, writeSubtree } from './node-writer';
 import { StoragePolicy } from './policy';
 
@@ -8,8 +10,12 @@ import { StoragePolicy } from './policy';
 export class NodeStore {
   constructor(readonly policy = new StoragePolicy()) {}
 
-  read(exec: SqlExecutor, path: string): Promise<unknown | undefined> {
-    return readSubtree(exec, path);
+  read(
+    exec: SqlExecutor,
+    path: string,
+    onRows?: (rows: NodeRow[]) => void,
+  ): Promise<unknown | undefined> {
+    return readSubtree(exec, path, onRows);
   }
 
   write(exec: SqlExecutor, path: string, value: unknown, changes: ChangeSet): Promise<void> {
@@ -22,8 +28,9 @@ export class NodeStore {
     prev: unknown,
     next: unknown,
     changes: ChangeSet,
+    location?: Location,
   ): Promise<void> {
-    return diffWrite(exec, path, prev, next, changes, this.policy);
+    return diffWrite(exec, path, prev, next, changes, this.policy, location);
   }
 
   delete(exec: SqlExecutor, path: string, changes: ChangeSet): Promise<void> {

@@ -177,7 +177,7 @@ ${environment}
 
 ${method}
 
-Real NodeStore with promotionThreshold=0 forces every container into pointer rows. Depth is the maximum edge distance from feature root to scalar. A spine ends in 10–10,000 scalar children: depth and breadth vary independently without exponential fixture growth. Rows = depth + breadth. Both readers use the production SQL and assembler; each performs node/entity/chunk queries. SQL time is measured at the executor boundary. JS reassembly is measured separately by replaying all three captured query results through the unchanged reader; this includes metadata attachment and async overhead but no database queries. SQL and replay medians need not sum to the independently measured total. No library exports or copies of the assembler were needed.
+Real NodeStore with promotionThreshold=0 forces every container into pointer rows. Depth is the maximum edge distance from feature root to scalar. A spine ends in 10–10,000 scalar children: depth and breadth vary independently without exponential fixture growth. Rows = depth + breadth. Both readers use the production SQL and assembler; the range reader combines node/entity/chunk rows in one UNION query, while the CTE reader only queries auxiliary tables when their kinds are present. SQL time is measured at the executor boundary. JS reassembly is measured separately by replaying the captured query results through the production reader; this includes metadata attachment and async overhead but no database queries. SQL and replay medians need not sum to the independently measured total. No library exports or copies of the assembler were needed.
 
 | Depth | Breadth | Rows | Reader | Total ms | SQL ms | JS replay ms | SQL statements |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -198,7 +198,7 @@ Rename the object property old → renamed at the feature root while retaining t
 ${moves.join('\n')}
 
 ## Conclusions
-Keep the range reader as the default and the CTE reader as a verification alternative. Both perform three statements and round-trip deep structures; compare the measured SQL and replay columns rather than attributing all latency to SQLite. The CTE traverses the parent index per level whereas range reads exploit the contiguous path prefix. This is evidence for the existing model, not Android latency or heap targets.
+Keep the range reader as the default and the CTE reader as a verification alternative. Both use one statement for these node-only fixtures and round-trip deep structures; compare the measured SQL and replay columns rather than attributing all latency to SQLite. The CTE traverses the parent index per level whereas range reads exploit the contiguous path prefix. This is evidence for the existing model, not Android latency or heap targets.
 
 Object renames/cross-parent moves cost O(subtree rows): pointer rows do not make paths independent of their ancestors. By contrast, the 100k-node array swaps change only position rows while all descendant paths stay stable. Keep hidden array ids and fractional positions (ADR-0006). Do not replace them with array indices. A global opaque node-id schema could make object moves cheaper but requires a migration and sacrifices simple prefix reads; defer until actual move-heavy workloads justify it. ADR-0026 resolves Q3 for Node/sql.js. No library change is justified.
 `,

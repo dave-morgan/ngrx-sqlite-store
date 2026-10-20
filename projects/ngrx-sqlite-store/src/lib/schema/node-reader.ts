@@ -38,21 +38,13 @@ function freeze(value: unknown): void {
   Object.freeze(value);
 }
 
-async function assemble(
-  exec: Pick<SqlExecutor, 'query'>,
+function assemble(
   path: string,
   rows: NodeRow[],
-): Promise<unknown | undefined> {
+  entities: EntityRow[],
+  chunks: { path: string; seq: number; data: string }[],
+): unknown | undefined {
   if (!rows.some((row) => row.path === path)) return undefined;
-  const [lower, upper] = subtreeRange(path);
-  const entities = await exec.query<EntityRow>(
-    'SELECT coll, id, pos, data, sortkey FROM nss_entity WHERE (coll >= ? AND coll < ?) OR coll = ? ORDER BY coll, sortkey, pos',
-    [lower, upper, path],
-  );
-  const chunks = await exec.query<{ path: string; seq: number; data: string }>(
-    'SELECT path, seq, data FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?) ORDER BY path, seq',
-    [path, lower, upper],
-  );
   const chunkData = new Map<string, string[]>();
   for (const chunk of chunks) {
     const parts = chunkData.get(chunk.path) ?? [];
@@ -137,13 +129,36 @@ async function assemble(
 export async function readSubtree(
   exec: Pick<SqlExecutor, 'query'>,
   path: string,
+  onRows?: (rows: NodeRow[]) => void,
 ): Promise<unknown | undefined> {
   const [lower, upper] = subtreeRange(path);
-  const rows = await exec.query<NodeRow>(
-    'SELECT path, parent, kind, pos, value FROM nss_node WHERE path = ? OR (path >= ? AND path < ?) ORDER BY parent, pos',
-    [path, lower, upper],
+  // Flat UNION rows avoid both extra bridge calls and a giant JSON aggregate.
+  const transport = await exec.query<
+    | (NodeRow & { source: 0 })
+    | (EntityRow & { source: 1 })
+    | { path: string; seq: number; data: string; source: 2 }
+  >(
+    `SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (
+      SELECT path, parent, kind, pos, value, 0 AS source,
+        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq
+      FROM nss_node WHERE path = ? OR (path >= ? AND path < ?)
+      UNION ALL
+      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL
+      FROM nss_entity WHERE coll = ? OR (coll >= ? AND coll < ?)
+      UNION ALL
+      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq
+      FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?)
+    ) ORDER BY source, parent, sortkey, pos, seq`,
+    [path, lower, upper, path, lower, upper, path, lower, upper],
   );
-  return assemble(exec, path, rows);
+  const nodes = transport.filter((row) => row.source === 0);
+  onRows?.(nodes);
+  return assemble(
+    path,
+    nodes,
+    transport.filter((row) => row.source === 1),
+    transport.filter((row) => row.source === 2),
+  );
 }
 
 export async function readSubtreeCte(
@@ -160,5 +175,17 @@ export async function readSubtreeCte(
     ) SELECT * FROM subtree ORDER BY parent, pos`,
     [path],
   );
-  return assemble(exec, path, rows);
+  const entities = rows.some((row) => row.kind === NodeKind.Entity)
+    ? await exec.query<EntityRow>(
+        'SELECT coll,id,pos,data,sortkey FROM nss_entity WHERE coll = ? OR (coll >= ? AND coll < ?) ORDER BY coll,sortkey,pos',
+        [path, ...subtreeRange(path)],
+      )
+    : [];
+  const chunks = rows.some((row) => row.kind === NodeKind.Chunked)
+    ? await exec.query<{ path: string; seq: number; data: string }>(
+        'SELECT path,seq,data FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?) ORDER BY path,seq',
+        [path, ...subtreeRange(path)],
+      )
+    : [];
+  return assemble(path, rows, entities, chunks);
 }

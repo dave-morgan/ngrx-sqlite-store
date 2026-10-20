@@ -333,3 +333,7 @@ Two build configurations, `classic` and `sqlite`, swap the implementation behind
 - **Contract tests.** Real `@ngrx/effects`, `@ngrx/router-store`, and `@ngrx/store-devtools` run against both implementations.
 - **E2E.** The harness runs in the browser (jeep-sqlite or sql.js driver) and on an Android emulator or device (Capacitor).
 - **Benchmarks (Phase 9, Q14).** These measure Android RAM and dispatch→emit latency, comparing classic against sqlite.
+
+### Phase 11: bridge statement budgets (ADR-0029)
+
+Subtree range reads transport node, entity and chunk rows in one flat ordered UNION query; the CTE comparison reader retains its traversal. RowWriter batches removed array leaves, deleted entity IDs and independent changed entity rows within 999 bind parameters, retaining minimal single-row UPDATEs and UTF-8 row caps. Explicit feature reset replaces the prefix without materializing previous state; ordinary set remains a diff. Prefix reset records replacement identity hints without reading the old subtree. Transaction reads retain physical locations, containers reload lazily after writes, and targeted entity operations can reuse fresh committed collection metadata. Invalidations cover overlapping identities and cached locations. Acceptance budgets include BEGIN/COMMIT, internal sql.js queries and active whole-store refresh; the same workload generates `spikes/bridge-cost.md`.

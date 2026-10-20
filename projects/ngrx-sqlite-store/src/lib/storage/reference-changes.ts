@@ -7,6 +7,23 @@ export function referenceChanges(changes: ChangeSet): ReadonlySet<string> {
   return references.get(changes) ?? new Set<string>();
 }
 
+/** A prefix replacement needs identity hints without loading its old subtree. */
+export function recordReplacement(changes: ChangeSet, path: string, next: unknown): void {
+  if (!next || typeof next !== 'object') return;
+  let paths = references.get(changes);
+  if (!paths) {
+    paths = new Set();
+    references.set(changes, paths);
+  }
+  paths.add(path);
+  // Match recordReferences: arrays replace their container; stable physical IDs
+  // determine which elements can be shared during the subsequent refresh.
+  if (!Array.isArray(next)) {
+    for (const [key, value] of Object.entries(next))
+      recordReplacement(changes, `${path}/${escapeSegment(key)}`, value);
+  }
+}
+
 /** ADR-0021: identity is observable even when an immutable replacement writes no rows. */
 export function recordReferences(
   changes: ChangeSet,

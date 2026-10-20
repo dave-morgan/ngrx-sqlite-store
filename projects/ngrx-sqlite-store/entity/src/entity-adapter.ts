@@ -82,6 +82,24 @@ export function createEntityAdapter<T, IdType = string | number>(
 
     async function updateMany(updates: Update<T>[]): Promise<void> {
       if (!updates.length) return;
+      // Independent same-ID updates can share one capped multi-row write.
+      // Duplicate updates and renames retain the sequential collision path below.
+      if (
+        !comparer &&
+        updates.length > 1 &&
+        new Set(updates.map((u) => u.id)).size === updates.length
+      ) {
+        const originals = await collection.getMany(updates.map((u) => u.id));
+        const models = updates.flatMap((update, i) =>
+          originals[i] === undefined
+            ? []
+            : [{ id: update.id, entity: { ...originals[i], ...update.changes } }],
+        );
+        if (models.every((model) => selectId(model.entity) === model.id)) {
+          await collection.upsert(models);
+          return;
+        }
+      }
       // Unsorted NgRx filters against the state before any update in the batch.
       // A newly renamed ID must not make an initially missing update eligible.
       const initial = comparer ? undefined : await collection.getMany(updates.map(({ id }) => id));

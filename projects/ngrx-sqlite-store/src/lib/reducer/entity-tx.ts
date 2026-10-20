@@ -1,4 +1,8 @@
 import { isDevMode } from '@angular/core';
+import { getEntityOrder } from '../schema/entity-order';
+import { getNodeMeta } from '../schema/meta';
+import { NodeKind } from '../schema/kinds';
+import type { EntityValue } from '../schema/entity-brand';
 import { decodeEntityId, encodeEntityId } from '../schema/ids';
 import { entityValuePath } from '../schema/node-reader';
 import type { NodeStore } from '../schema/node-store';
@@ -33,18 +37,23 @@ export class EntityTx<T> {
   private sortKey?: (entity: T) => string | number;
   private readonly cached = new Map<string, EntityRow | undefined>();
   private readonly writer: RowWriter;
+  private snapshot?: EntityValue;
   constructor(
     private readonly sql: SqlExecutor,
     private readonly nodes: NodeStore,
     private readonly changes: ChangeSet,
     private readonly coll: string,
     private readonly onWrite: () => void,
+    snapshot?: unknown,
   ) {
     this.writer = new RowWriter(sql, changes, nodes.policy.rowCap);
+    if (getNodeMeta(snapshot)?.kind === NodeKind.Entity && getEntityOrder(snapshot as EntityValue))
+      this.snapshot = snapshot as EntityValue;
   }
 
   invalidate(): void {
     this.cached.clear();
+    this.snapshot = undefined;
   }
   async prepareSortKey(sortKey: (entity: T) => string | number): Promise<void> {
     if (this.sortKey === sortKey) return;
@@ -81,6 +90,22 @@ export class EntityTx<T> {
   }
   private async row(id: EntityId): Promise<EntityRow | undefined> {
     const encoded = encodeEntityId(id);
+    if (!this.cached.has(encoded) && this.snapshot) {
+      const order = getEntityOrder(this.snapshot)!;
+      const pos = order.positions.get(encoded);
+      this.cached.set(
+        encoded,
+        pos === undefined
+          ? undefined
+          : {
+              coll: this.coll,
+              id: encoded,
+              pos,
+              sortkey: order.keys.get(encoded),
+              data: this.data(id, this.snapshot.entities[String(id)] as T),
+            },
+      );
+    }
     if (!this.cached.has(encoded)) {
       const [row] = await this.sql.query<EntityRow>(
         'SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? AND id = ?',
@@ -106,21 +131,21 @@ export class EntityTx<T> {
     return (await this.row(id))?.pos;
   }
   async getMany(ids: readonly EntityId[]): Promise<(T | undefined)[]> {
-    const rows: EntityRow[] = [];
-    for (let index = 0; index < ids.length; index += 998) {
-      const batch = ids.slice(index, index + 998).map(encodeEntityId);
-      rows.push(
-        ...(await this.sql.query<EntityRow>(
-          `SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? AND id IN (${batch.map(() => '?').join(',')})`,
-          [this.coll, ...batch],
-        )),
+    const missing = [...new Set(ids)].filter(
+      (id) => !this.cached.has(encodeEntityId(id)) && !this.snapshot,
+    );
+    for (let index = 0; index < missing.length; index += 998) {
+      const batch = missing.slice(index, index + 998).map(encodeEntityId);
+      const rows = await this.sql.query<EntityRow>(
+        `SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? AND id IN (${batch.map(() => '?').join(',')})`,
+        [this.coll, ...batch],
       );
+      for (const id of batch) this.cached.set(id, undefined);
+      for (const row of rows) this.cached.set(row.id, row);
     }
-    for (const id of ids) this.cached.set(encodeEntityId(id), undefined);
-    for (const row of rows) this.cached.set(row.id, row);
     const result: (T | undefined)[] = [];
     for (const id of ids) {
-      const row = this.cached.get(encodeEntityId(id));
+      const row = await this.row(id);
       result.push(row ? await this.value(row) : undefined);
     }
     return result;
@@ -157,6 +182,12 @@ export class EntityTx<T> {
     return result;
   }
   private async lastPosition(): Promise<number> {
+    if (this.snapshot) {
+      let last: number | undefined;
+      for (const pos of getEntityOrder(this.snapshot)!.positions.values())
+        last = last === undefined ? pos : Math.max(last, pos);
+      return last ?? 0;
+    }
     const [row] = await this.sql.query<{ pos: number }>(
       'SELECT pos FROM nss_entity WHERE coll = ? ORDER BY pos DESC LIMIT 1',
       [this.coll],

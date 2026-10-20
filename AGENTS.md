@@ -15,7 +15,7 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 
 ## Progress
 - [x] Phase 1 docs
-- [ ] Phase 2 storage core (driver abstraction, serial write queue, tx, post-commit notifications)
+- [x] Phase 2 storage core (driver abstraction, serial write queue, tx, post-commit notifications)
 - [ ] Phase 3 schema engine
 - [ ] Phase 4 store contract
 - [ ] Phase 5 selectors
@@ -29,4 +29,10 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - On-disk schema v1 approval (architecture §4.1).
 
 ## Next steps
-- Phase 2 implementation.
+- Phase 3 schema engine, after on-disk schema approval.
+
+## Storage core notes
+- Tests load sql.js through Node's native createRequire and resolve its WASM from node_modules; no copied WASM or test helper is needed.
+- Capacitor 8 query has no transaction flag; run/execute pass false, and web commits call saveToStore (apps set up jeep-sqlite).
+- Reads, writes, open and close share a FIFO queue; use the supplied executor inside callbacks to avoid nested queue waits.
+- Internal migration v1 creates only nss_meta. Post-commit callback failures reject after commit and cannot undo persisted data.

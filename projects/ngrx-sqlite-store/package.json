@@ -2,10 +2,26 @@
   "name": "ngrx-sqlite-store",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^22.2.0",
-    "@angular/core": "^22.2.0"
+    "@angular/core": "^22",
+    "@ngrx/store": "^22",
+    "rxjs": "^7.5",
+    "@capacitor-community/sqlite": "^8",
+    "@capacitor/core": "^8",
+    "sql.js": "^1.15"
+  },
+  "peerDependenciesMeta": {
+    "@capacitor-community/sqlite": {
+      "optional": true
+    },
+    "@capacitor/core": {
+      "optional": true
+    },
+    "sql.js": {
+      "optional": true
+    }
   },
   "dependencies": {
+    "@types/sql.js": "^1.4.11",
     "tslib": "^2.3.0"
   },
   "sideEffects": false

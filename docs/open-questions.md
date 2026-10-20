@@ -35,11 +35,8 @@ Devtools, router-store, and some meta-reducers expect one full state object.
 - Current: `select()` emits nothing until loaded. `selectSignal()` computes from `initialState` defaults until loaded. An app initializer opens and seeds the DB before bootstrap and preloads `eager` features. Released sources stay in a small LRU (default 32 entries), so re-subscribing emits immediately while a refresh runs.
 - Resolves when: harness UX on device is acceptable, with no flash-of-default for eager features.
 
-### Q6. Reducer API shape. Status: **Needs approval (public API)**
-- Options: (a) imperative `tx` (`tx.set(path, v)`, adapter ops); (b) return a new partial state that is diffed (ADR-0009); (c) both.
-- Constraint: values read from SQLite are fresh objects, so (b) requires reads through a per-transaction identity cache. That is planned regardless.
-- Open sub-question: how `on()` distinguishes `(tx, action)` from classic `(state, action)` reducers. Same arity, and async detection is unreliable after transpilation. Candidates: separate helpers (`on` vs `onTx`), a marker wrapper (`tx(async (tx, a) => ...)`), or reducer-level opt-in (`createTxReducer`).
-- Proposed `tx` API: see architecture §3.2.
+### Q6. Reducer API shape. Status: **Resolved → ADR-0013, ADR-0014**
+`on()` handlers are tx reducers, and `onState()` / `fromSyncReducer()` cover classic ones. Handlers can write imperatively and/or return a partial that gets diffed. Reads go through the identity cache. The detailed `tx` method list is in architecture §3.2.
 
 ### Q7. Mixed mode. Status: **Provisional**
 Can small UI slices stay fully in memory with classic sync reducers?

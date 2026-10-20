@@ -44,11 +44,18 @@ interface SqlDriver {
 type SqlValue = string | number | null | Uint8Array;
 ```
 
-- **CapacitorSqliteDriver** wraps `SQLiteConnection` / `SQLiteDBConnection` from `@capacitor-community/sqlite`. It always passes `transaction: false` to `run`/`query`, because the store owns transaction boundaries through `beginTransaction`/`commitTransaction`. On web it relies on `jeep-sqlite` and calls `initWebStore()` first.
+- **CapacitorSqliteDriver** wraps `SQLiteConnection` / `SQLiteDBConnection` from `@capacitor-community/sqlite`. It always passes `transaction: false` to `run`/`execute`, because the store owns transaction boundaries through `BEGIN IMMEDIATE`/`COMMIT`/`ROLLBACK`. Plugin 8.x `query` has no transaction parameter; its third argument is `isSQL92`, so queries use the default signature. On web the app sets up `jeep-sqlite`; the driver calls `initWebStore()` before opening and `saveToStore()` after commit.
 - **SqlJsDriver** uses `sql.js` (WASM). It needs no native build, so it runs in Vitest under Node/jsdom and in the browser. It is the default for unit tests (ADR-0012).
+- Under Node 22.12+ the sql.js driver uses `process.getBuiltinModule('module').createRequire()` to load the native Node package entry and resolve `sql.js/dist/sql-wasm.wasm` from `node_modules`. This bypasses the Angular test builder's browser-conditioned bundle in jsdom; no test helper or copied WASM asset is required. Browser apps supply `locateFile` and serve the WASM asset, or inject an initialized module factory with `sqlJs`.
 - Every value crossing the Capacitor bridge is JSON-serialized. That makes the bridge cost proportional to bytes moved, which is another reason to keep rows small (D8).
+- Driver runtimes load lazily so importing the package does not require unused optional peers. The published package includes `@types/sql.js` because the sql.js factory option exposes its module type.
+- A web `saveToStore()` failure after SQLite commits leaves IndexedDB durability uncertain. The commit promise rejects, no changes are emitted, and a failed rollback places the engine in `error`; callers must close and recover rather than retry the write blindly.
 
 ## 3. Write side
+
+Phase 2 implements `StorageEngine` with one FIFO queue shared by lifecycle operations, transactions, and reads. Reads are queued because a single SQLite connection can see its own uncommitted writes. Inside a transaction or queued callback, use its supplied executor; awaiting another queued engine operation from there would deadlock. Non-empty change sets emit after commit, followed by awaited `afterCommit` callbacks, before the transaction promise resolves. Callback failures reject the promise without rolling back committed data.
+
+Internal migrations run atomically at open, ordered by version, with `schema_version` in `nss_meta`. Built-in migration v1 creates only `nss_meta`; additional migrations extend v1 with unique positive integer versions. Failed opens roll back and close the connection, exposing `error` status. Node/entity/chunk tables remain deferred to phase 3 and still require schema approval.
 
 ### 3.1 Dispatch pipeline
 
@@ -76,7 +83,7 @@ Guarantees (ADR-0003):
 
 `store.dispatch` stays synchronous and returns `void`, the same as NgRx. Callers that need completion can use an opt-in `store.dispatchAsync(action): Promise<void>` extension. The harness uses it for e2e determinism.
 
-### 3.2 Reducers and the `tx` handle (provisional, Q6)
+### 3.2 Reducers and the `tx` handle (ADR-0013, ADR-0014)
 
 ```ts
 export const todosReducer = createReducer(
@@ -98,14 +105,14 @@ The `tx` handle is scoped to one feature. Paths are relative to the feature key.
 
 | Method | Semantics |
 | --- | --- |
-| `get<T>(path?)` | Read a subtree. Goes through the transaction's **identity cache**, so repeated reads return the same reference and diffing works (Q6). `get()` with no path returns the whole slice, which is expensive and should be avoided in hot paths. |
+| `get<T>(path?)` | Read a subtree. Goes through the transaction's **identity cache**, so repeated reads return the same reference and diffing works (ADR-0014). `get()` with no path returns the whole slice, which is expensive and should be avoided in hot paths. |
 | `set(path, value)` | Replace the subtree at `path`. Structurally diffed against the identity-cached previous value. Only changed paths are written. |
 | `patch(path, partial)` | Shallow merge into an object node. |
 | `delete(path)` | Remove a subtree (prefix delete). |
 | `insert(arrayPath, value, index?)` / `move` / `removeAt` | Array element ops using fractional positions (D6). |
 | `sql` | Escape hatch: raw `run`/`query` on the open transaction, for advanced users. |
 
-**Classic sync reducers (compat bridge).** `(state, action) => state` reducers, such as `routerReducer` from `@ngrx/router-store`, third-party reducers, or not-yet-migrated user reducers, are wrapped by `fromSyncReducer()`. The wrapper loads the slice with `tx.get()`, runs the reducer, and `tx.set('', next)` diffs the result. That costs memory proportional to the slice, so it is meant for small slices. See Q7. How `on()` tells the two forms apart is part of Q6.
+**Classic sync reducers (compat bridge).** `(state, action) => state` reducers, such as `routerReducer` from `@ngrx/router-store`, third-party reducers, or not-yet-migrated user reducers, are wrapped by `fromSyncReducer()`. The wrapper loads the slice with `tx.get()`, runs the reducer, and `tx.set('', next)` diffs the result. That costs memory proportional to the slice, so it is meant for small slices. See Q7. `on()` is always a tx handler. Classic handlers use `onState()`, and unbranded foreign reducers are auto-wrapped (ADR-0013). A tx handler may also resolve to a partial state that gets diffed (ADR-0014).
 
 ### 3.3 Diffing (D9)
 
@@ -119,7 +126,7 @@ The `tx` handle is scoped to one feature. Paths are relative to the feature key.
 
 ## 4. Schema engine (D4–D8)
 
-### 4.1 On-disk schema v1 (provisional; hard to reverse, needs approval)
+### 4.1 On-disk schema v1 (ADR-0015)
 
 ```sql
 CREATE TABLE nss_meta   (key TEXT PRIMARY KEY, value TEXT NOT NULL);

@@ -11,11 +11,11 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - Docs first: update `docs/` when design changes; resolved open question → new ADR in `docs/decisions/`.
 - Implementations bind to ORIGINAL `@ngrx/store` DI tokens (ADR-0010). `@ngrx/store` is a peer dep.
 - All row writes through `RowWriter` (1 MB UTF-8 cap, ADR-0008).
-- Hard-to-reverse (public API shape, on-disk schema): ask user.
+- Agent has authority to decide (incl. API/schema) — log every decision in `docs/decisions/README.md` (register) + ADR. Only hard rule: stay compatible with other NgRx libs (effects, router-store, devtools, Store consumers). Exception: `@ngrx/entity` is folded in and may diverge.
 
 ## Progress
 - [x] Phase 1 docs
-- [ ] Phase 2 storage core (driver abstraction, serial write queue, tx, post-commit notifications)
+- [x] Phase 2 storage core (driver abstraction, serial write queue, tx, post-commit notifications)
 - [ ] Phase 3 schema engine
 - [ ] Phase 4 store contract
 - [ ] Phase 5 selectors
@@ -25,8 +25,15 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - [ ] Phase 9 Android benchmarks
 
 ## Blocking / awaiting user
-- Q6 reducer API shape (`on` tx vs classic detection).
-- On-disk schema v1 approval (architecture §4.1).
+- None. Q6 → ADR-0013/0014; schema v1 → ADR-0015.
 
 ## Next steps
-- Phase 2 implementation.
+- Phase 3 schema engine, after on-disk schema approval.
+
+## Storage core notes
+- Tests load sql.js through Node's native createRequire and resolve its WASM from node_modules; no copied WASM or test helper is needed.
+- Capacitor 8 query has no transaction flag; run/execute pass false, and web commits call saveToStore (apps set up jeep-sqlite).
+- Reads, writes, open and close share a FIFO queue; use the supplied executor inside callbacks to avoid nested queue waits.
+- DEADLOCK RULE: `changes$` emits and `afterCommit` runs INSIDE the queue task. Never await `engine.read/transaction` there; phase 4 must trigger selector re-queries + ScannedActions emission outside the task (after `transaction()` resolves).
+- Extra migrations via `STORAGE_ENGINE_OPTIONS` token or constructor `{ migrations }`.
+- Internal migration v1 creates only nss_meta. Post-commit callback failures reject after commit and cannot undo persisted data.

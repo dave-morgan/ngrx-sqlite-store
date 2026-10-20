@@ -21,6 +21,8 @@ The hard rule (stay compatible with the NgRx libraries) requires that adding dev
    - `provideStore` provides `ScannedActionsSubject` as `NssScannedActionsSubject extends ScannedActionsSubject`.
    - Its public `next()` is a **no-op**. A dev-mode debug log notes when a foreign caller such as devtools tries to emit.
    - The core emits through an internal symbol method, `[NSS_EMIT](action)`, which calls `super.next`.
+     Lifecycle actions use a captured subscriber audience to preserve bootstrap
+     ordering (ADR-0023); ordinary application actions use `super.next`.
    - Effects therefore see each action exactly once, post-commit, with or without devtools.
 2. **Display-only state.**
    - The reducer that `ReducerManager` emits (the "compat reducer") ignores its arguments when called synchronously. It returns the **current committed view state**: the loaded paths as of the latest finished refresh.
@@ -28,6 +30,10 @@ The hard rule (stay compatible with the NgRx libraries) requires that adding dev
 3. **Our services never inject `StateObservable`.**
    - Our `Store`, the core, and the selection engine reference our `State` class directly. Devtools overriding `StateObservable` therefore cannot affect app state.
    - Third-party code that injects `StateObservable` sees devtools' display state. This is identical to NgRx: with devtools installed, NgRx also routes `StateObservable` through devtools.
+   - The root provider resolves `StateObservable` once for initialization only,
+     after constructing our services. This activates NgRx's lazy devtools provider
+     without using its display state as an application data source. Browser and
+     unit tests verify activation without manually injecting `StoreDevtools`.
 4. **Unsupported features.**
    - Time travel, jump, skip, commit, import, and "dispatch from monitor" do not alter the SQLite store.
    - Lifted actions arriving through `ReducerManagerDispatcher` from the extension are ignored by the core.
@@ -37,3 +43,6 @@ The hard rule (stay compatible with the NgRx libraries) requires that adding dev
 - Adding or removing devtools never changes app behaviour, which is verified by phase 7 tests.
 - The devtools timeline is debug-grade and may lag by one action. This is acceptable because devtools is a dev-only tool.
 - A future option is a dedicated monitor that reads `nss_*` tables directly.
+- `createFeature` uses transaction reducer metadata to discover initial fields,
+  including when delegating selector generation to NgRx. It retains the original
+  reducer on the returned feature and never runs it synchronously during setup.

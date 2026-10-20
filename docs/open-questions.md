@@ -21,13 +21,13 @@ When does nested data move from a JSON column to child rows (beyond the hard 1 M
 Validate adjacency list + recursive CTE: read/write performance at depth, reassembly cost, how pointer rows interact with path-as-ID, and whether arrays-in-objects-in-arrays round-trip.
 - Resolves when: a benchmark plus round-trip property tests are in `projects/ngrx-sqlite-store/spikes/`.
 
-### Q4. `StateObservable` and whole-state consumers. Status: **Provisional (decide per consumer)**
+### Q4. `StateObservable` and whole-state consumers. Status: **Resolved → ADR-0022**
 Devtools, router-store, and some meta-reducers expect one full state object.
 - Options: a lazy proxy that loads on access; a degraded/partial mode; an explicit debug-only "materialize full state".
 - Findings (NgRx 22.0.1):
   - **router-store** only `select`s its own `router` slice and dispatches. It works through ordinary selectors, with the `router` slice handled by a classic reducer through the compat bridge.
   - **store-devtools** injects `ActionsSubject`, `ReducerObservable`, `ReducerManagerDispatcher`, `ScannedActionsSubject`, and `INITIAL_STATE`, recomputes state *in memory* by running the combined reducer, and **overrides `StateObservable`**. That is fundamentally at odds with async `tx` reducers.
-- Current: `StateObservable` emits a lazy view, containing only loaded features, plus `materialize()`. For devtools, the plan is a debug-only mode where `ReducerObservable` emits a sync reducer that returns post-commit materialized snapshots, so the devtools timeline is display-only. Time travel and jump are unsupported. To be confirmed in phase 7.
+- Verified in phase 7: whole-store subscriptions pin registered features; services read our State directly. Devtools overrides StateObservable for display only, receives the current committed loaded view through the compat reducer, and cannot inject pre-commit or duplicate scanned actions. Monitor control actions never enter the application queue. Time travel and monitor dispatch do not change SQLite state. See [ADR-0022](decisions/0022-devtools-compat.md) and [ADR-0023](decisions/0023-async-ecosystem-ordering.md) for router preactivation transport ordering.
 
 ### Q5. Selector loading semantics. Status: **Provisional**
 - Options: emit nothing until loaded; emit `initialState` defaults; serve the last value from an LRU.

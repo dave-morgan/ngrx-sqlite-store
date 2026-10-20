@@ -27,6 +27,7 @@ import { STORAGE_ENGINE_OPTIONS, StorageEngine } from '../storage/storage-engine
 import { SqliteStoreCore, resolveInitial } from './core';
 import { ReducerManager } from './reducer-manager';
 import { State } from './state';
+import { NssScannedActionsSubject } from './scanned-actions-subject';
 import { Store } from './store';
 import {
   COMMITTED_CACHE,
@@ -99,7 +100,8 @@ function rootProviders<T, A extends Action>(
     State,
     ReducerManager,
     ngrx.ActionsSubject,
-    ngrx.ScannedActionsSubject,
+    NssScannedActionsSubject,
+    { provide: ngrx.ScannedActionsSubject, useExisting: NssScannedActionsSubject },
     { provide: ngrx.ReducerManagerDispatcher, useExisting: ngrx.ActionsSubject },
     { provide: ngrx.Store, useExisting: Store },
     { provide: ngrx.ReducerManager, useExisting: ReducerManager },
@@ -133,6 +135,9 @@ function rootProviders<T, A extends Action>(
         inject(SqliteStoreCore);
         inject(Store);
         inject(ReducerManager);
+        // NgRx devtools is activated lazily by its StateObservable provider.
+        // Resolve it for initialization only; our services read State directly.
+        inject(ngrx.StateObservable);
         if (config.runtimeChecks?.strictActionTypeUniqueness) checkActionTypes();
       },
     },
@@ -207,9 +212,17 @@ export function provideState<T, A extends Action = Action>(
 }
 
 @NgModule({ providers: [{ provide: ngrx.StoreRootModule, useExisting: StoreRootModule }] })
-export class StoreRootModule {}
+export class StoreRootModule {
+  constructor() {
+    inject(ngrx.ROOT_STORE_PROVIDER);
+  }
+}
 @NgModule({ providers: [{ provide: ngrx.StoreFeatureModule, useExisting: StoreFeatureModule }] })
-export class StoreFeatureModule {}
+export class StoreFeatureModule {
+  constructor() {
+    inject(ngrx.FEATURE_STATE_PROVIDER);
+  }
+}
 @NgModule({})
 export class StoreModule {
   static forRoot<T = object, A extends Action = Action>(

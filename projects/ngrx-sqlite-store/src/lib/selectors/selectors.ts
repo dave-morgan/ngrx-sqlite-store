@@ -1,5 +1,6 @@
 import * as ngrx from '@ngrx/store';
 import type { Observable } from 'rxjs';
+import { getTxReducerMetadata, isTxReducer } from '../reducer/reducer';
 import { escapeSegment } from '../storage/path';
 import { derived, SELECT_OPERATOR, source } from './metadata';
 
@@ -26,14 +27,17 @@ export const createFeatureSelector: typeof ngrx.createFeatureSelector = ((name: 
   )) as typeof ngrx.createFeatureSelector;
 
 export const createFeature: typeof ngrx.createFeature = ((config: any) => {
+  const initial = isTxReducer(config.reducer)
+    ? getTxReducerMetadata(config.reducer).initialState
+    : config.reducer(undefined, { type: '@ngrx/feature/init' });
   // NgRx calls this callback after constructing base selectors and before extras.
   // Decorating here lets our createSelector see precise dependencies in extras.
-  return ngrx.createFeature({
+  const feature = ngrx.createFeature({
     ...config,
+    reducer: isTxReducer(config.reducer) ? () => initial : config.reducer,
     extraSelectors: (base: Record<string, object>) => {
       const root = `select${capitalize(config.name)}State`;
       source(base[root], escapeSegment(config.name));
-      const initial = config.reducer(undefined, { type: '@ngrx/feature/init' });
       if (initial && typeof initial === 'object' && !Array.isArray(initial)) {
         for (const key of Object.keys(initial)) {
           const selector = base[`select${capitalize(key)}`];
@@ -43,6 +47,7 @@ export const createFeature: typeof ngrx.createFeature = ((config: any) => {
       return config.extraSelectors?.(base) ?? {};
     },
   });
+  return { ...feature, reducer: config.reducer };
 }) as typeof ngrx.createFeature;
 
 function capitalize(value: string): string {

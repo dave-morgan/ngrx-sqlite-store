@@ -1,24 +1,19 @@
 import { Injectable, inject } from '@angular/core';
-import { INITIAL_REDUCERS, INITIAL_STATE, REDUCER_FACTORY, combineReducers } from '@ngrx/store';
-import type { ActionReducer, ActionReducerFactory } from '@ngrx/store';
+import { INITIAL_REDUCERS, combineReducers } from '@ngrx/store';
+import type { ActionReducer } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import { SqliteStoreCore } from './core';
+import { State } from './state';
 import type { RegisteredFeature } from './tokens';
 
 @Injectable()
 export class ReducerManager extends BehaviorSubject<ActionReducer<any>> {
   private readonly core = inject(SqliteStoreCore);
   readonly currentReducers: Record<string, ActionReducer<any>>;
-  private readonly factory = inject(REDUCER_FACTORY) as ActionReducerFactory<any>;
-  private readonly initialState = inject(INITIAL_STATE) as Record<string, unknown>;
   constructor() {
     const reducers = inject(INITIAL_REDUCERS) as Record<string, ActionReducer<any>>;
-    super(
-      (inject(REDUCER_FACTORY) as ActionReducerFactory<any>)(
-        reducers,
-        inject(INITIAL_STATE) as Record<string, unknown>,
-      ),
-    );
+    const state = inject(State);
+    super(() => state.value);
     this.currentReducers = { ...reducers };
   }
   addFeature(feature: RegisteredFeature): void {
@@ -30,7 +25,7 @@ export class ReducerManager extends BehaviorSubject<ActionReducer<any>> {
         typeof feature.reducers === 'function'
           ? feature.reducers
           : combineReducers(feature.reducers);
-    this.next(this.factory(this.currentReducers, this.initialState));
+    this.next(this.value);
     this.core.addFeatures(features);
   }
   removeFeature(feature: Pick<RegisteredFeature, 'key'>): void {
@@ -52,7 +47,7 @@ export class ReducerManager extends BehaviorSubject<ActionReducer<any>> {
   }
   removeReducers(keys: string[]): void {
     for (const key of keys) delete this.currentReducers[key];
-    this.next(this.factory(this.currentReducers, this.initialState));
+    this.next(this.value);
     this.core.removeFeatures(keys);
   }
   ngOnDestroy(): void {

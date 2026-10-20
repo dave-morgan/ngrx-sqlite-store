@@ -1,12 +1,13 @@
 import { Injectable, Injector, effect, inject, untracked } from '@angular/core';
 import type { EffectRef, Signal } from '@angular/core';
-import { ActionsSubject, StateObservable } from '@ngrx/store';
+import { ActionsSubject } from '@ngrx/store';
 import { select as ngrxSelect } from '@ngrx/store';
 import type { Action, ActionCreator, ActionReducer, SelectSignalOptions } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import type { Observer, Operator } from 'rxjs';
 import { SqliteStoreCore } from './core';
 import { ReducerManager } from './reducer-manager';
+import { State } from './state';
 import { SELECTION_ENGINE } from './tokens';
 import { SELECT_OPERATOR } from '../selectors/metadata';
 
@@ -23,10 +24,16 @@ export class Store<T = object> extends Observable<T> implements Observer<Action>
   readonly status = this.core.status;
   constructor() {
     super();
-    const state = inject(StateObservable);
+    const state = inject(State<T>);
     this.source = new Observable<T>((subscriber) => {
       const release = this.selection.pinAll();
-      const subscription = state.subscribe(subscriber);
+      const subscription = state.subscribe({
+        next: (value) => {
+          if (!this.core.deferWholeState) subscriber.next(value);
+        },
+        error: (error: unknown) => subscriber.error(error),
+        complete: () => subscriber.complete(),
+      });
       return () => {
         subscription.unsubscribe();
         release();

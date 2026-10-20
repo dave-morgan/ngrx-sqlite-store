@@ -111,14 +111,46 @@ edge cases. Transaction insert batches ignore repeated IDs; parity tests use
 unique IDs within batch inputs because sorted NgRx batches can create duplicate
 `ids` even when adding repeated new IDs.
 
-## 4. Ecosystem dependencies on the store (verified by FESM import scan)
+## 4. Ecosystem dependencies on the store (verified by phase 7 contract tests)
 
 | Package | Imports from `@ngrx/store` | Injects | Requirement for us |
 | --- | --- | --- | --- |
 | `@ngrx/effects` | `ScannedActionsSubject`, `createAction`, `ROOT_STORE_PROVIDER`, `FEATURE_STATE_PROVIDER`, `Store` | `Actions` (built on `ScannedActionsSubject`), `Store` | Post-commit `ScannedActionsSubject`. Provide both tokens so that `provideEffects` initialization runs after the store. Effects dispatch through `Store`. |
 | `@ngrx/router-store` | `createAction`, `props`, `isNgrxMockEnvironment`, `select`, `ACTIVE_RUNTIME_CHECKS`, `createFeatureSelector`, `createSelector` | `Store`, `Router`, `RouterStateSerializer`, `ACTIVE_RUNTIME_CHECKS` | `store.pipe(select(featureSelector))` must work with selectors built by the *real* `createFeatureSelector` (foreign selectors, Q8). `routerReducer` is classic (compat bridge). `RouterState.Minimal` is recommended, because the full serializer is not JSON-safe. |
-| `@ngrx/store-devtools` | `ActionsSubject`, `UPDATE`, `INIT`, `INITIAL_STATE`, `StateObservable`, `ReducerManagerDispatcher` | plus `ReducerObservable`, `ScannedActionsSubject` | Recomputes state in memory and overrides `StateObservable`. Compatibility mode in Q4. |
+| `@ngrx/store-devtools` | `ActionsSubject`, `UPDATE`, `INIT`, `INITIAL_STATE`, `StateObservable`, `ReducerManagerDispatcher` | plus `ReducerObservable`, `ScannedActionsSubject` | Verified display-only compatibility (ADR-0022). Guarded scanned subject guarantees exactly-once post-commit effects; compat reducer returns our committed loaded view. |
 | `@ngrx/entity` | `createSelector` | — | Replaced by `/entity`. |
+
+Verified against NgRx 22.0.1 with real packages, not substitutes:
+
+- Effects: classic/SQLite parity for class and functional effects, non-dispatching
+  effects, multiple-creator `ofType`, `withLatestFrom` and installed
+  `@ngrx/operators` `concatLatestFrom`, ROOT_EFFECTS_INIT, default error-handler
+  resubscription, multiple dispatched actions and a 61-action chain. Lazy Router
+  providers and NgModule root/feature registration are covered too.
+- Router-store: parity for default minimal and Full/custom JSON-safe serializers,
+  both navigation timings, URL/route/query selectors, guard cancellation and
+  resolver errors, including action sequences and rollback state (ADR-0020).
+- Devtools: fake extension integration compares effects, selections and final
+  state with/without devtools. Browser coverage checks the real harness provider,
+  exactly one observation per triggering action and no synchronous tx warnings.
+- Real MockStore: wrapped selectors, createFeature selectors, overrides, setState,
+  refresh/reset and scannedActions$. Runtime checks reject duplicate action types
+  and function-valued action fields.
+
+**Devtools limitations (Q4 resolved, ADR-0022):** the timeline displays the loaded
+committed view available at synchronous processing time and may lag one action.
+Time travel, jump, skip, commit, import and monitor dispatch do not mutate SQLite.
+Third-party StateObservable consumers see the devtools display state; our Store,
+core and selection engine consume our State directly. The root provider resolves
+the overridden token only to activate devtools, without consuming its values.
+
+**Async ordering (ADR-0023):** each commit, refresh and scanned emission finishes
+before the next action's transaction. Lifecycle actions (INIT, UPDATE and
+ROOT_EFFECTS_INIT) are not replayed
+to effects that attach later. Whole-store subscriptions defer transient router
+preactivation and superseded terminal views until the latest requested navigation
+completes, cancels or errors, preventing
+router-store feedback; normal selectors and effects retain intermediate values.
 
 ## 5. Behavioural contract (tested in phase 7)
 

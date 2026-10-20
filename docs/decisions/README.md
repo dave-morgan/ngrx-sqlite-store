@@ -27,6 +27,8 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0019](0019-entity-adapter.md) | Entity adapter: dual-form ops (classic pure / tx SQL), `adapter.at(tx, path)`, write-time sort order via binary search (Q1); unique-ID collision overwrite policy (§7) | Agent / User (§7) | 2026-10-20 | Accepted |
 | [0020](0020-router-json-snapshots.md) | Persist default router-store snapshots as JSON in the classic bridge | Agent | 2026-10-20 | Accepted |
 | [0021](0021-selector-reference-replacements.md) | Preserve reference-only reducer replacements with transient commit hints | Agent | 2026-10-20 | Accepted |
+| [0022](0022-devtools-compat.md) | Display-only devtools with guarded scanned actions and committed-view reducer; resolves Q4 | Agent / Phase 7 brief | 2026-10-20 | Accepted |
+| [0023](0023-async-ecosystem-ordering.md) | Commit/refresh/emission serialization, bootstrap lifecycle ordering and router feedback transport | Agent | 2026-10-20 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 
@@ -34,7 +36,6 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | --- | --- | --- |
 | Q1 | Write-time ordering by binary search (ADR-0019); spike benchmark pending | Agent |
 | Q2 | 16 KB promotion threshold + path hints; depth-1 props always rows; changed values may demote (Phase 3 brief) | Agent |
-| Q4 | Lazy whole-state view; devtools display-only mode (no time travel) | Agent |
 | Q5 | `select` waits for first load; `selectSignal` falls back to `initialState`; LRU 32 | Agent |
 | Q7 | No in-memory slices; classic reducers via SQLite-backed bridge | Agent |
 | Q8 | Path-level, segment-boundary prefix invalidation; foreign selectors tracked by proxy | Agent |

@@ -19,6 +19,47 @@ import { POST_COMMIT_HOOK } from './tokens';
 
 afterEach(() => TestBed.resetTestingModule());
 describe('SQLite store write contract', () => {
+  it('publishes deferred whole state when a router terminal action changes no rows', async () => {
+    const navigation = { type: '@ngrx/router-store/navigation' };
+    const navigated = { type: '@ngrx/router-store/navigated' };
+    TestBed.configureTestingModule({
+      providers: [
+        provideStore(
+          {
+            counter: (state = { count: 0 }, action) =>
+              action.type === navigation.type ? { count: 1 } : state,
+          },
+          { sqlite: { driver: new SqlJsDriver() } },
+        ),
+      ],
+    });
+    const store = TestBed.inject(Store<{ counter: { count: number } }>);
+    const core = TestBed.inject(SqliteStoreCore);
+    const whole: number[] = [];
+    const selected: number[] = [];
+    try {
+      await store.settle();
+      const subscription = store.subscribe((state) => {
+        if (state.counter) whole.push(state.counter.count);
+      });
+      const selection = store
+        .select((state) => state.counter.count)
+        .subscribe((count) => selected.push(count));
+      await store.settle();
+      await store.dispatchAsync(navigation);
+      expect(selected).toEqual([0, 1]);
+      expect(whole).toEqual([0]);
+      await store.dispatchAsync(navigated);
+      expect(whole).toEqual([0, 1]);
+      expect(selected).toEqual([0, 1]);
+      expect(core.deferWholeState).toBe(false);
+      selection.unsubscribe();
+      subscription.unsubscribe();
+    } finally {
+      TestBed.resetTestingModule();
+      await core.engine.close();
+    }
+  });
   it('settles only after purge SQL and its refresh hooks finish', async () => {
     let purging = false;
     let release!: () => void;
@@ -69,6 +110,7 @@ describe('SQLite store write contract', () => {
     });
     const store = TestBed.inject(Store);
     const scanned: string[] = [];
+    expect(TestBed.inject(ActionsSubject).value.type).toBe(INIT);
     const reads: Promise<unknown>[] = [];
     const engine = TestBed.inject(StorageEngine);
     TestBed.inject(ScannedActionsSubject).subscribe((a) => {
@@ -79,7 +121,7 @@ describe('SQLite store write contract', () => {
     await TestBed.inject(SqliteStoreCore).initialize();
     await store.dispatchAsync(increment());
     expect(TestBed.inject(NgrxStore)).toBe(store);
-    expect(scanned[0]).toBe(INIT);
+    expect(scanned).toEqual([increment.type]);
     expect(await Promise.all(reads)).toEqual([{ count: 1 }]);
     expect(TestBed.inject(ActionsSubject).value.type).toBe(increment.type);
   });

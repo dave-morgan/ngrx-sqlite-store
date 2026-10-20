@@ -4,9 +4,9 @@ import {
   ActionsSubject,
   INITIAL_REDUCERS,
   INITIAL_STATE,
+  INIT,
   META_REDUCERS,
   ReducerManagerDispatcher,
-  ScannedActionsSubject,
   UPDATE,
   USER_PROVIDED_META_REDUCERS,
   combineReducers,
@@ -14,6 +14,7 @@ import {
   props,
 } from '@ngrx/store';
 import type { Action, ActionReducer } from '@ngrx/store';
+import type { Observer } from 'rxjs';
 import {
   fromSyncReducer,
   getTxReducerMetadata,
@@ -35,6 +36,8 @@ import {
 } from './tokens';
 import type { RegisteredFeature } from './tokens';
 import { Injector } from '@angular/core';
+import { NSS_CAPTURE, NSS_EMIT, NssScannedActionsSubject } from './scanned-actions-subject';
+import { State } from './state';
 
 export const nssReducerError = createAction(
   '[ngrx-sqlite-store] Reducer Error',
@@ -51,7 +54,7 @@ export class SqliteStoreCore {
   private readonly injector = inject(Injector);
   readonly engine = inject(StorageEngine);
   private readonly actions = inject(ActionsSubject);
-  private readonly scanned = inject(ScannedActionsSubject);
+  private readonly scanned = inject(NssScannedActionsSubject);
   private readonly dispatcher = inject(ReducerManagerDispatcher);
   private readonly config = inject(STORE_CONFIGURATION);
   private readonly initial = inject(INITIAL_STATE) as Record<string, unknown>;
@@ -71,17 +74,31 @@ export class SqliteStoreCore {
   private readonly maintenance = new Set<Promise<void>>();
   private startup?: Promise<void>;
   private started = false;
-  private readonly pending: Array<{ action: Action; validationError?: unknown }> = [];
+  /** Router-store's synchronous feedback guard cannot span an async commit. */
+  deferWholeState = false;
+  private latestNavigationId?: number;
+  private readonly pending: Array<{
+    action: Action;
+    validationError?: unknown;
+    audience?: readonly Observer<Action>[];
+  }> = [];
   private readonly completions = new WeakMap<Action, Promise<void>>();
   private readonly subscription = this.actions.subscribe((action) => {
+    // The extension's separate ReducerManagerDispatcher is intentionally not
+    // subscribed here: only ActionsSubject carries application work.
+    if (action.type === '@ngrx/router-store/request')
+      this.latestNavigationId = navigationId(action);
     let validationError: unknown;
     try {
       this.validate(action);
     } catch (error) {
       validationError = error;
     }
-    if (!this.started) this.pending.push({ action, validationError });
-    else this.enqueue(action, validationError);
+    // Lifecycle actions must only reach effects that could observe them when
+    // dispatched. Async bootstrap must not replay early INIT/UPDATE to new effects.
+    const audience = LIFECYCLE_ACTIONS.has(action.type) ? this.scanned[NSS_CAPTURE]() : undefined;
+    if (!this.started) this.pending.push({ action, validationError, audience });
+    else this.enqueue(action, validationError, audience);
   });
 
   initialize(): Promise<void> {
@@ -109,8 +126,8 @@ export class SqliteStoreCore {
       await this.injector.get(SELECTION_ENGINE).preload(this.config.sqlite?.eager ?? []);
       this.state.set('ready');
       this.started = true;
-      for (const { action, validationError } of this.pending.splice(0))
-        this.enqueue(action, validationError);
+      for (const { action, validationError, audience } of this.pending.splice(0))
+        this.enqueue(action, validationError, audience);
     } catch (error) {
       this.state.set('error');
       if (isDevMode()) throw error;
@@ -239,7 +256,11 @@ export class SqliteStoreCore {
     if (!this.started) return this.initialize().then(() => this.completions.get(action));
     return this.completions.get(action)!;
   }
-  private enqueue(action: Action, validationError?: unknown): void {
+  private enqueue(
+    action: Action,
+    validationError?: unknown,
+    audience?: readonly Observer<Action>[],
+  ): void {
     const features = [...this.features.values()];
     const transaction = this.work.then(() =>
       this.engine.transaction(async (sql) => {
@@ -266,15 +287,26 @@ export class SqliteStoreCore {
           await runHandlers(feature.reducer, handles[index], action);
       }),
     );
-    this.work = transaction.then(
-      () => undefined,
-      () => undefined,
-    );
     const completion = this.emission.then(async () => {
       try {
         const { changes } = await transaction;
+        const state = this.injector.get(State);
+        const previousView = state.value;
+        const releaseWholeState =
+          this.deferWholeState &&
+          ROUTER_TERMINAL_ACTIONS.has(action.type) &&
+          (this.latestNavigationId === undefined ||
+            navigationId(action) === this.latestNavigationId);
+        if (
+          action.type === '@ngrx/router-store/request' ||
+          action.type === '@ngrx/router-store/navigation'
+        )
+          this.deferWholeState = true;
+        if (releaseWholeState) this.deferWholeState = false;
         await Promise.all(this.hooks.map((hook) => hook(changes)));
-        this.scanned.next(action);
+        if (releaseWholeState && state.value === previousView) state.next(state.value);
+        // Classic NgRx completes bootstrap lifecycle actions before effects attach.
+        this.scanned[NSS_EMIT](action, audience);
       } catch (error) {
         if (action.type !== nssReducerError.type)
           this.actions.next(nssReducerError({ action, error }));
@@ -288,6 +320,9 @@ export class SqliteStoreCore {
       () => undefined,
       () => undefined,
     );
+    // Keep each commit, refresh and scanned emission together. Otherwise a burst
+    // from an effect can commit N+1 before selectors/effects observe N.
+    this.work = this.emission;
   }
   async settle(): Promise<void> {
     await this.initialize();
@@ -318,6 +353,15 @@ export class SqliteStoreCore {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+}
+const ROUTER_TERMINAL_ACTIONS = new Set([
+  '@ngrx/router-store/navigated',
+  '@ngrx/router-store/cancel',
+  '@ngrx/router-store/error',
+]);
+const LIFECYCLE_ACTIONS = new Set([INIT, UPDATE, '@ngrx/effects/init']);
+function navigationId(action: Action): number | undefined {
+  return (action as Action & { payload?: { event?: { id?: number } } }).payload?.event?.id;
 }
 export function resolveInitial(value: unknown): any {
   return typeof value === 'function' ? value() : value;

@@ -348,7 +348,7 @@ describe('phase 4a integration contract', () => {
     expect(TestBed.inject(ngrx.State)).toBe(TestBed.inject(State));
     expect(TestBed.inject(ngrx.StateObservable)).toBe(TestBed.inject(State));
     expect(manager.currentReducers['counter']).toBe(counter);
-    expect(manager.value(undefined, { type: ngrx.INIT })).toEqual({ counter: { count: 0 } });
+    expect(manager.value(undefined, { type: ngrx.INIT })).toBe(TestBed.inject(State).value);
   });
 
   it('provides the phase 4b selection engine through the original store', async () => {

@@ -22,13 +22,13 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - [x] Phase 4b selector read side (ADR-0018/0020/0021)
 - [x] Phase 5 selectors
 - [x] Phase 6 entity (ADR-0019 dual-form adapter and `/entity` entry point)
-- [ ] Phase 7 compat tests + harness e2e
+- [x] Phase 7 compat tests + harness e2e
 - [ ] Phase 8 spikes Q1/Q2/Q3/Q4
 - [ ] Phase 9 Android benchmarks
 
 ## Harness (orchestrator-owned; agents don't touch unless briefed)
 - `projects/harness`: README there. Aliases `@store`, `@store/entity`, `@impl` per build config (`-c classic|sqlite`). Shared code in `src/app/state`, pages in `src/app/pages`; only reducers differ (`store-impl/{classic,sqlite}`).
-- Classic: builds, 1 unit test + 11/11 Playwright e2e pass (`npm run e2e:classic`). Sqlite development build passes after phase 6; compatibility and harness e2e remain phase 7.
+- Classic: builds, 1 unit test + 11/11 Playwright e2e pass (`npm run e2e:classic`). Phase 7: SQLite development build and 12/12 Playwright e2e pass, including real devtools provider activation, exactly-once post-commit effects and no synchronous tx reducer warnings.
 - Android: `android/` added (Capacitor 8). Gradle needs JDK 21: `JAVA_HOME="C:\Program Files\Android\Android Studio\jbr"`.
 - Phase 6 implemented from `docs/briefs/phase-6-entity.md` (ADR-0019); 146 library tests pass, including entity parity, SQL minimality and collision regressions.
 
@@ -36,7 +36,7 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - None. Q6 → ADR-0013/0014; schema v1 → ADR-0015.
 
 ## Next steps
-- Phase 7 compatibility tests and harness e2e.
+- Phase 8 spikes Q1/Q2/Q3/Q4 (Q4 ecosystem compatibility is resolved by ADR-0022).
 
 ## Storage core notes
 - Tests load sql.js through Node's native createRequire and resolve its WASM from node_modules; no copied WASM or test helper is needed.
@@ -56,11 +56,14 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - Windows PowerShell may block npx.ps1; use npx.cmd for the same npm CLI commands.
 
 ## Store write-side notes
-- Phase 4a reuses real NgRx subjects and binds Store, State and ReducerManager to the original tokens. Bootstrap seeds versioned features before releasing INIT and buffered actions.
-- Each action runs every feature handler in one transaction. Scanned emissions and awaited refresh hooks run after transaction resolution, outside the engine FIFO. dispatchAsync rejects reducer failures; plain dispatch reports nssReducerError and continues.
+- Store, State and ReducerManager bind to the original NgRx tokens. ActionsSubject is unchanged; ScannedActionsSubject uses the guarded NSS subclass (ADR-0022). Bootstrap seeds versioned features before releasing INIT and buffered actions.
+- Each action runs every feature handler in one transaction. Commit, awaited refresh and scanned emission finish before the next transaction (ADR-0023), outside the engine FIFO. dispatchAsync rejects reducer failures; plain dispatch reports nssReducerError and continues.
 - StoreTx shares an identity cache across features. Writes drop overlapping cached ancestors/descendants and reload containers to preserve hidden array IDs. Unknown paths under inline nodes resolve through the owning container.
 - Removing/destroying features keeps their data. purgeFeature deletes the subtree and version marker; settle includes purge work, refresh hooks and the engine queue.
 - Foreign reducers with undefined initial state (routerReducer) seed only their version marker; reset/reseed deletes their subtree. Default router-store snapshots are converted to JSON before persistence (ADR-0020).
+- Phase 7 verifies effects (including concatLatestFrom), lazy/NgModule providers, router timings/serializers/cancel/error/overlap, devtools, MockStore and runtime checks. 164 library tests and both required builds pass.
+- Devtools is display-only and may lag one action; monitor actions cannot mutate SQLite. Services consume State directly; the root provider resolves StateObservable only to activate NgRx devtools. createFeature reads tx metadata without synchronous reducer calls.
+- INIT/UPDATE/ROOT_EFFECTS_INIT delivery captures the original subscriber audience (RxJS 7 observers). Whole-store transport defers transient/superseded router views until the latest navigation terminates; normal selectors/effects retain intermediate commits (ADR-0023).
 - Phase 4b hooks: internal ɵSELECTION_ENGINE, ɵCOMMITTED_CACHE, and multi ɵPOST_COMMIT_HOOK. Selector helpers wrap NgRx with hidden metadata and exact typings.
 
 ## Selector notes

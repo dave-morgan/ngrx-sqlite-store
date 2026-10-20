@@ -42,7 +42,7 @@ function buildAndInstall(impl) {
   log(`build ${impl}`);
   sh('npx', ['ng', 'build', 'harness', '-c', `production,${impl}`]);
   sh('npx', ['cap', 'sync', 'android']);
-  sh(process.platform === 'win32' ? 'gradlew.bat' : './gradlew', ['assembleDebug', '-q', '--no-daemon'], {
+  sh(join(ROOT, 'android', process.platform === 'win32' ? 'gradlew.bat' : 'gradlew'), ['assembleDebug', '-q', '--no-daemon'], {
     cwd: join(ROOT, 'android'),
     env: { ...process.env, JAVA_HOME },
   });

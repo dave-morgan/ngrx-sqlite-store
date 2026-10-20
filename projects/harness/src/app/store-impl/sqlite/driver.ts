@@ -27,7 +27,7 @@ function mountJeepSqlite(): Promise<void> {
     await defineCustomElements(window);
     if (!document.querySelector('jeep-sqlite')) {
       const el = document.createElement('jeep-sqlite');
-      el.setAttribute('autoSave', 'true');
+      // No autoSave: the driver persists once per committed transaction.
       el.setAttribute('wasmPath', 'assets');
       document.body.appendChild(el);
     }

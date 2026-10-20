@@ -53,12 +53,14 @@ test.describe('ngrx harness', () => {
     await page.getByTestId('filter-open').click();
     await expect(page.getByTestId('visible-count')).toHaveText(`${open} shown`);
     await page.getByTestId('filter-all').click();
+    // Dispatch is synchronous but state settles asynchronously with the sqlite store:
+    // always wait for the expected UI state rather than for "anything changed".
+    await expect(page.getByTestId('visible-count')).toHaveText(`${SEED} shown`);
 
     await page.getByTestId('search').fill('#11');
-    await expect(page.getByTestId('visible-count')).not.toHaveText(`${SEED} shown`);
-    const titles = await page.getByTestId('todo-list').locator('a.title').allTextContents();
-    expect(titles.length).toBeGreaterThan(0);
-    for (const t of titles) expect(t).toContain('#11');
+    const titles = page.getByTestId('todo-list').locator('a.title');
+    await expect(titles.filter({ hasNotText: '#11' })).toHaveCount(0);
+    await expect(titles.first()).toContainText('#11');
     await page.getByTestId('search').fill('');
     await expect(page.getByTestId('visible-count')).toHaveText(`${SEED} shown`);
 

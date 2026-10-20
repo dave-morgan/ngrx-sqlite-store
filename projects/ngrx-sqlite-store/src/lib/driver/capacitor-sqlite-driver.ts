@@ -69,17 +69,21 @@ export class CapacitorSqliteDriver implements SqlDriver {
     return ((await this.database.query(sql, params)).values as R[]) ?? [];
   }
 
-  begin(): Promise<void> {
-    return this.exec('BEGIN IMMEDIATE');
+  // Use the plugin's transaction API rather than raw BEGIN/COMMIT so the plugin's own
+  // "transaction active" flag stays in sync. On web, jeep-sqlite otherwise treats each
+  // statement as standalone and may persist (sql.js export()) mid-transaction, which
+  // silently ends it ("cannot commit - no transaction is active").
+  async begin(): Promise<void> {
+    await this.database.beginTransaction();
   }
 
   async commit(): Promise<void> {
-    await this.exec('COMMIT');
+    await this.database.commitTransaction();
     if (this.web) await this.connection.saveToStore(this.options.database);
   }
 
-  rollback(): Promise<void> {
-    return this.exec('ROLLBACK');
+  async rollback(): Promise<void> {
+    await this.database.rollbackTransaction();
   }
 
   private get connection(): SQLiteConnection {

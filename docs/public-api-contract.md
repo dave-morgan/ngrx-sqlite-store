@@ -57,12 +57,59 @@ projector-count semantics through transient commit hints (ADR-0021).
 
 ## 3. `@ngrx/entity` → `ngrx-sqlite-store/entity`
 
+ADR-0019 defines the dual-form adapter. Classic overloads retain the real
+`@ngrx/entity` signatures and delegate unchanged to that adapter. Transaction
+operations return `Promise<void>` and use the feature-root collection;
+`adapter.at(tx, 'items')` binds the same operations to a nested collection.
+
 | Export | Status | Notes |
 | --- | --- | --- |
-| `createEntityAdapter({ selectId?, sortComparer? })` | **R\*** | `getInitialState(extra?)` is branded so it is detected as an entity collection (D5). |
-| adapter ops: `addOne`, `addMany`, `setAll`, `setOne`, `setMany`, `removeOne`, `removeMany` (ids or predicate), `removeAll`, `updateOne`, `updateMany`, `upsertOne`, `upsertMany`, `mapOne`, `map` | **R\*** | In `tx` reducers the ops run as SQL against the transaction. The classic `(…, state) => state` form is kept for compat-bridge reducers. Q6 decides the exact form. |
-| `getSelectors()` / `getSelectors(selectState)` → `selectIds`, `selectEntities`, `selectAll`, `selectTotal` | **R** | Source selectors on `nss_entity`. `selectTotal` uses `COUNT(*)`. |
-| `Dictionary`, `EntityState`, `EntityAdapter`, `Update`, `Predicate`, `EntityMap`, `EntityMapOne`, `IdSelector`, `Comparer` | types **=** | |
+| `createEntityAdapter<T>({ selectId?, sortComparer? })` | **R\*** | Retains NgRx's default-id and custom string/numeric-id overloads. |
+| `getInitialState()` / `getInitialState<S>(extra: Omit<S, keyof EntityState<T>>): S` | **R\*** | Non-enumerable entity brand directs persistence to `nss_entity`. |
+| `getSelectors()` / `getSelectors(selectState)` | **R** | `selectIds`, `selectEntities`, `selectAll`, `selectTotal` use our `createSelector`; plain-callable with dependency metadata. Total derives from the stored ordered IDs. |
+| `Dictionary`, `EntityState`, `Update`, `Predicate`, `EntityMap`, `EntityMapOne`, `IdSelector`, `Comparer` | types **=** | Re-exported from real NgRx. |
+| `EntityAdapter<T, IdType>` | **R\*** | All classic overloads plus transaction overloads and `at(tx, path)`. |
+
+Transaction signatures (the bound form omits the first `tx` argument):
+
+```ts
+addOne(tx: StoreTx, entity: T): Promise<void>;
+addMany(tx: StoreTx, entities: T[]): Promise<void>;
+setOne(tx: StoreTx, entity: T): Promise<void>;
+setMany(tx: StoreTx, entities: T[]): Promise<void>;
+setAll(tx: StoreTx, entities: T[]): Promise<void>;
+upsertOne(tx: StoreTx, entity: T): Promise<void>;
+upsertMany(tx: StoreTx, entities: T[]): Promise<void>;
+updateOne(tx: StoreTx, update: Update<T>): Promise<void>;
+updateMany(tx: StoreTx, updates: Update<T>[]): Promise<void>;
+removeOne(tx: StoreTx, id: string | number): Promise<void>;
+removeMany(tx: StoreTx, idsOrPredicate: string[] | number[] | Predicate<T>): Promise<void>;
+removeAll(tx: StoreTx): Promise<void>;
+mapOne(tx: StoreTx, map: EntityMapOne<T>): Promise<void>;
+map(tx: StoreTx, map: EntityMap<T>): Promise<void>;
+at(tx: StoreTx, path: string): EntityOperations<T>;
+```
+
+`tx.entities<T>(path = '')` exposes the lower-level collection operations:
+`get(id)`, `getMany(ids)` (input order, missing entries are `undefined`), `has(id)`,
+`count()`, `ids()`, `page(offset, limit)` (rows `{ id, entity, pos }`),
+`insert(rows, { pos }?)`, `upsert(rows)`, `update(id, entity)`, `remove(ids)`,
+`clear()`, and `positionFor(entity, comparer)`. Input rows are
+`{ id: string | number, entity: T, pos?: number }`; optional insert positions
+are a starting number or an array of positions. All methods are asynchronous.
+
+Ordering is persisted at write time. Sorted inserts binary-search indexed rows;
+unsorted inserts retain insertion order. All mutations pass through `RowWriter`
+and invalidate the transaction cache and collection dependencies. Values over the
+row cap use the ADR-0016 promotion marker.
+
+**ID collision divergence (ADR-0019 §7):** transaction updates/maps that rename
+an entity to an existing ID overwrite the target, retain the renamed entity's
+position, and keep `ids` unique. Dev mode logs one warning per operation with a
+collision. Classic operations preserve NgRx behavior, including its duplicate-ID
+edge cases. Transaction insert batches ignore repeated IDs; parity tests use
+unique IDs within batch inputs because sorted NgRx batches can create duplicate
+`ids` even when adding repeated new IDs.
 
 ## 4. Ecosystem dependencies on the store (verified by FESM import scan)
 

@@ -1,0 +1,295 @@
+import { isDevMode } from '@angular/core';
+import { decodeEntityId, encodeEntityId } from '../schema/ids';
+import { entityValuePath } from '../schema/node-reader';
+import type { NodeStore } from '../schema/node-store';
+import { between } from '../schema/positions';
+import { RowWriter } from '../schema/row-writer';
+import type { EntityRow } from '../schema/row-writer';
+import { serializedSize } from '../schema/size';
+import type { ChangeSet } from '../storage/change-set';
+import type { SqlExecutor } from '../storage/storage-engine';
+
+export type EntityId = string | number;
+export interface EntityInput<T> {
+  id: EntityId;
+  entity: T;
+  pos?: number;
+}
+export interface EntityPageRow<T> {
+  id: EntityId;
+  entity: T;
+  pos: number;
+}
+
+function freeze(value: unknown): void {
+  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return;
+  for (const child of Object.values(value)) freeze(child);
+  Object.freeze(value);
+}
+
+/** Indexed entity operations on the current transaction's executor. */
+export class EntityTx<T> {
+  private readonly cached = new Map<string, EntityRow | undefined>();
+  private readonly writer: RowWriter;
+  constructor(
+    private readonly sql: SqlExecutor,
+    private readonly nodes: NodeStore,
+    private readonly changes: ChangeSet,
+    private readonly coll: string,
+    private readonly onWrite: () => void,
+  ) {
+    this.writer = new RowWriter(sql, changes, nodes.policy.rowCap);
+  }
+
+  invalidate(): void {
+    this.cached.clear();
+  }
+  private changed(): void {
+    this.changes.add(this.coll);
+    this.invalidate();
+    this.onWrite();
+  }
+  private async row(id: EntityId): Promise<EntityRow | undefined> {
+    const encoded = encodeEntityId(id);
+    if (!this.cached.has(encoded)) {
+      const [row] = await this.sql.query<EntityRow>(
+        'SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? AND id = ?',
+        [this.coll, encoded],
+      );
+      this.cached.set(encoded, row);
+    }
+    return this.cached.get(encoded);
+  }
+  private async value(row: EntityRow): Promise<T> {
+    const value =
+      row.data === ''
+        ? await this.nodes.read(this.sql, entityValuePath(this.coll, row.id))
+        : JSON.parse(row.data);
+    if (isDevMode()) freeze(value);
+    return value as T;
+  }
+  async get(id: EntityId): Promise<T | undefined> {
+    const row = await this.row(id);
+    return row ? this.value(row) : undefined;
+  }
+  async getPosition(id: EntityId): Promise<number | undefined> {
+    return (await this.row(id))?.pos;
+  }
+  async getMany(ids: readonly EntityId[]): Promise<(T | undefined)[]> {
+    const rows: EntityRow[] = [];
+    for (let index = 0; index < ids.length; index += 998) {
+      const batch = ids.slice(index, index + 998).map(encodeEntityId);
+      rows.push(
+        ...(await this.sql.query<EntityRow>(
+          `SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? AND id IN (${batch.map(() => '?').join(',')})`,
+          [this.coll, ...batch],
+        )),
+      );
+    }
+    for (const id of ids) this.cached.set(encodeEntityId(id), undefined);
+    for (const row of rows) this.cached.set(row.id, row);
+    const result: (T | undefined)[] = [];
+    for (const id of ids) {
+      const row = this.cached.get(encodeEntityId(id));
+      result.push(row ? await this.value(row) : undefined);
+    }
+    return result;
+  }
+  async has(id: EntityId): Promise<boolean> {
+    return !!(await this.row(id));
+  }
+  async count(): Promise<number> {
+    const [row] = await this.sql.query<{ count: number }>(
+      'SELECT COUNT(*) AS count FROM nss_entity WHERE coll = ?',
+      [this.coll],
+    );
+    return row.count;
+  }
+  async ids(): Promise<EntityId[]> {
+    return (
+      await this.sql.query<{ id: string }>(
+        'SELECT id FROM nss_entity WHERE coll = ? ORDER BY pos',
+        [this.coll],
+      )
+    ).map(({ id }) => decodeEntityId(id));
+  }
+  async page(offset: number, limit: number): Promise<EntityPageRow<T>[]> {
+    if (!Number.isInteger(offset) || offset < 0 || !Number.isInteger(limit) || limit < 0)
+      throw new RangeError('Invalid entity page');
+    const rows = await this.sql.query<EntityRow>(
+      'SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? ORDER BY pos LIMIT ? OFFSET ?',
+      [this.coll, limit, offset],
+    );
+    const result: EntityPageRow<T>[] = [];
+    for (const row of rows) {
+      result.push({ id: decodeEntityId(row.id), entity: await this.value(row), pos: row.pos });
+    }
+    return result;
+  }
+  private async lastPosition(): Promise<number> {
+    const [row] = await this.sql.query<{ pos: number }>(
+      'SELECT pos FROM nss_entity WHERE coll = ? ORDER BY pos DESC LIMIT 1',
+      [this.coll],
+    );
+    return row?.pos ?? 0;
+  }
+  private data(id: EntityId, entity: T): string {
+    return serializedSize(entity, entityValuePath(this.coll, encodeEntityId(id))) >
+      this.nodes.policy.rowCap
+      ? ''
+      : JSON.stringify(entity);
+  }
+  async insert(
+    rows: readonly EntityInput<T>[],
+    options: { pos?: number | readonly number[] } = {},
+  ): Promise<void> {
+    if (!rows.length) return;
+    const seen = new Set<string>();
+    const encoded = rows
+      .filter(({ id }) => {
+        const key = encodeEntityId(id);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .map((row) => ({ ...row, data: this.data(row.id, row.entity) }));
+    let last: number | undefined;
+    const batch: EntityRow[] = [];
+    for (const [index, row] of encoded.entries()) {
+      // A duplicate promoted insert must leave the existing promoted subtree intact.
+      if (row.data === '' && (await this.has(row.id))) continue;
+      const explicit =
+        row.pos ?? (typeof options.pos === 'number' ? options.pos + index : options.pos?.[index]);
+      if (explicit === undefined && last === undefined) last = await this.lastPosition();
+      const pos = explicit ?? ++last!;
+      if (!Number.isFinite(pos)) throw new RangeError('Invalid entity position');
+      batch.push({ coll: this.coll, id: encodeEntityId(row.id), pos, data: row.data });
+      if (row.data === '')
+        await this.nodes.write(
+          this.sql,
+          entityValuePath(this.coll, encodeEntityId(row.id)),
+          row.entity,
+          this.changes,
+        );
+    }
+    await this.writer.writeEntityRows(batch, false);
+    this.changed();
+  }
+  async upsert(rows: readonly EntityInput<T>[]): Promise<void> {
+    if (!rows.length) return;
+    // Validate every value before the first mutation.
+    const encoded = rows.map((row) => ({ ...row, data: this.data(row.id, row.entity) }));
+    let last: number | undefined;
+    const batch: EntityRow[] = [];
+    for (const row of encoded) {
+      const old = await this.row(row.id);
+      if (row.pos === undefined && !old && last === undefined) last = await this.lastPosition();
+      const pos = row.pos ?? old?.pos ?? ++last!;
+      if (!Number.isFinite(pos)) throw new RangeError('Invalid entity position');
+      const path = entityValuePath(this.coll, encodeEntityId(row.id));
+      if (old?.data === '') await this.writer.deletePrefix(path, this.coll);
+      if (row.data === '') await this.nodes.write(this.sql, path, row.entity, this.changes);
+      batch.push({ coll: this.coll, id: encodeEntityId(row.id), pos, data: row.data });
+    }
+    await this.writer.writeEntityRows(batch, true);
+    this.changed();
+  }
+  async update(id: EntityId, entity: T): Promise<void> {
+    const data = this.data(id, entity);
+    const old = await this.row(id);
+    if (!old) return;
+    const path = entityValuePath(this.coll, encodeEntityId(id));
+    if (old.data === '') await this.writer.deletePrefix(path, this.coll);
+    if (data === '') await this.nodes.write(this.sql, path, entity, this.changes);
+    await this.writer.updateEntity(this.coll, encodeEntityId(id), data);
+    this.changed();
+  }
+  async setPosition(id: EntityId, pos: number): Promise<void> {
+    if (!Number.isFinite(pos)) throw new RangeError('Invalid entity position');
+    await this.writer.updateEntityPosition(this.coll, encodeEntityId(id), pos);
+    this.changed();
+  }
+  async remove(ids: readonly EntityId[]): Promise<void> {
+    const deleted = await this.writer.deleteEntities(this.coll, ids.map(encodeEntityId));
+    for (const row of deleted)
+      if (row.data === '')
+        await this.writer.deletePrefix(entityValuePath(this.coll, row.id), this.coll);
+    if (deleted.length) this.changed();
+  }
+  async clear(): Promise<void> {
+    const deleted = await this.writer.deleteEntities(this.coll);
+    for (const row of deleted)
+      if (row.data === '')
+        await this.writer.deletePrefix(entityValuePath(this.coll, row.id), this.coll);
+    if (deleted.length) this.changed();
+  }
+  async positionForUpdate(
+    id: EntityId,
+    entity: T,
+    comparer: (left: T, right: T) => number,
+  ): Promise<number> {
+    const current = await this.row(id);
+    if (!current) return this.positionFor(entity, comparer);
+    const [previous] = await this.sql.query<EntityRow>(
+      'SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? AND pos < ? ORDER BY pos DESC LIMIT 1',
+      [this.coll, current.pos],
+    );
+    const [next] = await this.sql.query<EntityRow>(
+      'SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? AND pos > ? ORDER BY pos LIMIT 1',
+      [this.coll, current.pos],
+    );
+    if (
+      (!previous || comparer(await this.value(previous), entity) < 0) &&
+      (!next || comparer(await this.value(next), entity) >= 0)
+    )
+      return current.pos;
+    return this.positionFor(entity, comparer, id);
+  }
+  async positionFor(
+    entity: T,
+    comparer: (left: T, right: T) => number,
+    excludeId?: EntityId,
+  ): Promise<number> {
+    const exclusion = excludeId === undefined ? '' : ' AND id != ?';
+    const params = excludeId === undefined ? [this.coll] : [this.coll, encodeEntityId(excludeId)];
+    const [total] = await this.sql.query<{ count: number }>(
+      `SELECT COUNT(*) AS count FROM nss_entity WHERE coll = ?${exclusion}`,
+      params,
+    );
+    let low = 0;
+    let high = total.count;
+    let previous: EntityRow | undefined;
+    let next: EntityRow | undefined;
+    while (low < high) {
+      const mid = Math.floor((low + high) / 2);
+      const [row] = await this.sql.query<EntityRow>(
+        `SELECT coll,id,pos,data FROM nss_entity WHERE coll = ?${exclusion} ORDER BY pos LIMIT 1 OFFSET ?`,
+        [...params, mid],
+      );
+      if (comparer(await this.value(row), entity) < 0) {
+        low = mid + 1;
+        previous = row;
+      } else {
+        high = mid;
+        next = row;
+      }
+    }
+    const position = between(previous?.pos, next?.pos);
+    if (
+      !Number.isFinite(position) ||
+      (previous && position <= previous.pos) ||
+      (next && position >= next.pos) ||
+      (previous && next && next.pos - previous.pos < 1e-9)
+    ) {
+      const all = await this.sql.query<{ id: string }>(
+        'SELECT id FROM nss_entity WHERE coll = ? ORDER BY pos',
+        [this.coll],
+      );
+      for (const [index, row] of all.entries())
+        await this.writer.updateEntityPosition(this.coll, row.id, index + 1);
+      this.changed();
+      return this.positionFor(entity, comparer, excludeId);
+    }
+    return position;
+  }
+}

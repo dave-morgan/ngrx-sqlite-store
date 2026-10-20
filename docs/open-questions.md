@@ -6,11 +6,10 @@ When a question is resolved, move it to an ADR and leave a one-line pointer here
 
 ---
 
-### Q1. `sortComparer` for entities. Status: **Open (parked)**
-A JS comparator can't run inside SQLite.
-- Options: (a) compute and store an indexed `sortkey` column at write time, using a user-supplied `sortKey(entity) => string|number`; (b) a declarative sort spec (`{ field, direction }[]`) compiled to `ORDER BY json_extract(...)`; (c) sort in JS on read, only for small collections; (d) a combination: a declarative spec preferred, with a function comparator allowed but warned about and applied in JS.
-- Current: the `nss_entity.sortkey` column is reserved. `sortComparer` is accepted but applied in JS on read, with a dev warning.
-- Resolves when: a spike measures (a) vs (b) on 10k entities on Android, and the API shape is agreed.
+### Q1. `sortComparer` for entities. Status: **Provisionally resolved → ADR-0019**
+Ordering is decided at write time by indexed binary search with the JS comparer,
+then stored in `pos`. Reads retain SQL order. The reserved `sortkey` stays unused.
+The phase 8 Android benchmark will compare this approach with declarative sort keys.
 
 ### Q2. Promotion threshold rules. Status: **Provisional**
 When does nested data move from a JSON column to child rows (beyond the hard 1 MB cap, ADR-0008)?

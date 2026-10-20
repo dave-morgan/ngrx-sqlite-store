@@ -10,6 +10,8 @@ export type { StorageHint } from './lib/schema/policy';
 export { createReducer, on, onState, fromSyncReducer } from './lib/reducer/reducer';
 export type { TxReducer } from './lib/reducer/reducer';
 export { StoreTx } from './lib/reducer/store-tx';
+export { isStoreTx as ɵisStoreTx } from './lib/reducer/store-tx';
+export { brandEntityState as ɵbrandEntityState } from './lib/schema/entity-brand';
 export { Store } from './lib/store/store';
 export { State } from './lib/store/state';
 export { ReducerManager } from './lib/store/reducer-manager';

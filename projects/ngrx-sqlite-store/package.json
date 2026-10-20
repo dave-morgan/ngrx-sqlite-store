@@ -4,6 +4,7 @@
   "peerDependencies": {
     "@angular/core": "^22",
     "@ngrx/store": "^22",
+    "@ngrx/entity": "^22",
     "rxjs": "^7.5",
     "@capacitor-community/sqlite": "^8",
     "@capacitor/core": "^8",

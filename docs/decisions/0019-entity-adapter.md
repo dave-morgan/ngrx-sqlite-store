@@ -30,6 +30,13 @@ Entity is folded into the store (ADR-0005) and is the one package allowed to div
 5. **Selectors.** `getSelectors(selectState?)` returns `selectIds`, `selectEntities`, `selectAll`, `selectTotal`, built with our `createSelector`, so they are plain-callable and carry dependency metadata. Without `selectState`, they are relative selectors over an EntityState input, as in NgRx.
 6. **`getInitialState(extra?)`** returns a branded EntityState (`NSS_ENTITY_BRAND`), so the schema stores it in `nss_entity`.
 
+7. **Amendment, 2026-10-20: id-change collisions.** In NgRx, an `updateOne`/`updateMany`/`map` that changes an id to one that already exists yields a corrupt state: duplicate entries in `ids` (e.g. `[2,2]`) with only one entity. `nss_entity` has one row per id, and entity is allowed to diverge (ADR-0005). Our behaviour:
+   - the renamed entity **overwrites** the existing target row;
+   - it keeps the **renamed entity's position**;
+   - `ids` stays unique.
+
+   The operation doesn't throw, because throwing would roll back the whole action. In dev mode it logs a single warning. Parity property tests exclude collision cases and cover this behaviour with a dedicated test. The divergence is documented in the contract (§3).
+
 ## Consequences
 - Migrating tx reducers is mechanical: `adapter.addOne(x, state)` becomes `await adapter.addOne(tx, x)`.
 - Sorted inserts cost a handful of indexed queries. Large sorted bulk loads should use `setAll`, which does a single sort plus a batch insert.

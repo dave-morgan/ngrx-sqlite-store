@@ -5,6 +5,16 @@ import type { ChangeSet } from '../storage/change-set';
 import { escapeSegment, isAncestorOrSelf, parentPath, unescapeSegment } from '../storage/path';
 import type { SqlExecutor } from '../storage/storage-engine';
 import { recordReferences } from '../storage/reference-changes';
+import { EntityTx } from './entity-tx';
+
+export const STORE_TX_BRAND = Symbol.for('ngrx-sqlite-store/StoreTx');
+export function isStoreTx(value: unknown): value is StoreTx {
+  return (
+    !!value &&
+    typeof value === 'object' &&
+    (value as Record<symbol, unknown>)[STORE_TX_BRAND] === true
+  );
+}
 
 export interface CommittedCache {
   peek(fullPath: string): unknown | undefined;
@@ -33,6 +43,8 @@ function freeze(value: unknown): void {
 
 /** A feature-scoped view of the executor; never queues nested engine work. */
 export class StoreTx<S = unknown> {
+  readonly [STORE_TX_BRAND] = true;
+  private readonly entityCollections = new Map<string, EntityTx<unknown>>();
   private readonly root: string;
   constructor(
     featureKey: string,
@@ -49,6 +61,23 @@ export class StoreTx<S = unknown> {
 
   private fullPath(path: string): string {
     return path === '' ? this.root : `${this.root}/${path}`;
+  }
+
+  entities<T = unknown>(path = ''): EntityTx<T> {
+    const full = this.fullPath(path);
+    let collection = this.entityCollections.get(full);
+    if (!collection) {
+      collection = new EntityTx(this.sql, this.nodes, this.changes, full, () => {
+        for (const key of this.cache.keys()) {
+          if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) this.cache.delete(key);
+        }
+        for (const [key, other] of this.entityCollections) {
+          if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) other.invalidate();
+        }
+      });
+      this.entityCollections.set(full, collection);
+    }
+    return collection as EntityTx<T>;
   }
 
   async get<T = S>(path = ''): Promise<T> {
@@ -90,6 +119,9 @@ export class StoreTx<S = unknown> {
 
   /** Ancestors are dropped after writes and reloaded on demand; descendants expire. */
   private invalidate(full: string, value: unknown): void {
+    for (const [key, collection] of this.entityCollections) {
+      if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) collection.invalidate();
+    }
     for (const key of this.cache.keys()) {
       if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) this.cache.delete(key);
     }

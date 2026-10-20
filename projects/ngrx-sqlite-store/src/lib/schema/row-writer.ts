@@ -106,6 +106,43 @@ export class RowWriter {
     this.changes.add(coll);
   }
 
+  async writeEntityRows(rows: EntityRow[], upsert: boolean): Promise<void> {
+    for (const row of rows) this.check(row.coll, row.data);
+    await this.flush();
+    for (let index = 0; index < rows.length; index += 249) {
+      const batch = rows.slice(index, index + 249);
+      await this.exec.run(
+        `INSERT INTO nss_entity (coll,id,pos,data) VALUES ${batch.map(() => '(?,?,?,?)').join(',')} ON CONFLICT(coll,id) DO ${upsert ? 'UPDATE SET data = excluded.data, pos = excluded.pos' : 'NOTHING'}`,
+        batch.flatMap(({ coll, id, pos, data }) => [coll, id, pos, data]),
+      );
+      for (const row of batch) this.changes.add(row.coll);
+    }
+  }
+
+  async deleteEntities(
+    coll: string,
+    ids?: readonly string[],
+  ): Promise<{ id: string; data: string }[]> {
+    await this.flush();
+    const deleted: { id: string; data: string }[] = [];
+    const batches =
+      ids === undefined
+        ? [undefined]
+        : Array.from({ length: Math.ceil(ids.length / 998) }, (_, index) =>
+            ids.slice(index * 998, (index + 1) * 998),
+          );
+    for (const batch of batches) {
+      deleted.push(
+        ...(await this.exec.query<{ id: string; data: string }>(
+          `DELETE FROM nss_entity WHERE coll = ?${batch ? ` AND id IN (${batch.map(() => '?').join(',')})` : ''} RETURNING id,data`,
+          [coll, ...(batch ?? [])],
+        )),
+      );
+    }
+    if (deleted.length) this.changes.add(coll);
+    return deleted;
+  }
+
   async updateEntityPosition(coll: string, id: string, pos: number): Promise<void> {
     await this.flush();
     await this.exec.run('UPDATE nss_entity SET pos = ? WHERE coll = ? AND id = ?', [pos, coll, id]);

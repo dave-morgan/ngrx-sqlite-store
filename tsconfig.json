@@ -8,7 +8,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "ngrx-sqlite-store": ["./dist/ngrx-sqlite-store"]
+      "ngrx-sqlite-store": ["./dist/ngrx-sqlite-store"],
+      "ngrx-sqlite-store/entity": ["./dist/ngrx-sqlite-store/entity"]
     },
     "skipLibCheck": true,
     "isolatedModules": true,

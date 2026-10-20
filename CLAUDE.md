@@ -23,7 +23,7 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - [x] Phase 5 selectors
 - [x] Phase 6 entity (ADR-0019 dual-form adapter and `/entity` entry point)
 - [x] Phase 7 compat tests + harness e2e
-- [ ] Phase 8 spikes Q1/Q2/Q3/Q4
+- [x] Phase 8 spikes Q1/Q2/Q3/Q4
 - [ ] Phase 9 Android benchmarks
 
 ## Harness (orchestrator-owned; agents don't touch unless briefed)
@@ -36,7 +36,14 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - None. Q6 → ADR-0013/0014; schema v1 → ADR-0015.
 
 ## Next steps
-- Phase 8 spikes Q1/Q2/Q3/Q4 (Q4 ecosystem compatibility is resolved by ADR-0022).
+- Phase 9 Android benchmarks. Q4 ecosystem compatibility is resolved by ADR-0022.
+
+## Phase 8 spike findings
+- `npm run spikes` bundles source with esbuild and runs Node/sql.js; code is in `projects/ngrx-sqlite-store/spikes`, excluded from the library build. Results: `docs/spikes/q1.md`, `q2.md`, `q3.md` (five-run medians and SQL counts).
+- Final run: 106.39 seconds; 164 library tests, library build and strict spike type check pass. No library behavior changes or harness edits.
+- Q1: 50k sorted insert 589.309 ms / 20 SQL vs sort-key prototype 0.285 ms / 5 SQL; declarative sortKey remains Proposed (ADR-0024).
+- Q2: retain configurable 16 KiB provisionally; tiny hot leaves benefit from 2-8 KiB/hints. Existing changed-write demotion stays (ADR-0025).
+- Q3: range/CTE matrix covers every depth 2-12 and breadth 10-10k. Five seeded 100k-node depth-12 round trips pass; swaps update one row, while a 10,011-row subtree rename rewrites 20,022 rows. Retain hidden array ids and range reads (ADR-0026).
 
 ## Storage core notes
 - Tests load sql.js through Node's native createRequire and resolve its WASM from node_modules; no copied WASM or test helper is needed.

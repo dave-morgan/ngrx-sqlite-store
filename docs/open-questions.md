@@ -6,20 +6,14 @@ When a question is resolved, move it to an ADR and leave a one-line pointer here
 
 ---
 
-### Q1. `sortComparer` for entities. Status: **Provisionally resolved → ADR-0019**
-Ordering is decided at write time by indexed binary search with the JS comparer,
-then stored in `pos`. Reads retain SQL order. The reserved `sortkey` stays unused.
-The phase 8 Android benchmark will compare this approach with declarative sort keys.
+### Q1. `sortComparer` for entities. Status: **Provisional → ADR-0024 (Proposed)**
+[Node/sql.js results](spikes/q1.md) compare current binary search, indexed declarative keys and JS read sorting at 1k/10k/50k entities. Keep ADR-0019's current comparer ordering; propose optional `sortKey` without implementing it. Numeric encoding, tie/classic parity, migration and phase 9 Android validation remain before adoption. See [ADR-0024](decisions/0024-declarative-entity-sort-key.md).
 
-### Q2. Promotion threshold rules. Status: **Provisional**
-When does nested data move from a JSON column to child rows (beyond the hard 1 MB cap, ADR-0008)?
-- Options: a size threshold; per-feature config hints (`paths: { 'items': 'collection' }`); access frequency; dynamic promotion/demotion at runtime.
-- Current: a 16 KB serialized threshold plus config hints. Promotion and demotion happen on changed writes (Phase 3 brief, ADR-0016). The hard row cap always wins over inline hints.
-- Resolves when: spike Q3 gives read/write costs by size, and a migration story for changing promotion exists (with Q10).
+### Q2. Promotion threshold rules. Status: **Provisional → ADR-0025**
+[Threshold sweep and boundary-crossing results](spikes/q2.md) retain configurable 16 KiB as a compromise; hot small-leaf workloads can use 2–8 KiB or collection hints. Keep existing changed-write promotion/demotion and the hard cap; no new background demoter. Device access-pattern costs and a threshold migration story (Q10) remain before a universal default can be validated. See [ADR-0025](decisions/0025-promotion-threshold-findings.md).
 
-### Q3. Nested structure spike. Status: **Open (spike, phase 8)**
-Validate adjacency list + recursive CTE: read/write performance at depth, reassembly cost, how pointer rows interact with path-as-ID, and whether arrays-in-objects-in-arrays round-trip.
-- Resolves when: a benchmark plus round-trip property tests are in `projects/ngrx-sqlite-store/spikes/`.
+### Q3. Nested structure spike. Status: **Resolved → ADR-0026**
+[Range/CTE, reassembly, five seeded depth-12/100k-node round trips and rename measurements](spikes/q3.md) validate the current structural model. Retain the range reader and hidden array ids; object renames/moves still rewrite descendant paths. See [ADR-0026](decisions/0026-adjacency-readers-and-array-identity.md). Android performance targets remain Q14/phase 9.
 
 ### Q4. `StateObservable` and whole-state consumers. Status: **Resolved → ADR-0022**
 Devtools, router-store, and some meta-reducers expect one full state object.

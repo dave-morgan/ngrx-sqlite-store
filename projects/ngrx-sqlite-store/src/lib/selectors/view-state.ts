@@ -1,5 +1,6 @@
 import { getNodeMeta, setNodeMeta } from '../schema/meta';
 import { NSS_ENTITY_BRAND } from '../schema/entity-brand';
+import { getEntityOrder, setEntityOrder } from '../schema/entity-order';
 import { unescapeSegment } from '../storage/path';
 
 function freezeTree(value: unknown, seen = new WeakSet<object>()): unknown {
@@ -73,6 +74,8 @@ export function share(
   const selected = same ? previous : result;
   const meta = getNodeMeta(next);
   if (meta) setNodeMeta(selected, meta);
+  const order = getEntityOrder(next);
+  if (order) setEntityOrder(selected, order);
   if (!same && NSS_ENTITY_BRAND in next)
     Object.defineProperty(result, NSS_ENTITY_BRAND, { value: true });
   return Object.freeze(selected);

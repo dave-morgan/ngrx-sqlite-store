@@ -9,9 +9,13 @@ import { filter, map, switchMap, take, tap, withLatestFrom } from 'rxjs';
 import { SeedActions, TodosActions, UiActions } from './actions';
 import { DEFAULT_SEED_SIZE, SEED_VERSION, generateSeed } from './seed';
 
-/** Seed size can be overridden with `?seed=<n>` (e2e and benchmarks). */
+/**
+ * Seed size can be overridden with `?seed=<n>` (e2e) or `localStorage['harness:seed']`
+ * (Android benchmarks: the Capacitor WebView drops query strings on reload).
+ */
 function requestedSeedSize(doc: Document): number {
-  const raw = new URL(doc.location.href).searchParams.get('seed');
+  const raw =
+    new URL(doc.location.href).searchParams.get('seed') ?? doc.defaultView?.localStorage.getItem('harness:seed') ?? null;
   const n = raw === null ? NaN : Number(raw);
   return Number.isFinite(n) && n >= 0 ? n : DEFAULT_SEED_SIZE;
 }

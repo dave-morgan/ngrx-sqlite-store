@@ -58,13 +58,14 @@ projector-count semantics through transient commit hints (ADR-0021).
 ## 3. `@ngrx/entity` → `ngrx-sqlite-store/entity`
 
 ADR-0019 defines the dual-form adapter. Classic overloads retain the real
-`@ngrx/entity` signatures and delegate unchanged to that adapter. Transaction
+`@ngrx/entity` signatures and delegate to that adapter (keyed mode adds the
+stable ordering described below). Transaction
 operations return `Promise<void>` and use the feature-root collection;
 `adapter.at(tx, 'items')` binds the same operations to a nested collection.
 
 | Export | Status | Notes |
 | --- | --- | --- |
-| `createEntityAdapter<T>({ selectId?, sortComparer? })` | **R\*** | Retains NgRx's default-id and custom string/numeric-id overloads. |
+| `createEntityAdapter<T>({ selectId?, sortComparer?, sortKey? })` | **R\*** | Retains NgRx's default-id and custom string/numeric-id overloads. sortKey returns string or number; mutually exclusive with sortComparer in dev mode. |
 | `getInitialState()` / `getInitialState<S>(extra: Omit<S, keyof EntityState<T>>): S` | **R\*** | Non-enumerable entity brand directs persistence to `nss_entity`. |
 | `getSelectors()` / `getSelectors(selectState)` | **R** | `selectIds`, `selectEntities`, `selectAll`, `selectTotal` use our `createSelector`; plain-callable with dependency metadata. Total derives from the stored ordered IDs. |
 | `Dictionary`, `EntityState`, `Update`, `Predicate`, `EntityMap`, `EntityMapOne`, `IdSelector`, `Comparer` | types **=** | Re-exported from real NgRx. |
@@ -110,6 +111,51 @@ collision. Classic operations preserve NgRx behavior, including its duplicate-ID
 edge cases. Transaction insert batches ignore repeated IDs; parity tests use
 unique IDs within batch inputs because sorted NgRx batches can create duplicate
 `ids` even when adding repeated new IDs.
+
+### Query selectors and scalar sort keys (Phase 10)
+
+```ts
+createEntityAdapter<T>({ selectId?, sortComparer?, sortKey?: (entity: T) => string | number }): EntityAdapter<T>;
+adapter.query(): EntityQueries<EntityState<T>, T, Id>;
+adapter.query<S>(selectState: (state: S) => EntityState<T>): EntityQueries<S, T, Id>;
+// Each EntityQueries method returns a normal MemoizedSelector<S, Result>:
+count(where?: Where): MemoizedSelector<S, number>;
+ids(where?: Where): MemoizedSelector<S, Id[]>;
+exists(where?: Where): MemoizedSelector<S, boolean>;
+page(options: { where?: Where; offset: number; limit: number }): MemoizedSelector<S, T[]>;
+// Primary entry point:
+createQuerySelector<T, S = object>(
+  options: { path: string; key: string; initial: T },
+  reader: (sql: SqlReader) => Promise<T>,
+): MemoizedSelector<S, T>;
+type SqlReader = Pick<SqlExecutor, 'query'>;
+```
+
+`Where` supports field equality and eq/ne/lt/lte/gt/gte/in/like operators, with
+and/or/not trees. Paths use dotted identifier names. Values and paths are bound;
+invalid paths throw. Missing fields match null; equality distinguishes scalar
+types. Ordered strings use binary UTF-8 order. LIKE uses SQLite's default ASCII
+case folding and `%`/`_` wildcards. See ADR-0028 for the full filter contract.
+
+Relative query() selectors evaluate EntityState directly in classic Store and
+MockStore. SQLite Store uses query(selectState) with a precise source selector or
+collection accessor lambda, such as `s => s.todos.items`. Count/exists aggregate
+in SQL without loading the collection. Promoted rows alone fall back to JS and
+warn once in development. Results share query-source refcounts/LRU and refresh
+before scanned effects; fresh subscriptions are synchronous and signals start
+from 0/false/[] respectively. Generic SQL selectors use their supplied initial
+value for synchronous plain-state calls and preserve non-JSON reader result types.
+
+sortKey and a truthy sortComparer together throw in development. Keys must be
+strings or non-NaN numbers; a nonempty collection must have one key type (checked
+in development). Strings sort in binary UTF-8 order, not locale order. Numeric
+keys use fixed-width IEEE-754 encoding, including signed fractions and infinities;
+-0 equals +0. Ties follow original insertion pos, including key-changing updates;
+setAll resets insertion order. Keyed classic operations preserve this order in
+transient metadata, which full/diff persistence retains. Unchanged no-op operations
+retain state identity. Migration v3 only creates the (coll,sortkey,pos) index;
+existing rows keep their order until a keyed adapter first writes and backfills.
+Do not mix keyed and non-keyed adapters for the same persisted collection.
 
 ## 4. Ecosystem dependencies on the store (verified by phase 7 contract tests)
 

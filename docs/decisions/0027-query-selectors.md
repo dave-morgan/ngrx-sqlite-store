@@ -32,3 +32,10 @@ Memoized JS projections cannot express "count where done = false" without materi
 - An "open count" costs one indexed `COUNT(*)` with `json_extract`. No rows are held in memory.
 - `json_extract` cannot use an index without an expression index. The spike in phase 10 measures this cost; ADR-0024's sort key or generated columns could follow later.
 - Selector results computed in SQL never share references with path-source values. Memoization still holds, because a result is replaced only when the query re-runs and the value changed (deep-equal on primitives and arrays of ids).
+
+## Phase 10 implementation
+
+Implemented with a shared PathCache LRU and post-commit refresh. Both field paths
+and values are bound parameters after field validation. Scalar/null, accessor,
+generic fallback and promoted-row semantics are specified in [ADR-0028](0028-query-filter-and-classic-order-semantics.md).
+The entity sort-key mode is accepted in [ADR-0024](0024-declarative-entity-sort-key.md).

@@ -5,7 +5,8 @@ import { SqliteStoreCore } from '../store/core';
 import { State } from '../store/state';
 import type { SelectionEngine } from '../store/tokens';
 import { escapeSegment, joinPath } from '../storage/path';
-import { dependencies } from './metadata';
+import { dependencies, querySources } from './metadata';
+import { queryViews } from './query-selector';
 import { PathCache } from './path-cache';
 import { share } from './view-state';
 
@@ -106,6 +107,8 @@ export class SqliteSelectionEngine implements SelectionEngine {
     emit: (value: unknown) => void,
     error: (error: unknown) => void,
   ): () => void {
+    const queries = querySources(selector);
+    this.cache.registerQueries(queries);
     const leases = new Map<string, () => void>();
     const loading = new Set<string>();
     let stopped = false;
@@ -147,7 +150,14 @@ export class SqliteSelectionEngine implements SelectionEngine {
           defaultView = share(defaultView, filled);
           view = defaultView as object;
         }
-        const required = new Set<string>(paths === 'dynamic' ? [] : paths);
+        if (queries.length) {
+          // A new view identity lets NgRx memoization observe query-only generations.
+          view = { ...view };
+          queryViews.set(view, this.cache.queryValues());
+        }
+        const required = new Set<string>(
+          paths === 'dynamic' ? queries.map((query) => query.id) : paths,
+        );
         let result: unknown;
         let thrown: unknown;
         let didThrow = false;
@@ -174,6 +184,7 @@ export class SqliteSelectionEngine implements SelectionEngine {
               return [...keys];
             },
           });
+          if (queries.length) queryViews.set(proxy, this.cache.queryValues());
           try {
             result = selector(proxy, props);
             if (result === proxy) {

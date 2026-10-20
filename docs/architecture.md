@@ -149,7 +149,7 @@ CREATE TABLE nss_entity (
   coll    TEXT NOT NULL,              -- path of the EntityState, e.g. 'todos' or 'todos/items'
   id      TEXT NOT NULL,              -- selectId(entity), stringified with a type prefix
   pos     REAL NOT NULL,              -- ids[] order (insertion / fractional)
-  sortkey TEXT,                       -- reserved for Q1 (sortComparer)
+  sortkey TEXT,                       -- optional encoded scalar key (ADR-0024)
   data    TEXT NOT NULL,              -- JSON ≤ 1 MB; '' marks a promoted entity value
   PRIMARY KEY (coll, id)
 ) WITHOUT ROWID;
@@ -240,6 +240,32 @@ container so physical row changes also invalidate logical dependencies.
 - `store.select(sel)` / `store.selectSignal(sel)` evaluate selectors against a plain frozen view containing exactly the loaded paths. The view is rebuilt with structural sharing, preserving plain NgRx memoization. Reference-only immutable replacements carry transient commit hints so they also cause the appropriate projector calls (ADR-0021).
 - **Foreign selectors** (built with the real `@ngrx/store`, for example router-store's `getRouterSelectors`, or plain `state => state.x` lambdas) have no metadata. A tracking proxy records feature-level dependencies on every evaluation (Q8). Newly discovered conditional branches load before the scanned action is emitted. Identity selectors pin all registered features and return the plain view.
 - **Before the first load (provisional, Q5).** `select()` emits nothing until the sources are ready. `selectSignal()` returns the value computed from `initialState` defaults until then. `provideStore` registers an app initializer that opens the DB, runs migrations, seeds, and preloads root features that are marked `eager`.
+
+### 5.3 Query sources (ADR-0027/0028)
+
+`adapter.query(selectState?)` supplies count, ids, exists and ordered page selectors.
+Each is an ordinary NgRx memoized selector with a query source keyed by the pair
+(collectionPath, queryKey). Derived selectors retain these sources, including
+compositions with dynamic selectors. Query values live outside the materialized
+state tree; a count subscription never loads or pins the collection path.
+
+PathCache shares refcounting and its inactive LRU budget between path and query
+entries. changes$ only marks overlapping collection queries stale. The existing
+post-commit hook re-runs active queries through engine.read, after transaction
+resolution and before scanned actions/effects. Fresh results emit synchronously;
+unloaded query signals use the query's initial value. Equal JSON results retain
+references; non-JSON generic reader results retain their actual types.
+
+Fields are validated against the ADR-0027 identifier grammar. Both JSON paths and
+values are bound SQL parameters. Two-valued scalar filters distinguish booleans,
+numbers and strings; missing fields are null-equivalent. Promoted rows alone use
+JS evaluation with a development warning. Counts aggregate inline rows without
+loading entities; pages bound inline reads even when merging promoted rows.
+
+Keyed entity reads order by sortkey, pos using the migration v3 index. Non-keyed
+collections have NULL keys and keep stored pos order. The first write by a keyed
+adapter backfills keys through RowWriter; migration alone never reorders data.
+See ADR-0024 for encoding and insertion-order ties.
 
 ## 6. Change notification (Q8, provisional)
 

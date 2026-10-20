@@ -14,6 +14,7 @@ export interface NodeRow {
   value: string | null;
 }
 export interface EntityRow {
+  sortkey?: string | null;
   coll: string;
   id: string;
   pos: number;
@@ -63,7 +64,12 @@ export class RowWriter {
 
   insertEntity(row: EntityRow): void {
     this.check(row.coll, row.data);
-    this.insert('nss_entity', ['coll', 'id', 'pos', 'data'], [row.coll, row.id, row.pos, row.data]);
+    this.check(row.coll, row.sortkey ?? null);
+    this.insert(
+      'nss_entity',
+      ['coll', 'id', 'pos', 'data', 'sortkey'],
+      [row.coll, row.id, row.pos, row.data, row.sortkey ?? null],
+    );
     this.changes.add(row.coll);
   }
 
@@ -107,16 +113,30 @@ export class RowWriter {
   }
 
   async writeEntityRows(rows: EntityRow[], upsert: boolean): Promise<void> {
-    for (const row of rows) this.check(row.coll, row.data);
+    for (const row of rows) {
+      this.check(row.coll, row.data);
+      this.check(row.coll, row.sortkey ?? null);
+    }
     await this.flush();
-    for (let index = 0; index < rows.length; index += 249) {
-      const batch = rows.slice(index, index + 249);
+    for (let index = 0; index < rows.length; index += 199) {
+      const batch = rows.slice(index, index + 199);
       await this.exec.run(
-        `INSERT INTO nss_entity (coll,id,pos,data) VALUES ${batch.map(() => '(?,?,?,?)').join(',')} ON CONFLICT(coll,id) DO ${upsert ? 'UPDATE SET data = excluded.data, pos = excluded.pos' : 'NOTHING'}`,
-        batch.flatMap(({ coll, id, pos, data }) => [coll, id, pos, data]),
+        `INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES ${batch.map(() => '(?,?,?,?,?)').join(',')} ON CONFLICT(coll,id) DO ${upsert ? 'UPDATE SET data = excluded.data, pos = excluded.pos, sortkey = excluded.sortkey' : 'NOTHING'}`,
+        batch.flatMap(({ coll, id, pos, data, sortkey }) => [coll, id, pos, data, sortkey ?? null]),
       );
       for (const row of batch) this.changes.add(row.coll);
     }
+  }
+
+  async updateEntitySortKey(coll: string, id: string, sortkey: string): Promise<void> {
+    this.check(coll, sortkey);
+    await this.flush();
+    await this.exec.run('UPDATE nss_entity SET sortkey = ? WHERE coll = ? AND id = ?', [
+      sortkey,
+      coll,
+      id,
+    ]);
+    this.changes.add(coll);
   }
 
   async deleteEntities(

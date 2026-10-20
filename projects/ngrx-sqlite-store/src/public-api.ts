@@ -33,6 +33,23 @@ export type { SelectionEngine, CommittedCache } from './lib/store/tokens';
 export { StorageEngine as ɵStorageEngine } from './lib/storage/storage-engine';
 export type { ChangeSet } from './lib/storage/change-set';
 export {
+  createQuerySelector,
+  querySelector as ɵquerySelector,
+} from './lib/selectors/query-selector';
+export type { QueryOptions, SqlReader } from './lib/selectors/query-selector';
+export { dependencies as ɵdependencies } from './lib/selectors/metadata';
+export { encodeSortKey as ɵencodeSortKey } from './lib/schema/sort-key';
+export { decodeEntityId as ɵdecodeEntityId } from './lib/schema/ids';
+export { encodeEntityId as ɵencodeEntityId } from './lib/schema/ids';
+export {
+  getEntityOrder as ɵgetEntityOrder,
+  setEntityOrder as ɵsetEntityOrder,
+} from './lib/schema/entity-order';
+export {
+  readSubtree as ɵreadSubtree,
+  entityValuePath as ɵentityValuePath,
+} from './lib/schema/node-reader';
+export {
   ACTIVE_RUNTIME_CHECKS,
   ActionsSubject,
   FEATURE_REDUCERS,

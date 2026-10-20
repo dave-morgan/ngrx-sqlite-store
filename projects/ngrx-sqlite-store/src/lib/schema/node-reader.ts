@@ -2,6 +2,7 @@ import { isDevMode } from '@angular/core';
 import { escapeSegment, subtreeRange, unescapeSegment } from '../storage/path';
 import type { SqlExecutor } from '../storage/storage-engine';
 import { brandEntityState } from './entity-brand';
+import { getEntityOrder, setEntityOrder } from './entity-order';
 import { decodeEntityId } from './ids';
 import { NodeKind } from './kinds';
 import { setNodeMeta } from './meta';
@@ -38,14 +39,14 @@ function freeze(value: unknown): void {
 }
 
 async function assemble(
-  exec: SqlExecutor,
+  exec: Pick<SqlExecutor, 'query'>,
   path: string,
   rows: NodeRow[],
 ): Promise<unknown | undefined> {
   if (!rows.some((row) => row.path === path)) return undefined;
   const [lower, upper] = subtreeRange(path);
   const entities = await exec.query<EntityRow>(
-    'SELECT coll, id, pos, data FROM nss_entity WHERE (coll >= ? AND coll < ?) OR coll = ? ORDER BY coll, pos',
+    'SELECT coll, id, pos, data, sortkey FROM nss_entity WHERE (coll >= ? AND coll < ?) OR coll = ? ORDER BY coll, sortkey, pos',
     [lower, upper, path],
   );
   const chunks = await exec.query<{ path: string; seq: number; data: string }>(
@@ -71,6 +72,7 @@ async function assemble(
         break;
       case NodeKind.Entity: {
         const entity = brandEntityState({ ids: [], entities: {} });
+        setEntityOrder(entity, { positions: new Map(), keys: new Map() });
         setNodeMeta(entity.ids, { path: `${row.path}/ids`, kind: NodeKind.Json });
         setNodeMeta(entity.entities, { path: `${row.path}/entities`, kind: NodeKind.Json });
         value = entity;
@@ -119,6 +121,8 @@ async function assemble(
     if (!value) continue;
     const id = decodeEntityId(row.id);
     value.ids.push(id);
+    getEntityOrder(value)!.positions.set(row.id, row.pos);
+    getEntityOrder(value)!.keys.set(row.id, row.sortkey ?? null);
     const data =
       row.data === '' ? values.get(entityValuePath(row.coll, row.id)) : JSON.parse(row.data);
     if (row.data !== '') attachJsonMeta(data, entityValuePath(row.coll, row.id));
@@ -130,7 +134,10 @@ async function assemble(
   return result;
 }
 
-export async function readSubtree(exec: SqlExecutor, path: string): Promise<unknown | undefined> {
+export async function readSubtree(
+  exec: Pick<SqlExecutor, 'query'>,
+  path: string,
+): Promise<unknown | undefined> {
   const [lower, upper] = subtreeRange(path);
   const rows = await exec.query<NodeRow>(
     'SELECT path, parent, kind, pos, value FROM nss_node WHERE path = ? OR (path >= ? AND path < ?) ORDER BY parent, pos',
@@ -140,7 +147,7 @@ export async function readSubtree(exec: SqlExecutor, path: string): Promise<unkn
 }
 
 export async function readSubtreeCte(
-  exec: SqlExecutor,
+  exec: Pick<SqlExecutor, 'query'>,
   path: string,
 ): Promise<unknown | undefined> {
   const rows = await exec.query<NodeRow>(

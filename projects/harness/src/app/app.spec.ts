@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { todosFeature, uiFeature } from '@impl';
+import { selectOpenTodoCount, uiFeature } from '@impl';
 
 import { App } from './app';
 
@@ -13,7 +13,7 @@ describe('App shell with provideMockStore', () => {
       providers: [provideRouter([]), provideMockStore()],
     }).compileComponents();
     const store = TestBed.inject(MockStore);
-    store.overrideSelector(todosFeature.selectOpenCount, 7);
+    store.overrideSelector(selectOpenTodoCount, 7);
     store.overrideSelector(uiFeature.selectTheme, 'dark');
   });
 

@@ -2,6 +2,7 @@ import type { ChangeSet } from '../storage/change-set';
 import { escapeSegment, parentPath } from '../storage/path';
 import type { SqlExecutor } from '../storage/storage-engine';
 import type { EntityValue } from './entity-brand';
+import { getEntityOrder } from './entity-order';
 import { encodeEntityId, newElementId } from './ids';
 import { NodeKind } from './kinds';
 import { getNodeMeta } from './meta';
@@ -78,7 +79,8 @@ class SubtreeWriter {
           this.rows.insertEntity({
             coll: path,
             id: encoded,
-            pos: positions[i],
+            pos: getEntityOrder(entity)?.positions.get(encoded) ?? positions[i],
+            sortkey: getEntityOrder(entity)?.keys.get(encoded),
             data: oversized ? '' : JSON.stringify(data),
           });
           if (oversized)
@@ -240,7 +242,10 @@ class SubtreeWriter {
     const oldIndex = new Map(oldIds.map((id, i) => [id, i]));
     const matches = nextIds.map((id) => oldIndex.get(id) ?? -1);
     const oldPositions = oldIds.map((id) => meta.entityPos!.get(id)!);
-    const positions = reorderedPositions(matches, oldPositions);
+    const order = getEntityOrder(next);
+    const positions = order
+      ? nextIds.map((id) => order.positions.get(id)!)
+      : reorderedPositions(matches, oldPositions);
     const kept = new Set(nextIds);
     for (let i = 0; i < oldIds.length; i++) {
       if (kept.has(oldIds[i])) continue;
@@ -260,11 +265,15 @@ class SubtreeWriter {
           coll: path,
           id,
           pos: positions[i],
+          sortkey: order?.keys.get(id),
           data: oversized ? '' : JSON.stringify(data),
         });
         if (oversized)
           this.insert(entityPath, data, { parent: path, pos: null }, changePath ?? path);
       } else {
+        const sortkey = order?.keys.get(id);
+        if (sortkey != null && sortkey !== getEntityOrder(prev)?.keys.get(id))
+          await this.rows.updateEntitySortKey(path, id, sortkey);
         const oldData = prev.entities[String(prev.ids[old])];
         if (oldData !== data) {
           const wasOversized = serializedSize(oldData) > this.policy.rowCap;

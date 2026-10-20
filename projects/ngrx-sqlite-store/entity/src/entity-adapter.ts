@@ -1,7 +1,17 @@
 import { isDevMode } from '@angular/core';
 import { createEntityAdapter as classicAdapter } from '@ngrx/entity';
 import type { Comparer, EntityState, IdSelector, Update } from '@ngrx/entity';
-import { createSelector, StoreTx, ɵbrandEntityState, ɵisStoreTx } from 'ngrx-sqlite-store';
+import {
+  createSelector,
+  StoreTx,
+  ɵencodeSortKey,
+  ɵencodeEntityId,
+  ɵgetEntityOrder,
+  ɵsetEntityOrder,
+  ɵbrandEntityState,
+  ɵisStoreTx,
+} from 'ngrx-sqlite-store';
+import { entityQueries } from './query';
 import type { EntityAdapter, EntityOperations, EntityOptions } from './types';
 
 export type { EntityAdapter, EntityOperations } from './types';
@@ -10,21 +20,30 @@ const PAGE_SIZE = 500;
 
 export function createEntityAdapter<T extends { id: string | number }>(options?: {
   sortComparer?: false | Comparer<T>;
+  sortKey?: (entity: T) => string | number;
 }): EntityAdapter<T, T extends { id: infer U } ? U : never>;
 export function createEntityAdapter<T>(options: {
   selectId: (entity: T) => string;
   sortComparer?: false | Comparer<T>;
+  sortKey?: (entity: T) => string | number;
 }): EntityAdapter<T, string>;
 export function createEntityAdapter<T>(options: {
   selectId: (entity: T) => number;
   sortComparer?: false | Comparer<T>;
+  sortKey?: (entity: T) => string | number;
 }): EntityAdapter<T, number>;
 export function createEntityAdapter<T>(options: {
   selectId: IdSelector<T>;
   sortComparer?: false | Comparer<T>;
+  sortKey?: (entity: T) => string | number;
 }): EntityAdapter<T>;
 export function createEntityAdapter<T>(): EntityAdapter<T>;
-export function createEntityAdapter<T>(options: EntityOptions<T> = {}): EntityAdapter<T> {
+export function createEntityAdapter<T, IdType = string | number>(
+  options: EntityOptions<T> = {},
+): EntityAdapter<T, IdType> {
+  if (options.sortKey && options.sortComparer && isDevMode())
+    throw new TypeError('sortKey and sortComparer are mutually exclusive');
+  const insertionOrders = new WeakMap<object, Id[]>();
   const classic = classicAdapter<T>(
     options as { selectId: IdSelector<T>; sortComparer?: false | Comparer<T> },
   );
@@ -187,6 +206,18 @@ export function createEntityAdapter<T>(options: EntityOptions<T> = {}): EntityAd
         await updateMany(updates);
       },
     };
+    if (options.sortKey) {
+      for (const name of Object.keys(operations) as (keyof EntityOperations<T>)[]) {
+        const operation = operations[name] as (...args: unknown[]) => Promise<void>;
+        Object.assign(operations, {
+          [name]: async (...args: unknown[]) => {
+            await collection.prepareSortKey(options.sortKey!);
+            await operation(...args);
+            await collection.validateSortKeys();
+          },
+        });
+      }
+    }
     return operations;
   }
 
@@ -213,6 +244,7 @@ export function createEntityAdapter<T>(options: EntityOptions<T> = {}): EntityAd
     at,
     getInitialState: (extra?: object) => ɵbrandEntityState(classic.getInitialState(extra ?? {})),
     getSelectors,
+    query: entityQueries,
   };
   const names: (keyof EntityOperations<T>)[] = [
     'addOne',
@@ -238,9 +270,46 @@ export function createEntityAdapter<T>(options: EntityOptions<T> = {}): EntityAd
           const operation = at(first, '')[name] as (...args: unknown[]) => Promise<void>;
           return operation(...args);
         }
-        return classicOperation(first, ...args);
+        if (!options.sortKey) return ɵbrandEntityState(classicOperation(first, ...args) as object);
+        const original = (name === 'removeAll' ? first : args[0]) as EntityState<T>;
+        const storedOrder = ɵgetEntityOrder(original);
+        const order =
+          insertionOrders.get(original) ??
+          (storedOrder
+            ? [...original.ids].sort(
+                (a, b) =>
+                  storedOrder.positions.get(ɵencodeEntityId(a))! -
+                  storedOrder.positions.get(ɵencodeEntityId(b))!,
+              )
+            : (original.ids as Id[]));
+        const input = { ...original, ids: [...order] };
+        const result = (
+          name === 'removeAll' ? classicOperation(input) : classicOperation(first, input)
+        ) as EntityState<T>;
+        if (result === input) return original;
+        const insertion = [...result.ids] as Id[];
+        let keyType: string | undefined;
+        const keys = new Map(
+          insertion.map((id) => {
+            const key = ɵencodeSortKey(options.sortKey!(result.entities[id]!));
+            if (keyType && keyType !== key[0] && isDevMode())
+              throw new TypeError('An entity collection cannot mix string and number sort keys');
+            keyType = key[0];
+            return [id, key];
+          }),
+        );
+        const sorted = [...insertion].sort((a, b) =>
+          keys.get(a)! < keys.get(b)! ? -1 : keys.get(a)! > keys.get(b)! ? 1 : 0,
+        );
+        const output = { ...result, ids: sorted };
+        insertionOrders.set(output, insertion);
+        ɵsetEntityOrder(output, {
+          positions: new Map(insertion.map((id, index) => [ɵencodeEntityId(id), index + 1])),
+          keys: new Map(insertion.map((id) => [ɵencodeEntityId(id), keys.get(id)!])),
+        });
+        return ɵbrandEntityState(output);
       },
     });
   }
-  return adapter as EntityAdapter<T>;
+  return adapter as EntityAdapter<T, IdType>;
 }

@@ -6,6 +6,7 @@ import { between } from '../schema/positions';
 import { RowWriter } from '../schema/row-writer';
 import type { EntityRow } from '../schema/row-writer';
 import { serializedSize } from '../schema/size';
+import { encodeSortKey } from '../schema/sort-key';
 import type { ChangeSet } from '../storage/change-set';
 import type { SqlExecutor } from '../storage/storage-engine';
 
@@ -29,6 +30,7 @@ function freeze(value: unknown): void {
 
 /** Indexed entity operations on the current transaction's executor. */
 export class EntityTx<T> {
+  private sortKey?: (entity: T) => string | number;
   private readonly cached = new Map<string, EntityRow | undefined>();
   private readonly writer: RowWriter;
   constructor(
@@ -43,6 +45,34 @@ export class EntityTx<T> {
 
   invalidate(): void {
     this.cached.clear();
+  }
+  async prepareSortKey(sortKey: (entity: T) => string | number): Promise<void> {
+    if (this.sortKey === sortKey) return;
+    this.sortKey = sortKey;
+    const rows = await this.sql.query<EntityRow>(
+      'SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? AND sortkey IS NULL ORDER BY pos',
+      [this.coll],
+    );
+    for (const row of rows)
+      await this.writer.updateEntitySortKey(this.coll, row.id, this.key(await this.value(row))!);
+    if (rows.length) this.changed();
+  }
+  private key(entity: T): string | undefined {
+    if (!this.sortKey) return undefined;
+    const encoded = encodeSortKey(this.sortKey(entity));
+    return encoded;
+  }
+  async validateSortKeys(): Promise<void> {
+    if (!isDevMode() || !this.sortKey) return;
+    // Two index endpoint probes check the final collection, including replacements
+    // that legitimately change every row's key type in a single operation.
+    const [row] = await this.sql.query<{ first: string | null; last: string | null }>(
+      `SELECT (SELECT sortkey FROM nss_entity WHERE coll = ? AND sortkey IS NOT NULL ORDER BY sortkey LIMIT 1) AS first,
+       (SELECT sortkey FROM nss_entity WHERE coll = ? AND sortkey IS NOT NULL ORDER BY sortkey DESC LIMIT 1) AS last`,
+      [this.coll, this.coll],
+    );
+    if (row.first?.[0] !== row.last?.[0])
+      throw new TypeError('An entity collection cannot mix string and number sort keys');
   }
   private changed(): void {
     this.changes.add(this.coll);
@@ -108,7 +138,7 @@ export class EntityTx<T> {
   async ids(): Promise<EntityId[]> {
     return (
       await this.sql.query<{ id: string }>(
-        'SELECT id FROM nss_entity WHERE coll = ? ORDER BY pos',
+        'SELECT id FROM nss_entity WHERE coll = ? ORDER BY sortkey, pos',
         [this.coll],
       )
     ).map(({ id }) => decodeEntityId(id));
@@ -117,7 +147,7 @@ export class EntityTx<T> {
     if (!Number.isInteger(offset) || offset < 0 || !Number.isInteger(limit) || limit < 0)
       throw new RangeError('Invalid entity page');
     const rows = await this.sql.query<EntityRow>(
-      'SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? ORDER BY pos LIMIT ? OFFSET ?',
+      'SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? ORDER BY sortkey, pos LIMIT ? OFFSET ?',
       [this.coll, limit, offset],
     );
     const result: EntityPageRow<T>[] = [];
@@ -152,7 +182,11 @@ export class EntityTx<T> {
         seen.add(key);
         return true;
       })
-      .map((row) => ({ ...row, data: this.data(row.id, row.entity) }));
+      .map((row) => ({
+        ...row,
+        data: this.data(row.id, row.entity),
+        sortkey: this.key(row.entity),
+      }));
     let last: number | undefined;
     const batch: EntityRow[] = [];
     for (const [index, row] of encoded.entries()) {
@@ -163,7 +197,13 @@ export class EntityTx<T> {
       if (explicit === undefined && last === undefined) last = await this.lastPosition();
       const pos = explicit ?? ++last!;
       if (!Number.isFinite(pos)) throw new RangeError('Invalid entity position');
-      batch.push({ coll: this.coll, id: encodeEntityId(row.id), pos, data: row.data });
+      batch.push({
+        coll: this.coll,
+        id: encodeEntityId(row.id),
+        pos,
+        data: row.data,
+        sortkey: row.sortkey,
+      });
       if (row.data === '')
         await this.nodes.write(
           this.sql,
@@ -178,7 +218,11 @@ export class EntityTx<T> {
   async upsert(rows: readonly EntityInput<T>[]): Promise<void> {
     if (!rows.length) return;
     // Validate every value before the first mutation.
-    const encoded = rows.map((row) => ({ ...row, data: this.data(row.id, row.entity) }));
+    const encoded = rows.map((row) => ({
+      ...row,
+      data: this.data(row.id, row.entity),
+      sortkey: this.key(row.entity),
+    }));
     let last: number | undefined;
     const batch: EntityRow[] = [];
     for (const row of encoded) {
@@ -189,12 +233,19 @@ export class EntityTx<T> {
       const path = entityValuePath(this.coll, encodeEntityId(row.id));
       if (old?.data === '') await this.writer.deletePrefix(path, this.coll);
       if (row.data === '') await this.nodes.write(this.sql, path, row.entity, this.changes);
-      batch.push({ coll: this.coll, id: encodeEntityId(row.id), pos, data: row.data });
+      batch.push({
+        coll: this.coll,
+        id: encodeEntityId(row.id),
+        pos,
+        data: row.data,
+        sortkey: row.sortkey,
+      });
     }
     await this.writer.writeEntityRows(batch, true);
     this.changed();
   }
   async update(id: EntityId, entity: T): Promise<void> {
+    const sortkey = this.key(entity);
     const data = this.data(id, entity);
     const old = await this.row(id);
     if (!old) return;
@@ -202,6 +253,8 @@ export class EntityTx<T> {
     if (old.data === '') await this.writer.deletePrefix(path, this.coll);
     if (data === '') await this.nodes.write(this.sql, path, entity, this.changes);
     await this.writer.updateEntity(this.coll, encodeEntityId(id), data);
+    if (sortkey !== undefined)
+      await this.writer.updateEntitySortKey(this.coll, encodeEntityId(id), sortkey);
     this.changed();
   }
   async setPosition(id: EntityId, pos: number): Promise<void> {

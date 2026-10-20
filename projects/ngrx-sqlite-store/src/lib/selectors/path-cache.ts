@@ -10,14 +10,32 @@ import { referenceChanges } from '../storage/reference-changes';
 import type { SqlExecutor } from '../storage/storage-engine';
 import { STORE_CONFIGURATION } from '../store/tokens';
 import { at, child, put, share } from './view-state';
+import type { QuerySource } from './metadata';
 
 interface Entry {
+  query?: QuerySource;
   value: unknown;
   refcount: number;
   version: number;
   lastUsed: number;
   dirty: ChangeSet;
   replaced: Set<string>;
+}
+
+function isJsonTree(value: unknown, seen = new WeakSet<object>()): boolean {
+  if (value === null || typeof value !== 'object') return typeof value !== 'function';
+  if (seen.has(value)) return false;
+  seen.add(value);
+  if (
+    !Array.isArray(value) &&
+    Object.getPrototypeOf(value) !== Object.prototype &&
+    Object.getPrototypeOf(value) !== null
+  )
+    return false;
+  return (
+    !Object.getOwnPropertySymbols(value).length &&
+    Object.values(value).every((child) => isJsonTree(child, seen))
+  );
 }
 
 @Injectable()
@@ -36,7 +54,7 @@ export class PathCache {
   private readonly subscription = this.engine.changes$.subscribe((changes) => {
     // This callback runs INSIDE the engine FIFO. Invalidate only; never query.
     for (const [path, entry] of this.entries)
-      if (changes.overlaps(path)) {
+      if (changes.overlaps(entry.query?.path ?? path)) {
         entry.dirty.merge(changes);
         for (const replaced of referenceChanges(changes)) entry.replaced.add(replaced);
         entry.version = ++this.revision;
@@ -46,9 +64,33 @@ export class PathCache {
   get view(): object {
     return this.currentView;
   }
+  registerQueries(queries: readonly QuerySource[]): void {
+    for (const query of queries) {
+      if (this.entries.has(query.id)) continue;
+      const dirty = new ChangeSet();
+      dirty.add(query.path);
+      this.entries.set(query.id, {
+        query,
+        value: query.initial,
+        refcount: 0,
+        version: this.revision,
+        lastUsed: ++this.clock,
+        dirty,
+        replaced: new Set(),
+      });
+    }
+  }
+  queryValues(): ReadonlyMap<string, unknown> {
+    return new Map(
+      [...this.entries]
+        .filter(([, entry]) => entry.query && entry.dirty.isEmpty)
+        .map(([key, entry]) => [key, entry.value]),
+    );
+  }
   withDefaults(defaults: object): object {
     let view: unknown = defaults;
-    for (const [path, entry] of this.entries) view = put(view, path.split('/'), entry.value);
+    for (const [path, entry] of this.entries)
+      if (!entry.query) view = put(view, path.split('/'), entry.value);
     return view as object;
   }
   notify(): void {
@@ -56,7 +98,9 @@ export class PathCache {
   }
 
   private owner(path: string): [string, Entry] | undefined {
-    return [...this.entries].find(([root]) => isAncestorOrSelf(root, path));
+    return [...this.entries].find(([root, entry]) =>
+      entry.query ? root === path : isAncestorOrSelf(root, path),
+    );
   }
   ready(path: string): boolean {
     const owner = this.owner(path);
@@ -110,6 +154,7 @@ export class PathCache {
       const root = resolved.path;
       let value = resolved.value;
       for (const [descendant, entry] of this.entries) {
+        if (entry.query) continue;
         if (!isAncestorOrSelf(root, descendant)) continue;
         const suffix = descendant === root ? [] : descendant.slice(root.length + 1).split('/');
         const loaded = at(value, suffix);
@@ -154,6 +199,13 @@ export class PathCache {
     this.publish();
   }
   private async refreshEntry(sql: SqlExecutor, path: string, entry: Entry): Promise<void> {
+    if (entry.query) {
+      const next = await entry.query.reader({ query: sql.query.bind(sql) });
+      entry.value = isJsonTree(entry.value) && isJsonTree(next) ? share(entry.value, next) : next;
+      entry.dirty = new ChangeSet();
+      entry.version = this.revision;
+      return;
+    }
     const targets = new ChangeSet();
     for (const changed of entry.dirty.paths()) {
       if (!pathsOverlap(path, changed)) continue;
@@ -209,7 +261,7 @@ export class PathCache {
     for (const [root, entry] of this.entries) {
       entry.refcount = 0;
       for (const [path, count] of this.references)
-        if (pathsOverlap(root, path)) entry.refcount += count;
+        if (entry.query ? root === path : pathsOverlap(root, path)) entry.refcount += count;
     }
   }
   private evict(): void {
@@ -225,7 +277,8 @@ export class PathCache {
   }
   private publish(): void {
     let view: unknown = Object.freeze({});
-    for (const [path, entry] of this.entries) view = put(view, path.split('/'), entry.value);
+    for (const [path, entry] of this.entries)
+      if (!entry.query) view = put(view, path.split('/'), entry.value);
     this.currentView = share(this.currentView, view) as object;
     const generation = this.generation() + 1;
     this.generation.set(generation);

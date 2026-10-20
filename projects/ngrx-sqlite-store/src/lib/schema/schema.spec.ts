@@ -114,7 +114,7 @@ describe('schema engine', () => {
     return statements;
   }
 
-  it('registers exactly the v2 tables and indexes without changing v1', async () => {
+  it('registers the v2 tables and v3 sort-key index without changing v1', async () => {
     const rows = await engine.read((sql) =>
       sql.query<{ name: string; sql: string }>(
         "SELECT name, sql FROM sqlite_master WHERE name LIKE 'nss_%' ORDER BY name",
@@ -124,6 +124,7 @@ describe('schema engine', () => {
       'nss_chunk',
       'nss_entity',
       'nss_entity_order',
+      'nss_entity_sortkey',
       'nss_meta',
       'nss_node',
       'nss_node_parent',

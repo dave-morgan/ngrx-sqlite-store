@@ -22,4 +22,10 @@ export const SCHEMA_MIGRATIONS: Migration[] = [
     `);
     },
   },
+  {
+    version: 3,
+    up: async (exec) => {
+      await exec.exec('CREATE INDEX nss_entity_sortkey ON nss_entity(coll, sortkey, pos)');
+    },
+  },
 ];

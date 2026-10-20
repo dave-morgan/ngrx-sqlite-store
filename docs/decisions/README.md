@@ -29,16 +29,16 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0021](0021-selector-reference-replacements.md) | Preserve reference-only reducer replacements with transient commit hints | Agent | 2026-10-20 | Accepted |
 | [0022](0022-devtools-compat.md) | Display-only devtools with guarded scanned actions and committed-view reducer; resolves Q4 | Agent / Phase 7 brief | 2026-10-20 | Accepted |
 | [0023](0023-async-ecosystem-ordering.md) | Commit/refresh/emission serialization, bootstrap lifecycle ordering and router feedback transport | Agent | 2026-10-20 | Accepted |
-| [0024](0024-declarative-entity-sort-key.md) | Optional declarative sortKey fast path; retain sortComparer pending semantics and migration | Agent / Phase 8 spike | 2026-10-20 | Proposed |
+| [0024](0024-declarative-entity-sort-key.md) | Declarative sortKey with IEEE-754/UTF-8 encoding, stable insertion ties and migration v3; resolves Q1 | Phase 10 brief / Agent | 2026-10-20 | Accepted |
 | [0025](0025-promotion-threshold-findings.md) | Retain configurable 16 KiB promotion and existing changed-write demotion | Agent / Phase 8 spike | 2026-10-20 | Provisional |
 | [0026](0026-adjacency-readers-and-array-identity.md) | Retain range reads and hidden array ids; object moves rewrite subtree paths (resolves Q3) | Agent / Phase 8 spike | 2026-10-20 | Accepted |
 | [0027](0027-query-selectors.md) | SQL-backed query selectors (count/page/ids/exists, declarative where, createQuerySelector) | Agent | 2026-10-20 | Accepted |
+| [0028](0028-query-filter-and-classic-order-semantics.md) | Two-valued scalar query filters, accessor paths, generic fallback and classic ordering metadata | Agent / Phase 10 | 2026-10-20 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 
 | Q | Current choice | Decided by |
 | --- | --- | --- |
-| Q1 | Keep write-time comparer ordering; optional sortKey proposed after Node spike (ADR-0024); semantics/migration and Android validation pending | Agent |
 | Q2 | Retain 16 KiB + hints and changed-write demotion (ADR-0025); Android workload/threshold migration validation pending | Agent |
 | Q5 | `select` waits for first load; `selectSignal` falls back to `initialState`; LRU 32 | Agent |
 | Q7 | No in-memory slices; classic reducers via SQLite-backed bridge | Agent |

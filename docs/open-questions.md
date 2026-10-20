@@ -6,8 +6,8 @@ When a question is resolved, move it to an ADR and leave a one-line pointer here
 
 ---
 
-### Q1. `sortComparer` for entities. Status: **Provisional → ADR-0024 (Proposed)**
-[Node/sql.js results](spikes/q1.md) compare current binary search, indexed declarative keys and JS read sorting at 1k/10k/50k entities. Keep ADR-0019's current comparer ordering; propose optional `sortKey` without implementing it. Numeric encoding, tie/classic parity, migration and phase 9 Android validation remain before adoption. See [ADR-0024](decisions/0024-declarative-entity-sort-key.md).
+### Q1. `sortComparer` for entities. Status: **Resolved → ADR-0024**
+Optional sortKey uses typed order-preserving encoding, stable insertion ties and migration v3; arbitrary sortComparer remains available. [Q1](spikes/q1.md) measures the production adapter. Android performance validation remains Phase 9. See [ADR-0024](decisions/0024-declarative-entity-sort-key.md).
 
 ### Q2. Promotion threshold rules. Status: **Provisional → ADR-0025**
 [Threshold sweep and boundary-crossing results](spikes/q2.md) retain configurable 16 KiB as a compromise; hot small-leaf workloads can use 2–8 KiB or collection hints. Keep existing changed-write promotion/demotion and the hard cap; no new background demoter. Device access-pattern costs and a threshold migration story (Q10) remain before a universal default can be validated. See [ADR-0025](decisions/0025-promotion-threshold-findings.md).
@@ -68,3 +68,7 @@ Can small UI slices stay fully in memory with classic sync reducers?
 
 ### Q16. Aggregates over large collections. Status: **Resolved → ADR-0027**
 Selectors derived from `selectAll` materialize and pin the whole collection (found while designing the phase 9 benchmark). Counts, pages and filters move into SQL as query selectors.
+Phase 10 implements query-source caching, post-commit refresh, parameterized filters
+and promoted-row fallback, with JS/SQL equivalence and effect-timing tests.
+See [ADR-0027](decisions/0027-query-selectors.md) and
+[ADR-0028](decisions/0028-query-filter-and-classic-order-semantics.md).

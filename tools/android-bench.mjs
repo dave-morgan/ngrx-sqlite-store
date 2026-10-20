@@ -73,8 +73,18 @@ async function launch() {
 }
 
 async function readyMs(page, total) {
+  const summary = () => page.locator('[data-testid=todo-summary]').textContent({ timeout: 1000 }).catch(() => '?');
+  const timer = setInterval(async () => log(`    waiting for ${total} total; showing: ${(await summary()).trim()}`), 15_000);
+  try {
+    return await readyMsInner(page, total);
+  } finally {
+    clearInterval(timer);
+  }
+}
+
+async function readyMsInner(page, total) {
   await page.waitForFunction(
-    (t) => (document.querySelector('[data-testid=todo-summary]')?.textContent ?? '').includes(`${t} total`),
+    (t) => new RegExp(`(^|\\D)${t} total`).test(document.querySelector('[data-testid=todo-summary]')?.textContent ?? ''),
     total,
     { timeout: 300_000 },
   );
@@ -137,13 +147,23 @@ async function measure(impl, size) {
   adb('shell', 'pm', 'clear', PKG);
   let { browser, page } = await launch();
   await page.waitForFunction(() => !!window.__harness, null, { timeout: 120_000 });
-  // Reset whatever the default boot seeded, then reboot the app with the requested seed size.
+  // The default boot seeds 500 todos asynchronously. Wait for it, reset, confirm the
+  // reset committed, then reboot with the requested size (otherwise the default seed can
+  // land after the reset and the reboot skips seeding).
+  log('  wait default seed');
+  await readyMs(page, 500);
+  log('  reset');
   await page.evaluate(async () => {
     window.__harness.dispatch({ type: '[Seed] Reset' });
     await window.__harness.settle();
   });
+  if (impl === 'sqlite') await readyMs(page, 0);
+  log('  reboot with seed', size);
+  // The Capacitor WebView drops query strings on reload; the harness also reads localStorage.
+  await page.evaluate((n) => localStorage.setItem('harness:seed', String(n)), size);
   await page.goto(`${ORIGIN}/todos?seed=${size}`);
   const firstReadyMs = await readyMs(page, size);
+  log('  ready', Math.round(firstReadyMs), 'ms');
   await page.evaluate(() => window.__harness.settle());
   const heapTodos = await heapMb(page);
   const pssTodos = pssMb();
@@ -160,8 +180,7 @@ async function measure(impl, size) {
 
   log(`${impl} · ${size}: relaunch`);
   ({ browser, page } = await launch());
-  // Classic has no persistence: it re-seeds from the generator (stands in for an API fetch).
-  if (impl === 'classic') await page.goto(`${ORIGIN}/todos?seed=${size}`);
+  // Classic has no persistence: it re-seeds on boot (stands in for an API fetch), sized via localStorage.
   const relaunchReadyMs = await readyMs(page, size);
   await page.evaluate(() => window.__harness.settle());
   const heapRelaunch = await heapMb(page);

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Store } from '@store';
-import { IMPL_NAME, todosFeature } from '@impl';
+import { IMPL_NAME, selectOpenTodoCount } from '@impl';
 
 import { UiActions } from './state/actions';
 import { selectTheme } from './state/selectors';
@@ -70,7 +70,7 @@ export class App {
 
   protected readonly impl = IMPL_NAME;
   protected readonly theme = this.store.selectSignal(selectTheme);
-  protected readonly open = this.store.selectSignal(todosFeature.selectOpenCount);
+  protected readonly open = this.store.selectSignal(selectOpenTodoCount);
   protected readonly links = [
     { path: '/todos', label: 'Todos' },
     { path: '/users', label: 'Users' },

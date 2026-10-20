@@ -8,6 +8,7 @@ import type {
   Update,
 } from '@ngrx/entity';
 import type { StoreTx } from 'ngrx-sqlite-store';
+import type { EntityQueries } from './query';
 
 /** Transaction-bound operations returned by adapter.at(tx, path). */
 export interface EntityOperations<T> {
@@ -60,9 +61,12 @@ export type EntityAdapter<T, IdType = string | number> = Omit<
 > &
   DualOperations<T> & {
     at(tx: StoreTx, path: string): EntityOperations<T>;
+    query(): EntityQueries<EntityState<T>, T, IdType>;
+    query<S>(selectState: (state: S) => EntityState<T>): EntityQueries<S, T, IdType>;
   };
 
 export interface EntityOptions<T> {
+  sortKey?: (entity: T) => string | number;
   selectId?: (entity: T) => string | number;
   sortComparer?: false | Comparer<T>;
 }

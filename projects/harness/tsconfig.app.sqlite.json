@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "paths": {
+      "@store": ["./src/app/store-impl/sqlite/store.ts"],
+      "@store/entity": ["./src/app/store-impl/sqlite/entity.ts"],
+      "@impl": ["./src/app/store-impl/sqlite/index.ts"],
+      "ngrx-sqlite-store": ["../ngrx-sqlite-store/src/public-api.ts"],
+      "ngrx-sqlite-store/*": ["../ngrx-sqlite-store/*/src/public-api.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts", "src/app/store-impl/classic/**"]
+}

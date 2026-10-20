@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "paths": {
+      "@store": ["./src/app/store-impl/classic/store.ts"],
+      "@store/entity": ["./src/app/store-impl/classic/entity.ts"],
+      "@impl": ["./src/app/store-impl/classic/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts", "src/app/store-impl/sqlite/**"]
+}

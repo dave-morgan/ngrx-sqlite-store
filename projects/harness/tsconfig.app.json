@@ -1,10 +1,9 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+/* Base harness tsconfig. Store aliases live in tsconfig.app.classic.json / tsconfig.app.sqlite.json (ADR-0011). */
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "types": []
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts"]
+  "exclude": ["src/**/*.spec.ts", "src/app/store-impl/**"]
 }

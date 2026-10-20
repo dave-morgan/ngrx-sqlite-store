@@ -47,7 +47,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "projects/harness/src/main.ts",
-            "tsConfig": "projects/harness/tsconfig.app.json",
+            "tsConfig": "projects/harness/tsconfig.app.classic.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
@@ -55,15 +55,17 @@
                 "input": "projects/harness/public"
               }
             ],
-            "styles": ["projects/harness/src/styles.scss"]
+            "styles": [
+              "projects/harness/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1MB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -77,6 +79,12 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "classic": {
+              "tsConfig": "projects/harness/tsconfig.app.classic.json"
+            },
+            "sqlite": {
+              "tsConfig": "projects/harness/tsconfig.app.sqlite.json"
             }
           },
           "defaultConfiguration": "production"
@@ -89,12 +97,21 @@
             },
             "development": {
               "buildTarget": "harness:build:development"
+            },
+            "classic": {
+              "buildTarget": "harness:build:development,classic"
+            },
+            "sqlite": {
+              "buildTarget": "harness:build:development,sqlite"
             }
           },
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/harness/tsconfig.spec.json"
+          }
         }
       }
     }

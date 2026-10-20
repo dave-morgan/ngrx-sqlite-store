@@ -210,7 +210,10 @@ property keys. Entity extra properties remain ordinary child nodes. See ADR-0016
 - Reads go through the **PathCache**, which gives structural sharing: an unchanged subtree returns the same reference across reads.
 
 Phase 3's `NodeStore` takes the supplied `SqlExecutor` and `ChangeSet` directly;
-the Phase 4 transaction identity cache and Phase 5 PathCache remain to be built.
+Phase 4a adds the shared transaction identity cache; the committed PathCache remains
+for phase 4b. Repeated reads reuse references, including descendants derived from
+cached containers and hidden array ids. Writes invalidate overlapping ancestors
+and descendants; containers are reloaded to retain generated ids and positions.
 All schema INSERT/UPDATE/DELETE statements originate in `RowWriter`, which records
 paths and batches inserts with at most 999 parameters. Never await a nested engine
 operation in an engine callback, `changes$` subscriber, or `afterCommit` callback:
@@ -255,6 +258,31 @@ The library implements every class and token that ecosystem libraries inject, an
 | `INITIAL_STATE`, `INIT`, `UPDATE`, `ROOT_STORE_PROVIDER`, `FEATURE_STATE_PROVIDER`, `ACTIVE_RUNTIME_CHECKS`, ... | same tokens, our values |
 
 Pure helpers (`createAction`, `props`, `createActionGroup`, `union`, `emptyProps`, `select`, `compose`, `combineReducers`) are re-exported so that action creators are interchangeable with ones built by the real package. Effects' `ofType` matches on `type` strings, so they work across both.
+
+Phase 4a implements the write side and original DI token aliases. Root bootstrap
+opens and migrates the database, seeds versioned features, then releases buffered
+actions with `INIT` first. Feature registrations during bootstrap are also seeded
+before actions run. Removing a feature (including destroying its environment)
+unregisters handlers and retains data; `purgeFeature` deletes data and its version
+marker. `settle()` waits for writes, purges, refresh hooks and scanned emissions.
+Foreign reducers whose seed is `undefined`, including `routerReducer`, retain only
+the feature version marker until they produce state. Reset/reseed removes their
+persisted subtree rather than writing an invalid JSON value.
+
+`StoreTx` scopes paths to one feature. Action hooks run once before feature
+handlers, receiving the first registered feature's handle; `resetAll()` on that
+handle resets every registered feature in the same transaction. Classic reducer
+maps and meta-reducers use the compatibility bridge. Transaction reducers are
+registered individually; NgRx's synchronous composition helpers remain bridge-only.
+The opt-in action-type uniqueness check delegates to NgRx's private action
+registry through a temporary empty store using its public providers, at root and
+feature registration. No private NgRx symbols are imported.
+
+The phase 4b seams are internal `ɵSELECTION_ENGINE`, `ɵCOMMITTED_CACHE`, and the
+multi-provider `ɵPOST_COMMIT_HOOK`. Refresh hooks run after transactions resolve,
+including seeding and purge transactions. `State` currently holds `{}` and store
+selection methods throw `select is implemented in phase 4b`; selector creation
+helpers are temporarily re-exported unchanged from NgRx.
 
 ### 7.1 Import strategies
 

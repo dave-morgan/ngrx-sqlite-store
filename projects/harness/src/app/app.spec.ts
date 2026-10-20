@@ -1,23 +1,27 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { todosFeature, uiFeature } from '@impl';
+
 import { App } from './app';
 
-describe('App', () => {
+// provideMockStore compatibility (contract §2): the shell renders from overridden selectors.
+describe('App shell with provideMockStore', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [provideRouter([]), provideMockStore()],
     }).compileComponents();
+    const store = TestBed.inject(MockStore);
+    store.overrideSelector(todosFeature.selectOpenCount, 7);
+    store.overrideSelector(uiFeature.selectTheme, 'dark');
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it('should render title', async () => {
+  it('renders the open count from an overridden selector', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, harness');
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.querySelector('[data-testid="open-count"]')?.textContent).toContain('7 open');
+    expect(el.querySelector('[data-testid="impl"]')?.textContent?.trim()).toBe('classic');
   });
 });

@@ -7,7 +7,8 @@ vi.mock('@capacitor-community/sqlite', () => {
   throw new Error('Optional SQLite plugin loaded eagerly');
 });
 
-import { CapacitorSqliteDriver, SqlJsDriver, StorageEngine } from './public-api';
+import { CapacitorSqliteDriver, SqlJsDriver } from './public-api';
+import { StorageEngine } from './lib/storage/storage-engine';
 
 describe('public API optional drivers', () => {
   it('imports and constructs adapters without loading optional Capacitor dependencies', () => {

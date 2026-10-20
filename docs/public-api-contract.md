@@ -4,6 +4,11 @@ Verified against **@ngrx/store 22.0.1** (`types/ngrx-store.d.ts`, `ngrx-store-te
 
 Legend: **=** re-exported unchanged from `@ngrx/store` · **R** reimplemented with identical signature and semantics · **R\*** reimplemented with a documented difference · **T** provided under the original DI token (ADR-0010) · **—** out of scope (noted).
 
+Implementation checkpoint: phase 4a provides the write-side contract and DI.
+`Store.select`/`selectSignal` remain explicit phase 4b seams, `State` holds `{}`,
+and selector authoring helpers are temporary NgRx re-exports. Internal schema and
+storage implementation values are no longer public unprefixed exports.
+
 ## 1. `@ngrx/store` runtime exports
 
 | Export | Kind | Status | Notes |

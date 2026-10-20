@@ -23,6 +23,7 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0015](0015-on-disk-schema-v1.md) | Generic on-disk schema v1 | User | 2026-10-20 | Accepted |
 | [0016](0016-schema-engine-encoding.md) | Schema engine ordering, encoding, hints and opt-in migration | Phase 3 brief / Agent | 2026-10-20 | Accepted |
 | [0017](0017-store-composition.md) | Store composition: reuse NgRx subjects, 1 tx/action, scanned ordering, seeding, removeReducer keeps data, meta-reducers on bridge only | Agent | 2026-10-20 | Accepted |
+| [0018](0018-selector-engine.md) | Selector engine: reuse NgRx memoize + metadata, PathCache w/ staleness, view state, feature-level dynamic tracking | Agent | 2026-10-20 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

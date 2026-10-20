@@ -25,6 +25,12 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - [ ] Phase 8 spikes Q1/Q2/Q3/Q4
 - [ ] Phase 9 Android benchmarks
 
+## Harness (orchestrator-owned; agents don't touch unless briefed)
+- `projects/harness`: README there. Aliases `@store`, `@store/entity`, `@impl` per build config (`-c classic|sqlite`). Shared code in `src/app/state`, pages in `src/app/pages`; only reducers differ (`store-impl/{classic,sqlite}`).
+- Classic: builds, 1 unit test + 11/11 Playwright e2e pass (`npm run e2e:classic`). Sqlite build waits on phases 4b + 6 (`createFeature`, `ngrx-sqlite-store/entity` dual-form adapter, `tx.resetFeature`).
+- Android: `android/` added (Capacitor 8). Gradle needs JDK 21: `JAVA_HOME="C:\Program Files\Android\Android Studio\jbr"`.
+- Briefs for pending phases: `docs/briefs/phase-4b-selectors.md`, `docs/briefs/phase-6-entity.md` (ADR-0019).
+
 ## Blocking / awaiting user
 - None. Q6 → ADR-0013/0014; schema v1 → ADR-0015.
 

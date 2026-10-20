@@ -24,12 +24,13 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0016](0016-schema-engine-encoding.md) | Schema engine ordering, encoding, hints and opt-in migration | Phase 3 brief / Agent | 2026-10-20 | Accepted |
 | [0017](0017-store-composition.md) | Store composition: reuse NgRx subjects, 1 tx/action, scanned ordering, seeding, removeReducer keeps data, meta-reducers on bridge only | Agent | 2026-10-20 | Accepted |
 | [0018](0018-selector-engine.md) | Selector engine: reuse NgRx memoize + metadata, PathCache w/ staleness, view state, feature-level dynamic tracking | Agent | 2026-10-20 | Accepted |
+| [0019](0019-entity-adapter.md) | Entity adapter: dual-form ops (classic pure / tx SQL), `adapter.at(tx, path)`, write-time sort order via binary search (Q1) | Agent | 2026-10-20 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 
 | Q | Current choice | Decided by |
 | --- | --- | --- |
-| Q1 | `sortComparer` applied in JS on read, dev warning; `sortkey` column reserved | Agent |
+| Q1 | Write-time ordering by binary search (ADR-0019); spike benchmark pending | Agent |
 | Q2 | 16 KB promotion threshold + path hints; depth-1 props always rows; changed values may demote (Phase 3 brief) | Agent |
 | Q4 | Lazy whole-state view; devtools display-only mode (no time travel) | Agent |
 | Q5 | `select` waits for first load; `selectSignal` falls back to `initialState`; LRU 32 | Agent |

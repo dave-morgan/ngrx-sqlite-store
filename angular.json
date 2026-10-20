@@ -53,6 +53,11 @@
               {
                 "glob": "**/*",
                 "input": "projects/harness/public"
+              },
+              {
+                "glob": "sql-wasm.wasm",
+                "input": "node_modules/sql.js/dist",
+                "output": "assets"
               }
             ],
             "styles": [

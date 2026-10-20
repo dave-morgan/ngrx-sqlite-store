@@ -1,10 +1,18 @@
-import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
+// Classic @ngrx/store reducers: synchronous (state, action) => state.
+import { createFeature, createReducer, on } from '@ngrx/store';
 
 import { NotesActions, SeedActions, TodosActions, UiActions, UsersActions, benchmarkTick } from '../../state/actions';
-import { Note } from '../../state/models';
+import {
+  mapFolder,
+  mapNote,
+  moveItem,
+  newTodoId,
+  pushVisited,
+  todosExtraSelectors,
+  toggleChecklist,
+} from '../../state/logic';
 import { makeAttachmentData } from '../../state/seed';
 import {
-  MAX_VISITED,
   initialNotesState,
   initialTodosState,
   initialUiState,
@@ -12,9 +20,6 @@ import {
   todoAdapter,
   userAdapter,
 } from '../../state/state';
-
-let nextTodo = 0;
-const newTodoId = () => `n${Date.now().toString(36)}${(nextTodo++).toString(36)}`;
 
 export const todosFeature = createFeature({
   name: 'todos',
@@ -39,35 +44,14 @@ export const todosFeature = createFeature({
         state,
       ),
     ),
-    on(TodosActions.todoRenamed, (state, { id, title }) =>
-      todoAdapter.updateOne({ id, changes: { title } }, state),
-    ),
+    on(TodosActions.todoRenamed, (state, { id, title }) => todoAdapter.updateOne({ id, changes: { title } }, state)),
     on(TodosActions.todoRemoved, (state, { id }) => todoAdapter.removeOne(id, state)),
     on(TodosActions.completedCleared, (state) => todoAdapter.removeMany((t) => t.done, state)),
     on(TodosActions.filterChanged, (state, { filter }) => ({ ...state, filter })),
     on(TodosActions.queryChanged, (state, { query }) => ({ ...state, query })),
     on(TodosActions.userFilterChanged, (state, { userId }) => ({ ...state, userId })),
   ),
-  extraSelectors: ({ selectTodosState, selectFilter, selectQuery, selectUserId }) => {
-    const { selectAll, selectTotal } = todoAdapter.getSelectors(selectTodosState);
-    const selectOpenCount = createSelector(selectAll, (all) => all.filter((t) => !t.done).length);
-    const selectVisibleTodos = createSelector(
-      selectAll,
-      selectFilter,
-      selectQuery,
-      selectUserId,
-      (all, filter, query, userId) => {
-        const q = query.trim().toLowerCase();
-        return all.filter(
-          (t) =>
-            (filter === 'all' || (filter === 'done') === t.done) &&
-            (!userId || t.userId === userId) &&
-            (!q || t.title.toLowerCase().includes(q)),
-        );
-      },
-    );
-    return { selectAllTodos: selectAll, selectTodoTotal: selectTotal, selectOpenCount, selectVisibleTodos };
-  },
+  extraSelectors: todosExtraSelectors,
 });
 
 export const usersFeature = createFeature({
@@ -84,15 +68,6 @@ export const usersFeature = createFeature({
     return { selectAllUsers: selectAll, selectUserEntities: selectEntities };
   },
 });
-
-const mapFolder = (
-  folders: readonly import('../../state/models').Folder[],
-  folderId: string,
-  fn: (notes: Note[]) => Note[],
-) => folders.map((f) => (f.id === folderId ? { ...f, notes: fn(f.notes) } : f));
-
-const mapNote = (notes: Note[], noteId: string, fn: (n: Note) => Note) =>
-  notes.map((n) => (n.id === noteId ? fn(n) : n));
 
 export const notesFeature = createFeature({
   name: 'notes',
@@ -114,21 +89,11 @@ export const notesFeature = createFeature({
     })),
     on(NotesActions.checklistItemToggled, (state, { folderId, noteId, index }) => ({
       ...state,
-      folders: mapFolder(state.folders, folderId, (notes) =>
-        mapNote(notes, noteId, (n) => ({
-          ...n,
-          checklist: n.checklist.map((c, i) => (i === index ? { ...c, done: !c.done } : c)),
-        })),
-      ),
+      folders: mapFolder(state.folders, folderId, (notes) => mapNote(notes, noteId, (n) => toggleChecklist(n, index))),
     })),
     on(NotesActions.noteMoved, (state, { folderId, from, to }) => ({
       ...state,
-      folders: mapFolder(state.folders, folderId, (notes) => {
-        const next = [...notes];
-        const [moved] = next.splice(from, 1);
-        next.splice(to, 0, moved);
-        return next;
-      }),
+      folders: mapFolder(state.folders, folderId, (notes) => moveItem(notes, from, to)),
     })),
     on(NotesActions.noteRemoved, (state, { folderId, noteId }) => ({
       ...state,
@@ -148,10 +113,7 @@ export const uiFeature = createFeature({
     initialUiState,
     on(UiActions.themeToggled, (state) => ({ ...state, theme: state.theme === 'light' ? 'dark' : 'light' }) as const),
     on(UiActions.themeSet, (state, { theme }) => ({ ...state, theme })),
-    on(UiActions.pageVisited, (state, { url }) => ({
-      ...state,
-      visited: [url, ...state.visited.filter((u) => u !== url)].slice(0, MAX_VISITED),
-    })),
+    on(UiActions.pageVisited, (state, { url }) => ({ ...state, visited: pushVisited(state.visited, url) })),
     on(UiActions.effectObserved, (state, { observation }) => ({ ...state, lastObservation: observation })),
     on(benchmarkTick, (state, { n }) => ({ ...state, benchmarkCount: n })),
   ),

@@ -250,51 +250,59 @@ export function entityQueries<S, T, Id = string | number>(
           throw new Error(
             'SQLite entity queries require a selectState selector with a single collection path',
           );
-        const promoted = await sql.query<{ id: string; pos: number; sortkey: string | null }>(
-          "SELECT id,pos,sortkey FROM nss_entity WHERE coll = ? AND data = '' ORDER BY sortkey,pos",
-          [path],
-        );
         const predicate = `coll = ? AND data != '' AND ${filter.sql}`;
-        if (promoted.length && isDevMode() && !warned) {
-          console.warn('ngrx-sqlite-store/entity: query evaluates promoted entities in JS.');
-          warned = true;
-        }
         if (kind === 'count' || kind === 'exists') {
-          const [row] = await sql.query<{ value: number }>(
-            kind === 'count'
-              ? `SELECT COUNT(*) AS value FROM nss_entity WHERE ${predicate}`
-              : `SELECT EXISTS(SELECT 1 FROM nss_entity WHERE ${predicate}) AS value`,
-            [path, ...filter.params],
+          // Transport aggregate and promoted-row fallbacks in one bridge call.
+          const transport = await sql.query<{ id: string | null; value: number | null }>(
+            `SELECT id, NULL AS value FROM nss_entity WHERE coll = ? AND data = ''
+             UNION ALL SELECT NULL, ${kind === 'count' ? 'COUNT(*)' : `EXISTS(SELECT 1 FROM nss_entity WHERE ${predicate})`}
+             ${kind === 'count' ? `FROM nss_entity WHERE ${predicate}` : ''}`,
+            [path, path, ...filter.params],
           );
-          let value = row.value;
-          for (const promotedRow of promoted) {
-            if (filter.test(await ɵreadSubtree(sql, ɵentityValuePath(path, promotedRow.id))))
-              value++;
-          }
+          let value = transport.find((row) => row.id === null)!.value!;
+          for (const row of transport)
+            if (row.id !== null) {
+              if (filter.test(await ɵreadSubtree(sql, ɵentityValuePath(path, row.id)))) value++;
+            }
           return (kind === 'exists' ? !!value : value) as R;
         }
-        const rows = await sql.query<{
+        const transport = await sql.query<{
           id: string;
           pos: number;
           sortkey: string | null;
           data?: string;
+          promoted: number;
           entity?: unknown;
         }>(
-          `SELECT id,pos,sortkey${kind === 'page' ? ',data' : ''} FROM nss_entity WHERE ${predicate} ORDER BY sortkey,pos${kind === 'page' ? ' LIMIT ? OFFSET ?' : ''}`,
+          `WITH promoted AS (
+            SELECT id,pos,sortkey${kind === 'page' ? ',data' : ''},1 AS promoted
+            FROM nss_entity WHERE coll = ? AND data = ''
+          ), inline AS (
+            SELECT id,pos,sortkey${kind === 'page' ? ',data' : ''},0 AS promoted
+            FROM nss_entity WHERE ${predicate} ORDER BY sortkey,pos
+            ${
+              kind === 'page'
+                ? `LIMIT CASE WHEN EXISTS(SELECT 1 FROM promoted) THEN ? ELSE ? END
+              OFFSET CASE WHEN EXISTS(SELECT 1 FROM promoted) THEN 0 ELSE ? END`
+                : ''
+            }
+          ) SELECT * FROM inline UNION ALL SELECT * FROM promoted ORDER BY sortkey,pos`,
           [
             path,
+            path,
             ...filter.params,
-            ...(kind === 'page'
-              ? [
-                  promoted.length ? page!.offset + page!.limit : page!.limit,
-                  promoted.length ? 0 : page!.offset,
-                ]
-              : []),
+            ...(kind === 'page' ? [page!.offset + page!.limit, page!.limit, page!.offset] : []),
           ],
         );
+        const promoted = transport.filter((row) => row.promoted);
+        const rows = transport.filter((row) => !row.promoted);
+        if (promoted.length && isDevMode() && !warned) {
+          console.warn('ngrx-sqlite-store/entity: query evaluates promoted entities in JS.');
+          warned = true;
+        }
         for (const row of promoted) {
           const entity = await ɵreadSubtree(sql, ɵentityValuePath(path, row.id));
-          if (filter.test(entity)) rows.push({ ...row, entity });
+          if (filter.test(entity)) rows.push({ ...row, data: undefined, entity });
         }
         if (promoted.length)
           rows.sort((a, b) =>

@@ -122,7 +122,7 @@ describe('phase 12 scale', () => {
     await store.dispatchAsync(toggle());
     const next = cache.peek('todos') as typeof initial;
     expect(next.ids).toBe(previous.ids);
-    expect(counts.trace.some((sql) => /WHERE coll = \? AND id IN/.test(sql))).toBe(true);
+    expect(counts.trace.some((sql) => /WHERE coll = \? AND id IN/.test(sql))).toBe(false);
     sub.unsubscribe();
   });
   it('releases the complete entity selector memo graph', () => {
@@ -180,7 +180,7 @@ describe('phase 12 scale', () => {
       if (id !== 't1') expect(next.entities[id]).toBe(previous.entities[id]);
     const refresh = counts.trace.slice(counts.trace.indexOf('COMMIT') + 1);
     expect(refresh.length).toBeLessThanOrEqual(3);
-    expect(refresh.some((sql) => /WHERE coll = \? AND id IN/.test(sql))).toBe(true);
+    expect(refresh.some((sql) => /WHERE coll = \? AND id IN/.test(sql))).toBe(false);
     expect(changes.at(-1)).toEqual(['todos/s:t1']);
     commits.unsubscribe();
     sub.unsubscribe();

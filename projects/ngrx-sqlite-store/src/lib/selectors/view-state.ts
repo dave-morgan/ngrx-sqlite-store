@@ -105,6 +105,8 @@ export function put(value: unknown, segments: string[], next: unknown, remove = 
     });
   const meta = getNodeMeta(previous);
   if (meta) setNodeMeta(result, meta);
+  const order = getEntityOrder(previous);
+  if (order) setEntityOrder(result, order);
   if (NSS_ENTITY_BRAND in previous)
     Object.defineProperty(result, NSS_ENTITY_BRAND, { value: true });
   return Object.freeze(result);

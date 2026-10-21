@@ -75,6 +75,20 @@ export class CapacitorSqliteDriver implements SqlDriver {
     return { changes: result.changes?.changes ?? 0, lastId: result.changes?.lastId };
   }
 
+  async batch(
+    statements: { sql: string; params?: SqlValue[] }[],
+    opts: { transaction: boolean },
+  ): Promise<void> {
+    await this.database.executeSet(
+      statements.map(({ sql, params }) => ({
+        statement: sql,
+        values: params ?? [],
+      })),
+      opts.transaction,
+    );
+    if (this.web && opts.transaction) await this.connection.saveToStore(this.options.database);
+  }
+
   async query<R = Row>(sql: string, params: SqlValue[] = []): Promise<R[]> {
     // Plugin 8.x query has no transaction parameter (its third flag is isSQL92).
     return ((await this.database.query(sql, params)).values as R[]) ?? [];

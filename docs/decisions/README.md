@@ -38,6 +38,8 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0030](0030-session-scoped-features.md) | `persist: false` session-scoped features; router-store slice not persisted by default | Agent | 2026-10-21 | Accepted |
 | [0031](0031-granular-entity-refresh.md) | Typed entity changes, indexed refresh, structural sharing and unchanged-reference fast paths | Phase 12 brief / Agent | 2026-10-21 | Accepted |
 | [0032](0032-retained-cache-budget.md) | Compact collection metadata and byte-budgeted inactive cache | Phase 12 brief / Agent | 2026-10-21 | Accepted |
+| [0033](0033-lazy-batch-and-write-through.md) | Lazy atomic driver batches and exact committed cache write-through | Phase 13 brief / Agent | 2026-10-21 | Accepted |
+| [0034](0034-seed-retention-contracts.md) | Device retainer paths; preserve action/history/active-lease contracts and scope write journals | Phase 13 brief / Agent | 2026-10-21 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

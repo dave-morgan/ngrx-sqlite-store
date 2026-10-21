@@ -6,7 +6,7 @@ import type { ChangeSet } from '../storage/change-set';
 import { escapeSegment, isAncestorOrSelf, parentPath, unescapeSegment } from '../storage/path';
 import type { SqlExecutor } from '../storage/storage-engine';
 import { recordReferences, recordReplacement } from '../storage/reference-changes';
-import type { NodeRow } from '../schema/row-writer';
+import type { EntityRow, NodeRow } from '../schema/row-writer';
 import { EntityTx } from './entity-tx';
 
 export const STORE_TX_BRAND = Symbol.for('ngrx-sqlite-store/StoreTx');
@@ -20,6 +20,8 @@ export function isStoreTx(value: unknown): value is StoreTx {
 
 export interface CommittedCache {
   peek(fullPath: string): unknown | undefined;
+  peekEntity?(coll: string, id: string): EntityRow | undefined;
+  location?(path: string): Pick<NodeRow, 'parent' | 'pos'> | undefined;
 }
 
 function child(value: unknown, segment: string): { found: boolean; value?: unknown } {
@@ -87,7 +89,10 @@ export class StoreTx<S = unknown> {
             if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) other.invalidate();
           }
         },
-        this.changes.overlaps(full) ? undefined : this.committedCache.peek(full),
+        this.cache.get(full) ??
+          (this.changes.overlaps(full) ? undefined : this.committedCache.peek(full)),
+        (id) =>
+          this.changes.overlaps(full) ? undefined : this.committedCache.peekEntity?.(full, id),
       );
       this.entityCollections.set(full, collection);
     }
@@ -164,6 +169,7 @@ export class StoreTx<S = unknown> {
       ownerMeta && ownerMeta.kind !== NodeKind.Json && ownerMeta.childPos?.has(segment);
     const row =
       this.locations.get(full) ??
+      (this.changes.overlaps(full) ? undefined : this.committedCache.location?.(full)) ??
       (physical
         ? { parent, pos: ownerMeta.childPos!.get(segment)! }
         : path === '' && getNodeMeta(previous)
@@ -194,7 +200,7 @@ export class StoreTx<S = unknown> {
     recordReferences(this.changes, full, previous, value);
     // Reload container metadata only if a later read needs it. This preserves
     // generated array ids without an unconditional sibling/container round trip.
-    this.invalidate(full, value, value === null || typeof value !== 'object');
+    this.invalidate(full, value);
   }
 
   async patch(path: string, partial: Record<string, unknown>): Promise<void> {

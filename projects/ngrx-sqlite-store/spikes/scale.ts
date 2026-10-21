@@ -101,6 +101,15 @@ export class LatencyDriver extends SqlJsDriver {
       return rows;
     });
   }
+  override batch(
+    statements: { sql: string; params?: SqlValue[] }[],
+    opts: { transaction: boolean },
+  ): Promise<void> {
+    return this.statement(opts.transaction ? 'BATCH COMMIT' : 'BATCH', async () => {
+      await super.batch(statements, opts);
+      if (opts.transaction) this.commitAt = performance.now();
+    });
+  }
   override run(sql: string, params: SqlValue[] = []) {
     // run calls this.query; count it separately, but avoid double-counting its time.
     this.trace.push(sql);
@@ -258,7 +267,9 @@ export async function scaleWorker(): Promise<void> {
     if (i) toggleTimes.push(emittedAt - start);
     toggleStatements = driver.trace.length;
     toggleEntityRows = driver.entityRows;
-    refreshStatements = driver.trace.slice(driver.trace.indexOf('COMMIT') + 1).length;
+    refreshStatements = driver.trace.slice(
+      Math.max(driver.trace.lastIndexOf('COMMIT'), driver.trace.lastIndexOf('BATCH COMMIT')) + 1,
+    ).length;
     driver.trace = [];
     driver.waitMs = driver.sqlMs = driver.todosStatements = 0;
     start = performance.now();
@@ -353,7 +364,9 @@ export async function scale(): Promise<void> {
       '50k toggle time target',
     );
     assert.ok(largest.refreshStatements <= 3, 'refresh statement target');
-    assert.equal(largest.toggleEntityRows, 1, 'toggle must transport one entity row');
+    assert.equal(largest.toggleEntityRows, 0, 'cached toggle must not read back an entity row');
+    assert.equal(largest.uiStatements, 1, 'ui dispatch bridge floor');
+    assert.equal(largest.toggleStatements, 2, 'cached toggle plus subscribed count');
     assert.ok(largest.commitJsMs < 5, 'post-commit JS target (conservatively includes SQL)');
     assert.equal(largest.todosStatements, 0, 'ui must not touch todos');
     assert.ok(largest.sqliteHeap <= largest.classicHeap * 1.2, 'loaded heap target');
@@ -366,6 +379,6 @@ export async function scale(): Promise<void> {
   const mb = (bytes: number) => (bytes / 1024 ** 2).toFixed(2);
   await report(
     'scale',
-    `# Phase 12 scale\n\n${environment}\n\nLatencyDriver uses an asynchronous turn followed by a monotonic CPU wait (Windows setTimeout/Atomics.wait measured 15.5 ms for a requested 3 ms). The wait is isolated as delay in CPU profiles. Configurable requested delay: ${process.env['SCALE_LATENCY_MS'] ?? 3} ms per statement; complete dispatch through selector emission. Five-run medians after warm-up. Post-commit time measured separately at zero latency (includes SQL refresh). Heap deltas use two forced GCs after an event-loop turn, against each initialized empty store after a 100-row setup warm-up and clear. Every implementation/size runs in a fresh process; classic and SQLite both subscribe to selectAll, count and ui. Seed actions and instrumentation SQL strings are released before GC. After list release, count and ui remain mounted; no manual selector.release() is used. SQL counts include BEGIN/COMMIT and last_insert_rowid; refresh counts exclude writes/transaction control.\n\n| N | toggle before ms | after ms | classic ms | target ms | ui before ms | after ms | post-commit before ms | after ms |\n|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n${results.map((r, i) => `| ${r.n} | ${before[i].toggleMs.toFixed(3)} | ${r.toggleMs.toFixed(3)} | ${r.classicMs.toFixed(3)} | ${(10 * r.classicMs + 9).toFixed(3)} | ${before[i].uiMs.toFixed(3)} | ${r.uiMs.toFixed(3)} | ${before[i].commitJsMs.toFixed(3)} | ${r.commitJsMs.toFixed(3)} |`).join('\n')}\n\n| N | toggle statements before/after | refresh before/after | entity rows before/after | ui statements | todos statements on ui | classic MiB | store before MiB | after MiB | released before MiB | after MiB |\n|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n${results.map((r, i) => `| ${r.n} | ${before[i].toggleStatements}/${r.toggleStatements} | ${before[i].refreshStatements}/${r.refreshStatements} | ${before[i].toggleEntityRows}/${r.toggleEntityRows} | ${r.uiStatements} | ${r.todosStatements} | ${mb(r.classicHeap)} | ${mb(before[i].sqliteHeap)} | ${mb(r.sqliteHeap)} | ${mb(before[i].releasedHeap)} | ${mb(r.releasedHeap)} |`).join('\n')}\n\nAt 50k the compact position buffer uses another 0.38 MiB outside heapUsed; including it still meets the 1.2x classic bound. Negative released deltas reflect GC/JIT noise around the empty-store baseline. The targets apply to N=50k; full-dispatch counts include four write/control statements in addition to the three refresh reads.\n\n${profile}\n`,
+    `# Phase 13 scale\n\n${environment}\n\nLatencyDriver uses an asynchronous turn followed by a monotonic CPU wait (Windows setTimeout/Atomics.wait measured 15.5 ms for a requested 3 ms). The wait is isolated as delay in CPU profiles. Configurable requested delay: ${process.env['SCALE_LATENCY_MS'] ?? 3} ms per driver invocation; complete dispatch through selector emission. Five-run medians after warm-up. Post-commit time measured separately at zero latency (includes SQL refresh). Heap deltas use two forced GCs after an event-loop turn, against each initialized empty store after a 100-row setup warm-up and clear. Every implementation/size runs in a fresh process; classic and SQLite both subscribe to selectAll, count and ui. Seed actions and instrumentation SQL strings are released before GC. After list release, count and ui remain mounted; no manual selector.release() is used. After counts are driver invocations (batch = one); the historical baseline counted SQL including internal last_insert_rowid. Refresh excludes the batch/commit. Cached entity values use write-through; count reruns once.\n\n| N | toggle before ms | after ms | classic ms | target ms | ui before ms | after ms | post-commit before ms | after ms |\n|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n${results.map((r, i) => `| ${r.n} | ${before[i].toggleMs.toFixed(3)} | ${r.toggleMs.toFixed(3)} | ${r.classicMs.toFixed(3)} | ${(10 * r.classicMs + 9).toFixed(3)} | ${before[i].uiMs.toFixed(3)} | ${r.uiMs.toFixed(3)} | ${before[i].commitJsMs.toFixed(3)} | ${r.commitJsMs.toFixed(3)} |`).join('\n')}\n\n| N | toggle statements before/after | refresh before/after | entity rows before/after | ui statements | todos statements on ui | classic MiB | store before MiB | after MiB | released before MiB | after MiB |\n|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n${results.map((r, i) => `| ${r.n} | ${before[i].toggleStatements}/${r.toggleStatements} | ${before[i].refreshStatements}/${r.refreshStatements} | ${before[i].toggleEntityRows}/${r.toggleEntityRows} | ${r.uiStatements} | ${r.todosStatements} | ${mb(r.classicHeap)} | ${mb(before[i].sqliteHeap)} | ${mb(r.sqliteHeap)} | ${mb(before[i].releasedHeap)} | ${mb(r.releasedHeap)} |`).join('\n')}\n\nAt 50k the compact position buffer uses another 0.38 MiB outside heapUsed; including it still meets the 1.2x classic bound. Negative released deltas reflect GC/JIT noise around the empty-store baseline. The targets apply to N=50k. Cached toggles use one atomic batch and one count query; ui uses one atomic batch. The phase 13 acceptance tests measure cold toggles separately (three calls).\n\n${profile}\n`,
   );
 }

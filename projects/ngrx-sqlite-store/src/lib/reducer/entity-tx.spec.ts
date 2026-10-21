@@ -23,16 +23,16 @@ describe('transaction entities', () => {
   });
   afterEach(async () => engine.close());
 
-  it('updates a row with one read and one UPDATE, invalidates cached state and preserves extras', async () => {
+  it('updates a locally cached row without a read and one buffered UPDATE, invalidates cached state and preserves extras', async () => {
     await engine.transaction(async (sql) => {
       const tx = new StoreTx('items', nodes, sql, sql.changes);
       await tx.get();
       const query = vi.spyOn(sql, 'query');
-      const run = vi.spyOn(sql, 'run');
+      const run = vi.spyOn(sql, 'write');
       const rows = tx.entities<{ id: number; value: string }>('');
       expect(await rows.get(1)).toEqual({ id: 1, value: 'a' });
       await rows.update(1, { id: 1, value: 'b' });
-      expect(query).toHaveBeenCalledTimes(1);
+      expect(query).not.toHaveBeenCalled();
       expect(run).toHaveBeenCalledTimes(1);
       expect(run.mock.calls[0][0]).toMatch(/^UPDATE nss_entity/);
       expect(await tx.get()).toEqual({
@@ -129,7 +129,7 @@ describe('transaction entities', () => {
       const compare = (a: { value: string }, b: { value: string }) =>
         a.value.localeCompare(b.value);
       expect(await rows.positionForUpdate(2, { id: 2, value: 'bb' }, compare)).toBe(2);
-      const run = vi.spyOn(sql, 'run');
+      const run = vi.spyOn(sql, 'write');
       await rows.update(2, { id: 2, value: 'bb' });
       expect(
         run.mock.calls.filter(([statement]) => statement.startsWith('UPDATE nss_entity SET pos')),

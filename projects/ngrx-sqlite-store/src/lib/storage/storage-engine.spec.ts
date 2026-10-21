@@ -5,6 +5,10 @@ import { SQL_DRIVER } from '../driver/sql-driver';
 import { SqlJsDriver } from '../driver/sqljs-driver';
 import { StorageEngine } from './storage-engine';
 import type { Migration } from './storage-engine';
+import { SCHEMA_MIGRATIONS } from '../schema/migrations';
+import { NodeStore } from '../schema/node-store';
+import { committedWrites } from './committed-writes';
+import type { ChangeSet } from './change-set';
 
 describe('StorageEngine', () => {
   let driver: SqlJsDriver;
@@ -21,6 +25,93 @@ describe('StorageEngine', () => {
   });
   afterEach(async () => {
     await engine.close();
+  });
+
+  it.each([false, true])(
+    'releases commit journals even when diagnostics retain ChangeSet (callback fails: %s)',
+    async (fails) => {
+      engine = new StorageEngine(driver, { migrations: SCHEMA_MIGRATIONS });
+      await engine.open();
+      const value = { payload: Array.from({ length: 100 }, (_, i) => ({ id: i })) };
+      let retained!: ChangeSet;
+      const sub = engine.changes$.subscribe((changes) => {
+        retained = changes;
+        expect(committedWrites(changes).values.get('sample')).toBe(value);
+      });
+      const operation = engine.transaction(async (tx) => {
+        await new NodeStore().write(tx, 'sample', value, tx.changes);
+        if (fails)
+          tx.afterCommit(() => {
+            throw new Error('callback');
+          });
+      });
+      if (fails) await expect(operation).rejects.toThrow('callback');
+      else await operation;
+      expect(committedWrites(retained).values.size).toBe(0);
+      expect(committedWrites(retained).entities.size).toBe(0);
+      expect(await engine.read((sql) => new NodeStore().read(sql, 'sample'))).toEqual(value);
+      sub.unsubscribe();
+    },
+  );
+
+  it('discards unflushed writes on handler failure and rolls back an atomic batch failure', async () => {
+    await engine.open();
+    const batch = vi.spyOn(driver, 'batch');
+    await expect(
+      engine.transaction(async (tx) => {
+        await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [1, 'lost']);
+        throw new Error('handler');
+      }),
+    ).rejects.toThrow('handler');
+    expect(batch).not.toHaveBeenCalled();
+    await expect(
+      engine.transaction(async (tx) => {
+        await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [1, 'lost']);
+        await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [1, 'duplicate']);
+      }),
+    ).rejects.toThrow();
+    expect(await engine.read((sql) => sql.query('SELECT * FROM test'))).toEqual([]);
+    await engine.transaction(async (tx) => {
+      await tx.write!('INSERT INTO test(name) VALUES (?)', ['kept']);
+    });
+    expect(batch.mock.calls.at(-1)?.[1]).toEqual({ transaction: true });
+    expect(await engine.read((sql) => sql.query('SELECT name FROM test'))).toEqual([
+      { name: 'kept' },
+    ]);
+  });
+
+  it('flushes before reads, then rolls back every flushed write on failure', async () => {
+    await engine.open();
+    const batch = vi.spyOn(driver, 'batch');
+    await expect(
+      engine.transaction(async (tx) => {
+        await tx.write!('INSERT INTO test(name) VALUES (?)', ['visible']);
+        expect(await tx.query('SELECT name FROM test')).toEqual([{ name: 'visible' }]);
+        await tx.write!('INSERT INTO test(name) VALUES (?)', ['pending']);
+        throw new Error('rollback');
+      }),
+    ).rejects.toThrow('rollback');
+    expect(batch.mock.calls[0][1]).toEqual({ transaction: false });
+    expect(await engine.read((sql) => sql.query('SELECT * FROM test'))).toEqual([]);
+  });
+
+  it('uses one atomic batch after initial reads and supports drivers without batching', async () => {
+    await engine.open();
+    const begin = vi.spyOn(driver, 'begin');
+    await engine.transaction(async (tx) => {
+      expect(await tx.query('SELECT * FROM test')).toEqual([]);
+      await tx.write!('INSERT INTO test(name) VALUES (?)', ['batched']);
+    });
+    expect(begin).not.toHaveBeenCalled();
+    Object.defineProperty(driver, 'batch', { value: undefined });
+    await engine.transaction(async (tx) => {
+      await tx.write!('INSERT INTO test(name) VALUES (?)', ['legacy']);
+      expect(await tx.query('SELECT name FROM test')).toEqual([
+        { name: 'batched' },
+        { name: 'legacy' },
+      ]);
+    });
+    expect(begin).toHaveBeenCalledTimes(1);
   });
 
   it('supports Angular injection using SQL_DRIVER and plain construction', async () => {
@@ -295,7 +386,8 @@ describe('StorageEngine', () => {
     await engine.open();
     vi.spyOn(driver, 'rollback').mockRejectedValueOnce(new Error('rollback failed'));
     await expect(
-      engine.transaction(async () => {
+      engine.transaction(async (tx) => {
+        await tx.run("INSERT INTO test(name) VALUES ('lost')");
         throw new Error('original failure');
       }),
     ).rejects.toMatchObject({

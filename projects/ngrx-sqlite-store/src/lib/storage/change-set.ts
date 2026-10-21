@@ -1,3 +1,4 @@
+import { invalidateWrites } from './committed-writes';
 interface Branch {
   path?: string;
   children: Map<string, Branch>;
@@ -23,6 +24,7 @@ export class ChangeSet {
     return false;
   }
   private record(path: string): void {
+    invalidateWrites(this, path);
     let node = this.root;
     for (const segment of path === '' ? [] : path.split('/')) {
       if (node.path !== undefined) return;

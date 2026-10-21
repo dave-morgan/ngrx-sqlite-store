@@ -45,6 +45,7 @@ export class EntityTx<T> {
     private readonly coll: string,
     private readonly onWrite: () => void,
     snapshot?: unknown,
+    private readonly committedRow?: (id: string) => EntityRow | undefined,
   ) {
     this.writer = new RowWriter(sql, changes, nodes.policy.rowCap);
     if (getNodeMeta(snapshot)?.kind === NodeKind.Entity && getEntityOrder(snapshot as EntityValue))
@@ -104,6 +105,10 @@ export class EntityTx<T> {
               data: this.data(id, this.snapshot.entities[String(id)] as T),
             },
       );
+    }
+    if (!this.cached.has(encoded)) {
+      const committed = this.committedRow?.(encoded);
+      if (committed) this.cached.set(encoded, committed);
     }
     if (!this.cached.has(encoded)) {
       const [row] = await this.sql.query<EntityRow>(

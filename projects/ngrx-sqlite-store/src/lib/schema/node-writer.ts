@@ -1,3 +1,6 @@
+import { committedWrites } from '../storage/committed-writes';
+import { setEntityOrder } from './entity-order';
+import { EntityPositions } from './entity-positions';
 import type { ChangeSet } from '../storage/change-set';
 import { escapeSegment, parentPath } from '../storage/path';
 import type { SqlExecutor } from '../storage/storage-engine';
@@ -5,7 +8,7 @@ import type { EntityValue } from './entity-brand';
 import { getEntityOrder } from './entity-order';
 import { encodeEntityId, newElementId } from './ids';
 import { NodeKind } from './kinds';
-import { getNodeMeta } from './meta';
+import { getNodeMeta, setNodeMeta } from './meta';
 import type { NodeMeta } from './meta';
 import { entityValuePath } from './node-reader';
 import { matchElements, reorderedPositions } from './ordering';
@@ -67,6 +70,7 @@ class SubtreeWriter {
   insert(path: string, value: unknown, location: Location, changePath?: string): void {
     const kind = this.policy.decideKind(path, value, depth(path));
     this.rows.insertNode({ path, ...location, kind, value: valueText(value, kind) }, changePath);
+    if (value && typeof value === 'object') setNodeMeta(value, { path, kind });
     if (kind === NodeKind.Chunked) this.insertChunks(path, value as string, changePath);
     else if (kind === NodeKind.Obj || kind === NodeKind.Arr || kind === NodeKind.Entity) {
       if (kind === NodeKind.Entity) {
@@ -100,6 +104,22 @@ class SubtreeWriter {
               .filter(([key]) => kind !== NodeKind.Entity || (key !== 'ids' && key !== 'entities'))
               .map(([key, child]) => [escapeSegment(key), child] as const);
       const positions = initial(entries.length);
+      const meta: NodeMeta = {
+        path,
+        kind,
+        childPos: new Map(entries.map(([key], i) => [key, positions[i]])),
+      };
+      if (kind === NodeKind.Arr) meta.elementIds = entries.map(([key]) => key);
+      if (kind === NodeKind.Entity) {
+        const entity = value as EntityValue;
+        const order = getEntityOrder(entity) ?? {
+          positions: new EntityPositions(new Map(entity.ids.map((id, i) => [id, i + 1]))),
+          keys: new Map(),
+        };
+        setEntityOrder(entity, order);
+        meta.entityPos = order.positions;
+      }
+      setNodeMeta(value as object, meta);
       entries.forEach(([segment, child], i) =>
         this.insert(`${path}/${segment}`, child, { parent: path, pos: positions[i] }, changePath),
       );
@@ -146,6 +166,7 @@ class SubtreeWriter {
       await this.replace(path, next, location, changePath);
       return;
     }
+    if (next && typeof next === 'object') setNodeMeta(next, { path, kind });
     if (kind <= NodeKind.Json) {
       await this.rows.updateValue(path, valueText(next, kind), changePath);
     } else if (kind === NodeKind.Chunked) {
@@ -183,9 +204,13 @@ class SubtreeWriter {
     for (const key of previousKeys) {
       if (!Object.hasOwn(next, key)) await this.remove(childPath(path, key), prev[key], changePath);
     }
+    const childPos = new Map(meta.childPos);
+    for (const key of previousKeys)
+      if (!Object.hasOwn(next, key)) childPos.delete(escapeSegment(key));
     for (const key of keys(next)) {
       if (!Object.hasOwn(prev, key)) {
-        this.insert(childPath(path, key), next[key], { parent: path, pos: ++lastPos }, changePath);
+        childPos.set(escapeSegment(key), ++lastPos);
+        this.insert(childPath(path, key), next[key], { parent: path, pos: lastPos }, changePath);
       } else if (prev[key] !== next[key]) {
         await this.diff(
           childPath(path, key),
@@ -196,6 +221,8 @@ class SubtreeWriter {
         );
       }
     }
+    const nextMeta = getNodeMeta(next)!;
+    setNodeMeta(next, { ...meta, ...nextMeta, childPos });
   }
 
   private async diffArray(
@@ -219,11 +246,12 @@ class SubtreeWriter {
       else await this.remove(child, prev[i], changePath);
     }
     await this.rows.deleteLeaves(leaves, changePath);
+    const elementIds = matches.map((old) => (old < 0 ? newElementId() : meta.elementIds![old]));
     for (let i = 0; i < next.length; i++) {
       const old = matches[i];
       if (old < 0)
         this.insert(
-          `${path}/${newElementId()}`,
+          `${path}/${elementIds[i]}`,
           next[i],
           { parent: path, pos: positions[i] },
           changePath,
@@ -236,6 +264,12 @@ class SubtreeWriter {
         );
       }
     }
+    setNodeMeta(next, {
+      path,
+      kind: NodeKind.Arr,
+      elementIds,
+      childPos: new Map(elementIds.map((id, i) => [id, positions[i]])),
+    });
   }
 
   private async diffEntity(
@@ -338,6 +372,17 @@ class SubtreeWriter {
       );
       await this.rows.writeEntityRows(updated, true, orderChanges);
     }
+    const nextOrder = {
+      positions: new EntityPositions(new Map(next.ids.map((id, i) => [id, positions[i]]))),
+      keys: new Map(
+        nextIds.flatMap((id) => {
+          const key = order?.keys.get(id) ?? getEntityOrder(prev)?.keys.get(id);
+          return key == null ? [] : [[id, key] as [string, string]];
+        }),
+      ),
+    };
+    setEntityOrder(next, nextOrder);
+    setNodeMeta(next, { ...meta, entityPos: nextOrder.positions });
     await this.diffObject(path, prev, next, meta, true, changePath);
   }
 }
@@ -360,6 +405,7 @@ export async function writeSubtree(
   const writer = new SubtreeWriter(new RowWriter(exec, changes, policy.rowCap), policy);
   await writer.replace(path, value, await location(exec, path));
   await writer.rows.flush();
+  committedWrites(changes).values.set(path, value);
 }
 
 export async function diffWrite(
@@ -385,6 +431,7 @@ export async function diffWrite(
   const writer = new SubtreeWriter(new RowWriter(exec, changes, policy.rowCap), policy);
   await writer.diff(path, prev, next, knownLocation ?? (await location(exec, path)));
   await writer.rows.flush();
+  committedWrites(changes).values.set(path, next);
 }
 
 export async function deleteSubtree(

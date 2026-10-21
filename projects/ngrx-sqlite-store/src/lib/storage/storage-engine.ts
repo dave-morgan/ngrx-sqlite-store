@@ -1,12 +1,15 @@
+import { releaseWrites } from './committed-writes';
 import { Inject, Injectable, InjectionToken, Optional, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { SQL_DRIVER } from '../driver/sql-driver';
-import type { SqlDriver } from '../driver/sql-driver';
+import type { SqlDriver, SqlValue } from '../driver/sql-driver';
 import { ChangeSet } from './change-set';
 import { WriteQueue } from './write-queue';
 
-export type SqlExecutor = Pick<SqlDriver, 'exec' | 'run' | 'query'>;
+export type SqlExecutor = Pick<SqlDriver, 'exec' | 'run' | 'query'> & {
+  write?(sql: string, params?: SqlValue[]): Promise<void>;
+};
 
 export interface Migration {
   version: number;
@@ -117,25 +120,72 @@ export class StorageEngine {
       this.assertReady();
       const changes = new ChangeSet();
       const callbacks: Array<() => void | Promise<void>> = [];
+      const pending: { sql: string; params?: SqlValue[] }[] = [];
+      let began = false;
+      const begin = async () => {
+        if (!began) {
+          await this.driver.begin();
+          began = true;
+        }
+      };
+      const flush = async () => {
+        if (!pending.length) return;
+        await begin();
+        if (this.driver.batch) await this.driver.batch(pending, { transaction: false });
+        else for (const { sql, params } of pending) await this.driver.run(sql, params);
+        pending.length = 0;
+      };
       const tx: TxContext = {
-        ...this.executor(),
+        write: async (sql, params) => {
+          pending.push({ sql, params });
+        },
+        query: async (sql, params) => {
+          await flush();
+          if (!/^\s*(SELECT|EXPLAIN)\b/i.test(sql)) await begin();
+          return this.driver.query(sql, params);
+        },
+        run: async (sql, params) => {
+          await flush();
+          await begin();
+          return this.driver.run(sql, params);
+        },
+        exec: async (sql) => {
+          await flush();
+          await begin();
+          await this.driver.exec(sql);
+        },
         changes,
         afterCommit: (callback) => {
           callbacks.push(callback);
         },
       };
-      await this.driver.begin();
       let result: T;
       try {
+        // Legacy drivers retain explicit transactions, including read-only ones.
+        if (!this.driver.batch) await begin();
         result = await fn(tx);
-        await this.driver.commit();
+        if (!began && pending.length && this.driver.batch) {
+          await this.driver.batch(pending, { transaction: true });
+          pending.length = 0;
+        } else {
+          await flush();
+          if (began) await this.driver.commit();
+        }
       } catch (error) {
-        await this.rollback(error);
+        pending.length = 0;
+        releaseWrites(changes);
+        if (began) await this.rollback(error);
         throw error;
       }
-      if (!changes.isEmpty) this.notifications.next(changes);
-      for (const callback of callbacks) await callback();
-      return { result, changes };
+      try {
+        if (!changes.isEmpty) this.notifications.next(changes);
+        for (const callback of callbacks) await callback();
+        return { result, changes };
+      } finally {
+        // Subscribers copied the journal synchronously. A consumer may retain
+        // ChangeSet for diagnostics; it must not retain committed input objects.
+        releaseWrites(changes);
+      }
     });
   }
 

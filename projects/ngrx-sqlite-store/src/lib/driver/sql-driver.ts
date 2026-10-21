@@ -9,6 +9,10 @@ export interface SqlDriver {
   exec(sql: string): Promise<void>;
   run(sql: string, params?: SqlValue[]): Promise<{ changes: number; lastId?: number }>;
   query<R = Row>(sql: string, params?: SqlValue[]): Promise<R[]>;
+  batch?(
+    statements: { sql: string; params?: SqlValue[] }[],
+    opts: { transaction: boolean },
+  ): Promise<void>;
   begin(): Promise<void>;
   commit(): Promise<void>;
   rollback(): Promise<void>;

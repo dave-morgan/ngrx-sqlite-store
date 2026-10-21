@@ -1,3 +1,6 @@
+import type { EntityRow, NodeRow } from '../schema/row-writer';
+import type { SqlValue } from '../driver/sql-driver';
+import { committedWrites } from '../storage/committed-writes';
 import { Injectable, inject, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { NodeKind } from '../schema/kinds';
@@ -18,6 +21,8 @@ import { SelectorCleanup } from './selector-cleanup';
 
 interface Entry {
   query?: QuerySource;
+  entityRows?: Map<string, EntityRow>;
+  location?: Pick<NodeRow, 'parent' | 'pos'>;
   value: unknown;
   refcount: number;
   version: number;
@@ -63,8 +68,54 @@ export class PathCache {
     for (const [path, entry] of this.entries)
       if (changes.overlaps(entry.query?.path ?? path)) {
         entry.dirty.merge(changes);
+        const source = committedWrites(changes);
+        const known = committedWrites(entry.dirty);
+        for (const [key, value] of source.values)
+          if (entry.refcount && pathsOverlap(path, key) && !entry.query)
+            known.values.set(key, value);
+        for (const [coll, rows] of source.entities)
+          if (entry.refcount && pathsOverlap(path, coll) && !entry.query)
+            known.entities.set(coll, new Map([...(known.entities.get(coll) ?? []), ...rows]));
+        for (const [coll, ids] of source.removed)
+          if (entry.refcount && pathsOverlap(path, coll) && !entry.query)
+            known.removed.set(coll, new Set([...(known.removed.get(coll) ?? []), ...ids]));
         for (const replaced of referenceChanges(changes)) entry.replaced.add(replaced);
         entry.version = ++this.revision;
+        // Inactive entries can adopt exact node writes without retaining a journal
+        // or loading data. Unknown/entity SQL changes stay stale until leased.
+        if (!entry.refcount && !entry.query) {
+          const patches: { suffix: string[]; value: unknown; target: string }[] = [];
+          for (const changed of entry.dirty.paths()) {
+            if (!pathsOverlap(path, changed)) continue;
+            const requested = isAncestorOrSelf(changed, path) ? path : changed;
+            const owner = [...source.values.keys()].find((key) => isAncestorOrSelf(key, requested));
+            if (owner === undefined) {
+              patches.length = 0;
+              break;
+            }
+            const target = isAncestorOrSelf(owner, path) ? path : owner;
+            if (patches.some((patch) => patch.target === target)) continue;
+            patches.push({
+              target,
+              suffix: target === path ? [] : target.slice(path.length + 1).split('/'),
+              value: at(
+                source.values.get(owner),
+                target === owner ? [] : target.slice(owner.length + 1).split('/'),
+              ),
+            });
+          }
+          if (patches.length) {
+            for (const patch of patches)
+              entry.value = put(
+                entry.value,
+                patch.suffix,
+                share(at(entry.value, patch.suffix), patch.value, entry.replaced, patch.target),
+              );
+            entry.dirty = new ChangeSet();
+            entry.replaced.clear();
+            entry.bytes = undefined;
+          }
+        }
       }
   });
 
@@ -102,6 +153,7 @@ export class PathCache {
   }
   notify(): void {
     this.publish();
+    this.evict();
   }
   whenEvicted(paths: readonly string[], selector: unknown): void {
     this.cleanup.register(paths, selector);
@@ -122,6 +174,18 @@ export class PathCache {
     if (!owner || !owner[1].dirty.isEmpty) return undefined;
     owner[1].lastUsed = ++this.clock;
     return at(owner[1].value, path === owner[0] ? [] : path.slice(owner[0].length + 1).split('/'));
+  }
+  location(path: string): Pick<NodeRow, 'parent' | 'pos'> | undefined {
+    const owner = this.owner(path);
+    return owner?.[0] === path && owner[1].dirty.isEmpty ? owner[1].location : undefined;
+  }
+  peekEntity(coll: string, id: string): EntityRow | undefined {
+    for (const entry of this.entries.values()) {
+      if (entry.query?.path !== coll || !entry.dirty.isEmpty) continue;
+      const row = entry.entityRows?.get(id);
+      if (row) return row;
+    }
+    return undefined;
   }
   retain(path: string): () => void {
     this.references.set(path, (this.references.get(path) ?? 0) + 1);
@@ -175,6 +239,7 @@ export class PathCache {
       }
       this.entries.set(root, {
         value,
+        location: resolved.location,
         refcount: 0,
         version: this.revision,
         lastUsed: ++this.clock,
@@ -186,8 +251,13 @@ export class PathCache {
     this.publish();
     this.evict();
   }
-  private async read(sql: SqlExecutor, path: string): Promise<unknown> {
-    const value = await this.nodes.read(sql, path);
+  private async read(sql: SqlExecutor, path: string, entry?: Entry): Promise<unknown> {
+    const value = await this.nodes.read(sql, path, (rows) => {
+      if (entry) {
+        const row = rows.find((row) => row.path === path);
+        entry.location = row && { parent: row.parent, pos: row.pos };
+      }
+    });
     if (value !== undefined || !path.includes('/')) return value;
     // Inline JSON and EntityState logical children have no independent SQL row.
     return child(await this.read(sql, parentPath(path)), path.slice(path.lastIndexOf('/') + 1));
@@ -195,9 +265,13 @@ export class PathCache {
   private async resolveRead(
     sql: SqlExecutor,
     path: string,
-  ): Promise<{ path: string; value: unknown }> {
-    const value = await this.nodes.read(sql, path);
-    if (value !== undefined || !path.includes('/')) return { path, value };
+  ): Promise<{ path: string; value: unknown; location?: Pick<NodeRow, 'parent' | 'pos'> }> {
+    let location: Pick<NodeRow, 'parent' | 'pos'> | undefined;
+    const value = await this.nodes.read(sql, path, (rows) => {
+      const row = rows.find((row) => row.path === path);
+      location = row && { parent: row.parent, pos: row.pos };
+    });
+    if (value !== undefined || !path.includes('/')) return { path, value, location };
     return this.resolveRead(sql, parentPath(path));
   }
   async refresh(): Promise<void> {
@@ -212,7 +286,26 @@ export class PathCache {
   private async refreshEntry(sql: SqlExecutor, path: string, entry: Entry): Promise<void> {
     entry.bytes = undefined;
     if (entry.query) {
-      const next = await entry.query.reader({ query: sql.query.bind(sql) });
+      const entityRows = new Map<string, EntityRow>();
+      const queryPath = entry.query.path;
+      const next = await entry.query.reader({
+        query: async <R>(statement: string, params?: SqlValue[]) => {
+          const rows = await sql.query<R>(statement, params);
+          if (/FROM nss_entity/.test(statement) && params?.[0] === queryPath) {
+            for (const candidate of rows) {
+              const row = candidate as Partial<EntityRow>;
+              if (
+                typeof row.id === 'string' &&
+                typeof row.data === 'string' &&
+                typeof row.pos === 'number'
+              )
+                entityRows.set(row.id, { ...row, coll: queryPath } as EntityRow);
+            }
+          }
+          return rows;
+        },
+      });
+      entry.entityRows = entityRows;
       entry.value = isJsonTree(entry.value) && isJsonTree(next) ? share(entry.value, next) : next;
       entry.dirty = new ChangeSet();
       entry.version = this.revision;
@@ -222,6 +315,10 @@ export class PathCache {
     for (const changed of entry.dirty.paths()) {
       if (!pathsOverlap(path, changed)) continue;
       let target = isAncestorOrSelf(changed, path) ? path : changed;
+      if (committedWrites(entry.dirty).values.has(target)) {
+        targets.add(target);
+        continue;
+      }
       let cursor = path;
       let value = entry.value;
       // Array order/ids, inline JSON and entity containers are atomic read units.
@@ -240,7 +337,10 @@ export class PathCache {
     for (const target of targets.paths()) {
       const suffix = target === path ? [] : target.slice(path.length + 1).split('/');
       const previous = at(entry.value, suffix);
-      if (getNodeMeta(previous)?.kind === NodeKind.Entity) {
+      if (
+        !committedWrites(entry.dirty).values.has(target) &&
+        getNodeMeta(previous)?.kind === NodeKind.Entity
+      ) {
         const patched = await refreshEntities(
           sql,
           this.nodes,
@@ -254,7 +354,15 @@ export class PathCache {
           continue;
         }
       }
-      const next = await this.read(sql, target);
+      const known = committedWrites(entry.dirty).values;
+      let knownPath = [...known.keys()].find((key) => isAncestorOrSelf(key, target));
+      const next =
+        knownPath === undefined
+          ? await this.read(sql, target, target === path ? entry : undefined)
+          : at(
+              known.get(knownPath),
+              target === knownPath ? [] : target.slice(knownPath.length + 1).split('/'),
+            );
       entry.value = put(
         entry.value,
         suffix,
@@ -264,7 +372,7 @@ export class PathCache {
       // A spliced pointer object needs current child positions for later tx diffs.
       let cursor = path;
       let value = entry.value;
-      for (const segment of suffix) {
+      for (const segment of knownPath === undefined ? suffix : []) {
         const meta = getNodeMeta(value);
         if (meta?.kind === NodeKind.Obj && value && typeof value === 'object') {
           const rows = await sql.query<{ path: string; pos: number }>(
@@ -298,7 +406,7 @@ export class PathCache {
     let removed = false;
     let bytes = 0;
     for (const [index, [path, entry]] of inactive.entries()) {
-      const size = (entry.bytes ??= retainedSize(entry.value));
+      const size = (entry.bytes ??= retainedSize([entry.value, entry.entityRows]));
       if (index >= Math.max(0, this.limit) || bytes + size > Math.max(0, this.budget)) {
         this.entries.delete(path);
         this.cleanup.evict(path);

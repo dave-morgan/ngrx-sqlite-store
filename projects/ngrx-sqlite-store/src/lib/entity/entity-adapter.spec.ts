@@ -249,7 +249,7 @@ describe('dual-form entity adapter', () => {
     await seed(adapter.addOne({ id: 1, rank: 1, name: 'one' }, adapter.getInitialState()));
     await engine.transaction(async (sql) => {
       const query = vi.spyOn(sql, 'query');
-      const run = vi.spyOn(sql, 'run');
+      const run = vi.spyOn(sql, 'write');
       await adapter.updateOne(new StoreTx('items', nodes, sql, sql.changes), { id: 1, changes: { name: 'updated' } });
       const entityReads = query.mock.calls.filter(([statement]) => /\bFROM nss_entity\b/i.test(statement));
       const writes = run.mock.calls.filter(([statement]) => /\b(?:UPDATE|INSERT INTO|DELETE FROM) nss_entity\b/i.test(statement));
@@ -279,7 +279,7 @@ describe('dual-form entity adapter', () => {
     await seed(adapter.setAll(rows, adapter.getInitialState()));
     await engine.transaction(async (sql) => {
       const query = vi.spyOn(sql, 'query');
-      const run = vi.spyOn(sql, 'run');
+      const run = vi.spyOn(sql, 'write');
       await adapter.addOne(new StoreTx('items', nodes, sql, sql.changes), { id: 1000, rank: 127, name: 'between' });
       const probes = query.mock.calls.filter(([statement]) => /LIMIT 1 OFFSET/i.test(statement));
       expect(probes.length).toBeGreaterThan(0);
@@ -296,7 +296,7 @@ describe('dual-form entity adapter', () => {
     await seed(adapter.addOne({ id: 1, rank: 1, name: 'one' }, adapter.getInitialState()));
     await engine.transaction(async (sql) => {
       const query = vi.spyOn(sql, 'query');
-      const run = vi.spyOn(sql, 'run');
+      const run = vi.spyOn(sql, 'write');
       await adapter.removeOne(new StoreTx('items', nodes, sql, sql.changes), 1);
       expect(query.mock.calls.filter(([statement]) => /^SELECT\b.*\bFROM nss_entity\b/is.test(statement))).toHaveLength(0);
       expect([...run.mock.calls, ...query.mock.calls].filter(([statement]) => /^DELETE FROM nss_entity\b/i.test(statement))).toHaveLength(1);

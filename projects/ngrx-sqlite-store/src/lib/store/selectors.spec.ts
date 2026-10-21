@@ -403,7 +403,8 @@ describe('phase 4b selectors', () => {
     const reads = query.mock.calls
       .slice(committedAt)
       .filter(([sql]) => sql.startsWith('SELECT path, parent'));
-    expect(reads.map(([, params]) => params?.[0])).toEqual(['todos/filter']);
+    expect(reads).toEqual([]);
+    expect(TestBed.inject(PathCache).peek('todos/filter')).toBe('done');
     expect(TestBed.inject(PathCache).peek('todos/items')).toBe(items);
     subscription.unsubscribe();
     commits.unsubscribe();

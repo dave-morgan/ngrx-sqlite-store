@@ -1,0 +1,823 @@
+{
+  "before": {
+    "needle": "#12345",
+    "nodes": 1097213,
+    "shapes": [
+      [
+        "Array {}",
+        102435
+      ],
+      [
+        "Object {createdAt,done,id,priority,tags,title,userId}",
+        100101
+      ],
+      [
+        "Object {consumer,knownValidAtEpoch,lastReadVersion,nextConsumer,nextProducer,prevConsumer,producer}",
+        1322
+      ],
+      [
+        "system / Context / scope @164867 {}",
+        1193
+      ],
+      [
+        "Object {consumers,consumersTail,value}",
+        537
+      ],
+      [
+        "Object {callbackId,methodName,options,pluginId}",
+        335
+      ],
+      [
+        "system / Context / scope @139665 {}",
+        332
+      ],
+      [
+        "system / Context / scope @139793 {}",
+        332
+      ],
+      [
+        "system / Context / scope @139825 {}",
+        332
+      ],
+      [
+        "Pf {$implicit,$index,lContainer}",
+        278
+      ],
+      [
+        "Object {database,isSQL92,readonly,returnMode,statement,transaction,values}",
+        266
+      ],
+      [
+        "Object {value}",
+        217
+      ],
+      [
+        "Object {equal,value}",
+        208
+      ],
+      [
+        "e {nativeElement}",
+        171
+      ],
+      [
+        "Object {factory,multi,value}",
+        151
+      ],
+      [
+        "Object {}",
+        139
+      ],
+      [
+        "Y {closed,currentObservers,hasError,isStopped,observers,thrownError}",
+        125
+      ],
+      [
+        "Object {consumers,consumersTail,value,version}",
+        122
+      ],
+      [
+        "_c {currentValue,firstChange,previousValue}",
+        116
+      ],
+      [
+        "Map {}",
+        115
+      ],
+      [
+        "Object {current,previous}",
+        114
+      ],
+      [
+        "Ff {hasEmptyBlock,liveCollection,trackByFn}",
+        105
+      ],
+      [
+        "Lf {hostLView,lContainer,needsIndexUpdate,operationsCounter,templateTNode}",
+        105
+      ],
+      [
+        "Object {transformFn,value}",
+        105
+      ],
+      [
+        "system / Context / scope @164947 {}",
+        105
+      ],
+      [
+        "system / Context / scope @164829 {}",
+        104
+      ],
+      [
+        "e {__ngContext__,__ngSimpleChanges__,_fragment,_info,_preserveFragment,_queryParams,_queryParamsHandling,_relativeTo,_replaceUrl,_skipLocationChange,_state,_target,applicationErrorHandler,browserUrl,el,hrefAttributeValue,isAnchorElement,locationStrategy,onChanges,options,reactiveHref,reactiveRouterState,renderer,route,router,routerLinkInput,tabIndexAttribute}",
+        104
+      ],
+      [
+        "system / Context / scope @165159 {}",
+        104
+      ],
+      [
+        "Object {consumers,consumersTail,equal,value}",
+        104
+      ],
+      [
+        "system / Context / scope @333439 {}",
+        104
+      ],
+      [
+        "Object {computation,consumers,consumersTail,dirty,lastCleanEpoch,producers,producersTail,recomputing,source,sourceValue,value,version}",
+        104
+      ],
+      [
+        "system / Context / scope @350273 {}",
+        104
+      ],
+      [
+        "Object {routerLink}",
+        104
+      ],
+      [
+        "Object {kind,path}",
+        101
+      ],
+      [
+        "system / Context / scope @146447 {}",
+        100
+      ],
+      [
+        "Object {clearResult,memoized,reset,setResult}",
+        99
+      ],
+      [
+        "system / Context / scope @347603 {}",
+        98
+      ],
+      [
+        "system / Context / scope @349911 {}",
+        98
+      ],
+      [
+        "Li {_complete,_error,_finalizers,_next,_parentage,closed,destination,initialTeardown,isStopped,onFinalize,shouldUnsubscribe}",
+        89
+      ],
+      [
+        "system / Context / scope @347355 {}",
+        89
+      ],
+      [
+        "Object {attrs,child,classBindings,classes,classesWithoutHost,componentOffset,controlDirectiveIndex,customControlIndex,directiveEnd,directiveStart,directiveStylingLast,directiveToIndex,flags,hostDirectiveInputs,hostDirectiveOutputs,index,initialInputs,injectorIndex,inputs,insertBeforeIndex,localNames,mergedAttrs,namespace,next,outputs,parent,prev,projection,projectionNext,propertyBindings,providerIndexes,residualClasses,residualStyles,styleBindings,styles,stylesWithoutHost,tView,type,value}",
+        88
+      ],
+      [
+        "Set {}",
+        84
+      ],
+      [
+        "Object {name,rtype}",
+        83
+      ],
+      [
+        "Object {factory,providedIn,token,value}",
+        76
+      ],
+      [
+        "I {_desc,ngMetadataName,\u0275prov}",
+        73
+      ],
+      [
+        "Object {done,text}",
+        73
+      ],
+      [
+        "e {_finalizers,_parentage,closed,initialTeardown}",
+        67
+      ],
+      [
+        "Object {constructor}",
+        65
+      ],
+      [
+        "system / Context / scope @346967 {}",
+        64
+      ],
+      [
+        "xt {_finalizers,_parentage,closed,destination,initialTeardown,isStopped}",
+        55
+      ],
+      [
+        "xl {partialObserver}",
+        54
+      ],
+      [
+        "Object {complete,error,next}",
+        54
+      ],
+      [
+        "Wr {canSeeViewProviders,componentProviders,factory,index,injectImpl,multi,name,providerFactory,resolving}",
+        52
+      ],
+      [
+        "Arguments {callee,get callee,length,set callee}",
+        50
+      ],
+      [
+        "system / Context / scope @351485 {}",
+        50
+      ],
+      [
+        "Object {stateFn}",
+        50
+      ],
+      [
+        "system / Context / scope @350941 {}",
+        49
+      ],
+      [
+        "system / Context / scope @351521 {}",
+        49
+      ],
+      [
+        "Object {database,isSQL92,readonly,statement,values}",
+        42
+      ],
+      [
+        "Error {constructor,message,name}",
+        36
+      ]
+    ],
+    "samples": [
+      [
+        " --element:1--> (GC roots) [3]",
+        "(GC roots) --element:10--> (Global handles) [23]",
+        "(Global handles) --internal:414 / gin::ContextHolder::context_--> system / NativeContext / https://localhost [8121]",
+        "system / NativeContext / https://localhost --internal:global_object--> Window [JSGlobalObject] / https://localhost [1416007]",
+        "Window [JSGlobalObject] / https://localhost --property:__harness--> Object [1420229]",
+        "Object --property:dispatch--> dispatch [1439723]",
+        "dispatch --internal:context--> system / Context / scope @1461251 [1962473]",
+        "system / Context / scope @1461251 --context:t--> e [345835]",
+        "e --property:selection--> e [344439]",
+        "e --property:viewState--> Object [1119931]",
+        "Object --property:todos--> Object [345307]",
+        "Object --property:entities--> Object [449255]",
+        "Object --property:t12345--> Object [1041801]"
+      ],
+      [
+        " --element:1--> (GC roots) [3]",
+        "(GC roots) --element:10--> (Global handles) [23]",
+        "(Global handles) --internal:414 / gin::ContextHolder::context_--> system / NativeContext / https://localhost [8121]",
+        "system / NativeContext / https://localhost --internal:global_object--> Window [JSGlobalObject] / https://localhost [1416007]",
+        "Window [JSGlobalObject] / https://localhost --property:__harness--> Object [1420229]",
+        "Object --property:dispatch--> dispatch [1439723]",
+        "dispatch --internal:context--> system / Context / scope @1461251 [1962473]",
+        "system / Context / scope @1461251 --context:t--> e [345835]",
+        "e --property:actions--> e [344429]",
+        "e --property:_value--> Object [319667]",
+        "Object --property:data--> Object [343755]",
+        "Object --property:todos--> Array [343757]",
+        "Array --internal:elements--> (object elements) [353217]",
+        "(object elements) --internal:12344--> Object [1819065]"
+      ]
+    ]
+  },
+  "after": {
+    "needle": "#12345",
+    "nodes": 1174492,
+    "shapes": [
+      [
+        "Array {}",
+        102479
+      ],
+      [
+        "Object {createdAt,done,id,priority,tags,title,userId}",
+        100101
+      ],
+      [
+        "Object {consumer,knownValidAtEpoch,lastReadVersion,nextConsumer,nextProducer,prevConsumer,producer}",
+        1322
+      ],
+      [
+        "system / Context / scope @440969 {}",
+        1193
+      ],
+      [
+        "Object {consumers,consumersTail,value}",
+        537
+      ],
+      [
+        "system / Context / scope @439647 {}",
+        332
+      ],
+      [
+        "system / Context / scope @746695 {}",
+        332
+      ],
+      [
+        "system / Context / scope @746719 {}",
+        332
+      ],
+      [
+        "Lf {$implicit,$index,lContainer}",
+        278
+      ],
+      [
+        "Object {statement,values}",
+        265
+      ],
+      [
+        "Object {value}",
+        216
+      ],
+      [
+        "Object {equal,value}",
+        208
+      ],
+      [
+        "e {nativeElement}",
+        171
+      ],
+      [
+        "Object {}",
+        153
+      ],
+      [
+        "Object {factory,multi,value}",
+        151
+      ],
+      [
+        "J {closed,currentObservers,hasError,isStopped,observers,thrownError}",
+        125
+      ],
+      [
+        "Object {consumers,consumersTail,value,version}",
+        122
+      ],
+      [
+        "Error {constructor,message,name}",
+        120
+      ],
+      [
+        "Nc {currentValue,firstChange,previousValue}",
+        116
+      ],
+      [
+        "Map {}",
+        115
+      ],
+      [
+        "Object {current,previous}",
+        114
+      ],
+      [
+        "TypedArray {BYTES_PER_ELEMENT,constructor}",
+        110
+      ],
+      [
+        "jf {hasEmptyBlock,liveCollection,trackByFn}",
+        105
+      ],
+      [
+        "Uf {hostLView,lContainer,needsIndexUpdate,operationsCounter,templateTNode}",
+        105
+      ],
+      [
+        "system / Context / scope @746639 {}",
+        105
+      ],
+      [
+        "Object {transformFn,value}",
+        105
+      ],
+      [
+        "system / Context / scope @746537 {}",
+        104
+      ],
+      [
+        "system / Context / scope @746683 {}",
+        104
+      ],
+      [
+        "e {__ngContext__,__ngSimpleChanges__,_fragment,_info,_preserveFragment,_queryParams,_queryParamsHandling,_relativeTo,_replaceUrl,_skipLocationChange,_state,_target,applicationErrorHandler,browserUrl,el,hrefAttributeValue,isAnchorElement,locationStrategy,onChanges,options,reactiveHref,reactiveRouterState,renderer,route,router,routerLinkInput,tabIndexAttribute}",
+        104
+      ],
+      [
+        "system / Context / scope @746939 {}",
+        104
+      ],
+      [
+        "Object {computation,consumers,consumersTail,dirty,lastCleanEpoch,producers,producersTail,recomputing,source,sourceValue,value,version}",
+        104
+      ],
+      [
+        "system / Context / scope @746969 {}",
+        104
+      ],
+      [
+        "Object {consumers,consumersTail,equal,value}",
+        104
+      ],
+      [
+        "Object {routerLink}",
+        104
+      ],
+      [
+        "system / Context / scope @746761 {}",
+        100
+      ],
+      [
+        "Object {coll,data,id,pos,promoted,sortkey}",
+        100
+      ],
+      [
+        "Object {clearResult,memoized,reset,setResult}",
+        99
+      ],
+      [
+        "system / Context / scope @426987 {}",
+        98
+      ],
+      [
+        "system / Context / scope @428287 {}",
+        98
+      ],
+      [
+        "Object {constructor}",
+        93
+      ],
+      [
+        "Ui {_complete,_error,_finalizers,_next,_parentage,closed,destination,initialTeardown,isStopped,onFinalize,shouldUnsubscribe}",
+        89
+      ],
+      [
+        "system / Context / scope @443263 {}",
+        89
+      ],
+      [
+        "Object {attrs,child,classBindings,classes,classesWithoutHost,componentOffset,controlDirectiveIndex,customControlIndex,directiveEnd,directiveStart,directiveStylingLast,directiveToIndex,flags,hostDirectiveInputs,hostDirectiveOutputs,index,initialInputs,injectorIndex,inputs,insertBeforeIndex,localNames,mergedAttrs,namespace,next,outputs,parent,prev,projection,projectionNext,propertyBindings,providerIndexes,residualClasses,residualStyles,styleBindings,styles,stylesWithoutHost,tView,type,value}",
+        88
+      ],
+      [
+        "Set {}",
+        84
+      ],
+      [
+        "Object {name,rtype}",
+        83
+      ],
+      [
+        "Object {factory,providedIn,token,value}",
+        76
+      ],
+      [
+        "T {_desc,ngMetadataName,\u0275prov}",
+        73
+      ],
+      [
+        "e {_finalizers,_parentage,closed,initialTeardown}",
+        67
+      ],
+      [
+        "system / Context / scope @443029 {}",
+        64
+      ],
+      [
+        "Object {complete,error,next}",
+        55
+      ],
+      [
+        "Ft$1 {_finalizers,_parentage,closed,destination,initialTeardown,isStopped}",
+        55
+      ],
+      [
+        "kl {partialObserver}",
+        54
+      ],
+      [
+        "Yr {canSeeViewProviders,componentProviders,factory,index,injectImpl,multi,name,providerFactory,resolving}",
+        52
+      ],
+      [
+        "Object {callbackId,methodName,options,pluginId}",
+        50
+      ],
+      [
+        "Arguments {callee,get callee,length,set callee}",
+        50
+      ],
+      [
+        "Object {stateFn}",
+        50
+      ],
+      [
+        "system / Context / scope @443359 {}",
+        50
+      ],
+      [
+        "system / Context / scope @428581 {}",
+        49
+      ],
+      [
+        "system / Context / scope @428805 {}",
+        49
+      ],
+      [
+        "Object {done,text}",
+        37
+      ]
+    ],
+    "samples": [
+      [
+        " --element:1--> (GC roots) [3]",
+        "(GC roots) --element:10--> (Global handles) [23]",
+        "(Global handles) --internal:7 / V8PerContextData::context_--> system / NativeContext / https://localhost [7389]",
+        "system / NativeContext / https://localhost --internal:global_object--> Window [JSGlobalObject] / https://localhost [1409031]",
+        "Window [JSGlobalObject] / https://localhost --property:__harness--> Object [1115025]",
+        "Object --property:dispatch--> dispatch [1115027]",
+        "dispatch --internal:context--> system / Context / scope @1315081 [2016715]",
+        "system / Context / scope @1315081 --context:t--> e [440617]",
+        "e --property:selection--> e [442313]",
+        "e --property:viewState--> Object [1356449]",
+        "Object --property:todos--> Object [1356159]",
+        "Object --property:entities--> Object [238671]",
+        "Object --property:t12345--> Object [306197]"
+      ],
+      [
+        " --element:1--> (GC roots) [3]",
+        "(GC roots) --element:10--> (Global handles) [23]",
+        "(Global handles) --internal:7 / V8PerContextData::context_--> system / NativeContext / https://localhost [7389]",
+        "system / NativeContext / https://localhost --internal:global_object--> Window [JSGlobalObject] / https://localhost [1409031]",
+        "Window [JSGlobalObject] / https://localhost --property:__harness--> Object [1115025]",
+        "Object --property:dispatch--> dispatch [1115027]",
+        "dispatch --internal:context--> system / Context / scope @1315081 [2016715]",
+        "system / Context / scope @1315081 --context:t--> e [440617]",
+        "e --property:actions--> e [1114923]",
+        "e --property:_value--> Object [440159]",
+        "Object --property:data--> Object [1519959]",
+        "Object --property:todos--> Array [1519955]",
+        "Array --internal:elements--> (object elements) [1519957]",
+        "(object elements) --internal:12344--> Object [2051063]"
+      ]
+    ]
+  },
+  "historyDrained": {
+    "needle": "#12345",
+    "nodes": 536077,
+    "shapes": [
+      [
+        "Array {}",
+        52225
+      ],
+      [
+        "Object {createdAt,done,id,priority,tags,title,userId}",
+        50101
+      ],
+      [
+        "Object {consumer,knownValidAtEpoch,lastReadVersion,nextConsumer,nextProducer,prevConsumer,producer}",
+        1322
+      ],
+      [
+        "system / Context / scope @437893 {}",
+        1193
+      ],
+      [
+        "Object {consumers,consumersTail,value}",
+        537
+      ],
+      [
+        "system / Context / scope @445043 {}",
+        332
+      ],
+      [
+        "system / Context / scope @461191 {}",
+        332
+      ],
+      [
+        "system / Context / scope @699815 {}",
+        332
+      ],
+      [
+        "Lf {$implicit,$index,lContainer}",
+        278
+      ],
+      [
+        "Object {value}",
+        216
+      ],
+      [
+        "Object {equal,value}",
+        208
+      ],
+      [
+        "e {nativeElement}",
+        171
+      ],
+      [
+        "Object {}",
+        151
+      ],
+      [
+        "Object {factory,multi,value}",
+        151
+      ],
+      [
+        "Error {constructor,message,name}",
+        132
+      ],
+      [
+        "J {closed,currentObservers,hasError,isStopped,observers,thrownError}",
+        125
+      ],
+      [
+        "Object {consumers,consumersTail,value,version}",
+        122
+      ],
+      [
+        "TypedArray {BYTES_PER_ELEMENT,constructor}",
+        121
+      ],
+      [
+        "Nc {currentValue,firstChange,previousValue}",
+        116
+      ],
+      [
+        "Object {current,previous}",
+        114
+      ],
+      [
+        "Map {}",
+        110
+      ],
+      [
+        "jf {hasEmptyBlock,liveCollection,trackByFn}",
+        105
+      ],
+      [
+        "system / Context / scope @447765 {}",
+        105
+      ],
+      [
+        "Object {transformFn,value}",
+        105
+      ],
+      [
+        "Uf {hostLView,lContainer,needsIndexUpdate,operationsCounter,templateTNode}",
+        105
+      ],
+      [
+        "e {__ngContext__,__ngSimpleChanges__,_fragment,_info,_preserveFragment,_queryParams,_queryParamsHandling,_relativeTo,_replaceUrl,_skipLocationChange,_state,_target,applicationErrorHandler,browserUrl,el,hrefAttributeValue,isAnchorElement,locationStrategy,onChanges,options,reactiveHref,reactiveRouterState,renderer,route,router,routerLinkInput,tabIndexAttribute}",
+        104
+      ],
+      [
+        "system / Context / scope @432083 {}",
+        104
+      ],
+      [
+        "system / Context / scope @438071 {}",
+        104
+      ],
+      [
+        "Object {computation,consumers,consumersTail,dirty,lastCleanEpoch,producers,producersTail,recomputing,source,sourceValue,value,version}",
+        104
+      ],
+      [
+        "system / Context / scope @447745 {}",
+        104
+      ],
+      [
+        "Object {consumers,consumersTail,equal,value}",
+        104
+      ],
+      [
+        "system / Context / scope @702355 {}",
+        104
+      ],
+      [
+        "Object {routerLink}",
+        104
+      ],
+      [
+        "Object {coll,data,id,pos,promoted,sortkey}",
+        100
+      ],
+      [
+        "system / Context / scope @701881 {}",
+        100
+      ],
+      [
+        "Object {clearResult,memoized,reset,setResult}",
+        99
+      ],
+      [
+        "system / Context / scope @786283 {}",
+        98
+      ],
+      [
+        "system / Context / scope @451815 {}",
+        98
+      ],
+      [
+        "Object {constructor}",
+        97
+      ],
+      [
+        "Ui {_complete,_error,_finalizers,_next,_parentage,closed,destination,initialTeardown,isStopped,onFinalize,shouldUnsubscribe}",
+        89
+      ],
+      [
+        "system / Context / scope @455853 {}",
+        89
+      ],
+      [
+        "Object {attrs,child,classBindings,classes,classesWithoutHost,componentOffset,controlDirectiveIndex,customControlIndex,directiveEnd,directiveStart,directiveStylingLast,directiveToIndex,flags,hostDirectiveInputs,hostDirectiveOutputs,index,initialInputs,injectorIndex,inputs,insertBeforeIndex,localNames,mergedAttrs,namespace,next,outputs,parent,prev,projection,projectionNext,propertyBindings,providerIndexes,residualClasses,residualStyles,styleBindings,styles,stylesWithoutHost,tView,type,value}",
+        88
+      ],
+      [
+        "Set {}",
+        84
+      ],
+      [
+        "Object {name,rtype}",
+        83
+      ],
+      [
+        "Object {factory,providedIn,token,value}",
+        76
+      ],
+      [
+        "T {_desc,ngMetadataName,\u0275prov}",
+        73
+      ],
+      [
+        "e {_finalizers,_parentage,closed,initialTeardown}",
+        67
+      ],
+      [
+        "system / Context / scope @456043 {}",
+        64
+      ],
+      [
+        "Ft$1 {_finalizers,_parentage,closed,destination,initialTeardown,isStopped}",
+        55
+      ],
+      [
+        "Object {complete,error,next}",
+        55
+      ],
+      [
+        "kl {partialObserver}",
+        54
+      ],
+      [
+        "Yr {canSeeViewProviders,componentProviders,factory,index,injectImpl,multi,name,providerFactory,resolving}",
+        52
+      ],
+      [
+        "Arguments {callee,get callee,length,set callee}",
+        50
+      ],
+      [
+        "Object {stateFn}",
+        50
+      ],
+      [
+        "system / Context / scope @439207 {}",
+        50
+      ],
+      [
+        "system / Context / scope @786193 {}",
+        49
+      ],
+      [
+        "system / Context / scope @451875 {}",
+        49
+      ],
+      [
+        "Object {notes,router,todos,ui,users}",
+        38
+      ],
+      [
+        "Object {done,text}",
+        37
+      ],
+      [
+        "Promise {}",
+        36
+      ]
+    ],
+    "samples": [
+      [
+        " --element:1--> (GC roots) [3]",
+        "(GC roots) --element:10--> (Global handles) [23]",
+        "(Global handles) --internal:25 / V8PerContextData::context_--> system / NativeContext / https://localhost [7419]",
+        "system / NativeContext / https://localhost --internal:global_object--> Window [JSGlobalObject] / https://localhost [392475]",
+        "Window [JSGlobalObject] / https://localhost --property:__harness--> Object [865965]",
+        "Object --property:dispatch--> dispatch [935369]",
+        "dispatch --internal:context--> system / Context / scope @455353 [935371]",
+        "system / Context / scope @455353 --context:t--> e [833965]",
+        "e --property:selection--> e [832265]",
+        "e --property:viewState--> Object [832279]",
+        "Object --property:todos--> Object [664127]",
+        "Object --property:entities--> Object [698593]",
+        "Object --property:t12345--> Object [343371]"
+      ]
+    ]
+  }
+}

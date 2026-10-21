@@ -1,22 +1,22 @@
-# Phase 12 scale
+# Phase 13 scale
 
 Node v26.5.1; sql.js 1.15.1; SQLite 3.54.0; win32/x64; AMD Ryzen 5 3600 6-Core Processor              ; 31.9 GiB RAM. Production mode (no dev freezing). In-memory WASM; no disk or Capacitor bridge.
 
-LatencyDriver uses an asynchronous turn followed by a monotonic CPU wait (Windows setTimeout/Atomics.wait measured 15.5 ms for a requested 3 ms). The wait is isolated as delay in CPU profiles. Configurable requested delay: 3 ms per statement; complete dispatch through selector emission. Five-run medians after warm-up. Post-commit time measured separately at zero latency (includes SQL refresh). Heap deltas use two forced GCs after an event-loop turn, against each initialized empty store after a 100-row setup warm-up and clear. Every implementation/size runs in a fresh process; classic and SQLite both subscribe to selectAll, count and ui. Seed actions and instrumentation SQL strings are released before GC. After list release, count and ui remain mounted; no manual selector.release() is used. SQL counts include BEGIN/COMMIT and last_insert_rowid; refresh counts exclude writes/transaction control.
+LatencyDriver uses an asynchronous turn followed by a monotonic CPU wait (Windows setTimeout/Atomics.wait measured 15.5 ms for a requested 3 ms). The wait is isolated as delay in CPU profiles. Configurable requested delay: 3 ms per driver invocation; complete dispatch through selector emission. Five-run medians after warm-up. Post-commit time measured separately at zero latency (includes SQL refresh). Heap deltas use two forced GCs after an event-loop turn, against each initialized empty store after a 100-row setup warm-up and clear. Every implementation/size runs in a fresh process; classic and SQLite both subscribe to selectAll, count and ui. Seed actions and instrumentation SQL strings are released before GC. After list release, count and ui remain mounted; no manual selector.release() is used. After counts are driver invocations (batch = one); the historical baseline counted SQL including internal last_insert_rowid. Refresh excludes the batch/commit. Cached entity values use write-through; count reruns once.
 
 | N | toggle before ms | after ms | classic ms | target ms | ui before ms | after ms | post-commit before ms | after ms |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 1000 | 41.274 | 24.801 | 0.447 | 13.469 | 19.709 | 19.751 | 0.694 | 0.410 |
-| 10000 | 190.263 | 43.109 | 6.139 | 70.388 | 27.252 | 19.396 | 8.763 | 0.372 |
-| 50000 | 975.174 | 128.995 | 37.793 | 386.935 | 87.858 | 19.261 | 64.686 | 0.347 |
+| 1000 | 41.274 | 8.550 | 0.437 | 13.373 | 19.709 | 3.551 | 0.694 | 0.108 |
+| 10000 | 190.263 | 20.851 | 5.550 | 64.499 | 27.252 | 3.562 | 8.763 | 0.093 |
+| 50000 | 975.174 | 85.396 | 37.303 | 382.029 | 87.858 | 3.667 | 64.686 | 0.110 |
 
 | N | toggle statements before/after | refresh before/after | entity rows before/after | ui statements | todos statements on ui | classic MiB | store before MiB | after MiB | released before MiB | after MiB |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 1000 | 7/7 | 3/3 | 1000/1 | 6 | 0 | 0.15 | 0.57 | 0.30 | 0.89 | 0.54 |
-| 10000 | 7/7 | 3/3 | 10000/1 | 6 | 0 | 1.70 | 4.56 | 1.72 | 6.30 | 1.96 |
-| 50000 | 7/7 | 3/3 | 50000/1 | 6 | 0 | 8.72 | 23.82 | 9.28 | 28.83 | 0.36 |
+| 1000 | 7/2 | 3/1 | 1000/0 | 1 | 0 | 0.15 | 0.57 | 0.32 | 0.89 | 0.57 |
+| 10000 | 7/2 | 3/1 | 10000/0 | 1 | 0 | 1.69 | 4.56 | 1.73 | 6.30 | 1.98 |
+| 50000 | 7/2 | 3/1 | 50000/0 | 1 | 0 | 8.72 | 23.82 | 9.32 | 28.83 | 0.45 |
 
-At 50k the compact position buffer uses another 0.38 MiB outside heapUsed; including it still meets the 1.2x classic bound. Negative released deltas reflect GC/JIT noise around the empty-store baseline. The targets apply to N=50k; full-dispatch counts include four write/control statements in addition to the three refresh reads.
+At 50k the compact position buffer uses another 0.38 MiB outside heapUsed; including it still meets the 1.2x classic bound. Negative released deltas reflect GC/JIT noise around the empty-store baseline. The targets apply to N=50k. Cached toggles use one atomic batch and one count query; ui uses one atomic batch. The phase 13 acceptance tests measure cold toggles separately (three calls).
 
 ## Profiling and reproduction evidence
 

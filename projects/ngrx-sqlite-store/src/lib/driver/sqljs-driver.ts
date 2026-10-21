@@ -57,6 +57,31 @@ export class SqlJsDriver implements SqlDriver {
     }
   }
 
+  async batch(
+    statements: { sql: string; params?: SqlValue[] }[],
+    opts: { transaction: boolean },
+  ): Promise<void> {
+    const db = this.database;
+    if (opts.transaction) db.exec('BEGIN IMMEDIATE');
+    try {
+      for (const { sql, params = [] } of statements) {
+        const statement = db.prepare(sql);
+        try {
+          statement.bind(params);
+          while (statement.step()) {
+            /* Drain without a lastId query. */
+          }
+        } finally {
+          statement.free();
+        }
+      }
+      if (opts.transaction) db.exec('COMMIT');
+    } catch (error) {
+      if (opts.transaction) db.exec('ROLLBACK');
+      throw error;
+    }
+  }
+
   begin(): Promise<void> {
     return this.exec('BEGIN IMMEDIATE');
   }

@@ -41,18 +41,30 @@ const adapter = createEntityAdapter<Todo>();
 const initial = adapter.getInitialState<TodosState>({ filter: 'all', loaded: false, page: 0 });
 
 export function countingDriver() {
-  const driver = new SqlJsDriver();
+  const raw = new SqlJsDriver();
   const counts = { statements: 0, trace: [] as string[] };
-  // Include BEGIN/COMMIT and sql.js's real internal last_insert_rowid query.
-  // Never bundle multiple SQL statements into one counted exec call.
-  for (const m of ['run', 'query', 'exec'] as const) {
-    const original = driver[m].bind(driver) as (...a: unknown[]) => Promise<unknown>;
-    (driver as unknown as Record<string, unknown>)[m] = (...a: unknown[]) => {
-      counts.statements++;
-      counts.trace.push(String(a[0]));
-      return original(...a);
-    };
-  }
+  const driver = new Proxy(raw, {
+    get(target, key) {
+      const value = Reflect.get(target, key);
+      if (typeof value !== 'function') return value;
+      return (...args: unknown[]) => {
+        if (
+          ['run', 'query', 'exec', 'begin', 'commit', 'rollback', 'batch'].includes(String(key))
+        ) {
+          counts.statements++;
+          if (key === 'batch') {
+            for (const statement of args[0] as { sql: string }[]) counts.trace.push(statement.sql);
+          } else
+            counts.trace.push(
+              ['begin', 'commit', 'rollback'].includes(String(key))
+                ? String(key).toUpperCase()
+                : String(args[0]),
+            );
+        }
+        return value.apply(target, args);
+      };
+    },
+  });
   return { driver, counts };
 }
 

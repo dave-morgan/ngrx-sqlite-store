@@ -1,6 +1,7 @@
+import { committedWrites } from '../storage/committed-writes';
 import type { SqlValue } from '../driver/sql-driver';
 import type { ChangeSet } from '../storage/change-set';
-import { subtreeRange } from '../storage/path';
+import { escapeSegment, subtreeRange } from '../storage/path';
 import type { SqlExecutor } from '../storage/storage-engine';
 import { RowCapExceededError } from './errors';
 import type { NodeKind } from './kinds';
@@ -30,6 +31,11 @@ export class RowWriter {
     private readonly changes: ChangeSet,
     readonly rowCap: number,
   ) {}
+
+  private async write(sql: string, params?: SqlValue[]): Promise<void> {
+    if (this.exec.write) await this.exec.write(sql, params);
+    else await this.exec.run(sql, params);
+  }
 
   private check(path: string, value: string | null): void {
     if (value === null) return;
@@ -80,7 +86,7 @@ export class RowWriter {
       for (let i = 0; i < rows.length; i += batchSize) {
         const batch = rows.slice(i, i + batchSize);
         const placeholders = batch.map(() => `(${columns.map(() => '?').join(',')})`).join(',');
-        await this.exec.run(
+        await this.write(
           `INSERT INTO ${table} (${columns.join(',')}) VALUES ${placeholders}`,
           batch.flat(),
         );
@@ -92,25 +98,38 @@ export class RowWriter {
   async updateValue(path: string, value: string | null, changePath = path): Promise<void> {
     this.check(path, value);
     await this.flush();
-    await this.exec.run('UPDATE nss_node SET value = ? WHERE path = ?', [value, path]);
+    await this.write('UPDATE nss_node SET value = ? WHERE path = ?', [value, path]);
     this.changes.add(changePath);
   }
 
   async updatePosition(path: string, pos: number, changePath = path): Promise<void> {
     await this.flush();
-    await this.exec.run('UPDATE nss_node SET pos = ? WHERE path = ?', [pos, path]);
+    await this.write('UPDATE nss_node SET pos = ? WHERE path = ?', [pos, path]);
     this.changes.add(changePath);
   }
 
   async updateEntity(coll: string, id: string, data: string): Promise<void> {
     this.check(coll, data);
     await this.flush();
-    await this.exec.run('UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?', [
-      data,
+    await this.write('UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?', [data, coll, id]);
+    const previous = committedWrites(this.changes).entities.get(coll)?.get(id);
+    const unknownOrder = !previous && this.changes.overlaps(`${coll}/${escapeSegment(id)}`);
+    this.changes.addEntity(coll, id);
+    if (unknownOrder) return;
+    const known = committedWrites(this.changes).entities;
+    let rows = known.get(coll);
+    if (!rows) {
+      rows = new Map();
+      known.set(coll, rows);
+    }
+    rows.set(id, {
       coll,
       id,
-    ]);
-    this.changes.addEntity(coll, id);
+      data,
+      pos: previous?.pos ?? 0,
+      sortkey: previous?.sortkey,
+      keepOrder: previous?.keepOrder ?? previous?.insertOnly ?? true,
+    });
   }
 
   async writeEntityRows(
@@ -125,13 +144,29 @@ export class RowWriter {
     await this.flush();
     for (let index = 0; index < rows.length; index += 199) {
       const batch = rows.slice(index, index + 199);
-      await this.exec.run(
+      await this.write(
         `INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES ${batch.map(() => '(?,?,?,?,?)').join(',')} ON CONFLICT(coll,id) DO ${upsert ? 'UPDATE SET data = excluded.data, pos = excluded.pos, sortkey = excluded.sortkey' : 'NOTHING'}`,
         batch.flatMap(({ coll, id, pos, data, sortkey }) => [coll, id, pos, data, sortkey ?? null]),
       );
       for (const row of batch) {
+        const journal = committedWrites(this.changes);
+        const previous = journal.entities.get(row.coll)?.get(row.id);
+        const unknown =
+          !previous &&
+          !journal.removed.get(row.coll)?.has(row.id) &&
+          this.changes.overlaps(`${row.coll}/${escapeSegment(row.id)}`);
         this.changes.addEntity(row.coll, row.id);
         if (!orderChanges || orderChanges.has(row.id)) this.changes.addEntityOrder(row.coll);
+        {
+          const known = committedWrites(this.changes).entities;
+          let rows = known.get(row.coll);
+          if (!rows) {
+            rows = new Map();
+            known.set(row.coll, rows);
+          }
+          if (upsert || !unknown)
+            rows.set(row.id, !upsert && previous ? previous : { ...row, insertOnly: !upsert });
+        }
       }
     }
   }
@@ -139,7 +174,7 @@ export class RowWriter {
   async updateEntitySortKey(coll: string, id: string, sortkey: string): Promise<void> {
     this.check(coll, sortkey);
     await this.flush();
-    await this.exec.run('UPDATE nss_entity SET sortkey = ? WHERE coll = ? AND id = ?', [
+    await this.write('UPDATE nss_entity SET sortkey = ? WHERE coll = ? AND id = ?', [
       sortkey,
       coll,
       id,
@@ -169,27 +204,36 @@ export class RowWriter {
       );
     }
     for (const row of deleted) this.changes.addEntity(coll, row.id);
+    if (deleted.length) {
+      const known = committedWrites(this.changes);
+      let removed = known.removed.get(coll);
+      if (!removed) {
+        removed = new Set();
+        known.removed.set(coll, removed);
+      }
+      for (const row of deleted) removed.add(row.id);
+    }
     if (deleted.length) this.changes.addEntityOrder(coll);
     return deleted;
   }
 
   async updateEntityPosition(coll: string, id: string, pos: number): Promise<void> {
     await this.flush();
-    await this.exec.run('UPDATE nss_entity SET pos = ? WHERE coll = ? AND id = ?', [pos, coll, id]);
+    await this.write('UPDATE nss_entity SET pos = ? WHERE coll = ? AND id = ?', [pos, coll, id]);
     this.changes.addEntity(coll, id);
     this.changes.addEntityOrder(coll);
   }
 
   async deleteEntity(coll: string, id: string): Promise<void> {
     await this.flush();
-    await this.exec.run('DELETE FROM nss_entity WHERE coll = ? AND id = ?', [coll, id]);
+    await this.write('DELETE FROM nss_entity WHERE coll = ? AND id = ?', [coll, id]);
     this.changes.addEntity(coll, id);
     this.changes.addEntityOrder(coll);
   }
 
   async deleteLeaf(path: string, changePath = path): Promise<void> {
     await this.flush();
-    await this.exec.run('DELETE FROM nss_node WHERE path = ?', [path]);
+    await this.write('DELETE FROM nss_node WHERE path = ?', [path]);
     this.changes.add(changePath);
   }
 
@@ -197,7 +241,7 @@ export class RowWriter {
     await this.flush();
     for (let i = 0; i < paths.length; i += 900) {
       const batch = paths.slice(i, i + 900);
-      await this.exec.run(
+      await this.write(
         `DELETE FROM nss_node WHERE path IN (${batch.map(() => '?').join(',')})`,
         batch,
       );
@@ -207,7 +251,7 @@ export class RowWriter {
 
   async deleteChunks(path: string, changePath = path): Promise<void> {
     await this.flush();
-    await this.exec.run('DELETE FROM nss_chunk WHERE path = ?', [path]);
+    await this.write('DELETE FROM nss_chunk WHERE path = ?', [path]);
     this.changes.add(changePath);
   }
 
@@ -219,7 +263,7 @@ export class RowWriter {
       ['nss_chunk', 'path'],
       ['nss_entity', 'coll'],
     ]) {
-      await this.exec.run(
+      await this.write(
         `DELETE FROM ${table} WHERE ${column} = ? OR (${column} >= ? AND ${column} < ?)`,
         [path, lower, upper],
       );

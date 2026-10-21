@@ -43,6 +43,8 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0035](0035-scoped-query-view-retention.md) | Scope query memo metadata to declared sources so evicted pages can collect | Agent / Library retention fix | 2026-10-21 | Accepted |
 | [0036](0036-whole-store-subscriptions-loaded-view.md) | Whole-store subscriptions see loaded-path view by default (`sqlite.wholeStore: loaded|pin-all`); router-store storeState payloads partial | Agent | 2026-10-21 | Accepted |
 
+| [0037](0037-change-aware-query-refresh.md) | Change-aware entity query maintenance and bounded batched refresh | Agent | 2026-10-22 | Accepted |
+
 ## Provisional choices (still open questions; listed so they're visible)
 
 | Q | Current choice | Decided by |

@@ -273,7 +273,8 @@ export function createEntityAdapter<T, IdType = string | number>(
     at,
     getInitialState: (extra?: object) => ɵbrandEntityState(classic.getInitialState(extra ?? {})),
     getSelectors,
-    query: entityQueries,
+    query: <S>(selectState?: (state: S) => EntityState<T>) =>
+      entityQueries<S, T, IdType>(selectState, selectId, !!comparer),
   };
   const names: (keyof EntityOperations<T>)[] = [
     'addOne',

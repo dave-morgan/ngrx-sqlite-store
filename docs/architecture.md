@@ -248,7 +248,7 @@ spine. Position metadata is one compact index per collection. See ADR-0031/0032.
 - **Foreign selectors** (built with the real `@ngrx/store`, for example router-store's `getRouterSelectors`, or plain `state => state.x` lambdas) have no metadata. A tracking proxy records feature-level dependencies on every evaluation (Q8). Newly discovered conditional branches load before the scanned action is emitted. Identity selectors pin all registered features and return the plain view.
 - **Before the first load (provisional, Q5).** `select()` emits nothing until the sources are ready. `selectSignal()` returns the value computed from `initialState` defaults until then. `provideStore` registers an app initializer that opens the DB, runs migrations, seeds, and preloads root features that are marked `eager`.
 
-### 5.3 Query sources (ADR-0027/0028)
+### 5.3 Query sources (ADR-0027/0028/0037)
 
 `adapter.query(selectState?)` supplies count, ids, exists and ordered page selectors.
 Each is an ordinary NgRx memoized selector with a query source keyed by the pair
@@ -258,10 +258,19 @@ state tree; a count subscription never loads or pins the collection path.
 
 PathCache shares refcounting and its inactive LRU budget between path and query
 entries. changes$ only marks overlapping collection queries stale. The existing
-post-commit hook re-runs active queries through engine.read, after transaction
+post-commit hook refreshes active queries through engine.read, after transaction
 resolution and before scanned actions/effects. Fresh results emit synchronously;
 unloaded query signals use the query's initial value. Equal JSON results retain
 references; non-JSON generic reader results retain their actual types.
+
+Entity queries consume commit-local previous/next deltas and changed top-level
+fields. Counts/exists maintain exact matching multiplicities; pages patch
+unchanged-membership rows and preserve references. Membership/order changes and
+unknown writes rerun SQL. Rerunning query transports share a bounded parameterized
+batch; oversized cells and unknown generic result shapes use ordinary transport.
+Fresh page transport rows serve EntityTx previous-value reads and become
+unavailable synchronously on overlapping commits. Pending payload journals are
+released after refresh or when a query becomes inactive.
 
 Fields are validated against the ADR-0027 identifier grammar. Both JSON paths and
 values are bound SQL parameters. Two-valued scalar filters distinguish booleans,

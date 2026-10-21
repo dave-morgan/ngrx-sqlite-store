@@ -1,4 +1,5 @@
 import type { ChangeSet } from './change-set';
+import { releaseEntityChanges } from './entity-changes';
 import { isAncestorOrSelf, pathsOverlap, unescapeSegment } from './path';
 import type { EntityRow } from '../schema/row-writer';
 
@@ -34,4 +35,5 @@ export function invalidateWrites(changes: ChangeSet, path: string): void {
 }
 export function releaseWrites(changes: ChangeSet): void {
   writes.delete(changes);
+  releaseEntityChanges(changes);
 }

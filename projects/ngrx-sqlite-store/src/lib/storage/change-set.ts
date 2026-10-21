@@ -1,4 +1,5 @@
 import { invalidateWrites } from './committed-writes';
+import { entityChanges, recordEntityChange, releaseEntityChanges } from './entity-changes';
 interface Branch {
   path?: string;
   children: Map<string, Branch>;
@@ -14,6 +15,7 @@ export class ChangeSet {
     this.record(path);
   }
   addEntity(coll: string, id: string): void {
+    entityChanges(this).get(coll)?.delete(id);
     this.record(`${coll}/${escapeSegment(id)}`);
   }
   addEntityOrder(coll: string): void {
@@ -65,9 +67,23 @@ export class ChangeSet {
     return this.changed.size === 0;
   }
 
-  merge(other: ChangeSet): void {
+  merge(other: ChangeSet, includeEntities = true): void {
+    // A delta describes one transaction's before/after. Keep only independent
+    // deltas when merging; repeated/unknown overlapping mutations require SQL.
+    const incoming = includeEntities
+      ? [...entityChanges(other)].flatMap(([coll, rows]) =>
+          [...rows.values()]
+            .filter((change) => !this.overlaps(`${coll}/${escapeSegment(change.id)}`))
+            .map((change) => ({ coll, change })),
+        )
+      : [];
+    for (const [coll, rows] of entityChanges(this))
+      for (const id of rows.keys())
+        if (other.overlaps(`${coll}/${escapeSegment(id)}`)) rows.delete(id);
     for (const path of other.paths()) this.record(path);
     for (const path of other.physical) this.physical.add(path);
+    for (const { coll, change } of incoming) recordEntityChange(this, coll, change);
+    if (!includeEntities) releaseEntityChanges(this);
   }
 }
 import { escapeSegment, pathsOverlap } from './path';

@@ -199,6 +199,89 @@ describe('phase 13 bridge invocations', () => {
   );
 });
 
+describe('phase 14 query refresh bridge budgets', () => {
+  afterEach(() => TestBed.resetTestingModule());
+  it.each([false, true])(
+    'refreshes the todos subscriptions within the bridge budgets (filtered page: %s)',
+    async (filteredPage) => {
+      const { driver, counts } = countingDriver();
+      const adapter = createEntityAdapter<{ id: string; done: boolean; name: string }>();
+      const initial = adapter.getInitialState();
+      const source = createFeatureSelector<typeof initial>('todos');
+      const seed = createAction('[Query budget] seed');
+      const toggle = createAction('[Query budget] toggle', (id: string) => ({ id }));
+      const add = createAction('[Query budget] add');
+      TestBed.configureTestingModule({
+        providers: [
+          provideStore(
+            {
+              todos: createReducer(
+                initial,
+                on(seed, (tx) =>
+                  adapter.setAll(
+                    tx,
+                    Array.from({ length: 110 }, (_, i) => ({
+                      id: `t${i}`,
+                      done: false,
+                      name: `Todo ${i}`,
+                    })),
+                  ),
+                ),
+                on(toggle, (tx, { id }) =>
+                  adapter.mapOne(tx, { id, map: (t) => ({ ...t, done: !t.done }) }),
+                ),
+                on(add, (tx) =>
+                  adapter.addOne(tx, { id: 'added', done: false, name: 'Todo added' }),
+                ),
+              ),
+            },
+            { sqlite: { driver } },
+          ),
+        ],
+      });
+      const store = TestBed.inject(Store);
+      await store.settle();
+      await store.dispatchAsync(seed());
+      const queries = adapter.query(source);
+      const where = filteredPage ? { done: false } : { name: { like: 'Todo%' } };
+      const selectors: ((state: object) => unknown)[] = [
+        queries.count({ done: false }),
+        queries.count(),
+        queries.count(where),
+        queries.page({ where, offset: 0, limit: 100 }),
+      ];
+      const subscriptions = selectors.map((selector) => store.select(selector).subscribe());
+      await store.settle();
+      await Promise.all(selectors.map((selector) => firstValueFrom(store.select(selector))));
+      for (const [id, budget] of [
+        ['t0', 2],
+        ['t109', 3],
+      ] as const) {
+        counts.statements = 0;
+        await store.dispatchAsync(toggle(id));
+        console.log('[phase14 calls]', id, counts.statements);
+        expect.soft(counts.statements).toBeLessThanOrEqual(budget);
+        expect.soft(counts.statements).toBe(filteredPage ? budget : budget - 1);
+      }
+      counts.statements = 0;
+      await store.dispatchAsync(add());
+      console.log('[phase14 calls] add', counts.statements);
+      expect.soft(counts.statements).toBe(3);
+      counts.statements = 0;
+      const filtered: ((state: object) => unknown)[] = [
+        queries.count({ done: true }),
+        queries.page({ where: { done: true }, offset: 0, limit: 100 }),
+      ];
+      const extra = filtered.map((selector) => store.select(selector).subscribe());
+      await Promise.all(filtered.map((selector) => firstValueFrom(store.select(selector))));
+      console.log('[phase14 calls] filter', counts.statements);
+      expect(counts.statements).toBe(1);
+      [...subscriptions, ...extra].forEach((s) => s.unsubscribe());
+      await driver.close();
+    },
+  );
+});
+
 describe('bridge cost (statement budgets)', () => {
   afterEach(() => TestBed.resetTestingModule());
 

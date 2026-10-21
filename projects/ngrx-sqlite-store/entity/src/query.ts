@@ -73,8 +73,10 @@ export function compileWhere(where: Where = {}): {
   sql: string;
   params: SqlValue[];
   test: (entity: unknown) => boolean;
+  fields: ReadonlySet<string>;
 } {
   const params: SqlValue[] = [];
+  const fields = new Set<string>();
   const bind = (v: SqlValue) => {
     params.push(v);
     return '?';
@@ -109,6 +111,7 @@ export function compileWhere(where: Where = {}): {
       }
       if (!/^[A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*)*$/.test(field))
         throw new TypeError('Invalid query field: ' + field);
+      fields.add(field.split('.')[0]);
       const get = (entity: unknown): unknown => {
         let value = entity;
         for (const key of field.split('.'))
@@ -197,11 +200,13 @@ export function compileWhere(where: Where = {}): {
     };
   }
   const result = compile(where);
-  return { ...result, params };
+  return { ...result, params, fields };
 }
 
 export function entityQueries<S, T, Id = string | number>(
   selectState?: (state: S) => EntityState<T>,
+  selectId: (entity: T) => string | number = (entity) => (entity as { id: string | number }).id,
+  sorted = false,
 ): EntityQueries<S, T, Id> {
   const deps = selectState ? ɵdependencies(selectState) : [];
   let path = deps !== 'dynamic' && deps.length === 1 ? deps[0] : '';
@@ -255,9 +260,9 @@ export function entityQueries<S, T, Id = string | number>(
           // Transport aggregate and promoted-row fallbacks in one bridge call.
           const transport = await sql.query<{ id: string | null; value: number | null }>(
             `SELECT id, NULL AS value FROM nss_entity WHERE coll = ? AND data = ''
-             UNION ALL SELECT NULL, ${kind === 'count' ? 'COUNT(*)' : `EXISTS(SELECT 1 FROM nss_entity WHERE ${predicate})`}
-             ${kind === 'count' ? `FROM nss_entity WHERE ${predicate}` : ''}`,
+             UNION ALL SELECT NULL, COUNT(*) FROM nss_entity WHERE ${predicate}`,
             [path, path, ...filter.params],
+            ['id', 'value'],
           );
           let value = transport.find((row) => row.id === null)!.value!;
           for (const row of transport)
@@ -293,6 +298,9 @@ export function entityQueries<S, T, Id = string | number>(
             ...filter.params,
             ...(kind === 'page' ? [page!.offset + page!.limit, page!.limit, page!.offset] : []),
           ],
+          kind === 'page'
+            ? ['id', 'pos', 'sortkey', 'data', 'promoted']
+            : ['id', 'pos', 'sortkey', 'promoted'],
         );
         const promoted = transport.filter((row) => row.promoted);
         const rows = transport.filter((row) => !row.promoted);
@@ -332,6 +340,13 @@ export function entityQueries<S, T, Id = string | number>(
                     .slice(page!.offset, page!.offset + page!.limit)
                     .map((id) => collection.entities[id]!)
         ) as R;
+      },
+      {
+        kind,
+        test: filter.test,
+        fields: filter.fields,
+        selectId: (entity) => selectId(entity as T),
+        sorted,
       },
     );
   }

@@ -1,8 +1,39 @@
 import { describe, expect, it } from 'vitest';
 
 import { ChangeSet } from './change-set';
+import { entityChanges, recordEntityChange } from './entity-changes';
 
 describe('ChangeSet', () => {
+  it.each(['unknown', 'update', 'reorder'] as const)(
+    'drops overlapping deltas when merging a later %s',
+    (kind) => {
+      const known = new ChangeSet();
+      known.addEntity('todos', 's:1');
+      recordEntityChange(known, 'todos', {
+        id: 's:1',
+        kind: 'update',
+        prev: { done: false },
+        next: { done: true },
+        fields: new Set(['done']),
+      });
+      const accumulated = new ChangeSet();
+      accumulated.merge(known);
+      expect(entityChanges(accumulated).get('todos')?.has('s:1')).toBe(true);
+      const later = new ChangeSet();
+      later.addEntity('todos', 's:1');
+      if (kind !== 'unknown')
+        recordEntityChange(later, 'todos', {
+          id: 's:1',
+          kind,
+          prev: { done: true },
+          next: { done: false },
+          fields: new Set(['done']),
+        });
+      accumulated.merge(later);
+      expect(entityChanges(accumulated).get('todos')?.has('s:1')).toBe(false);
+      expect(accumulated.paths()).toEqual(['todos/s:1']);
+    },
+  );
   it('retains physical write provenance when a scalar path collides with an entity id', () => {
     const changes = new ChangeSet();
     changes.addEntity('todos', 's:t1');

@@ -6,7 +6,14 @@ export interface QuerySource {
   path: string;
   key: string;
   initial: unknown;
-  reader: (sql: Pick<import('../storage/storage-engine').SqlExecutor, 'query'>) => Promise<unknown>;
+  reader: (sql: import('./query-selector').SqlReader) => Promise<unknown>;
+  entity?: {
+    kind: 'count' | 'exists' | 'page' | 'ids';
+    fields: ReadonlySet<string>;
+    test: (entity: unknown) => boolean;
+    selectId: (entity: unknown) => string | number;
+    sorted: boolean;
+  };
 }
 export function queryIdentity(path: string, key: string): string {
   return '\u0000query:' + JSON.stringify([path, key]);

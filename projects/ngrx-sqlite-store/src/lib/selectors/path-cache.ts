@@ -18,6 +18,10 @@ import type { EntityValue } from '../schema/entity-brand';
 import { refreshEntities } from './entity-refresh';
 import { retainedSize } from './retained-size';
 import { SelectorCleanup } from './selector-cleanup';
+import { learnedColumns, queryBatch } from './query-batch';
+import { releaseEntityChanges } from '../storage/entity-changes';
+import { refreshQuery } from './query-refresh';
+import type { SqlReader } from './query-selector';
 
 interface Entry {
   query?: QuerySource;
@@ -30,6 +34,8 @@ interface Entry {
   dirty: ChangeSet;
   replaced: Set<string>;
   bytes?: number;
+  matchCount?: number;
+  transportColumns?: Map<string, readonly string[]>;
 }
 
 function isJsonTree(value: unknown, seen = new WeakSet<object>()): boolean {
@@ -57,6 +63,7 @@ export class PathCache {
   private readonly entries = new Map<string, Entry>();
   private readonly references = new Map<string, number>();
   private readonly pending = new Map<string, Promise<void>>();
+  private queryLoad?: Promise<void>;
   private readonly cleanup = new SelectorCleanup();
   private clock = 0;
   private revision = 0;
@@ -67,7 +74,11 @@ export class PathCache {
     // This callback runs INSIDE the engine FIFO. Invalidate only; never query.
     for (const [path, entry] of this.entries)
       if (changes.overlaps(entry.query?.path ?? path)) {
-        entry.dirty.merge(changes);
+        const alreadyStale = !entry.dirty.isEmpty;
+        entry.dirty.merge(changes, !!entry.refcount && !!entry.query);
+        // Multiple commits without an intervening refresh can include unknown
+        // earlier rows. Never apply a later delta to that older cached result.
+        if (entry.query && alreadyStale) entry.dirty.add(entry.query.path);
         const source = committedWrites(changes);
         const known = committedWrites(entry.dirty);
         for (const [key, value] of source.values)
@@ -208,7 +219,13 @@ export class PathCache {
     if (this.ready(path)) return Promise.resolve();
     const pending = this.pending.get(path);
     if (pending) return pending;
-    const operation = this.load(path);
+    const operation = this.entries.get(path)?.query
+      ? (this.queryLoad ??= Promise.resolve()
+          .then(() => this.refresh())
+          .finally(() => {
+            this.queryLoad = undefined;
+          }))
+      : this.load(path);
     this.pending.set(path, operation);
     void operation.then(
       () => this.pending.delete(path),
@@ -278,20 +295,55 @@ export class PathCache {
   async refresh(): Promise<void> {
     if (![...this.entries.values()].some((entry) => entry.refcount && !entry.dirty.isEmpty)) return;
     await this.engine.read(async (sql) => {
-      for (const [path, entry] of this.entries) {
-        if (entry.refcount && !entry.dirty.isEmpty) await this.refreshEntry(sql, path, entry);
-      }
+      const queries: Promise<void>[] = [];
+      const batched = queryBatch(sql);
+      for (const [path, entry] of this.entries)
+        if (entry.refcount && !entry.dirty.isEmpty && !entry.query)
+          await this.refreshEntry(sql, path, entry);
+      for (const [path, entry] of this.entries)
+        if (entry.refcount && !entry.dirty.isEmpty && entry.query)
+          queries.push(this.refreshEntry(sql, path, entry, batched));
+      await Promise.all(queries);
     });
     this.publish();
   }
-  private async refreshEntry(sql: SqlExecutor, path: string, entry: Entry): Promise<void> {
+  private async refreshEntry(
+    sql: SqlExecutor,
+    path: string,
+    entry: Entry,
+    reader: SqlReader = sql,
+  ): Promise<void> {
     entry.bytes = undefined;
     if (entry.query) {
+      if (refreshQuery(entry.query, entry)) {
+        entry.dirty = new ChangeSet();
+        entry.version = this.revision;
+        return;
+      }
       const entityRows = new Map<string, EntityRow>();
       const queryPath = entry.query.path;
       const next = await entry.query.reader({
-        query: async <R>(statement: string, params?: SqlValue[]) => {
-          const rows = await sql.query<R>(statement, params);
+        query: async <R>(statement: string, params?: SqlValue[], columns?: readonly string[]) => {
+          const rows = await reader.query<R>(
+            statement,
+            params,
+            columns ?? entry.transportColumns?.get(statement),
+          );
+          if (!columns && rows.length) {
+            const inferred = learnedColumns(statement, rows[0]);
+            if (inferred) {
+              (entry.transportColumns ??= new Map()).set(statement, inferred);
+              if (entry.transportColumns.size > 32)
+                entry.transportColumns.delete(entry.transportColumns.keys().next().value!);
+            }
+          }
+          if (entry.query?.entity?.kind === 'count' || entry.query?.entity?.kind === 'exists') {
+            const aggregate = rows.find((row) => (row as { id?: string | null }).id === null) as
+              { value: number } | undefined;
+            entry.matchCount = aggregate?.value;
+            if (rows.some((row) => typeof (row as { id?: unknown }).id === 'string'))
+              entry.matchCount = undefined;
+          }
           if (/FROM nss_entity/.test(statement) && params?.[0] === queryPath) {
             for (const candidate of rows) {
               const row = candidate as Partial<EntityRow>;
@@ -398,6 +450,7 @@ export class PathCache {
       entry.refcount = 0;
       for (const [path, count] of this.references)
         if (entry.query ? root === path : pathsOverlap(root, path)) entry.refcount += count;
+      if (entry.query && !entry.refcount) releaseEntityChanges(entry.dirty);
     }
   }
   private evict(): void {

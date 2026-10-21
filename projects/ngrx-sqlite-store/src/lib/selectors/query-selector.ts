@@ -1,10 +1,12 @@
 import { createSelector } from '@ngrx/store';
 import type { MemoizedSelector } from '@ngrx/store';
-import type { SqlExecutor } from '../storage/storage-engine';
+import type { SqlValue, Row } from '../driver/sql-driver';
 import { NSS_DEPS, NSS_QUERIES, queryIdentity } from './metadata';
 import type { QuerySource } from './metadata';
 
-export type SqlReader = Pick<SqlExecutor, 'query'>;
+export interface SqlReader {
+  query<R = Row>(sql: string, params?: SqlValue[], columns?: readonly string[]): Promise<R[]>;
+}
 export interface QueryOptions<T> {
   path: string;
   key: string;
@@ -25,6 +27,7 @@ export function querySelector<S, T>(
   options: QueryOptions<T>,
   reader: (sql: SqlReader) => Promise<T>,
   classic: (state: S) => T,
+  entity?: QuerySource['entity'],
 ): MemoizedSelector<S, T> {
   const id = queryIdentity(options.path, options.key);
   const selector = createSelector(
@@ -34,7 +37,7 @@ export function querySelector<S, T>(
     },
     (value) => value,
   );
-  const source: QuerySource = { ...options, reader, id };
+  const source: QuerySource = { ...options, reader, id, entity };
   Object.defineProperty(selector, NSS_QUERIES, { value: [source] });
   Object.defineProperty(selector, NSS_DEPS, { value: [id] });
   return selector;

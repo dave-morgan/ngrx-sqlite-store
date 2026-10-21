@@ -186,6 +186,7 @@ export class RowWriter {
   async deleteEntities(
     coll: string,
     ids?: readonly string[],
+    beforeChange?: (row: { id: string; data: string }) => () => void,
   ): Promise<{ id: string; data: string }[]> {
     await this.flush();
     const deleted: { id: string; data: string }[] = [];
@@ -203,7 +204,11 @@ export class RowWriter {
         )),
       );
     }
-    for (const row of deleted) this.changes.addEntity(coll, row.id);
+    for (const row of deleted) {
+      const afterChange = beforeChange?.(row);
+      this.changes.addEntity(coll, row.id);
+      afterChange?.();
+    }
     if (deleted.length) {
       const known = committedWrites(this.changes);
       let removed = known.removed.get(coll);

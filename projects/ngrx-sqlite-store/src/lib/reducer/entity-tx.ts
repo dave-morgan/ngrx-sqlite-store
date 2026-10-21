@@ -13,6 +13,8 @@ import { serializedSize } from '../schema/size';
 import { encodeSortKey } from '../schema/sort-key';
 import type { ChangeSet } from '../storage/change-set';
 import type { SqlExecutor } from '../storage/storage-engine';
+import { changedFields, entityChanges, recordEntityChange } from '../storage/entity-changes';
+import { escapeSegment } from '../storage/path';
 
 export type EntityId = string | number;
 export interface EntityInput<T> {
@@ -88,6 +90,31 @@ export class EntityTx<T> {
     this.invalidate();
     this.onWrite();
   }
+  private track(id: string): (prev: unknown, next: unknown, reorder?: boolean) => void {
+    const earlier = entityChanges(this.changes).get(this.coll)?.get(id);
+    const unknown = !earlier && this.changes.overlaps(`${this.coll}/${escapeSegment(id)}`);
+    return (before, next, reorder = false) => {
+      if (unknown) return;
+      if (reorder && earlier) {
+        recordEntityChange(this.changes, this.coll, earlier);
+        return;
+      }
+      const prev = earlier && earlier.kind !== 'reorder' ? earlier.prev : before;
+      recordEntityChange(this.changes, this.coll, {
+        id,
+        prev,
+        next,
+        kind: reorder
+          ? 'reorder'
+          : prev === undefined
+            ? 'insert'
+            : next === undefined
+              ? 'delete'
+              : 'update',
+        fields: changedFields(prev, next),
+      });
+    };
+  }
   private async row(id: EntityId): Promise<EntityRow | undefined> {
     const encoded = encodeEntityId(id);
     if (!this.cached.has(encoded) && this.snapshot) {
@@ -135,6 +162,11 @@ export class EntityTx<T> {
     return (await this.row(id))?.pos;
   }
   async getMany(ids: readonly EntityId[]): Promise<(T | undefined)[]> {
+    for (const id of ids) {
+      const encoded = encodeEntityId(id);
+      const row = this.committedRow?.(encoded);
+      if (!this.cached.has(encoded) && row) this.cached.set(encoded, row);
+    }
     const missing = [...new Set(ids)].filter(
       (id) => !this.cached.has(encodeEntityId(id)) && !this.snapshot,
     );
@@ -222,11 +254,48 @@ export class EntityTx<T> {
         data: this.data(row.id, row.entity),
         sortkey: this.key(row.entity),
       }));
+    // One indexed transport supplies both the append endpoint and conflict ids.
+    // Knowing which rows actually insert makes aggregate deltas exact without
+    // adding a bridge call to the ordinary cold append path.
+    const existing = new Set<string>();
     let last: number | undefined;
+    const append = encoded.some(
+      (row, index) =>
+        row.pos === undefined &&
+        (typeof options.pos === 'number' ? options.pos + index : options.pos?.[index]) ===
+          undefined,
+    );
+    if (this.snapshot) {
+      for (const row of encoded)
+        if (getEntityOrder(this.snapshot)!.positions.get(row.id) !== undefined)
+          existing.add(encodeEntityId(row.id));
+      if (append) last = await this.lastPosition();
+    } else {
+      const rows = await this.sql.query<{ id: string | null; pos: number }>(
+        `SELECT id, pos FROM nss_entity WHERE coll = ? AND id IN (SELECT value FROM json_each(?))
+         ${append ? 'UNION ALL SELECT NULL, COALESCE((SELECT pos FROM nss_entity WHERE coll = ? ORDER BY pos DESC LIMIT 1), 0)' : ''}`,
+        [
+          this.coll,
+          JSON.stringify(encoded.map((row) => encodeEntityId(row.id))),
+          ...(append ? [this.coll] : []),
+        ],
+      );
+      for (const row of rows) {
+        if (row.id === null) last = row.pos;
+        else existing.add(row.id);
+      }
+    }
+    const deltas: (() => void)[] = [];
     const batch: EntityRow[] = [];
     for (const [index, row] of encoded.entries()) {
       // A duplicate promoted insert must leave the existing promoted subtree intact.
-      if (row.data === '' && (await this.has(row.id))) continue;
+      if (row.data === '' && existing.has(encodeEntityId(row.id))) continue;
+      const record = this.track(encodeEntityId(row.id));
+      deltas.push(() =>
+        existing.has(encodeEntityId(row.id))
+          ? record(undefined, undefined, true)
+          : record(undefined, row.entity),
+      );
       const explicit =
         row.pos ?? (typeof options.pos === 'number' ? options.pos + index : options.pos?.[index]);
       if (explicit === undefined && last === undefined) last = await this.lastPosition();
@@ -248,6 +317,7 @@ export class EntityTx<T> {
         );
     }
     await this.writer.writeEntityRows(batch, false);
+    for (const record of deltas) record();
     this.changed();
   }
   async upsert(rows: readonly EntityInput<T>[]): Promise<void> {
@@ -261,8 +331,12 @@ export class EntityTx<T> {
     let last: number | undefined;
     const batch: EntityRow[] = [];
     const orderChanges = new Set<string>();
+    const deltas: (() => void)[] = [];
     for (const row of encoded) {
       const old = await this.row(row.id);
+      const record = this.track(encodeEntityId(row.id));
+      const prev = old ? await this.value(old) : undefined;
+      deltas.push(() => record(prev, row.entity));
       if (row.pos === undefined && !old && last === undefined) last = await this.lastPosition();
       const pos = row.pos ?? old?.pos ?? ++last!;
       if (!old || pos !== old.pos || (row.sortkey ?? null) !== (old.sortkey ?? null))
@@ -280,6 +354,7 @@ export class EntityTx<T> {
       });
     }
     await this.writer.writeEntityRows(batch, true, orderChanges);
+    for (const record of deltas) record();
     this.changed();
   }
   async update(id: EntityId, entity: T): Promise<void> {
@@ -287,28 +362,41 @@ export class EntityTx<T> {
     const data = this.data(id, entity);
     const old = await this.row(id);
     if (!old) return;
+    const record = this.track(encodeEntityId(id));
+    const prev = await this.value(old);
     const path = entityValuePath(this.coll, encodeEntityId(id));
     if (old.data === '') await this.writer.deletePrefix(path, this.coll);
     if (data === '') await this.nodes.write(this.sql, path, entity, this.changes);
     await this.writer.updateEntity(this.coll, encodeEntityId(id), data);
     if (sortkey !== undefined && sortkey !== old.sortkey)
       await this.writer.updateEntitySortKey(this.coll, encodeEntityId(id), sortkey);
+    record(prev, entity);
     this.changed();
   }
   async setPosition(id: EntityId, pos: number): Promise<void> {
     if (!Number.isFinite(pos)) throw new RangeError('Invalid entity position');
+    const record = this.track(encodeEntityId(id));
     await this.writer.updateEntityPosition(this.coll, encodeEntityId(id), pos);
+    record(undefined, undefined, true);
     this.changed();
   }
   async remove(ids: readonly EntityId[]): Promise<void> {
+    const records = new Map(ids.map((id) => [encodeEntityId(id), this.track(encodeEntityId(id))]));
     const deleted = await this.writer.deleteEntities(this.coll, ids.map(encodeEntityId));
+    for (const row of deleted)
+      if (row.data !== '') records.get(row.id)?.(JSON.parse(row.data), undefined);
     for (const row of deleted)
       if (row.data === '')
         await this.writer.deletePrefix(entityValuePath(this.coll, row.id), this.coll);
     if (deleted.length) this.changed();
   }
   async clear(): Promise<void> {
-    const deleted = await this.writer.deleteEntities(this.coll);
+    const deleted = await this.writer.deleteEntities(this.coll, undefined, (row) => {
+      const record = this.track(row.id);
+      return () => {
+        if (row.data !== '') record(JSON.parse(row.data), undefined);
+      };
+    });
     for (const row of deleted)
       if (row.data === '')
         await this.writer.deletePrefix(entityValuePath(this.coll, row.id), this.coll);

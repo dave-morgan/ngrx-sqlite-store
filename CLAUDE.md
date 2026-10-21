@@ -29,6 +29,7 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - [x] Phase 11 bridge cost (statement budgets); brief docs/briefs/phase-11-bridge-cost.md
 - [x] Phase 12 scale (refresh granularity, per-commit work, memory); brief docs/briefs/phase-12-scale.md; baseline docs/benchmarks/android-baseline-2026-10-21.md
 - [x] Phase 13 bridge floor + retention; brief docs/briefs/phase-13-bridge-floor-and-retention.md
+- [ ] Phase 14 query refresh (change-aware invalidation, batched refresh); brief docs/briefs/phase-14-query-refresh.md
 
 ## Harness (orchestrator-owned; agents don't touch unless briefed)
 - `projects/harness`: README there. Aliases `@store`, `@store/entity`, `@impl` per build config (`-c classic|sqlite`). Shared code in `src/app/state`, pages in `src/app/pages`; only reducers differ (`store-impl/{classic,sqlite}`).

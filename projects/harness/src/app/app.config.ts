@@ -23,13 +23,9 @@ export const appConfig: ApplicationConfig = {
     // Everything below is the unmodified NgRx ecosystem.
     provideEffects(TodosEffects, { seedOnInit, loadSeed, releaseSeedPayload, trackVisits, applyTheme }),
     provideRouterStore(),
-    // Devtools keeps maxAge actions alive; keep the bulk seed payload out of its history.
-    provideStoreDevtools({
-      maxAge: 25,
-      logOnly: !isDevMode(),
-      connectInZone: true,
-      actionsBlocklist: ['\\[Seed\\] Seed Loaded'],
-    }),
+    // Devtools keeps its last `maxAge` actions (payloads included) in liftedState; actionsBlocklist
+    // only filters what is sent to the extension. Dev builds only (docs/guides/ram.md).
+    ...(isDevMode() ? [provideStoreDevtools({ maxAge: 25, connectInZone: true })] : []),
     provideAppInitializer(installHarnessHook),
   ],
 };

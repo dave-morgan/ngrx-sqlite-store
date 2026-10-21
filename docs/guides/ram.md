@@ -26,7 +26,7 @@ Keep them on query selectors or small paths. Avoid putting large features in `sq
 
 ## 3. Don't let bulk payloads linger in action history
 - **`ActionsSubject` is a `BehaviorSubject`** (NgRx contract). It keeps the **last dispatched action** alive. After a bulk load such as `loadSuccess({ items: 50_000 rows })`, dispatch a small follow-up action, for example `loadApplied()`. The payload can then be collected.
-- **`@ngrx/store-devtools` keeps `maxAge` actions.** Use `actionsBlocklist` (or a lower `maxAge`) for bulk actions, and don't ship devtools in production builds.
+- **`@ngrx/store-devtools` keeps `maxAge` actions, payloads included.** `actionsBlocklist` only filters what is sent to the extension, not the recorded history. Provide devtools in dev builds only (`isDevMode() ? [provideStoreDevtools(...)] : []`).
 
 Both apply to classic NgRx too. They only become visible with this store, because there the state no longer shares the payload's objects.
 

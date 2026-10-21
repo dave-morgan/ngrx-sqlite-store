@@ -72,3 +72,11 @@ Phase 10 implements query-source caching, post-commit refresh, parameterized fil
 and promoted-row fallback, with JS/SQL equivalence and effect-timing tests.
 See [ADR-0027](decisions/0027-query-selectors.md) and
 [ADR-0028](decisions/0028-query-filter-and-classic-order-semantics.md).
+
+### Q17. Bridge payload peak memory. Status: **Open**
+After a 50k-row bulk write in one session, the Android **app** process holds about 68 MB more than classic (Java plus native). The cause is large `executeSet` payloads crossing the Capacitor bridge, and the memory is not returned until the process restarts. Steady state after a restart is fine: 18 MB below classic.
+- **Options:**
+  - chunk bulk writes into bounded payloads, for example ≤ 1 MB per bridge call, so the peak is capped;
+  - stream inserts in several transactions, which needs an atomicity decision;
+  - investigate the plugin's Java-side buffers.
+- **Resolves when:** device-total PSS after a 50k seed is within about 10% of classic.

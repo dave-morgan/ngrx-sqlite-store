@@ -106,10 +106,24 @@ async function heapMb(page) {
   return +(usedSize / 1048576).toFixed(1);
 }
 
-function pssMb() {
-  const out = adb('shell', 'dumpsys', 'meminfo', PKG);
+const pssOf = (target) => {
+  const out = adb('shell', 'dumpsys', 'meminfo', target);
   const m = out.match(/TOTAL PSS:\s+(\d+)/) ?? out.match(/TOTAL\s+(\d+)/);
-  return m ? +(Number(m[1]) / 1024).toFixed(1) : null;
+  return m ? Number(m[1]) / 1024 : 0;
+};
+
+/**
+ * Device RAM attributable to the app: the app process (Java + native SQLite) PLUS the
+ * WebView sandboxed renderer process, which is where the JS heap (and NgRx state) lives.
+ */
+function pssMb() {
+  const app = pssOf(PKG);
+  const renderer = adb('shell', 'ps', '-A')
+    .split(/\r?\n/)
+    .filter((l) => /sandboxed_process/.test(l))
+    .map((l) => l.trim().split(/\s+/)[1])
+    .reduce((sum, pid) => sum + pssOf(pid), 0);
+  return { app: +app.toFixed(1), renderer: +renderer.toFixed(1), total: +(app + renderer).toFixed(1) };
 }
 
 async function toggleLatency(page) {
@@ -171,7 +185,7 @@ async function measure(impl, size) {
   log('  ready', Math.round(firstReadyMs), 'ms');
   await page.evaluate(() => window.__harness.settle());
   const heapTodos = await heapMb(page);
-  const pssTodos = pssMb();
+  const pss = pssMb();
   const toggle = await toggleLatency(page);
 
   await page.getByTestId('nav-notes').click();
@@ -189,6 +203,8 @@ async function measure(impl, size) {
   const relaunchReadyMs = await readyMs(page, size);
   await page.evaluate(() => window.__harness.settle());
   const heapRelaunch = await heapMb(page);
+  await sleep(2000);
+  const pssRelaunch = pssMb();
   await browser.close().catch(() => {});
 
   return {
@@ -199,7 +215,10 @@ async function measure(impl, size) {
     heapTodosMb: heapTodos,
     heapNotesMb: heapNotes,
     heapRelaunchMb: heapRelaunch,
-    pssTodosMb: pssTodos,
+    pssAppMb: pss.app,
+    pssRendererMb: pss.renderer,
+    pssTotalMb: pss.total,
+    pssRelaunchTotalMb: pssRelaunch.total,
     toggleP50: +pct(toggle, 50).toFixed(1),
     toggleP95: +pct(toggle, 95).toFixed(1),
     emitP50: emission.p50,
@@ -230,7 +249,7 @@ for (const impl of impls) {
   }
 }
 
-const cols = ['impl', 'size', 'firstReadyMs', 'relaunchReadyMs', 'heapTodosMb', 'heapNotesMb', 'heapRelaunchMb', 'pssTodosMb', 'toggleP50', 'toggleP95', 'emitP50', 'emitP95'];
+const cols = ['impl', 'size', 'firstReadyMs', 'relaunchReadyMs', 'heapTodosMb', 'heapNotesMb', 'heapRelaunchMb', 'pssAppMb', 'pssRendererMb', 'pssTotalMb', 'pssRelaunchTotalMb', 'toggleP50', 'toggleP95', 'emitP50', 'emitP95'];
 const table = [
   `| ${cols.join(' | ')} |`,
   `| ${cols.map(() => '---').join(' | ')} |`,

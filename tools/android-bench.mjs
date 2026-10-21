@@ -53,9 +53,14 @@ async function launch() {
   adb('shell', 'am', 'force-stop', PKG);
   adb('shell', 'am', 'start', '-n', `${PKG}/.MainActivity`);
   let socket;
-  for (let i = 0; i < 50 && !socket; i++) {
+  // Generous: a cold WebView on a busy emulator can take well over 10 s; adb can also hiccup.
+  for (let i = 0; i < 300 && !socket; i++) {
     await sleep(200);
-    socket = adb('shell', 'cat', '/proc/net/unix').match(/webview_devtools_remote_\d+/)?.[0];
+    try {
+      socket = adb('shell', 'cat', '/proc/net/unix').match(/webview_devtools_remote_\d+/)?.[0];
+    } catch {
+      /* transient adb daemon restart: retry */
+    }
   }
   if (!socket) throw new Error('WebView devtools socket not found (debug build?)');
   adb('forward', `tcp:${CDP_PORT}`, `localabstract:${socket}`);
@@ -211,13 +216,17 @@ const results = [];
 for (const impl of impls) {
   if (args['skip-build'] !== 'true') buildAndInstall(impl);
   for (const size of sizes) {
-    try {
-      results.push(await measure(impl, size));
-      log(JSON.stringify(results.at(-1)));
-    } catch (e) {
-      log(`FAILED ${impl} ${size}: ${e.message}`);
-      results.push({ impl, size, error: e.message.slice(0, 200) });
+    let result;
+    for (let attempt = 1; attempt <= 2 && !result; attempt++) {
+      try {
+        result = await measure(impl, size);
+        log(JSON.stringify(result));
+      } catch (e) {
+        log(`FAILED ${impl} ${size} (attempt ${attempt}): ${e.message}`);
+        if (attempt === 2) result = { impl, size, error: e.message.slice(0, 200) };
+      }
     }
+    results.push(result);
   }
 }
 

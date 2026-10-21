@@ -80,7 +80,7 @@ class SubtreeWriter {
           this.rows.insertEntity({
             coll: path,
             id: encoded,
-            pos: getEntityOrder(entity)?.positions.get(encoded) ?? positions[i],
+            pos: getEntityOrder(entity)?.positions.get(id) ?? positions[i],
             sortkey: getEntityOrder(entity)?.keys.get(encoded),
             data: oversized ? '' : JSON.stringify(data),
           });
@@ -249,10 +249,10 @@ class SubtreeWriter {
     const nextIds = next.ids.map(encodeEntityId);
     const oldIndex = new Map(oldIds.map((id, i) => [id, i]));
     const matches = nextIds.map((id) => oldIndex.get(id) ?? -1);
-    const oldPositions = oldIds.map((id) => meta.entityPos!.get(id)!);
+    const oldPositions = prev.ids.map((id) => meta.entityPos!.get(id)!);
     const order = getEntityOrder(next);
     const positions = order
-      ? nextIds.map((id) => order.positions.get(id)!)
+      ? next.ids.map((id) => order.positions.get(id)!)
       : reorderedPositions(matches, oldPositions);
     const kept = new Set(nextIds);
     const removed: string[] = [];
@@ -326,7 +326,18 @@ class SubtreeWriter {
         await this.rows.updateEntitySortKey(path, row.id, row.sortkey);
       if (row.pos !== oldPositions[old])
         await this.rows.updateEntityPosition(path, row.id, row.pos);
-    } else if (updated.length) await this.rows.writeEntityRows(updated, true);
+    } else if (updated.length) {
+      const orderChanges = new Set(
+        updated
+          .filter(
+            (row) =>
+              row.pos !== oldPositions[oldIndex.get(row.id)!] ||
+              (row.sortkey ?? null) !== (getEntityOrder(prev)?.keys.get(row.id) ?? null),
+          )
+          .map((row) => row.id),
+      );
+      await this.rows.writeEntityRows(updated, true, orderChanges);
+    }
     await this.diffObject(path, prev, next, meta, true, changePath);
   }
 }

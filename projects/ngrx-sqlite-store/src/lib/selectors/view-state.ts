@@ -4,7 +4,8 @@ import { getEntityOrder, setEntityOrder } from '../schema/entity-order';
 import { unescapeSegment } from '../storage/path';
 
 function freezeTree(value: unknown, seen = new WeakSet<object>()): unknown {
-  if (!value || typeof value !== 'object' || seen.has(value)) return value;
+  if (!value || typeof value !== 'object' || Object.isFrozen(value) || seen.has(value))
+    return value;
   seen.add(value);
   for (const child of Object.values(value)) freezeTree(child, seen);
   return Object.freeze(value);
@@ -31,8 +32,8 @@ export function share(
   replaced?: ReadonlySet<string>,
   path = '',
 ): unknown {
+  if (previous === next) return next;
   if (
-    previous === next ||
     !previous ||
     !next ||
     typeof previous !== 'object' ||

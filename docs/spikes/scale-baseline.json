@@ -1,0 +1,47 @@
+[
+  {
+    "n": 1000,
+    "classicMs": 0.5796000000000276,
+    "classicHeap": 160280,
+    "toggleMs": 41.27350000000001,
+    "uiMs": 19.70939999999996,
+    "commitJsMs": 0.6936999999999216,
+    "toggleStatements": 7,
+    "refreshStatements": 3,
+    "toggleEntityRows": 1000,
+    "uiStatements": 6,
+    "todosStatements": 0,
+    "sqliteHeap": 593328,
+    "releasedHeap": 933968
+  },
+  {
+    "n": 10000,
+    "classicMs": 5.521200000000022,
+    "classicHeap": 1780296,
+    "toggleMs": 190.26270000000022,
+    "uiMs": 27.251700000000028,
+    "commitJsMs": 8.762899999999718,
+    "toggleStatements": 7,
+    "refreshStatements": 3,
+    "toggleEntityRows": 10000,
+    "uiStatements": 6,
+    "todosStatements": 0,
+    "sqliteHeap": 4785392,
+    "releasedHeap": 6603864
+  },
+  {
+    "n": 50000,
+    "classicMs": 35.81980000000004,
+    "classicHeap": 9143128,
+    "toggleMs": 975.1743000000001,
+    "uiMs": 87.85779999999977,
+    "commitJsMs": 64.6864999999998,
+    "toggleStatements": 7,
+    "refreshStatements": 3,
+    "toggleEntityRows": 50000,
+    "uiStatements": 6,
+    "todosStatements": 0,
+    "sqliteHeap": 24977368,
+    "releasedHeap": 30227856
+  }
+]

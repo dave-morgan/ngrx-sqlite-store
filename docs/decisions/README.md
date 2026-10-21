@@ -36,6 +36,8 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0028](0028-query-filter-and-classic-order-semantics.md) | Two-valued scalar query filters, accessor paths, generic fallback and classic ordering metadata | Agent / Phase 10 | 2026-10-20 | Accepted |
 | [0029](0029-batched-bridge-transport.md) | Batch independent writes, combine subtree transport and reuse fresh transaction metadata | Agent / Phase 11 brief | 2026-10-20 | Accepted |
 | [0030](0030-session-scoped-features.md) | `persist: false` session-scoped features; router-store slice not persisted by default | Agent | 2026-10-21 | Accepted |
+| [0031](0031-granular-entity-refresh.md) | Typed entity changes, indexed refresh, structural sharing and unchanged-reference fast paths | Phase 12 brief / Agent | 2026-10-21 | Accepted |
+| [0032](0032-retained-cache-budget.md) | Compact collection metadata and byte-budgeted inactive cache | Phase 12 brief / Agent | 2026-10-21 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

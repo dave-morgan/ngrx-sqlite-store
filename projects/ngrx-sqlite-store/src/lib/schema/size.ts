@@ -24,7 +24,11 @@ export function serializedStringSize(value: string): number {
   return bytes;
 }
 
-const sizes = new WeakMap<object, number>();
+// V8 keeps a WeakMap's large backing table after its keys die. Bound the
+// memo table as well as its live keys; retain the most recently sized roots.
+const SIZE_CACHE_LIMIT = 1024;
+let sizes = new WeakMap<object, number>();
+let cachedSizes = 0;
 
 export function isPlainObject(value: unknown): value is Record<string, unknown> {
   if (!value || typeof value !== 'object') return false;
@@ -75,6 +79,11 @@ export function serializedSize(
     }
   }
   visiting.delete(value);
+  if (cachedSizes >= SIZE_CACHE_LIMIT) {
+    sizes = new WeakMap();
+    cachedSizes = 0;
+  }
   sizes.set(value, bytes);
+  cachedSizes++;
   return bytes;
 }

@@ -3,6 +3,7 @@ import { escapeSegment, subtreeRange, unescapeSegment } from '../storage/path';
 import type { SqlExecutor } from '../storage/storage-engine';
 import { brandEntityState } from './entity-brand';
 import { getEntityOrder, setEntityOrder } from './entity-order';
+import { EntityPositions } from './entity-positions';
 import { decodeEntityId } from './ids';
 import { NodeKind } from './kinds';
 import { setNodeMeta } from './meta';
@@ -53,6 +54,7 @@ function assemble(
   }
   const values = new Map<string, unknown>();
   const metas = new Map<string, NodeMeta>();
+  const positions = new Map<string, Map<string | number, number>>();
   for (const row of rows) {
     let value: unknown;
     switch (row.kind) {
@@ -64,7 +66,9 @@ function assemble(
         break;
       case NodeKind.Entity: {
         const entity = brandEntityState({ ids: [], entities: {} });
-        setEntityOrder(entity, { positions: new Map(), keys: new Map() });
+        const index = new Map<string | number, number>();
+        positions.set(row.path, index);
+        setEntityOrder(entity, { positions: index, keys: new Map() });
         setNodeMeta(entity.ids, { path: `${row.path}/ids`, kind: NodeKind.Json });
         setNodeMeta(entity.entities, { path: `${row.path}/entities`, kind: NodeKind.Json });
         value = entity;
@@ -86,7 +90,8 @@ function assemble(
       else {
         const meta: NodeMeta = { path: row.path, kind: row.kind, childPos: new Map() };
         if (row.kind === NodeKind.Arr) meta.elementIds = [];
-        if (row.kind === NodeKind.Entity) meta.entityPos = new Map();
+        if (row.kind === NodeKind.Entity)
+          meta.entityPos = getEntityOrder(value as object)!.positions;
         setNodeMeta(value, meta);
         metas.set(row.path, meta);
       }
@@ -113,13 +118,16 @@ function assemble(
     if (!value) continue;
     const id = decodeEntityId(row.id);
     value.ids.push(id);
-    getEntityOrder(value)!.positions.set(row.id, row.pos);
-    getEntityOrder(value)!.keys.set(row.id, row.sortkey ?? null);
+    positions.get(row.coll)!.set(id, row.pos);
+    if (row.sortkey != null) getEntityOrder(value)!.keys.set(row.id, row.sortkey);
     const data =
       row.data === '' ? values.get(entityValuePath(row.coll, row.id)) : JSON.parse(row.data);
-    if (row.data !== '') attachJsonMeta(data, entityValuePath(row.coll, row.id));
     setKey(value.entities, String(id), data);
-    metas.get(row.coll)!.entityPos!.set(row.id, row.pos);
+  }
+  for (const [coll, index] of positions) {
+    const packed = new EntityPositions(index);
+    metas.get(coll)!.entityPos = packed;
+    getEntityOrder(values.get(coll) as object)!.positions = packed;
   }
   const result = values.get(path);
   if (isDevMode()) freeze(result);

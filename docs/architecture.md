@@ -228,16 +228,23 @@ Selector sources are represented internally by refcounted PathCache entries keye
 by path (`todos` or `todos/items`), subscription leases, and a generation signal.
 On first subscription they query SQLite; no public resource object is exposed.
 After a commit, active overlapping entries refresh only their changed branches.
-Released entries stay in the inactive LRU (default 32); entries beyond the limit
-are evicted immediately. A fresh entry emits synchronously when resubscribed.
+Released entries stay in the inactive LRU (default 32 entries and 4 MiB estimated
+retention, configurable with `sqlite.lruSize` and `sqlite.cacheBudgetBytes`).
+Entries beyond either limit are evicted immediately, including a single oversized
+collection. Eviction releases inactive selector memos and compatibility views.
+A fresh entry emits synchronously when resubscribed.
 Logical array indices and inline/entity children cache their nearest physical
 container so physical row changes also invalidate logical dependencies.
+Entity data changes use `coll/<escaped typed id>` and membership/order adds
+`coll/#order`. Data-only refresh batches indexed entity-row reads, copies the
+dictionary once, retains ids/order and unchanged entities, and splices the object
+spine. Position metadata is one compact index per collection. See ADR-0031/0032.
 
 ### 5.2 Selector composition
 
 - `createFeatureSelector('todos')` and the selectors that `createFeature` generates per property (`selectItems` → `todos/items`) are **source selectors**. They carry a hidden `[NSS_SOURCE]` path.
 - `createSelector(...inputs, projector)` is the ordinary NgRx memoized selector (same `defaultMemoize`, `resultMemoize`, `release`, `projector`, `setResult`, `clearResult`). It also records the union of its inputs' source paths.
-- `store.select(sel)` / `store.selectSignal(sel)` evaluate selectors against a plain frozen view containing exactly the loaded paths. The view is rebuilt with structural sharing, preserving plain NgRx memoization. Reference-only immutable replacements carry transient commit hints so they also cause the appropriate projector calls (ADR-0021).
+- `store.select(sel)` / `store.selectSignal(sel)` evaluate selectors against a plain frozen view of their declared sources. Static selectors skip evaluation when their scoped view and query inputs are unchanged. Compatibility State retains the union of loaded paths using the same values. View assembly never recursively freezes or reconciles identical references. Reference-only immutable replacements carry transient commit hints so they also cause the appropriate projector calls (ADR-0021).
 - **Foreign selectors** (built with the real `@ngrx/store`, for example router-store's `getRouterSelectors`, or plain `state => state.x` lambdas) have no metadata. A tracking proxy records feature-level dependencies on every evaluation (Q8). Newly discovered conditional branches load before the scanned action is emitted. Identity selectors pin all registered features and return the plain view.
 - **Before the first load (provisional, Q5).** `select()` emits nothing until the sources are ready. `selectSignal()` returns the value computed from `initialState` defaults until then. `provideStore` registers an app initializer that opens the DB, runs migrations, seeds, and preloads root features that are marked `eager`.
 

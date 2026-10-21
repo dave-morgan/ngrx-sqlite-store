@@ -1,11 +1,12 @@
 import type { NodeKind } from './kinds';
+import type { EntityPositionIndex } from './entity-positions';
 
 export interface NodeMeta {
   path: string;
   kind: NodeKind;
   elementIds?: string[];
   childPos?: Map<string, number>;
-  entityPos?: Map<string, number>;
+  entityPos?: EntityPositionIndex;
 }
 
 const metadata = new WeakMap<object, NodeMeta>();

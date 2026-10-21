@@ -84,7 +84,6 @@ export class EntityTx<T> {
       throw new TypeError('An entity collection cannot mix string and number sort keys');
   }
   private changed(): void {
-    this.changes.add(this.coll);
     this.invalidate();
     this.onWrite();
   }
@@ -92,7 +91,7 @@ export class EntityTx<T> {
     const encoded = encodeEntityId(id);
     if (!this.cached.has(encoded) && this.snapshot) {
       const order = getEntityOrder(this.snapshot)!;
-      const pos = order.positions.get(encoded);
+      const pos = order.positions.get(id);
       this.cached.set(
         encoded,
         pos === undefined
@@ -108,7 +107,7 @@ export class EntityTx<T> {
     }
     if (!this.cached.has(encoded)) {
       const [row] = await this.sql.query<EntityRow>(
-        'SELECT coll,id,pos,data FROM nss_entity WHERE coll = ? AND id = ?',
+        'SELECT coll,id,pos,data,sortkey FROM nss_entity WHERE coll = ? AND id = ?',
         [this.coll, encoded],
       );
       this.cached.set(encoded, row);
@@ -256,10 +255,13 @@ export class EntityTx<T> {
     }));
     let last: number | undefined;
     const batch: EntityRow[] = [];
+    const orderChanges = new Set<string>();
     for (const row of encoded) {
       const old = await this.row(row.id);
       if (row.pos === undefined && !old && last === undefined) last = await this.lastPosition();
       const pos = row.pos ?? old?.pos ?? ++last!;
+      if (!old || pos !== old.pos || (row.sortkey ?? null) !== (old.sortkey ?? null))
+        orderChanges.add(encodeEntityId(row.id));
       if (!Number.isFinite(pos)) throw new RangeError('Invalid entity position');
       const path = entityValuePath(this.coll, encodeEntityId(row.id));
       if (old?.data === '') await this.writer.deletePrefix(path, this.coll);
@@ -272,7 +274,7 @@ export class EntityTx<T> {
         sortkey: row.sortkey,
       });
     }
-    await this.writer.writeEntityRows(batch, true);
+    await this.writer.writeEntityRows(batch, true, orderChanges);
     this.changed();
   }
   async update(id: EntityId, entity: T): Promise<void> {
@@ -284,7 +286,7 @@ export class EntityTx<T> {
     if (old.data === '') await this.writer.deletePrefix(path, this.coll);
     if (data === '') await this.nodes.write(this.sql, path, entity, this.changes);
     await this.writer.updateEntity(this.coll, encodeEntityId(id), data);
-    if (sortkey !== undefined)
+    if (sortkey !== undefined && sortkey !== old.sortkey)
       await this.writer.updateEntitySortKey(this.coll, encodeEntityId(id), sortkey);
     this.changed();
   }

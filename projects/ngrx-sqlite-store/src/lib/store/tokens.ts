@@ -18,6 +18,8 @@ export interface SqliteStoreConfig {
   features?: Record<string, SqliteFeatureConfig>;
   eager?: string[];
   lruSize?: number;
+  /** Estimated retained bytes allowed for inactive sources; defaults to 4 MiB. */
+  cacheBudgetBytes?: number;
   actionHooks?: Array<
     (action: Action, tx: import('../reducer/store-tx').StoreTx<unknown>) => void | Promise<void>
   >;

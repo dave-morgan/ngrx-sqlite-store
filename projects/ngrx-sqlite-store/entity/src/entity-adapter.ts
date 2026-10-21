@@ -249,11 +249,22 @@ export function createEntityAdapter<T, IdType = string | number>(
     const selectTotal = createSelector(selectIds, (ids) => ids.length);
     const relative = { selectIds, selectEntities, selectAll, selectTotal };
     if (!selectState) return relative;
+    function scoped<R>(project: ((state: EntityState<T>) => R) & { release(): void }) {
+      const selected = createSelector(selectState!, project);
+      const release = selected.release;
+      // NgRx does not release a memoized function used as the projector.
+      // Keep the classic projector(state) signature while releasing that memo too.
+      selected.release = () => {
+        release();
+        project.release();
+      };
+      return selected;
+    }
     return {
-      selectIds: createSelector(selectState, (state) => relative.selectIds(state)),
-      selectEntities: createSelector(selectState, (state) => relative.selectEntities(state)),
-      selectAll: createSelector(selectState, (state) => relative.selectAll(state)),
-      selectTotal: createSelector(selectState, (state) => relative.selectTotal(state)),
+      selectIds: scoped(relative.selectIds),
+      selectEntities: scoped(relative.selectEntities),
+      selectAll: scoped(relative.selectAll),
+      selectTotal: scoped(relative.selectTotal),
     };
   }
 
@@ -295,9 +306,7 @@ export function createEntityAdapter<T, IdType = string | number>(
           insertionOrders.get(original) ??
           (storedOrder
             ? [...original.ids].sort(
-                (a, b) =>
-                  storedOrder.positions.get(ɵencodeEntityId(a))! -
-                  storedOrder.positions.get(ɵencodeEntityId(b))!,
+                (a, b) => storedOrder.positions.get(a)! - storedOrder.positions.get(b)!,
               )
             : (original.ids as Id[]));
         const input = { ...original, ids: [...order] };
@@ -322,7 +331,7 @@ export function createEntityAdapter<T, IdType = string | number>(
         const output = { ...result, ids: sorted };
         insertionOrders.set(output, insertion);
         ɵsetEntityOrder(output, {
-          positions: new Map(insertion.map((id, index) => [ɵencodeEntityId(id), index + 1])),
+          positions: new Map(insertion.map((id, index) => [id, index + 1])),
           keys: new Map(insertion.map((id) => [ɵencodeEntityId(id), keys.get(id)!])),
         });
         return ɵbrandEntityState(output);

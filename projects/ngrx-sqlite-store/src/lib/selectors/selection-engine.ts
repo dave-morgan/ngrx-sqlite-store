@@ -8,7 +8,7 @@ import { escapeSegment, joinPath } from '../storage/path';
 import { dependencies, querySources } from './metadata';
 import { queryViews } from './query-selector';
 import { PathCache } from './path-cache';
-import { share } from './view-state';
+import { at, put, share } from './view-state';
 
 type Projection = (state: any, props?: any) => unknown;
 
@@ -118,6 +118,9 @@ export class SqliteSelectionEngine implements SelectionEngine {
     let previous: unknown;
     let emitted = false;
     let defaultView: unknown;
+    let scopedView: unknown;
+    let evaluatedView: unknown;
+    let previousQueryValues: unknown[] = [];
 
     const update = (required: Set<string>) => {
       for (const [path, release] of leases)
@@ -160,6 +163,27 @@ export class SqliteSelectionEngine implements SelectionEngine {
         const queryValues = queries.length
           ? new Map([...this.cache.queryValues()].filter(([id]) => available(id)))
           : undefined;
+        if (paths !== 'dynamic') {
+          // A selector retains its last state argument. Give static selectors
+          // only their own sources, so a ui/count memo cannot retain a list.
+          let scoped: unknown = {};
+          for (const path of paths) {
+            if (queries.some((query) => query.id === path)) continue;
+            scoped = put(scoped, path.split('/'), at(view, path.split('/')));
+          }
+          scopedView = share(scopedView, scoped);
+          view = scopedView as object;
+        }
+        const nextQueryValues = queries.map((query) => queryValues?.get(query.id));
+        const sameQueries =
+          nextQueryValues.length === previousQueryValues.length &&
+          nextQueryValues.every((value, index) => value === previousQueryValues[index]);
+        const readyStatic =
+          paths !== 'dynamic' && paths.every((path) => available(path) && this.cache.ready(path));
+        if (emitted && paths !== 'dynamic' && readyStatic && evaluatedView === view && sameQueries)
+          return;
+        evaluatedView = view;
+        previousQueryValues = nextQueryValues;
         if (queryValues) {
           // A new view identity lets NgRx memoization observe query-only generations.
           view = { ...view };
@@ -231,6 +255,9 @@ export class SqliteSelectionEngine implements SelectionEngine {
       stopped = true;
       generations.unsubscribe();
       for (const release of leases.values()) release();
+      // Eviction also releases NgRx's argument/result memos. An overlapping
+      // active source pins the entry, so its shared dependencies stay intact.
+      this.cache.whenEvicted([...leases.keys()], selector);
       leases.clear();
     };
   }
@@ -251,9 +278,11 @@ export class SqliteSelectionEngine implements SelectionEngine {
     this.registered = new Set(Object.keys(this.core.selectionFeatures()));
     for (const leases of this.wholeSubscribers) this.pinRegistered(leases);
     const pinned = new Set([...this.wholeSubscribers].flatMap((leases) => [...leases.keys()]));
-    await Promise.all([...pinned]
-      .filter((path) => this.core.selectionReady(path))
-      .map((path) => this.cache.ensure(path)));
+    await Promise.all(
+      [...pinned]
+        .filter((path) => this.core.selectionReady(path))
+        .map((path) => this.cache.ensure(path)),
+    );
     await this.cache.refresh();
     this.cache.notify();
     // A conditional dynamic selector can discover another feature during refresh.
@@ -262,9 +291,11 @@ export class SqliteSelectionEngine implements SelectionEngine {
   }
   private publishView(): void {
     const next = Object.fromEntries(
-      Object.entries(this.cache.view).filter(([key]) =>
-        (!this.registered || this.registered.has(key)) &&
-        this.core.selectionReady(escapeSegment(key))),
+      Object.entries(this.cache.view).filter(
+        ([key]) =>
+          (!this.registered || this.registered.has(key)) &&
+          this.core.selectionReady(escapeSegment(key)),
+      ),
     );
     const view = share(this.viewState, next) as object;
     if (view !== this.viewState) {

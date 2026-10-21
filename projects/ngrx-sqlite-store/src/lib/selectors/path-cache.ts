@@ -11,6 +11,10 @@ import type { SqlExecutor } from '../storage/storage-engine';
 import { STORE_CONFIGURATION } from '../store/tokens';
 import { at, child, put, share } from './view-state';
 import type { QuerySource } from './metadata';
+import type { EntityValue } from '../schema/entity-brand';
+import { refreshEntities } from './entity-refresh';
+import { retainedSize } from './retained-size';
+import { SelectorCleanup } from './selector-cleanup';
 
 interface Entry {
   query?: QuerySource;
@@ -20,6 +24,7 @@ interface Entry {
   lastUsed: number;
   dirty: ChangeSet;
   replaced: Set<string>;
+  bytes?: number;
 }
 
 function isJsonTree(value: unknown, seen = new WeakSet<object>()): boolean {
@@ -42,10 +47,12 @@ function isJsonTree(value: unknown, seen = new WeakSet<object>()): boolean {
 export class PathCache {
   private readonly engine = inject(StorageEngine);
   private readonly limit = inject(STORE_CONFIGURATION).sqlite?.lruSize ?? 32;
+  private readonly budget = inject(STORE_CONFIGURATION).sqlite?.cacheBudgetBytes ?? 4 * 1024 * 1024;
   private readonly nodes = new NodeStore();
   private readonly entries = new Map<string, Entry>();
   private readonly references = new Map<string, number>();
   private readonly pending = new Map<string, Promise<void>>();
+  private readonly cleanup = new SelectorCleanup();
   private clock = 0;
   private revision = 0;
   private currentView: object = Object.freeze({});
@@ -95,6 +102,10 @@ export class PathCache {
   }
   notify(): void {
     this.publish();
+  }
+  whenEvicted(paths: readonly string[], selector: unknown): void {
+    this.cleanup.register(paths, selector);
+    for (const path of paths) if (!this.ready(path)) this.cleanup.evict(path);
   }
 
   private owner(path: string): [string, Entry] | undefined {
@@ -199,6 +210,7 @@ export class PathCache {
     this.publish();
   }
   private async refreshEntry(sql: SqlExecutor, path: string, entry: Entry): Promise<void> {
+    entry.bytes = undefined;
     if (entry.query) {
       const next = await entry.query.reader({ query: sql.query.bind(sql) });
       entry.value = isJsonTree(entry.value) && isJsonTree(next) ? share(entry.value, next) : next;
@@ -227,6 +239,21 @@ export class PathCache {
     }
     for (const target of targets.paths()) {
       const suffix = target === path ? [] : target.slice(path.length + 1).split('/');
+      const previous = at(entry.value, suffix);
+      if (getNodeMeta(previous)?.kind === NodeKind.Entity) {
+        const patched = await refreshEntities(
+          sql,
+          this.nodes,
+          target,
+          previous as EntityValue,
+          entry.dirty,
+          entry.replaced,
+        );
+        if (patched) {
+          entry.value = put(entry.value, suffix, patched);
+          continue;
+        }
+      }
       const next = await this.read(sql, target);
       entry.value = put(
         entry.value,
@@ -269,9 +296,14 @@ export class PathCache {
       .filter(([, entry]) => !entry.refcount)
       .sort((a, b) => b[1].lastUsed - a[1].lastUsed);
     let removed = false;
-    for (const [path] of inactive.slice(Math.max(0, this.limit))) {
-      this.entries.delete(path);
-      removed = true;
+    let bytes = 0;
+    for (const [index, [path, entry]] of inactive.entries()) {
+      const size = (entry.bytes ??= retainedSize(entry.value));
+      if (index >= Math.max(0, this.limit) || bytes + size > Math.max(0, this.budget)) {
+        this.entries.delete(path);
+        this.cleanup.evict(path);
+        removed = true;
+      } else bytes += size;
     }
     if (removed) this.publish();
   }
@@ -286,6 +318,7 @@ export class PathCache {
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.cleanup.evict('');
     this.generations.complete();
   }
 }

@@ -4,9 +4,17 @@ import { bridgeCost } from './bridge-cost';
 import { q1 } from './q1';
 import { q2 } from './q2';
 import { q3 } from './q3';
+import { scale, scaleWorker } from './scale';
 
 enableProdMode();
-await bridgeCost();
-await q1();
-await q2();
-await q3();
+if (process.argv.includes('--scale-worker')) {
+  await scaleWorker();
+} else {
+  await scale();
+  if (!process.argv.includes('--scale-only')) {
+    await bridgeCost();
+    await q1();
+    await q2();
+    await q3();
+  }
+}

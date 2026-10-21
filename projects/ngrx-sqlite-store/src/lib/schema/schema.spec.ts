@@ -427,10 +427,12 @@ describe('schema engine', () => {
   it('attaches metadata and freezes every reconstructed entity container', async () => {
     await write(brandEntityState({ ids: ['x'], entities: { x: { nested: [] } } }));
     const value = (await read()) as { ids: string[]; entities: Record<string, object> };
-    for (const container of [value, value.ids, value.entities, value.entities['x']]) {
+    for (const container of [value, value.ids, value.entities]) {
       expect(getNodeMeta(container)).toBeDefined();
       expect(Object.isFrozen(container)).toBe(true);
     }
+    expect(getNodeMeta(value.entities['x'])).toBeUndefined();
+    expect(Object.isFrozen(value.entities['x'])).toBe(true);
   });
 
   it('enforces the object feature root contract and rejects class array instances', async () => {

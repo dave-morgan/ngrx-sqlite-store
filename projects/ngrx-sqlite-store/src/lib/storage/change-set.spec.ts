@@ -3,6 +3,27 @@ import { describe, expect, it } from 'vitest';
 import { ChangeSet } from './change-set';
 
 describe('ChangeSet', () => {
+  it('retains physical write provenance when a scalar path collides with an entity id', () => {
+    const changes = new ChangeSet();
+    changes.addEntity('todos', 's:t1');
+    expect(changes.paths()).toEqual(['todos/s:t1']);
+    expect(changes.physicalOverlaps('todos')).toBe(false);
+    const physical = new ChangeSet();
+    physical.add('todos/s:t1');
+    changes.merge(physical);
+    expect(changes.paths()).toEqual(['todos/s:t1']);
+    expect(changes.physicalOverlaps('todos')).toBe(true);
+  });
+  it('handles a wide entity change batch and collapses it without losing siblings', () => {
+    const changes = new ChangeSet();
+    for (let i = 0; i < 50000; i++) changes.add(`todos/s:${i}`);
+    changes.add('todos/#order');
+    changes.add('todos2/s:0');
+    expect(changes.paths()).toHaveLength(50002);
+    expect(changes.overlaps('todos/s:missing')).toBe(false);
+    changes.add('todos');
+    expect(changes.paths()).toEqual(['todos2/s:0', 'todos']);
+  }, 1000);
   it('deduplicates and collapses descendants regardless of insertion order', () => {
     const changes = new ChangeSet();
     expect(changes.isEmpty).toBe(true);

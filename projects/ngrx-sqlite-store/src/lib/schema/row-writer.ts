@@ -70,7 +70,8 @@ export class RowWriter {
       ['coll', 'id', 'pos', 'data', 'sortkey'],
       [row.coll, row.id, row.pos, row.data, row.sortkey ?? null],
     );
-    this.changes.add(row.coll);
+    this.changes.addEntity(row.coll, row.id);
+    this.changes.addEntityOrder(row.coll);
   }
 
   async flush(): Promise<void> {
@@ -109,10 +110,14 @@ export class RowWriter {
       coll,
       id,
     ]);
-    this.changes.add(coll);
+    this.changes.addEntity(coll, id);
   }
 
-  async writeEntityRows(rows: EntityRow[], upsert: boolean): Promise<void> {
+  async writeEntityRows(
+    rows: EntityRow[],
+    upsert: boolean,
+    orderChanges?: ReadonlySet<string>,
+  ): Promise<void> {
     for (const row of rows) {
       this.check(row.coll, row.data);
       this.check(row.coll, row.sortkey ?? null);
@@ -124,7 +129,10 @@ export class RowWriter {
         `INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES ${batch.map(() => '(?,?,?,?,?)').join(',')} ON CONFLICT(coll,id) DO ${upsert ? 'UPDATE SET data = excluded.data, pos = excluded.pos, sortkey = excluded.sortkey' : 'NOTHING'}`,
         batch.flatMap(({ coll, id, pos, data, sortkey }) => [coll, id, pos, data, sortkey ?? null]),
       );
-      for (const row of batch) this.changes.add(row.coll);
+      for (const row of batch) {
+        this.changes.addEntity(row.coll, row.id);
+        if (!orderChanges || orderChanges.has(row.id)) this.changes.addEntityOrder(row.coll);
+      }
     }
   }
 
@@ -136,7 +144,8 @@ export class RowWriter {
       coll,
       id,
     ]);
-    this.changes.add(coll);
+    this.changes.addEntity(coll, id);
+    this.changes.addEntityOrder(coll);
   }
 
   async deleteEntities(
@@ -159,20 +168,23 @@ export class RowWriter {
         )),
       );
     }
-    if (deleted.length) this.changes.add(coll);
+    for (const row of deleted) this.changes.addEntity(coll, row.id);
+    if (deleted.length) this.changes.addEntityOrder(coll);
     return deleted;
   }
 
   async updateEntityPosition(coll: string, id: string, pos: number): Promise<void> {
     await this.flush();
     await this.exec.run('UPDATE nss_entity SET pos = ? WHERE coll = ? AND id = ?', [pos, coll, id]);
-    this.changes.add(coll);
+    this.changes.addEntity(coll, id);
+    this.changes.addEntityOrder(coll);
   }
 
   async deleteEntity(coll: string, id: string): Promise<void> {
     await this.flush();
     await this.exec.run('DELETE FROM nss_entity WHERE coll = ? AND id = ?', [coll, id]);
-    this.changes.add(coll);
+    this.changes.addEntity(coll, id);
+    this.changes.addEntityOrder(coll);
   }
 
   async deleteLeaf(path: string, changePath = path): Promise<void> {

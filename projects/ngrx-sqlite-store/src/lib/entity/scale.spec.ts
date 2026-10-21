@@ -9,7 +9,7 @@ import { createFeatureSelector, createSelector } from '../selectors/selectors';
 import { PathCache } from '../selectors/path-cache';
 import { source as pathSource } from '../selectors/metadata';
 import { querySources } from '../selectors/metadata';
-import { createQuerySelector } from '../selectors/query-selector';
+import { createQuerySelector, queryViews } from '../selectors/query-selector';
 import { brandEntityState } from '../schema/entity-brand';
 import { StorageEngine } from '../storage/storage-engine';
 import { provideStore } from '../store/provide';
@@ -89,6 +89,36 @@ async function setup(n = 1000, budget?: number, lruSize = 32, collision = false,
   return { store, counts, cache: TestBed.inject(PathCache) };
 }
 describe('phase 12 scale', () => {
+  it.each([false, true])(
+    'scopes query memo arguments to declared queries (dynamic: %s)',
+    async (dynamic) => {
+      const { store, cache } = await setup(10, 0);
+      const queries = adapter.query(source);
+      const page = queries.page({ offset: 0, limit: 10 });
+      const pageSubscription = store.select(page).subscribe();
+      await firstValueFrom(store.select(page));
+      const count = queries.count();
+      const countId = querySources(count)[0].id;
+      let memoValues: ReadonlyMap<string, unknown> | undefined;
+      const capture = (state: object) => {
+        memoValues = queryViews.get(state);
+        return 0;
+      };
+      const selected = createSelector(
+        count,
+        dynamic ? capture : pathSource(capture, countId),
+        (value) => value,
+      );
+      const countSubscription = store.select(selected).subscribe();
+      expect(await firstValueFrom(store.select(selected))).toBe(10);
+      await store.settle();
+      expect([...memoValues!.keys()]).toEqual([countId]);
+      pageSubscription.unsubscribe();
+      expect(cache.ready(querySources(page)[0].id)).toBe(false);
+      expect([...memoValues!.keys()]).toEqual([countId]);
+      countSubscription.unsubscribe();
+    },
+  );
   it('distinguishes a new physical scalar from an entity id in a branded replacement', async () => {
     const { store, cache } = await setup(10);
     const sub = store.select(all).subscribe();

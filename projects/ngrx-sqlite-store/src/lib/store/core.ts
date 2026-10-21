@@ -47,6 +47,7 @@ interface Feature extends RegisteredFeature {
   reducer: ActionReducer<any>;
   nodes: NodeStore;
   seed: unknown;
+  router: boolean;
   persist: boolean;
   seeded: boolean;
 }
@@ -164,6 +165,7 @@ export class SqliteStoreCore {
       ...feature,
       reducer,
       sqlite,
+      router: feature.key === 'router' && bridge,
       persist: sqlite.persist ?? !(feature.key === 'router' && bridge),
       seeded: false,
       nodes: new NodeStore(
@@ -233,6 +235,11 @@ export class SqliteStoreCore {
       }
     });
     for (const feature of features) feature.seeded = true;
+    // NgRx router-store uses its own pipeable select, outside our path leases.
+    // Pin only its conventional bridge slice, including on lazy registration.
+    await this.injector.get(SELECTION_ENGINE).preload(
+      features.filter((feature) => feature.router).map((feature) => feature.key),
+    );
     await Promise.all(this.hooks.map((hook) => hook(changes)));
   }
   addFeatures(features: RegisteredFeature[]): void {

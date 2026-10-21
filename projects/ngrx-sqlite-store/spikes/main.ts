@@ -12,11 +12,13 @@ if (process.argv.includes('--scale-worker')) {
   await scaleWorker();
 } else {
   await retention();
-  await scale();
-  if (!process.argv.includes('--scale-only')) {
-    await bridgeCost();
-    await q1();
-    await q2();
-    await q3();
+  if (!process.argv.includes('--retention-only')) {
+    await scale();
+    if (!process.argv.includes('--scale-only')) {
+      await bridgeCost();
+      await q1();
+      await q2();
+      await q3();
+    }
   }
 }

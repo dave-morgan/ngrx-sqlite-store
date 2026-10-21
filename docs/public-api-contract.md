@@ -10,7 +10,11 @@ functions with hidden dependency metadata and retain their exact overloads.
 Internal schema and storage implementation values have no public unprefixed exports.
 
 `Store.materialize(): Promise<object>` reads every registered feature for debugging.
-Whole-store subscriptions pin all registered features for their subscription lifetime.
+Whole-store subscriptions emit only loaded paths by default, without loading or
+pinning additional features. `sqlite.wholeStore: 'pin-all'` restores complete
+snapshots by pinning all registered features for the subscription lifetime
+(ADR-0036). This applies to `store.subscribe`, raw `store.pipe(...)`, and
+`withLatestFrom(store)`; `State`/`StateObservable` emit the same loaded view.
 `sqlite.eager` pins and preloads named features before bootstrap releases actions;
 `sqlite.lruSize` defaults to 32 inactive cache entries. `select()` emits synchronously
 on subscription when its dependencies are loaded and fresh, including LRU hits.
@@ -34,6 +38,7 @@ corresponding root feature options.
 | --- | --- | --- |
 | `driver` | Capacitor SQLite driver | Driver instance or factory. |
 | `eager` | `[]` | Features to preload and pin before releasing buffered actions. |
+| `wholeStore` | `'loaded'` | Whole-store subscriptions consume loaded paths; `'pin-all'` loads and pins all registered features. |
 | `lruSize` | `32` | Maximum inactive cache entries. |
 | `actionHooks` | `[]` | Awaited hooks before feature handlers in each action transaction. |
 | `features[key].hints` | none | Storage policy hints for the feature. |
@@ -46,17 +51,19 @@ when the previous session used a different version. Lazy features re-seed when
 registered, before their UPDATE and subsequent actions. Seeding participates in
 normal change tracking, so selectors cannot observe the previous session's state.
 For router-store with a custom `stateKey`, configure it explicitly:
-`sqlite: { features: { myRouter: { persist: false } } }`.
+`sqlite: { features: { myRouter: { persist: false } }, eager: ['myRouter'] }`.
+The conventional `router` feature with a bridge/foreign reducer is automatically
+preloaded and pinned, including when `persist: true` enables route restoration.
 
 ## 1. `@ngrx/store` runtime exports
 
 | Export | Kind | Status | Notes |
 | --- | --- | --- | --- |
-| `Store` | class/token | **R, T** | `extends Observable<T> implements Observer<Action>`. Must implement: `select(mapFn)`, `select(mapFn, props)`, `select(...keys)` (up to 6 keys plus rest), `selectSignal(selector, { equal? })`, `lift`, `dispatch(action)`, `dispatch(() => Action, { injector })` → `EffectRef` (reactive dispatch), `next`, `error`, `complete`, `addReducer(key, reducer)`, `removeReducer(key)`. Subscribing to `store` itself emits the lazy whole-state view (Q4). Extension: `dispatchAsync(action): Promise<void>`, `status`. |
+| `Store` | class/token | **R\*, T** | `extends Observable<T> implements Observer<Action>`. Must implement: `select(mapFn)`, `select(mapFn, props)`, `select(...keys)` (up to 6 keys plus rest), `selectSignal(selector, { equal? })`, `lift`, `dispatch(action)`, `dispatch(() => Action, { injector })` → `EffectRef` (reactive dispatch), `next`, `error`, `complete`, `addReducer(key, reducer)`, `removeReducer(key)`. Subscribing to `store` itself emits loaded paths without force-loading features (ADR-0036); `sqlite.wholeStore: 'pin-all'` restores complete snapshots. Extension: `dispatchAsync(action): Promise<void>`, `status`. |
 | `ActionsSubject` | class/token | **R, T** | `BehaviorSubject<Action>` seeded with `{ type: INIT }`. Rejects `undefined` or function actions, like NgRx. |
 | `ScannedActionsSubject` | class/token | **R\*, T** | `Subject<Action>`. Emits **post-commit** (ADR-0003). Not emitted for failed actions (Q13). |
-| `StateObservable` | class/token | **R\*, T** | Emits a lazy whole-state view (Q4). devtools overrides this token. |
-| `State` | class | **R\*, T** | `BehaviorSubject`-like with `.value` → lazy view. |
+| `StateObservable` | class/token | **R\*, T** | Emits the loaded-path view without loading additional state (ADR-0036). devtools overrides this token. |
+| `State` | class | **R\*, T** | `BehaviorSubject`-like with `.value` → loaded-path view; whole-store subscriptions do not pin additional features by default (ADR-0036). |
 | `ReducerManager` | class/token | **R\*, T** | `addFeature(s)`, `removeFeature(s)`, `addReducer(s)`, `removeReducer(s)`, `currentReducers`. Emits a compat reducer (Q4). |
 | `ReducerObservable`, `ReducerManagerDispatcher` | tokens | **T** | `ReducerManagerDispatcher` is an `ActionsSubject` used for `UPDATE` actions. devtools injects both. |
 | `INIT`, `UPDATE` | consts | **=** | `'@ngrx/store/init'`, `'@ngrx/store/update-reducers'` |
@@ -187,7 +194,7 @@ Do not mix keyed and non-keyed adapters for the same persisted collection.
 | Package | Imports from `@ngrx/store` | Injects | Requirement for us |
 | --- | --- | --- | --- |
 | `@ngrx/effects` | `ScannedActionsSubject`, `createAction`, `ROOT_STORE_PROVIDER`, `FEATURE_STATE_PROVIDER`, `Store` | `Actions` (built on `ScannedActionsSubject`), `Store` | Post-commit `ScannedActionsSubject`. Provide both tokens so that `provideEffects` initialization runs after the store. Effects dispatch through `Store`. |
-| `@ngrx/router-store` | `createAction`, `props`, `isNgrxMockEnvironment`, `select`, `ACTIVE_RUNTIME_CHECKS`, `createFeatureSelector`, `createSelector` | `Store`, `Router`, `RouterStateSerializer`, `ACTIVE_RUNTIME_CHECKS` | `store.pipe(select(featureSelector))` must work with selectors built by the *real* `createFeatureSelector` (foreign selectors, Q8). `routerReducer` is classic (compat bridge). A bridged `router` feature defaults to `persist: false` so restarts begin at the launch URL; `sqlite.features.router.persist: true` opts into route restoration (ADR-0030). Custom state keys require explicit configuration. `RouterState.Minimal` is recommended, because the full serializer is not JSON-safe. |
+| `@ngrx/router-store` | `createAction`, `props`, `isNgrxMockEnvironment`, `select`, `ACTIVE_RUNTIME_CHECKS`, `createFeatureSelector`, `createSelector` | `Store`, `Router`, `RouterStateSerializer`, `ACTIVE_RUNTIME_CHECKS` | `store.pipe(select(featureSelector))` must work with selectors built by the *real* `createFeatureSelector` (foreign selectors, Q8). `routerReducer` is classic (compat bridge). A bridged `router` feature defaults to `persist: false` so restarts begin at the launch URL; `sqlite.features.router.persist: true` opts into route restoration (ADR-0030). The bridged/foreign `router` slice is automatically preloaded and pinned. Custom state keys require explicit persistence configuration and `sqlite.eager`. `ROUTER_CANCEL.payload.storeState` and `ROUTER_ERROR.payload.storeState` contain only loaded paths by default, a divergence from NgRx full snapshots; `wholeStore: 'pin-all'` restores those snapshots (ADR-0036). `RouterState.Minimal` is recommended, because the full serializer is not JSON-safe. |
 | `@ngrx/store-devtools` | `ActionsSubject`, `UPDATE`, `INIT`, `INITIAL_STATE`, `StateObservable`, `ReducerManagerDispatcher` | plus `ReducerObservable`, `ScannedActionsSubject` | Verified display-only compatibility (ADR-0022). Guarded scanned subject guarantees exactly-once post-commit effects; compat reducer returns our committed loaded view. |
 | `@ngrx/entity` | `createSelector` | — | Replaced by `/entity`. |
 

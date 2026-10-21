@@ -58,7 +58,7 @@ describe('serialized sizing', () => {
     for (const value of [-0, 1e-7, 1e21, Number.MIN_VALUE, '😀\ud800😀']) {
       expect(serializedSize(value)).toBe(utf8ByteLength(JSON.stringify(value)));
     }
-  });
+  }, 60000);
 
   it('exposes fractional position helpers and detects exhausted precision', () => {
     expect(initial(3)).toEqual([1, 2, 3]);

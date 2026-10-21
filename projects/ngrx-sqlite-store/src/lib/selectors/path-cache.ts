@@ -138,12 +138,13 @@ export class PathCache {
       });
     }
   }
-  queryValues(): ReadonlyMap<string, unknown> {
-    return new Map(
-      [...this.entries]
-        .filter(([, entry]) => entry.query && entry.dirty.isEmpty)
-        .map(([key, entry]) => [key, entry.value]),
-    );
+  queryValues(queries: readonly QuerySource[]): ReadonlyMap<string, unknown> {
+    const values = new Map<string, unknown>();
+    for (const { id } of queries) {
+      const entry = this.entries.get(id);
+      if (entry?.query && entry.dirty.isEmpty) values.set(id, entry.value);
+    }
+    return values;
   }
   withDefaults(defaults: object): object {
     let view: unknown = defaults;

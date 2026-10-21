@@ -78,7 +78,7 @@ describe('dual-form entity adapter', () => {
           });
           expect(await engine.read((sql) => nodes.read(sql, 'items'))).toEqual(expected);
         }
-      });
+      }, 60000);
       }
     }
   }

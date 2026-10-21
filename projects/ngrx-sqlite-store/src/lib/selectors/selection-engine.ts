@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SqliteStoreCore } from '../store/core';
 import { State } from '../store/state';
 import type { SelectionEngine } from '../store/tokens';
+import { STORE_CONFIGURATION } from '../store/tokens';
 import { escapeSegment, joinPath } from '../storage/path';
 import { dependencies, querySources } from './metadata';
 import { queryViews } from './query-selector';
@@ -18,6 +19,7 @@ export class SqliteSelectionEngine implements SelectionEngine {
   private readonly injector = inject(Injector);
   private readonly destroy = inject(DestroyRef);
   private readonly state = inject(State);
+  private readonly wholeStore = inject(STORE_CONFIGURATION).sqlite?.wholeStore ?? 'loaded';
   private readonly wholeSubscribers = new Set<Map<string, () => void>>();
   private readonly eager = new Map<string, () => void>();
   private readonly loads = new Set<Promise<void>>();
@@ -160,8 +162,10 @@ export class SqliteSelectionEngine implements SelectionEngine {
           defaultView = share(defaultView, filled);
           view = defaultView as object;
         }
+        // NgRx retains this map through its last view argument. Never attach
+        // unrelated queries: they must be collectable when their cache evicts.
         const queryValues = queries.length
-          ? new Map([...this.cache.queryValues()].filter(([id]) => available(id)))
+          ? this.cache.queryValues(queries.filter((query) => available(query.id)))
           : undefined;
         if (paths !== 'dynamic') {
           // A selector retains its last state argument. Give static selectors
@@ -317,6 +321,9 @@ export class SqliteSelectionEngine implements SelectionEngine {
       }
   }
   pinAll(): () => void {
+    // Raw subscriptions (including router-store's withLatestFrom) consume the
+    // loaded view. Only the explicit compatibility mode materializes features.
+    if (this.wholeStore !== 'pin-all') return () => {};
     const leases = new Map<string, () => void>();
     this.wholeSubscribers.add(leases);
     this.pinRegistered(leases);

@@ -322,7 +322,7 @@ the previous router subtree before router-store can navigate to a stale URL.
 Explicit `persist: true` opts into route restoration; explicit `false` also works
 for other slices. Transaction reducers named `router` retain the normal `true`
 default. A custom router-store state key requires explicit configuration, for
-example `sqlite: { features: { myRouter: { persist: false } } }`.
+example `sqlite: { features: { myRouter: { persist: false } }, eager: ['myRouter'] }`.
 
 `StoreTx` scopes paths to one feature. Action hooks run once before feature
 handlers, receiving the first registered feature's handle; `resetAll()` on that
@@ -337,8 +337,17 @@ The phase 4b implementation uses internal `ɵSELECTION_ENGINE`, `ɵCOMMITTED_CAC
 and multi-provider `ɵPOST_COMMIT_HOOK`. Cache invalidation is synchronous inside
 `changes$`; refresh hooks query after transactions resolve, including seeding and
 purge transactions. `State`/`StateObservable` emit the loaded view. Whole-store
-subscriptions pin registered features; `materialize()` reads all features for
-debugging. Default minimal router-store snapshots are normalized to JSON in the
+subscriptions consume the loaded-path view without additional leases by default.
+`sqlite.wholeStore: 'pin-all'` restores the original complete-snapshot behavior
+for the subscription lifetime. `materialize()` reads all features for debugging;
+`sqlite.eager` preloads and pins named features (ADR-0036).
+The bridged/foreign `router` feature is automatically preloaded and pinned after
+its registration seed, including lazy registration and persisted-route restoration.
+Custom router state keys must be named in `sqlite.eager`. NgRx router-store's
+own pipeable select bypasses our selector leases; its whole-store subscriptions
+therefore consume the loaded view without pinning unrelated collections.
+Cancel/error `storeState` payloads contain loaded paths only; `pin-all` restores
+full snapshots. Default minimal router-store snapshots are normalized to JSON in the
 classic bridge (ADR-0020), preserving default router navigation integration.
 
 ### 7.1 Import strategies

@@ -55,10 +55,10 @@ afterEach(async () => {
   TestBed.resetTestingModule();
   if (core) await core.engine.close();
 });
-async function boot(eager: string[] = []) {
+async function boot(eager: string[] = [], wholeStore?: 'loaded' | 'pin-all') {
   const driver = new SqlJsDriver();
   TestBed.configureTestingModule({
-    providers: [provideStore({ todos: feature.reducer }, { sqlite: { driver, eager } })],
+    providers: [provideStore({ todos: feature.reducer }, { sqlite: { driver, eager, wholeStore } })],
   });
   const store = TestBed.inject(Store);
   core = TestBed.inject(SqliteStoreCore);
@@ -359,8 +359,27 @@ describe('phase 4b selectors', () => {
     subscription.unsubscribe();
   });
 
-  it('pins whole store subscriptions and materializes every registered feature', async () => {
+  it('emits loaded paths by default and supports explicit materialization', async () => {
     const { store } = await boot();
+    const values: unknown[] = [];
+    const subscription = store.subscribe((state) => values.push(state));
+    await store.settle();
+    expect(values.at(-1)).toEqual({});
+    const selected = store.select(feature.selectFilter).subscribe();
+    await firstValueFrom(store.select(feature.selectFilter));
+    expect(values.at(-1)).toEqual({ todos: { filter: 'all' } });
+    expect(await store.materialize()).toEqual({ todos: { filter: 'all', items: ['one'] } });
+    selected.unsubscribe();
+    subscription.unsubscribe();
+  });
+
+  it('includes eager features in the default whole-store transport', async () => {
+    const { store } = await boot(['todos']);
+    expect(await firstValueFrom(store)).toEqual({ todos: { items: ['one'], filter: 'all' } });
+  });
+
+  it('pins whole store subscriptions and materializes every registered feature', async () => {
+    const { store } = await boot([], 'pin-all');
     const values: unknown[] = [];
     const subscription = store.subscribe((state) => values.push(state));
     await expect.poll(() => values.at(-1)).toEqual({ todos: { items: ['one'], filter: 'all' } });
@@ -481,7 +500,7 @@ describe('phase 4b selectors', () => {
   });
 
   it('pins late features for whole-store subscribers and hides unregistered features', async () => {
-    const { store } = await boot();
+    const { store } = await boot([], 'pin-all');
     const views: object[] = [];
     const subscription = store.subscribe((view) => views.push(view));
     await expect.poll(() => views.at(-1)).toEqual({ todos: { items: ['one'], filter: 'all' } });

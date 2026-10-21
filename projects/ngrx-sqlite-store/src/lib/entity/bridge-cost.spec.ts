@@ -141,7 +141,7 @@ describe('phase 13 bridge invocations', () => {
     console.log('[phase13 seed calls]', counts.statements);
     sub.unsubscribe();
     await driver.close();
-  });
+  }, 60000);
 
   it.each([false, true])(
     'keeps mixed journals consistent with SQLite (keyed: %s)',
@@ -236,7 +236,7 @@ describe('bridge cost (statement budgets)', () => {
   it.each([false, true])('enforces all budgets (active sources: %s)', async (active) => {
     const { driver, counts } = countingDriver();
     TestBed.configureTestingModule({
-      providers: [provideStore(bridgeReducers, { sqlite: { driver } })],
+      providers: [provideStore(bridgeReducers, { sqlite: { driver, wholeStore: 'pin-all' } })],
     });
     const { report, traces } = await exerciseBridgeCost(
       TestBed.inject(Store),

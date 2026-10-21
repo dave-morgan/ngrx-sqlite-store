@@ -7,6 +7,8 @@ export const SeedActions = createActionGroup({
   events: {
     'Seed Requested': props<{ size: number }>(),
     'Seed Loaded': props<{ data: SeedData; version: number }>(),
+    /** Small follow-up so ActionsSubject (a BehaviorSubject) stops retaining the bulk payload. */
+    'Seed Applied': emptyProps(),
     'Seed Skipped': emptyProps(),
     Reset: emptyProps(),
   },

@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, ROOT_EFFECTS_INIT, createEffect, ofType } from '@ngrx/effects';
 import { routerNavigatedAction } from '@ngrx/router-store';
 import { Store } from '@store';
-import { todosFeature, uiFeature } from '@impl';
+import { selectOpenTodoCount, selectTodoTotalCount, todosFeature, uiFeature } from '@impl';
 import { filter, map, switchMap, take, tap, withLatestFrom } from 'rxjs';
 
 import { SeedActions, TodosActions, UiActions } from './actions';
@@ -45,6 +45,16 @@ export const loadSeed = createEffect(
   { functional: true },
 );
 
+/**
+ * RAM: NgRx's ActionsSubject is a BehaviorSubject and keeps the *last* action alive.
+ * After a bulk payload, dispatch a tiny action so the payload can be collected
+ * (docs/guides/ram.md). Harmless for the classic store.
+ */
+export const releaseSeedPayload = createEffect(
+  (actions$ = inject(Actions)) => actions$.pipe(ofType(SeedActions.seedLoaded), map(() => SeedActions.seedApplied())),
+  { functional: true },
+);
+
 /** router-store integration: every completed navigation is recorded in the ui slice. */
 export const trackVisits = createEffect(
   (actions$ = inject(Actions)) =>
@@ -76,7 +86,9 @@ export class TodosEffects {
   readonly observeAfterAdd$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TodosActions.todoAdded, TodosActions.todoToggled, TodosActions.todoRemoved),
-      withLatestFrom(this.store.select(todosFeature.selectOpenCount), this.store.select(todosFeature.selectTodoTotal)),
+      // Count selectors from @impl: SQL COUNT(*) queries on sqlite, so this long-lived
+      // subscription does not pin the whole collection in memory (docs/guides/ram.md).
+      withLatestFrom(this.store.select(selectOpenTodoCount), this.store.select(selectTodoTotalCount)),
       filter(([, , total]) => total >= 0),
       map(([action, openCount, totalCount]) =>
         UiActions.effectObserved({ observation: { action: action.type, openCount, totalCount } }),

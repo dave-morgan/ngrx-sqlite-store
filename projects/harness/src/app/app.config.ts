@@ -12,7 +12,7 @@ import { provideHarnessStore } from '@impl';
 
 import { routes } from './app.routes';
 import { installHarnessHook } from './harness-hook';
-import { TodosEffects, applyTheme, loadSeed, seedOnInit, trackVisits } from './state/effects';
+import { TodosEffects, applyTheme, loadSeed, releaseSeedPayload, seedOnInit, trackVisits } from './state/effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,9 +21,15 @@ export const appConfig: ApplicationConfig = {
     // Store implementation (classic @ngrx/store or ngrx-sqlite-store) is chosen by the build config.
     ...provideHarnessStore(),
     // Everything below is the unmodified NgRx ecosystem.
-    provideEffects(TodosEffects, { seedOnInit, loadSeed, trackVisits, applyTheme }),
+    provideEffects(TodosEffects, { seedOnInit, loadSeed, releaseSeedPayload, trackVisits, applyTheme }),
     provideRouterStore(),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), connectInZone: true }),
+    // Devtools keeps maxAge actions alive; keep the bulk seed payload out of its history.
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: !isDevMode(),
+      connectInZone: true,
+      actionsBlocklist: ['\\[Seed\\] Seed Loaded'],
+    }),
     provideAppInitializer(installHarnessHook),
   ],
 };

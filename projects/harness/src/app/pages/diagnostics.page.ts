@@ -1,7 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, inject, signal } from '@angular/core';
 import { Store } from '@store';
-import { IMPL_NAME, settleStore, todosFeature, uiFeature } from '@impl';
+import { IMPL_NAME, selectTodoTotalCount, settleStore, todosFeature, uiFeature } from '@impl';
 import { filter, firstValueFrom } from 'rxjs';
 
 import { SeedActions, benchmarkTick } from '../state/actions';
@@ -98,7 +98,7 @@ export class DiagnosticsPage {
   private readonly injector = inject(Injector);
 
   protected readonly impl = IMPL_NAME;
-  protected readonly total = this.store.selectSignal(todosFeature.selectTodoTotal);
+  protected readonly total = this.store.selectSignal(selectTodoTotalCount);
   protected readonly seedVersion = this.store.selectSignal(todosFeature.selectSeedVersion);
   protected readonly visited = this.store.selectSignal(uiFeature.selectVisited);
   protected readonly url = this.store.selectSignal(selectUrl);

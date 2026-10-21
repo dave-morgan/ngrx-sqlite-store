@@ -8,12 +8,6 @@ export const { selectRouteParam, selectUrl } = getRouterSelectors();
 
 export const selectRouteTodoId = selectRouteParam('id');
 
-export const selectRoutedTodo = createSelector(
-  todosFeature.selectEntities,
-  selectRouteTodoId,
-  (entities, id) => (id ? (entities[id] ?? null) : null),
-);
-
 export const selectTodoCountsByUser = createSelector(todosFeature.selectAllTodos, (todos) => {
   const counts: Record<string, { open: number; done: number }> = {};
   for (const t of todos) {

@@ -1,16 +1,17 @@
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Store } from '@store';
-import { todosFeature, uiFeature, usersFeature } from '@impl';
+import { selectOpenTodoCount, selectTodoTotalCount, todosFeature, uiFeature, usersFeature, visibleTodos } from '@impl';
+import { combineLatest, map, switchMap } from 'rxjs';
 
 import { TodosActions } from '../state/actions';
 import { Priority, TodoFilter } from '../state/models';
 
 @Component({
   selector: 'app-todos-page',
-  imports: [AsyncPipe, FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="page">
@@ -59,11 +60,12 @@ import { Priority, TodoFilter } from '../state/models';
         </p>
       }
 
-      <!-- store.select + async pipe (Observable path); counts above use selectSignal. -->
-      @if (visible$ | async; as visible) {
-        <p class="muted" data-testid="visible-count">{{ visible.length }} shown</p>
+      <!-- store.select (Observable path) for the page + match count; header counts use selectSignal.
+           sqlite: both are SQL queries, so only \`limit\` rows are ever in memory (ADR-0027). -->
+      @if (visible(); as visible) {
+        <p class="muted" data-testid="visible-count">{{ visible.count }} shown</p>
         <ul class="card list" data-testid="todo-list">
-          @for (t of visible.slice(0, limit()); track t.id) {
+          @for (t of visible.page; track t.id) {
             <li [class.done]="t.done" [attr.data-testid]="'todo-' + t.id">
               <input type="checkbox" [checked]="t.done" (change)="toggle(t.id)"
                      [attr.aria-label]="'Toggle ' + t.title" [attr.data-testid]="'toggle-' + t.id" />
@@ -78,9 +80,9 @@ import { Priority, TodoFilter } from '../state/models';
             <li class="empty muted">Nothing here.</li>
           }
         </ul>
-        @if (visible.length > limit()) {
+        @if (visible.count > visible.page.length) {
           <button class="btn more" type="button" (click)="limit.set(limit() + 100)">
-            Show more ({{ visible.length - limit() }} hidden)
+            Show more ({{ visible.count - visible.page.length }} hidden)
           </button>
         }
       }
@@ -113,9 +115,8 @@ export class TodosPage {
   private readonly store = inject(Store);
 
   protected readonly filters: TodoFilter[] = ['all', 'open', 'done'];
-  protected readonly visible$ = this.store.select(todosFeature.selectVisibleTodos);
-  protected readonly open = this.store.selectSignal(todosFeature.selectOpenCount);
-  protected readonly total = this.store.selectSignal(todosFeature.selectTodoTotal);
+  protected readonly open = this.store.selectSignal(selectOpenTodoCount);
+  protected readonly total = this.store.selectSignal(selectTodoTotalCount);
   protected readonly filter = this.store.selectSignal(todosFeature.selectFilter);
   protected readonly query = this.store.selectSignal(todosFeature.selectQuery);
   protected readonly userId = this.store.selectSignal(todosFeature.selectUserId);
@@ -127,6 +128,22 @@ export class TodosPage {
   protected readonly priority = signal<Priority>(2);
   protected readonly owner = signal('u1');
   protected readonly limit = signal(100);
+
+  private readonly criteria = computed(() => ({
+    filter: this.filter(),
+    query: this.query(),
+    userId: this.userId(),
+    limit: this.limit(),
+  }));
+  protected readonly visible = toSignal(
+    toObservable(this.criteria).pipe(
+      switchMap(({ limit, ...criteria }) => {
+        const s = visibleTodos(criteria, limit);
+        return combineLatest([this.store.select(s.page), this.store.select(s.count)]);
+      }),
+      map(([page, count]) => ({ page, count })),
+    ),
+  );
 
   protected add(): void {
     const title = this.title().trim();

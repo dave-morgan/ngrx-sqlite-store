@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { of, switchMap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Store } from '@store';
-import { usersFeature } from '@impl';
+import { todoById, usersFeature } from '@impl';
 
 import { TodosActions } from '../state/actions';
-import { selectRouteTodoId, selectRoutedTodo } from '../state/selectors';
+import { selectRouteTodoId } from '../state/selectors';
 
 /** Reads its id exclusively through @ngrx/router-store selectors. */
 @Component({
@@ -58,8 +60,12 @@ import { selectRouteTodoId, selectRoutedTodo } from '../state/selectors';
 export class TodoDetailPage {
   private readonly store = inject(Store);
 
-  protected readonly todo = this.store.selectSignal(selectRoutedTodo);
   protected readonly routeId = this.store.selectSignal(selectRouteTodoId);
+  // Route param from @ngrx/router-store selectors; the todo by id (sqlite: one-row query).
+  protected readonly todo = toSignal(
+    toObservable(this.routeId).pipe(switchMap((id) => (id ? this.store.select(todoById(id)) : of(null)))),
+    { initialValue: null },
+  );
   protected readonly users = this.store.selectSignal(usersFeature.selectUserEntities);
   protected readonly draft = signal('');
 

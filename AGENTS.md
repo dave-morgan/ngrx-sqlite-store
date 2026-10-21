@@ -29,18 +29,26 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - [x] Phase 11 bridge cost (statement budgets); brief docs/briefs/phase-11-bridge-cost.md
 - [x] Phase 12 scale (refresh granularity, per-commit work, memory); brief docs/briefs/phase-12-scale.md; baseline docs/benchmarks/android-baseline-2026-10-21.md
 - [x] Phase 13 bridge floor + retention; brief docs/briefs/phase-13-bridge-floor-and-retention.md
+- [x] Phase 14 query refresh (change-aware invalidation, batched refresh); brief docs/briefs/phase-14-query-refresh.md
 
 ## Harness (orchestrator-owned; agents don't touch unless briefed)
 - `projects/harness`: README there. Aliases `@store`, `@store/entity`, `@impl` per build config (`-c classic|sqlite`). Shared code in `src/app/state`, pages in `src/app/pages`; only reducers differ (`store-impl/{classic,sqlite}`).
-- Classic: builds, 1 unit test + 11/11 Playwright e2e pass (`npm run e2e:classic`). Phase 7: SQLite development build and 12/12 Playwright e2e pass, including real devtools provider activation, exactly-once post-commit effects and no synchronous tx reducer warnings.
-- Android: `android/` added (Capacitor 8). Gradle needs JDK 21: `JAVA_HOME="C:\Program Files\Android\Android Studio\jbr"`.
-- Phase 6 implemented from `docs/briefs/phase-6-entity.md` (ADR-0019); 146 library tests pass, including entity parity, SQL minimality and collision regressions.
+- Status (2026-10-22, HEAD 43a1704): 256 lib tests; e2e 26/26 (13 classic + 13 sqlite, `npx playwright test`); 1 harness unit test.
+- sqlite harness lists/details/counts use query selectors (`@impl` visibleTodos/todoById/count); devtools dev-only; Seed Applied releases bulk payload (docs/guides/ram.md).
+- Android: `android/` (Capacitor 8). Gradle needs JDK 21: `JAVA_HOME="C:\Program Files\Android\Android Studio\jbr"`. Emulator `Pixel_9_Pro` (headless). Bench: `node tools/android-bench.mjs [--impl] [--sizes] [--runs] [--skip-build]`; heap retainers: `node tools/heap-retainers.mjs --seed N`. Capacitor WebView drops query strings on reload → seed size via localStorage `harness:seed`. Emulator degrades over long sessions: reboot before benchmarking.
+- Latest numbers: docs/benchmarks/android-after-phase14-2026-10-22.md.
+
+## Codex handoff (Windows)
+- Launch directly: `node <codex plugin>/scripts/codex-companion.mjs task --background --write --fresh --model gpt-6.1-sol "<ONE-LINE prompt>"` — cmd truncates multi-line prompts at the first newline. Codex sandbox can't write `.git`: orchestrator commits. Monitor `jobs/<id>.json` status + `.log` for `usage limit|rate.?limit|at capacity|insufficient_quota`.
+- AGENTS.md must stay a hard link to CLAUDE.md (git operations can break it: `cmd /c mklink /H AGENTS.md CLAUDE.md`).
 
 ## Blocking / awaiting user
-- None. Q6 → ADR-0013/0014; schema v1 → ADR-0015.
+- None.
 
 ## Next steps
-- Phase 9 Android benchmarks. Q4 ecosystem compatibility is resolved by ADR-0022.
+- Q17: cap post-bulk-write app-process memory (+68 MB after 50k seed in-session) — chunk executeSet payloads.
+- Real-device (non-emulator) benchmark; iOS not yet attempted.
+- Packaging: publishable build of `ngrx-sqlite-store` + verify Q15 (`@ngrx/store` path alias with prebuilt lib in node_modules).
 
 ## Phase 8 spike findings
 - `npm run spikes` bundles source with esbuild and runs Node/sql.js; code is in `projects/ngrx-sqlite-store/spikes`, excluded from the library build. Results: `docs/spikes/q1.md`, `q2.md`, `q3.md` (five-run medians and SQL counts).

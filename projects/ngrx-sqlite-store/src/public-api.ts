@@ -24,6 +24,7 @@ export {
   StoreFeatureModule,
 } from './lib/store/provide';
 export type { SqliteStoreConfig } from './lib/store/tokens';
+export { prewarmSqliteStore } from './lib/store/prewarm';
 export { nssReducerError } from './lib/store/core';
 export {
   SELECTION_ENGINE as ɵSELECTION_ENGINE,

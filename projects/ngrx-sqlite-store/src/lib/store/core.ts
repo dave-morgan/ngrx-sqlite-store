@@ -39,6 +39,7 @@ import type { RegisteredFeature } from './tokens';
 import { Injector } from '@angular/core';
 import { NSS_CAPTURE, NSS_EMIT, NssScannedActionsSubject } from './scanned-actions-subject';
 import { State } from './state';
+import { PREWARM_READY } from './prewarm';
 
 export const nssReducerError = createAction(
   '[ngrx-sqlite-store] Reducer Error',
@@ -57,6 +58,7 @@ interface Feature extends RegisteredFeature {
 export class SqliteStoreCore {
   private readonly injector = inject(Injector);
   readonly engine = inject(StorageEngine);
+  private readonly prewarm = inject(PREWARM_READY, { optional: true });
   private readonly actions = inject(ActionsSubject);
   private readonly scanned = inject(NssScannedActionsSubject);
   private readonly dispatcher = inject(ReducerManagerDispatcher);
@@ -111,7 +113,7 @@ export class SqliteStoreCore {
   private async boot(): Promise<void> {
     this.state.set('opening');
     try {
-      await this.engine.open();
+      await (this.prewarm ?? this.engine.open());
       for (const [key, reducer] of Object.entries(this.reducers)) {
         this.register({
           key,
@@ -213,18 +215,23 @@ export class SqliteStoreCore {
   }
   private async seed(features: Feature[]): Promise<void> {
     const { changes } = await this.engine.transaction(async (tx) => {
-      for (const feature of features) await ensureQueryIndexes(tx, feature.seed);
       const versions = new Map<string, string>();
+      const catalog: { name: string; tbl_name: string; sql: string }[] = [];
       const parameterLimit = 999;
       for (let offset = 0; offset < features.length; offset += parameterLimit) {
         const keys = features.slice(offset, offset + parameterLimit)
           .map((feature) => `feature:${feature.key}:version`);
-        const rows = await tx.query<{ key: string; value: string }>(
-          `SELECT key, value FROM nss_meta WHERE key IN (${keys.map(() => '?').join(',')})`,
+        const rows = await tx.query<{ key: string | null; value: string; name: string; tbl_name: string; sql: string }>(
+          `SELECT key, value, NULL AS name, NULL AS tbl_name, NULL AS sql FROM nss_meta WHERE key IN (${keys.map(() => '?').join(',')})` +
+            (offset === 0 ? " UNION ALL SELECT NULL,NULL,name,tbl_name,sql FROM sqlite_master WHERE type = 'index' AND name GLOB 'nss_query_*'" : ''),
           keys,
         );
-        for (const row of rows) versions.set(row.key, row.value);
+        for (const row of rows) {
+          if (typeof row.key === 'string') versions.set(row.key, row.value);
+          else catalog.push(row);
+        }
       }
+      await ensureQueryIndexes(tx, features.map((feature) => feature.seed), catalog);
       for (const feature of features) {
         const options = feature.sqlite ?? this.config.sqlite?.features?.[feature.key];
         const version = options?.version ?? 1;
@@ -411,5 +418,9 @@ function freeze(value: unknown, seen = new WeakSet<object>()): void {
   if (!value || typeof value !== 'object' || seen.has(value)) return;
   seen.add(value);
   Object.freeze(value);
-  for (const child of Object.values(value)) freeze(child, seen);
+  // NgRx's immutability meta-reducer also skips already frozen children. Store
+  // dispatch validates before ActionsSubject, whose direct callers need their
+  // own validation; do not walk the same bulk payload again on that second pass.
+  for (const child of Object.values(value))
+    if (child && typeof child === 'object' && !Object.isFrozen(child)) freeze(child, seen);
 }

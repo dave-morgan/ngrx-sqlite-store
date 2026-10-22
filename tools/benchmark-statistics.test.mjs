@@ -1,6 +1,33 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { latencyFloor, platformBaseline, summarize, verdict, trialOrder, validateControlProvenance } from './benchmark-statistics.mjs';
+import { codeBaseline, emptyControlPlan, latencyFloor, platformBaseline, summarize, verdict, trialOrder, validateControlProvenance } from './benchmark-statistics.mjs';
+
+test('real empty stores alternate APKs and keep each store paired with its own implementation', () => {
+  const plan = emptyControlPlan(true, 5);
+  assert.deepEqual(plan.map((row) => row.apk), ['classic', 'sqlite', 'sqlite', 'classic', 'classic', 'sqlite', 'sqlite', 'classic', 'classic', 'sqlite']);
+  assert.ok(plan.every((row) => row.pairs.length === 1 && row.pairs[0].impl === row.apk));
+  for (const apk of ['classic', 'sqlite'])
+    assert.deepEqual(plan.filter((row) => row.apk === apk).map((row) => row.pairs[0].trial), [1, 2, 3, 4, 5]);
+  assert.equal(emptyControlPlan(false, 5).flatMap((row) => row.pairs).length, 20);
+  assert.throws(() => emptyControlPlan(true, 1), /two/);
+  assert.throws(() => emptyControlPlan(true, NaN), /two/);
+});
+
+test('CODE-BOUND uses five paired real empty stores, heap only and no SD inflation', () => {
+  const rows = trialOrder(['classic', 'sqlite'], 5).map(({ impl, trial }) => ({
+    apk: impl, mode: impl, kind: 'empty-store', trial, heapMb: impl === 'classic' ? 4 : 5,
+  }));
+  const code = { ...codeBaseline(rows), metric: 'heapTodosMb', justification: 'Real zero-feature stores, same-session post-GC controls' };
+  assert.equal(verdict({ mean: 4, sd: 0.1 }, { mean: 5.1, sd: 100 }, null, null, null, null, code).status, 'CODE-BOUND');
+  assert.equal(verdict({ mean: 4, sd: 0.1 }, { mean: 5.101, sd: 100 }, null, null, null, null, code).status, 'FAIL');
+  for (const metric of ['relaunchReadyMs', 'pssTotalMb', 'emitP50'])
+    assert.equal(verdict({ mean: 4, sd: 0.1 }, { mean: 5, sd: 100 }, null, null, null, null, { ...code, metric }).status, 'FAIL');
+  assert.equal(verdict({ mean: 4, sd: 0.1 }, { mean: 4.05, sd: 0 }, null, null, null, null, code).status, 'PASS');
+  assert.throws(() => codeBaseline(rows.slice(1)), /paired/);
+  assert.throws(() => codeBaseline([...rows, rows[0]]), /paired/);
+  assert.throws(() => codeBaseline(rows.map((row) => ({ ...row, kind: 'empty-plugin' }))), /paired/);
+  assert.throws(() => codeBaseline(rows.map((row) => ({ ...row, heapMb: NaN }))), /finite/);
+});
 
 test('sample SD uses n - 1 and preserves unrounded mean', () => {
   assert.deepEqual(summarize([1, 2, 3]), { n: 3, mean: 2, sd: 1 });

@@ -27,6 +27,41 @@ describe('StorageEngine', () => {
     await engine.close();
   });
 
+  it('reclaims bulk memory after commit, never during a transaction or small dispatch', async () => {
+    await engine.open();
+    const order: string[] = [];
+    const commit = driver.batch.bind(driver);
+    vi.spyOn(driver, 'batch').mockImplementation(async (...args) => {
+      await commit(...args);
+      order.push('commit');
+    });
+    const releaseBulkMemory = vi.fn(async () => { order.push('reclaim'); });
+    Object.assign(driver, { releaseBulkMemory });
+    await engine.transaction(async (tx) => { await tx.write!('INSERT INTO test(name) VALUES (?)', ['tiny']); });
+    expect(releaseBulkMemory).not.toHaveBeenCalled();
+    await engine.transaction(async (tx) => { await tx.write!('INSERT INTO test(name) VALUES (?)', ['x'.repeat(150000)]); });
+    expect(order).toEqual(['commit', 'commit', 'reclaim']);
+  });
+
+  it('does not suppress committed changes or attempt rollback if optional reclamation fails', async () => {
+    await engine.open();
+    const rollback = vi.spyOn(driver, 'rollback');
+    Object.assign(driver, { releaseBulkMemory: async () => { throw new Error('maintenance'); } });
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const notify = vi.fn();
+    const sub = engine.changes$.subscribe(notify);
+    try {
+      await engine.transaction(async (tx) => {
+        await tx.write!('INSERT INTO test(name) VALUES (?)', ['x'.repeat(150000)]);
+        tx.changes.add('test');
+      });
+      expect(notify).toHaveBeenCalledTimes(1);
+      expect(rollback).not.toHaveBeenCalled();
+      expect(log).toHaveBeenCalledTimes(1);
+      expect(await engine.read((sql) => sql.query('SELECT length(name) AS n FROM test'))).toEqual([{ n: 150000 }]);
+    } finally { sub.unsubscribe(); log.mockRestore(); }
+  });
+
   it.each([false, true])(
     'releases commit journals even when diagnostics retain ChangeSet (callback fails: %s)',
     async (fails) => {

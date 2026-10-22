@@ -2,7 +2,11 @@ import type { SqlExecutor } from '../storage/storage-engine';
 import { getQueryIndexes, isBrandedEntity, validateQueryIndexes } from './entity-brand';
 
 /** Registration-time upgrade, including databases created before query indexes existed. */
-export async function ensureQueryIndexes(sql: SqlExecutor, initial: unknown): Promise<void> {
+export async function ensureQueryIndexes(
+  sql: SqlExecutor,
+  initial: unknown,
+  catalog?: { name: string; tbl_name: string; sql: string }[],
+): Promise<void> {
   const fields = new Set<string>();
   const visited = new WeakSet<object>();
   function visit(value: unknown): void {
@@ -18,7 +22,7 @@ export async function ensureQueryIndexes(sql: SqlExecutor, initial: unknown): Pr
   }
   visit(initial);
   if (!fields.size) return;
-  const existing = await sql.query<{ name: string; tbl_name: string; sql: string }>(
+  const existing = catalog ?? await sql.query<{ name: string; tbl_name: string; sql: string }>(
     "SELECT name,tbl_name,sql FROM sqlite_master WHERE type = 'index' AND name GLOB 'nss_query_*'",
   );
   const names = new Set(existing.map((row) => row.name));

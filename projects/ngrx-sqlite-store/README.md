@@ -1,5 +1,45 @@
 # NgrxSqliteStore
 
+## Early native startup
+
+Call `prewarmSqliteStore` before `bootstrapApplication` to overlap native open,
+interrupted-connection recovery, WAL verification and schema checks with app
+module loading. Supply the **same driver object or factory** to `provideStore`:
+
+```ts
+import { prewarmSqliteStore, provideStore } from 'ngrx-sqlite-store';
+
+const sqlite = { driver: createAppDriver };
+void prewarmSqliteStore(sqlite);
+const { App, appConfig } = await import('./app');
+await bootstrapApplication(App, {
+  ...appConfig,
+  providers: [...appConfig.providers, provideStore({}, { sqlite })],
+});
+```
+
+Alternatively, `prewarmSqliteStore(providers)` accepts the top-level provider
+array containing exactly one `provideStore` result. `provideStore.prewarm` is an
+alias for entrypoints shared with classic NgRx, whose function has no such
+property. Driver factories used by prewarm must work outside an injection context.
+
+The adopting store awaits the original in-flight operation. Open errors surface
+through normal store initialization, including its existing production status
+behavior. Prewarm observes its rejection until adoption, avoiding an unhandled
+rejection during bootstrap; callers may also await/catch the returned promise.
+Repeated calls before adoption reuse the operation; a separate store must use
+a separate driver. Bootstrap the matching store after starting prewarm so its
+normal lifecycle owns the connection. The provider-array form atomically clears
+statically declared session features before DI, preserving version markers and
+explicitly persistent routers. Registration then completes any initial reseed,
+version checks and declared indexes before INIT, buffered actions or selectors
+can see stale session data. Lazy and injection-token registrations wait for DI;
+the config-only form cannot know the session-feature declarations. Use the same
+feature persistence options when adopting the connection. Prewarm uses the
+built-in schema migrations; applications with custom `STORAGE_ENGINE_OPTIONS`
+migrations should keep normal DI initialization. Prewarm cannot discover
+arbitrary provider overrides. See ADR-0063.
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.0.
 
 ## Code scaffolding

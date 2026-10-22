@@ -1,0 +1,160 @@
+{
+  "trace": "docs/benchmarks/android-toggle-trace-2026-10-22-phase15e-final-1000.json",
+  "matchedScripts": [
+    "chunk-B3FEZs8J.js",
+    "chunk-Bcm8-z0F.js",
+    "chunk-Bf2XvTt6.js",
+    "chunk-BVUvd3Hk.js",
+    "chunk-Cf6OTpQP.js",
+    "chunk-CxuLpbdJ.js",
+    "chunk-D8FFP2mw.js",
+    "chunk-Dgs_8g91.js",
+    "chunk-slEpHN4Z.js",
+    "chunk-X5ShgmjB.js",
+    "main-4J5CZK2L.js"
+  ],
+  "caveat": "1 ms sampled CPU, mapped only after script equality validation. Categories allocate observed sample intervals, not exact function durations. Write preparation in the post-commit span belongs to the synchronous effect follow-up; other store cleanup is kept separate. Angular scheduling/render includes signal code outside primitives/signals. Program/idle/unattributed intervals cannot be assigned to an exact scheduler or treated as a platform floor. Bridge commit spans include waiting, not just native CPU.",
+  "iterations": [
+    {
+      "iteration": 1,
+      "preparation": {
+        "ms": 3.6000000000931323,
+        "sampledMs": {
+          "unattributed runtime/native": 0.014000000069700036,
+          "other store commit/notification": 1.6480000000001382,
+          "write preparation/queue": 0.5019999999999527,
+          "(idle)": 1.4360000000233413
+        }
+      },
+      "commit": {
+        "ms": 5.699999999953434,
+        "sampledMs": {
+          "(idle)": 5.44199999997636,
+          "selector publication/notification": 0.25799999997707346
+        }
+      },
+      "postCommitToDom": {
+        "ms": 8.099999999976717,
+        "sampledMs": {
+          "selector publication/notification": 3.499000000023443,
+          "NgRx/effects/RxJS": 1.13799999999992,
+          "Angular scheduling/render": 1.6289999999999054,
+          "(idle)": 1.8339999999534484
+        }
+      },
+      "effectNativeStartsBeforeDom": true,
+      "effectNativeOverlapMs": 2.400000000023283
+    },
+    {
+      "iteration": 2,
+      "preparation": {
+        "ms": 0.40000000002328306,
+        "sampledMs": {
+          "application/other mapped JS": 0.40000000002328306
+        }
+      },
+      "commit": {
+        "ms": 8.300000000046566,
+        "sampledMs": {
+          "application/other mapped JS": 1.1750000000465661,
+          "Angular scheduling/render": 2.949999999999818,
+          "(program)": 2.7539999999999054,
+          "selector publication/notification": 1.4210000000002765
+        }
+      },
+      "postCommitToDom": {
+        "ms": 8.400000000023283,
+        "sampledMs": {
+          "selector publication/notification": 3.4979999999995925,
+          "Angular scheduling/render": 3.8450000000002547,
+          "(program)": 1.0570000000234359
+        }
+      },
+      "effectNativeStartsBeforeDom": true,
+      "effectNativeOverlapMs": 3.900000000023283
+    },
+    {
+      "iteration": 3,
+      "preparation": {
+        "ms": 0.9000000000232831,
+        "sampledMs": {
+          "write preparation/queue": 0.6520000000236905,
+          "Angular scheduling/render": 0.24799999999959255
+        }
+      },
+      "commit": {
+        "ms": 6.599999999976717,
+        "sampledMs": {
+          "Angular scheduling/render": 1.6270000000004075,
+          "(program)": 2.100999999999658,
+          "other store commit/notification": 2.8719999999766515
+        }
+      },
+      "postCommitToDom": {
+        "ms": 6,
+        "sampledMs": {
+          "other store commit/notification": 1.3060000000232321,
+          "selector publication/notification": 1.6369999999997162,
+          "Angular scheduling/render": 2.3040000000000873,
+          "(garbage collector)": 0.7529999999769643
+        }
+      },
+      "effectNativeStartsBeforeDom": true,
+      "effectNativeOverlapMs": 1.900000000023283
+    },
+    {
+      "iteration": 4,
+      "preparation": {
+        "ms": 0.40000000002328306,
+        "sampledMs": {
+          "(program)": 0.40000000002328306
+        }
+      },
+      "commit": {
+        "ms": 81.30000000004657,
+        "sampledMs": {
+          "(program)": 4.098000000046341,
+          "(idle)": 76.32900000000063,
+          "write preparation/queue": 0.8729999999995925
+        }
+      },
+      "postCommitToDom": {
+        "ms": 14.79999999993015,
+        "sampledMs": {
+          "write preparation/queue": 9.60400000000027,
+          "selector publication/notification": 2.730999999999767,
+          "unattributed runtime/native": 2.4649999999301144
+        }
+      },
+      "effectNativeStartsBeforeDom": true,
+      "effectNativeOverlapMs": 2.099999999976717
+    },
+    {
+      "iteration": 5,
+      "preparation": {
+        "ms": 0.6999999999534339,
+        "sampledMs": {
+          "native bridge JS": 0.6999999999534339
+        }
+      },
+      "commit": {
+        "ms": 11.599999999976717,
+        "sampledMs": {
+          "native bridge JS": 3.343000000023494,
+          "Angular scheduling/render": 3.581000000000131,
+          "(program)": 4.573999999999614,
+          "application/other mapped JS": 0.10199999995347753
+        }
+      },
+      "postCommitToDom": {
+        "ms": 5.599999999976717,
+        "sampledMs": {
+          "application/other mapped JS": 3.9890000000468717,
+          "(program)": 1.6109999999298452
+        }
+      },
+      "effectNativeStartsBeforeDom": true,
+      "effectNativeOverlapMs": 2.599999999976717
+    }
+  ]
+}

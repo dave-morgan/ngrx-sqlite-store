@@ -54,6 +54,12 @@ type SqlValue = string | number | null | Uint8Array;
   recovery, but recent commits can be lost on device power failure or OS crash
   before a durable checkpoint. Web, iOS and readonly connections are unchanged.
 - Driver runtimes load lazily so importing the package does not require unused optional peers. The published package includes `@types/sql.js` because the sql.js factory option exposes its module type.
+- `prewarmSqliteStore` can begin recovery, WAL and schema open before framework
+  bootstrap. The provider-array form clears declared session features in an
+  atomic transaction without evaluating reducers or initial-state factories;
+  registration completes seeding before readers, INIT and buffered actions.
+  Adoption reuses the exact driver/factory and original promise, including open
+  failures. Explicitly persistent router features are preserved (ADR-0063).
 - A web `saveToStore()` failure after SQLite commits leaves IndexedDB durability uncertain. The commit promise rejects, no changes are emitted, and a failed rollback places the engine in `error`; callers must close and recover rather than retry the write blindly.
 
 ## 3. Write side
@@ -61,6 +67,15 @@ type SqlValue = string | number | null | Uint8Array;
 Phase 2 implements `StorageEngine` with one FIFO queue shared by lifecycle operations, transactions, and reads. Reads are queued because a single SQLite connection can see its own uncommitted writes. Inside a transaction or queued callback, use its supplied executor; awaiting another queued engine operation from there would deadlock. Non-empty change sets emit after commit, followed by awaited `afterCommit` callbacks, before the transaction promise resolves. Callback failures reject the promise without rolling back committed data.
 
 Internal migrations run atomically at open, ordered by version, with `schema_version` in `nss_meta`. Built-in migration v1 creates only `nss_meta`; additional migrations extend v1 with unique positive integer versions. Failed opens roll back and close the connection, exposing `error` status. Phase 3 exports `SCHEMA_MIGRATIONS` (v2), registered through the existing `migrations` option or `STORAGE_ENGINE_OPTIONS`, to create the approved node/entity/chunk tables.
+
+Registration batches the independent feature-version and query-index catalog
+reads in one transport, then validates/creates the union of declarations. Root
+preloads remain after the session seed commit. Android commits carrying at least
+128 KiB of buffered row writes request WAL truncation and SQLite memory shrink
+inside the engine FIFO, after commit and before notification. Maintenance is
+best effort: failure is logged and cannot undo durability or suppress committed
+notifications. Small dispatches, web, iOS and readonly drivers do no extra work
+(ADR-0064). No Java/native GC is forced and cache size is unchanged.
 
 ### 3.1 Dispatch pipeline
 

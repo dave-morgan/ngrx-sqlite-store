@@ -1,5 +1,8 @@
 # NgrxSqliteStore
 
+Native apps can start SQLite recovery and schema checks before Angular bootstrap
+with `prewarmSqliteStore`; see the [startup API and adoption rules](projects/ngrx-sqlite-store/README.md#early-native-startup).
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.3.
 
 ## Development server

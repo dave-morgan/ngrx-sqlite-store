@@ -1,0 +1,882 @@
+{
+  "date": "2026-10-22",
+  "serial": "emulator-5554",
+  "packageName": "dev.ngrxsqlite.harness.sqlite",
+  "device": "sdk_gphone64_x86_64",
+  "caveat": "5 toggles observed on /todos. DOM timestamp is the MutationObserver callback detecting an exact todo-summary text change, not a browser paint timestamp. Native call options are cloned before mutation; start/end classify activity relative to DOM change. settle includes queued follow-up work. Call timing alone does not prove an effect or rendering caused latency. Diagnostic only.",
+  "iterations": [
+    {
+      "iteration": 1,
+      "before": " 669 open · 1000 total ",
+      "after": " 670 open · 1000 total ",
+      "dispatchAt": 4265.699999999721,
+      "domAt": 4285.899999999907,
+      "settledAt": 4313.5,
+      "domLatencyMs": 20.200000000186265,
+      "settleLatencyMs": 47.8000000002794,
+      "nativeCalls": [
+        {
+          "plugin": "CapacitorSQLite",
+          "method": "executeSet",
+          "options": {
+            "database": "ngrx-harness",
+            "set": [
+              {
+                "statement": "UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?",
+                "values": [
+                  "{\"id\":\"t1\",\"title\":\"Test the entity adapter #1\",\"done\":false,\"userId\":\"u7\",\"tags\":[\"android\",\"docs\",\"spike\"],\"priority\":1,\"createdAt\":1767225600000}",
+                  "todos",
+                  "s:t1"
+                ]
+              }
+            ],
+            "transaction": true,
+            "readonly": false,
+            "returnMode": "no",
+            "isSQL92": true
+          },
+          "start": 4268.899999999907,
+          "end": 4273.899999999907,
+          "ms": 5
+        },
+        {
+          "plugin": "CapacitorSQLite",
+          "method": "executeSet",
+          "options": {
+            "database": "ngrx-harness",
+            "set": [
+              {
+                "statement": "DELETE FROM nss_node WHERE path = ? OR (path >= ? AND path < ?)",
+                "values": [
+                  "ui/lastObservation",
+                  "ui/lastObservation/",
+                  "ui/lastObservation0"
+                ]
+              },
+              {
+                "statement": "DELETE FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?)",
+                "values": [
+                  "ui/lastObservation",
+                  "ui/lastObservation/",
+                  "ui/lastObservation0"
+                ]
+              },
+              {
+                "statement": "DELETE FROM nss_entity WHERE coll = ? OR (coll >= ? AND coll < ?)",
+                "values": [
+                  "ui/lastObservation",
+                  "ui/lastObservation/",
+                  "ui/lastObservation0"
+                ]
+              },
+              {
+                "statement": "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)",
+                "values": [
+                  "ui/lastObservation",
+                  "ui",
+                  5,
+                  3,
+                  null,
+                  "ui/lastObservation/action",
+                  "ui/lastObservation",
+                  3,
+                  1,
+                  "\"[Todos] Todo Toggled\"",
+                  "ui/lastObservation/openCount",
+                  "ui/lastObservation",
+                  2,
+                  2,
+                  "670",
+                  "ui/lastObservation/totalCount",
+                  "ui/lastObservation",
+                  2,
+                  3,
+                  "1000"
+                ]
+              }
+            ],
+            "transaction": true,
+            "readonly": false,
+            "returnMode": "no",
+            "isSQL92": true
+          },
+          "start": 4291.199999999721,
+          "end": 4309.199999999721,
+          "ms": 18
+        }
+      ],
+      "nativeStartedBeforeDom": 1,
+      "nativeStartedAfterDom": 1,
+      "nativeFinishedBeforeDom": 1
+    },
+    {
+      "iteration": 2,
+      "before": " 670 open · 1000 total ",
+      "after": " 669 open · 1000 total ",
+      "dispatchAt": 4314.600000000093,
+      "domAt": 4338.299999999814,
+      "settledAt": 4427.100000000093,
+      "domLatencyMs": 23.699999999720603,
+      "settleLatencyMs": 112.5,
+      "nativeCalls": [
+        {
+          "plugin": "CapacitorSQLite",
+          "method": "executeSet",
+          "options": {
+            "database": "ngrx-harness",
+            "set": [
+              {
+                "statement": "UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?",
+                "values": [
+                  "{\"id\":\"t1\",\"title\":\"Test the entity adapter #1\",\"done\":true,\"userId\":\"u7\",\"tags\":[\"android\",\"docs\",\"spike\"],\"priority\":1,\"createdAt\":1767225600000}",
+                  "todos",
+                  "s:t1"
+                ]
+              }
+            ],
+            "transaction": true,
+            "readonly": false,
+            "returnMode": "no",
+            "isSQL92": true
+          },
+          "start": 4315.100000000093,
+          "end": 4330.799999999814,
+          "ms": 15.699999999720603
+        },
+        {
+          "plugin": "CapacitorSQLite",
+          "method": "executeSet",
+          "options": {
+            "database": "ngrx-harness",
+            "set": [
+              {
+                "statement": "UPDATE nss_node SET value = ? WHERE path = ?",
+                "values": [
+                  "669",
+                  "ui/lastObservation/openCount"
+                ]
+              }
+            ],
+            "transaction": true,
+            "readonly": false,
+            "returnMode": "no",
+            "isSQL92": true
+          },
+          "start": 4352,
+          "end": 4422.799999999814,
+          "ms": 70.79999999981374
+        }
+      ],
+      "nativeStartedBeforeDom": 1,
+      "nativeStartedAfterDom": 1,
+      "nativeFinishedBeforeDom": 1
+    },
+    {
+      "iteration": 3,
+      "before": " 669 open · 1000 total ",
+      "after": " 670 open · 1000 total ",
+      "dispatchAt": 4427.5,
+      "domAt": 4455.199999999721,
+      "settledAt": 4473.899999999907,
+      "domLatencyMs": 27.699999999720603,
+      "settleLatencyMs": 46.39999999990687,
+      "nativeCalls": [
+        {
+          "plugin": "CapacitorSQLite",
+          "method": "executeSet",
+          "options": {
+            "database": "ngrx-harness",
+            "set": [
+              {
+                "statement": "UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?",
+                "values": [
+                  "{\"id\":\"t1\",\"title\":\"Test the entity adapter #1\",\"done\":false,\"userId\":\"u7\",\"tags\":[\"android\",\"docs\",\"spike\"],\"priority\":1,\"createdAt\":1767225600000}",
+                  "todos",
+                  "s:t1"
+                ]
+              }
+            ],
+            "transaction": true,
+            "readonly": false,
+            "returnMode": "no",
+            "isSQL92": true
+          },
+          "start": 4429.600000000093,
+          "end": 4449.600000000093,
+          "ms": 20
+        },
+        {
+          "plugin": "CapacitorSQLite",
+          "method": "executeSet",
+          "options": {
+            "database": "ngrx-harness",
+            "set": [
+              {
+                "statement": "UPDATE nss_node SET value = ? WHERE path = ?",
+                "values": [
+                  "670",
+                  "ui/lastObservation/openCount"
+                ]
+              }
+            ],
+            "transaction": true,
+            "readonly": false,
+            "returnMode": "no",
+            "isSQL92": true
+          },
+          "start": 4461.799999999814,
+          "end": 4471.799999999814,
+          "ms": 10
+        }
+      ],
+      "nativeStartedBeforeDom": 1,
+      "nativeStartedAfterDom": 1,
+      "nativeFinishedBeforeDom": 1
+    },
+    {
+      "iteration": 4,
+      "before": " 670 open · 1000 total ",
+      "after": " 669 open · 1000 total ",
+      "dispatchAt": 4474,
+      "domAt": 4492,
+      "settledAt": 4511.699999999721,
+      "domLatencyMs": 18,
+      "settleLatencyMs": 37.6999999997206,
+      "nativeCalls": [
+        {
+          "plugin": "CapacitorSQLite",
+          "method": "executeSet",
+          "options": {
+            "database": "ngrx-harness",
+            "set": [
+              {
+                "statement": "UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?",
+                "values": [
+                  "{\"id\":\"t1\",\"title\":\"Test the entity adapter #1\",\"done\":true,\"userId\":\"u7\",\"tags\":[\"android\",\"docs\",\"spike\"],\"priority\":1,\"createdAt\":1767225600000}",
+                  "todos",
+                  "s:t1"
+                ]
+              }
+            ],
+            "transaction": true,
+            "readonly": false,
+            "returnMode": "no",
+            "isSQL92": true
+          },
+          "start": 4474.5,
+          "end": 4486.799999999814,
+          "ms": 12.299999999813735
+        },
+        {
+          "plugin": "CapacitorSQLite",
+          "method": "executeSet",
+          "options": {
+            "database": "ngrx-harness",
+            "set": [
+              {
+                "statement": "UPDATE nss_node SET value = ? WHERE path = ?",
+                "values": [
+                  "669",
+                  "ui/lastObservation/openCount"
+                ]
+              }
+            ],
+            "transaction": true,
+            "readonly": false,
+            "returnMode": "no",
+            "isSQL92": true
+          },
+          "start": 4498.899999999907,
+          "end": 4510.100000000093,
+          "ms": 11.200000000186265
+        }
+      ],
+      "nativeStartedBeforeDom": 1,
+      "nativeStartedAfterDom": 1,
+      "nativeFinishedBeforeDom": 1
+    },
+    {
+      "iteration": 5,
+      "before": " 669 open · 1000 total ",
+      "after": " 670 open · 1000 total ",
+      "dispatchAt": 4511.899999999907,
+      "domAt": 4570.299999999814,
+      "settledAt": 4593.100000000093,
+      "domLatencyMs": 58.39999999990687,
+      "settleLatencyMs": 81.20000000018626,
+      "nativeCalls": [
+        {
+          "plugin": "CapacitorSQLite",
+          "method": "executeSet",
+          "options": {
+            "database": "ngrx-harness",
+            "set": [
+              {
+                "statement": "UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?",
+                "values": [
+                  "{\"id\":\"t1\",\"title\":\"Test the entity adapter #1\",\"done\":false,\"userId\":\"u7\",\"tags\":[\"android\",\"docs\",\"spike\"],\"priority\":1,\"createdAt\":1767225600000}",
+                  "todos",
+                  "s:t1"
+                ]
+              }
+            ],
+            "transaction": true,
+            "readonly": false,
+            "returnMode": "no",
+            "isSQL92": true
+          },
+          "start": 4513.100000000093,
+          "end": 4559.699999999721,
+          "ms": 46.59999999962747
+        },
+        {
+          "plugin": "CapacitorSQLite",
+          "method": "executeSet",
+          "options": {
+            "database": "ngrx-harness",
+            "set": [
+              {
+                "statement": "UPDATE nss_node SET value = ? WHERE path = ?",
+                "values": [
+                  "670",
+                  "ui/lastObservation/openCount"
+                ]
+              }
+            ],
+            "transaction": true,
+            "readonly": false,
+            "returnMode": "no",
+            "isSQL92": true
+          },
+          "start": 4572.600000000093,
+          "end": 4591.199999999721,
+          "ms": 18.59999999962747
+        }
+      ],
+      "nativeStartedBeforeDom": 1,
+      "nativeStartedAfterDom": 1,
+      "nativeFinishedBeforeDom": 1
+    }
+  ],
+  "calls": [
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "options": {
+        "database": "ngrx-harness",
+        "set": [
+          {
+            "statement": "UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?",
+            "values": [
+              "{\"id\":\"t1\",\"title\":\"Test the entity adapter #1\",\"done\":false,\"userId\":\"u7\",\"tags\":[\"android\",\"docs\",\"spike\"],\"priority\":1,\"createdAt\":1767225600000}",
+              "todos",
+              "s:t1"
+            ]
+          }
+        ],
+        "transaction": true,
+        "readonly": false,
+        "returnMode": "no",
+        "isSQL92": true
+      },
+      "start": 4268.899999999907,
+      "end": 4273.899999999907,
+      "ms": 5
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "options": {
+        "database": "ngrx-harness",
+        "set": [
+          {
+            "statement": "DELETE FROM nss_node WHERE path = ? OR (path >= ? AND path < ?)",
+            "values": [
+              "ui/lastObservation",
+              "ui/lastObservation/",
+              "ui/lastObservation0"
+            ]
+          },
+          {
+            "statement": "DELETE FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?)",
+            "values": [
+              "ui/lastObservation",
+              "ui/lastObservation/",
+              "ui/lastObservation0"
+            ]
+          },
+          {
+            "statement": "DELETE FROM nss_entity WHERE coll = ? OR (coll >= ? AND coll < ?)",
+            "values": [
+              "ui/lastObservation",
+              "ui/lastObservation/",
+              "ui/lastObservation0"
+            ]
+          },
+          {
+            "statement": "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)",
+            "values": [
+              "ui/lastObservation",
+              "ui",
+              5,
+              3,
+              null,
+              "ui/lastObservation/action",
+              "ui/lastObservation",
+              3,
+              1,
+              "\"[Todos] Todo Toggled\"",
+              "ui/lastObservation/openCount",
+              "ui/lastObservation",
+              2,
+              2,
+              "670",
+              "ui/lastObservation/totalCount",
+              "ui/lastObservation",
+              2,
+              3,
+              "1000"
+            ]
+          }
+        ],
+        "transaction": true,
+        "readonly": false,
+        "returnMode": "no",
+        "isSQL92": true
+      },
+      "start": 4291.199999999721,
+      "end": 4309.199999999721,
+      "ms": 18
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "options": {
+        "database": "ngrx-harness",
+        "set": [
+          {
+            "statement": "UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?",
+            "values": [
+              "{\"id\":\"t1\",\"title\":\"Test the entity adapter #1\",\"done\":true,\"userId\":\"u7\",\"tags\":[\"android\",\"docs\",\"spike\"],\"priority\":1,\"createdAt\":1767225600000}",
+              "todos",
+              "s:t1"
+            ]
+          }
+        ],
+        "transaction": true,
+        "readonly": false,
+        "returnMode": "no",
+        "isSQL92": true
+      },
+      "start": 4315.100000000093,
+      "end": 4330.799999999814,
+      "ms": 15.699999999720603
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "options": {
+        "database": "ngrx-harness",
+        "set": [
+          {
+            "statement": "UPDATE nss_node SET value = ? WHERE path = ?",
+            "values": [
+              "669",
+              "ui/lastObservation/openCount"
+            ]
+          }
+        ],
+        "transaction": true,
+        "readonly": false,
+        "returnMode": "no",
+        "isSQL92": true
+      },
+      "start": 4352,
+      "end": 4422.799999999814,
+      "ms": 70.79999999981374
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "options": {
+        "database": "ngrx-harness",
+        "set": [
+          {
+            "statement": "UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?",
+            "values": [
+              "{\"id\":\"t1\",\"title\":\"Test the entity adapter #1\",\"done\":false,\"userId\":\"u7\",\"tags\":[\"android\",\"docs\",\"spike\"],\"priority\":1,\"createdAt\":1767225600000}",
+              "todos",
+              "s:t1"
+            ]
+          }
+        ],
+        "transaction": true,
+        "readonly": false,
+        "returnMode": "no",
+        "isSQL92": true
+      },
+      "start": 4429.600000000093,
+      "end": 4449.600000000093,
+      "ms": 20
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "options": {
+        "database": "ngrx-harness",
+        "set": [
+          {
+            "statement": "UPDATE nss_node SET value = ? WHERE path = ?",
+            "values": [
+              "670",
+              "ui/lastObservation/openCount"
+            ]
+          }
+        ],
+        "transaction": true,
+        "readonly": false,
+        "returnMode": "no",
+        "isSQL92": true
+      },
+      "start": 4461.799999999814,
+      "end": 4471.799999999814,
+      "ms": 10
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "options": {
+        "database": "ngrx-harness",
+        "set": [
+          {
+            "statement": "UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?",
+            "values": [
+              "{\"id\":\"t1\",\"title\":\"Test the entity adapter #1\",\"done\":true,\"userId\":\"u7\",\"tags\":[\"android\",\"docs\",\"spike\"],\"priority\":1,\"createdAt\":1767225600000}",
+              "todos",
+              "s:t1"
+            ]
+          }
+        ],
+        "transaction": true,
+        "readonly": false,
+        "returnMode": "no",
+        "isSQL92": true
+      },
+      "start": 4474.5,
+      "end": 4486.799999999814,
+      "ms": 12.299999999813735
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "options": {
+        "database": "ngrx-harness",
+        "set": [
+          {
+            "statement": "UPDATE nss_node SET value = ? WHERE path = ?",
+            "values": [
+              "669",
+              "ui/lastObservation/openCount"
+            ]
+          }
+        ],
+        "transaction": true,
+        "readonly": false,
+        "returnMode": "no",
+        "isSQL92": true
+      },
+      "start": 4498.899999999907,
+      "end": 4510.100000000093,
+      "ms": 11.200000000186265
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "options": {
+        "database": "ngrx-harness",
+        "set": [
+          {
+            "statement": "UPDATE nss_entity SET data = ? WHERE coll = ? AND id = ?",
+            "values": [
+              "{\"id\":\"t1\",\"title\":\"Test the entity adapter #1\",\"done\":false,\"userId\":\"u7\",\"tags\":[\"android\",\"docs\",\"spike\"],\"priority\":1,\"createdAt\":1767225600000}",
+              "todos",
+              "s:t1"
+            ]
+          }
+        ],
+        "transaction": true,
+        "readonly": false,
+        "returnMode": "no",
+        "isSQL92": true
+      },
+      "start": 4513.100000000093,
+      "end": 4559.699999999721,
+      "ms": 46.59999999962747
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "options": {
+        "database": "ngrx-harness",
+        "set": [
+          {
+            "statement": "UPDATE nss_node SET value = ? WHERE path = ?",
+            "values": [
+              "670",
+              "ui/lastObservation/openCount"
+            ]
+          }
+        ],
+        "transaction": true,
+        "readonly": false,
+        "returnMode": "no",
+        "isSQL92": true
+      },
+      "start": 4572.600000000093,
+      "end": 4591.199999999721,
+      "ms": 18.59999999962747
+    }
+  ],
+  "cpuSelfTime": [
+    {
+      "functionName": "(program)",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 289.191
+    },
+    {
+      "functionName": "(idle)",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 191.188
+    },
+    {
+      "functionName": "mt",
+      "url": "https://localhost/chunk-B5Gx1ZfQ.js",
+      "lineNumber": 2,
+      "selfMs": 8.429
+    },
+    {
+      "functionName": "capacitor.nativePromise",
+      "url": "",
+      "lineNumber": 8,
+      "selfMs": 6.895
+    },
+    {
+      "functionName": "(garbage collector)",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 6.441
+    },
+    {
+      "functionName": "structuredClone",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 6.406
+    },
+    {
+      "functionName": "te",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 17,
+      "selfMs": 4.869
+    },
+    {
+      "functionName": "",
+      "url": "",
+      "lineNumber": 0,
+      "selfMs": 4.864
+    },
+    {
+      "functionName": "ku",
+      "url": "https://localhost/chunk-B5Gx1ZfQ.js",
+      "lineNumber": 3,
+      "selfMs": 4.714
+    },
+    {
+      "functionName": "gf",
+      "url": "https://localhost/chunk-B5Gx1ZfQ.js",
+      "lineNumber": 3,
+      "selfMs": 4.155
+    },
+    {
+      "functionName": "merge",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 3,
+      "selfMs": 3.91
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 18,
+      "selfMs": 3.299
+    },
+    {
+      "functionName": "selectionFeatures",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 17,
+      "selfMs": 2.985
+    },
+    {
+      "functionName": "now",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 2.932
+    },
+    {
+      "functionName": "next",
+      "url": "https://localhost/chunk-B5Gx1ZfQ.js",
+      "lineNumber": 2,
+      "selfMs": 2.895
+    },
+    {
+      "functionName": "setValue",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 0,
+      "selfMs": 2.758
+    },
+    {
+      "functionName": "te",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 17,
+      "selfMs": 2.277
+    },
+    {
+      "functionName": "_e",
+      "url": "https://localhost/chunk-ZDmCHv1K.js",
+      "lineNumber": 0,
+      "selfMs": 2.217
+    },
+    {
+      "functionName": "hostBindings",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 0,
+      "selfMs": 2.183
+    },
+    {
+      "functionName": "te",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 17,
+      "selfMs": 2.182
+    },
+    {
+      "functionName": "yy",
+      "url": "https://localhost/chunk-B5Gx1ZfQ.js",
+      "lineNumber": 3,
+      "selfMs": 2.108
+    },
+    {
+      "functionName": "diff",
+      "url": "https://localhost/chunk-B-FND73_.js",
+      "lineNumber": 0,
+      "selfMs": 2.063
+    },
+    {
+      "functionName": "Td",
+      "url": "https://localhost/chunk-B5Gx1ZfQ.js",
+      "lineNumber": 3,
+      "selfMs": 2.038
+    },
+    {
+      "functionName": "owner",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 18,
+      "selfMs": 1.872
+    },
+    {
+      "functionName": "template",
+      "url": "https://localhost/chunk-ZDmCHv1K.js",
+      "lineNumber": 0,
+      "selfMs": 1.86
+    },
+    {
+      "functionName": "l",
+      "url": "https://localhost/chunk-D8FFP2mw.js",
+      "lineNumber": 0,
+      "selfMs": 1.806
+    },
+    {
+      "functionName": "Km",
+      "url": "https://localhost/chunk-B5Gx1ZfQ.js",
+      "lineNumber": 3,
+      "selfMs": 1.753
+    },
+    {
+      "functionName": "f",
+      "url": "https://localhost/chunk-D8FFP2mw.js",
+      "lineNumber": 0,
+      "selfMs": 1.667
+    },
+    {
+      "functionName": "D",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 18,
+      "selfMs": 1.567
+    },
+    {
+      "functionName": "record",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 3,
+      "selfMs": 1.341
+    },
+    {
+      "functionName": "changed",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 1,
+      "selfMs": 1.25
+    },
+    {
+      "functionName": "Vv",
+      "url": "https://localhost/chunk-B5Gx1ZfQ.js",
+      "lineNumber": 3,
+      "selfMs": 1.212
+    },
+    {
+      "functionName": "setTimeout",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 1.176
+    },
+    {
+      "functionName": "returnResult",
+      "url": "",
+      "lineNumber": 938,
+      "selfMs": 1.14
+    },
+    {
+      "functionName": "now",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 0.256
+    },
+    {
+      "functionName": "(root)",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 0
+    },
+    {
+      "functionName": "w",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 27,
+      "selfMs": 0
+    },
+    {
+      "functionName": "update",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 2,
+      "selfMs": 0
+    },
+    {
+      "functionName": "",
+      "url": "",
+      "lineNumber": 14,
+      "selfMs": 0
+    },
+    {
+      "functionName": "refresh",
+      "url": "https://localhost/main-52EAOOFJ.js",
+      "lineNumber": 18,
+      "selfMs": 0
+    }
+  ]
+}

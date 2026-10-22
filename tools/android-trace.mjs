@@ -65,8 +65,12 @@ try {
   }
   await page.evaluate(() => window.__harness.settle());
   let cdp;
+  let cpuNavigationStartUs;
   if (args.includes('--cpu-profile')) {
     cdp = await page.context().newCDPSession(page);
+    await cdp.send('Performance.enable');
+    const { metrics } = await cdp.send('Performance.getMetrics');
+    cpuNavigationStartUs = metrics.find((metric) => metric.name === 'NavigationStart')?.value * 1000000;
     await cdp.send('Profiler.enable');
     await cdp.send('Profiler.setSamplingInterval', { interval: 1000 });
     await cdp.send('Profiler.start');
@@ -74,7 +78,7 @@ try {
   let trace;
   let cpuProfile;
   try {
-    trace = toggle ? await page.evaluate(async () => {
+    trace = toggle ? await page.evaluate(async (count) => {
       await window.__harness.settle();
       const capacitor = window.Capacitor;
       const original = capacitor.nativePromise;
@@ -94,7 +98,7 @@ try {
         });
       };
       try {
-        for (let index = 0; index < 3; index++) {
+        for (let index = 0; index < count; index++) {
           const before = summary();
           const firstCall = calls.length;
           let observer;
@@ -137,7 +141,7 @@ try {
         }
         return { iterations, calls };
       } finally { capacitor.nativePromise = original; }
-    }) : seed === undefined ? await page.evaluate(() => window.__harness.benchTrace())
+    }, Number(option('toggles', '3'))) : seed === undefined ? await page.evaluate(() => window.__harness.benchTrace())
       : await page.evaluate(async ({ size, nativeClock }) => {
         if (!window.__harness.benchSeed) throw new Error('APK has no benchSeed hook; rebuild first');
         const capacitor = window.Capacitor;
@@ -212,9 +216,9 @@ try {
   }
   const date = new Date().toISOString().slice(0, 10);
   const report = {
-    date, serial, packageName, device: adb('shell', 'getprop', 'ro.product.model').trim(),
+    date, serial, packageName, cpuNavigationStartUs, device: adb('shell', 'getprop', 'ro.product.model').trim(),
     caveat: toggle
-      ? 'Three toggles observed on /todos. DOM timestamp is the MutationObserver callback detecting an exact todo-summary text change, not a browser paint timestamp. Native call options are cloned before mutation; start/end classify activity relative to DOM change. settle includes queued follow-up work. Call timing alone does not prove an effect or rendering caused latency. Diagnostic only.'
+      ? `${Number(option('toggles', '3'))} toggles observed on /todos. DOM timestamp is the MutationObserver callback detecting an exact todo-summary text change, not a browser paint timestamp. Native call options are cloned before mutation; start/end classify activity relative to DOM change. settle includes queued follow-up work. Call timing alone does not prove an effect or rendering caused latency. Diagnostic only.`
       : seed === undefined
       ? 'Driver method timings can nest (e.g. commit includes batch), so summing all calls double-counts work. Three emissions are a diagnostic, not acceptance statistics.'
       : 'Native trace includes reset calls preceding the timed generate/reduce hook phases. Native elapsed includes bridge transport and native SQL, not native-only CPU. JSON byte counting happens before each native timer but perturbs total elapsed. Calls may overlap; sums need not equal wall time. Full bulk payloads are never retained. Diagnostic only.',

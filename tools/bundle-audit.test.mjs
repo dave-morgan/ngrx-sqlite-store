@@ -16,4 +16,9 @@ test('initial graph excludes dynamic imports while the initial route includes it
   assert.equal(result.categories.jeepSqlite.todosReadyBytes, 0);
   assert.equal(result.categories.jeepSqlite.allOutputsBytes, 45);
   assert.equal(result.dynamicEntrypoints.find((entry) => entry.output === 'web.js').additionalBytes, 50);
+  stats.outputs['app.js'] = { entryPoint: 'projects/harness/src/app/app.ts', bytes: 15, inputs: {}, imports: [] };
+  stats.outputs['config.js'] = { entryPoint: 'projects/harness/src/app/app.config.ts', bytes: 25, inputs: {}, imports: [] };
+  const deferredBootstrap = audit(stats);
+  assert.equal(deferredBootstrap.initial.bytes, 120);
+  assert.equal(deferredBootstrap.todosReady.bytes, 190);
 });

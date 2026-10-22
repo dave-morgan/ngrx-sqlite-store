@@ -16,6 +16,8 @@ export interface SqlDriver {
   begin(): Promise<void>;
   commit(): Promise<void>;
   rollback(): Promise<void>;
+  /** Optional best-effort allocator/WAL reclamation, outside a committed bulk transaction. */
+  releaseBulkMemory?(): Promise<void>;
 }
 
 export const SQL_DRIVER = new InjectionToken<SqlDriver>('ngrx-sqlite-store SqlDriver');

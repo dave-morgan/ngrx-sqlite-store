@@ -19,6 +19,7 @@ export class CapacitorSqliteDriver implements SqlDriver {
   private sqlite?: SQLiteConnection;
   private web = false;
   private db?: SQLiteDBConnection;
+  private android = false;
 
   constructor(private readonly options: CapacitorSqliteDriverOptions) {}
 
@@ -30,6 +31,7 @@ export class CapacitorSqliteDriver implements SqlDriver {
     ]);
     this.sqlite ??= new SQLiteConnection(CapacitorSQLite);
     this.web = Capacitor.getPlatform() === 'web';
+    this.android = Capacitor.getPlatform() === 'android';
     if (this.web) await this.sqlite.initWebStore();
     const {
       database,
@@ -78,6 +80,12 @@ export class CapacitorSqliteDriver implements SqlDriver {
     await this.database.close();
     await this.connection.closeConnection(this.options.database, this.options.readonly ?? false);
     this.db = undefined;
+  }
+
+  async releaseBulkMemory(): Promise<void> {
+    if (!this.android || this.options.readonly) return;
+    await this.database.query('PRAGMA wal_checkpoint(TRUNCATE)');
+    await this.database.query('PRAGMA shrink_memory');
   }
 
   async exec(sql: string): Promise<void> {

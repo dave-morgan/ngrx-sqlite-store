@@ -14,6 +14,14 @@ export function trialOrder(impls, trials) {
   ).flat();
 }
 
+/** Pair real stores in separate APKs; native-only controls vary mode in each APK. */
+export function emptyControlPlan(store, trials) {
+  if (!Number.isInteger(trials) || trials < 2) throw new Error('At least two empty-control trials required');
+  return store
+    ? trialOrder(['classic', 'sqlite'], trials).map(({ impl, trial }) => ({ apk: impl, pairs: [{ impl, trial }] }))
+    : ['classic', 'sqlite'].map((apk) => ({ apk, pairs: trialOrder(['classic', 'sqlite'], trials) }));
+}
+
 /** Recompute native-only controls from raw paired trials, never supplied means. */
 export function platformBaseline(results, metric) {
   const groups = ['classic', 'sqlite'].map((mode) => results.filter((row) => row.apk === 'classic' && row.mode === mode));
@@ -43,9 +51,25 @@ export function seedMemoryFloor(results, size, metric) {
     justification: `F_seed(${size}) app-process PSS growth before shrink_memory (ADR-0057)` };
 }
 
-export function verdict(classic, sqlite, bridge, bound, platform, floor) {
+/** ADR-0062: real Angular stores in their respective workload APKs, zero features/data. */
+export function codeBaseline(results) {
+  const rows = results.filter((row) => row.kind === 'empty-store' && row.apk === row.mode);
+  if (rows.some((row) => !Number.isFinite(row.heapMb) || row.heapMb < 0))
+    throw new Error('Empty-store heap controls must be finite and nonnegative');
+  return platformBaseline(rows.map((row) => ({ ...row, apk: 'classic' })), 'heapMb');
+}
+
+export function verdict(classic, sqlite, bridge, bound, platform, floor, code) {
   const excess = sqlite.mean - classic.mean;
+  let codeAllowance = 0;
   if (excess <= classic.sd) return { status: 'PASS', excess, allowance: classic.sd };
+  if (/^heap\w*Mb$/.test(code?.metric) && code.justification && [code.classic, code.sqlite].every((control) =>
+      control && Number.isInteger(control.n) && control.n >= 5 && Number.isFinite(control.mean) &&
+      Number.isFinite(control.sd) && control.sd >= 0)) {
+    const allowance = classic.sd + Math.max(0, code.sqlite.mean - code.classic.mean);
+    codeAllowance = allowance;
+    if (excess <= allowance) return { status: 'CODE-BOUND', excess, allowance };
+  }
   if (floor?.justification && Number.isFinite(floor.ms) && floor.ms >= 0) {
     const allowance = classic.sd + floor.ms + sqlite.sd;
     return { status: excess <= allowance ? 'PLATFORM-BOUND' : 'FAIL', excess, allowance };
@@ -58,7 +82,8 @@ export function verdict(classic, sqlite, bridge, bound, platform, floor) {
       seed.samples.every(Number.isFinite) && Number.isFinite(seed.mean)
       ? seed.samples.reduce((sum, value) => sum + value, 0) / seed.samples.length : 0;
     const allowance = classic.sd + Math.max(0, platform.sqlite.mean - platform.classic.mean, seedDelta);
-    return { status: excess <= allowance ? 'PLATFORM-BOUND' : 'FAIL', excess, allowance };
+    if (excess <= allowance) return { status: 'PLATFORM-BOUND', excess, allowance };
+    return { status: 'FAIL', excess, allowance: Math.max(allowance, codeAllowance) };
   }
   const callMs = bound?.callCost === 'intercept' ? bridge?.interceptMs : bridge?.rttMs;
   if (bridge && bound?.justification && Number.isFinite(callMs) && callMs >= 0 &&
@@ -68,7 +93,7 @@ export function verdict(classic, sqlite, bridge, bound, platform, floor) {
     if (excess <= allowance) return { status: 'BRIDGE-BOUND', excess, allowance };
     return { status: 'FAIL', excess, allowance };
   }
-  return { status: 'FAIL', excess, allowance: classic.sd };
+  return { status: 'FAIL', excess, allowance: Math.max(classic.sd, codeAllowance) };
 }
 
 /** ADR-0051: derive floors from raw samples, rejecting undersampled controls. */

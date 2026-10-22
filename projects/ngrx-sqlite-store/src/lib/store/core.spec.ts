@@ -31,6 +31,19 @@ function configure(reducers: Record<string, ActionReducer<unknown>>) {
 }
 
 describe('feature registration metadata query budgets', () => {
+  it('matches NgRx by traversing each newly frozen action child once, including the subject validation', async () => {
+    const setup = configure({});
+    await setup.core.initialize();
+    let reads = 0;
+    const leaf = { value: 1 };
+    const nested = { get leaf() { reads++; return leaf; } };
+    TestBed.inject(Store).dispatch({ type: 'freeze-once', nested });
+    await setup.core.settle();
+    expect(reads).toBe(1);
+    expect(Object.isFrozen(nested)).toBe(true);
+    expect(Object.isFrozen(leaf)).toBe(true);
+    expect(() => { leaf.value = 2; }).toThrow();
+  });
   it('preloads the registered router and eager roots in one read after seeding', async () => {
     const driver = new SqlJsDriver();
     const query = vi.spyOn(driver, 'query');
@@ -50,6 +63,7 @@ describe('feature registration metadata query budgets', () => {
     const setup = configure({ todos: createReducer<unknown>(adapter.getInitialState()) });
     await setup.core.initialize();
     await setup.core.settle();
+    expect(setup.query.mock.calls.filter(([sql]) => sql.includes('FROM nss_meta WHERE key IN') && sql.includes('sqlite_master'))).toHaveLength(1);
     expect(await setup.driver.query("SELECT name FROM sqlite_master WHERE name = 'nss_query_646f6e65'"))
       .toEqual([{ name: 'nss_query_646f6e65' }]);
     setup.query.mockClear();

@@ -80,6 +80,21 @@ vi.mock('@capacitor-community/sqlite', async (importOriginal) => {
 });
 
 describe('CapacitorSqliteDriver startup', () => {
+  it.each([['android', false], ['android', true], ['ios', false], ['web', false]] as const)(
+    'reclaims bulk memory only on writable Android (%s readonly=%s)', async (platform, readonly) => {
+      native.state.platform = platform;
+      const driver = new CapacitorSqliteDriver({ database: 'test', readonly });
+      await driver.open();
+      native.plugin.query.mockClear();
+      await driver.releaseBulkMemory();
+      expect(native.plugin.query).toHaveBeenCalledTimes(platform === 'android' && !readonly ? 2 : 0);
+      if (platform === 'android' && !readonly) {
+        expect(native.plugin.query).toHaveBeenCalledWith(expect.objectContaining({ statement: 'PRAGMA wal_checkpoint(TRUNCATE)' }));
+        expect(native.plugin.query).toHaveBeenCalledWith(expect.objectContaining({ statement: 'PRAGMA shrink_memory' }));
+      }
+      await driver.close();
+    },
+  );
   beforeEach(() => {
     vi.restoreAllMocks();
     vi.clearAllMocks();

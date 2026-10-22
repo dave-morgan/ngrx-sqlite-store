@@ -1,0 +1,131 @@
+{
+  "session": "15e-final-2026-10-23-1792707720814",
+  "files": {
+    "floors": "docs/benchmarks/android-floors-15e-2026-10-23.json",
+    "platform": "docs/benchmarks/android-empty-15e-2026-10-23.json",
+    "code": "docs/benchmarks/android-empty-store-15e-2026-10-23.json",
+    "report": "docs/benchmarks/android-parity-15e-2026-10-23.md",
+    "log": ".tmp/phase15e/acceptance-15e-final-2026-10-23-1792707720814.log"
+  },
+  "startedAt": "2026-10-22T22:22:00.814Z",
+  "stages": [
+    {
+      "args": [
+        "tools/android-bench.mjs",
+        "--build-only",
+        "true",
+        "--skip-build",
+        "true",
+        "--session",
+        "15e-final-2026-10-23-1792707720814"
+      ],
+      "startedAt": "2026-10-22T22:23:44.919Z",
+      "finishedAt": "2026-10-22T22:23:47.012Z",
+      "exitCode": 0
+    },
+    {
+      "args": [
+        "tools/android-floor-controls.mjs",
+        "--session",
+        "15e-final-2026-10-23-1792707720814",
+        "--output",
+        "docs/benchmarks/android-floors-15e-2026-10-23.json"
+      ],
+      "startedAt": "2026-10-22T22:23:47.013Z",
+      "finishedAt": "2026-10-22T22:26:14.386Z",
+      "exitCode": 0
+    },
+    {
+      "args": [
+        "tools/android-parity-profile.mjs",
+        "--empty",
+        "--session",
+        "15e-final-2026-10-23-1792707720814",
+        "--output",
+        "docs/benchmarks/android-empty-15e-2026-10-23.json"
+      ],
+      "startedAt": "2026-10-22T22:26:14.387Z",
+      "finishedAt": "2026-10-22T22:30:36.679Z",
+      "exitCode": 0
+    },
+    {
+      "args": [
+        "tools/android-parity-profile.mjs",
+        "--empty-store",
+        "--session",
+        "15e-final-2026-10-23-1792707720814",
+        "--output",
+        "docs/benchmarks/android-empty-store-15e-2026-10-23.json"
+      ],
+      "startedAt": "2026-10-22T22:30:36.680Z",
+      "finishedAt": "2026-10-22T22:34:15.862Z",
+      "exitCode": 0
+    },
+    {
+      "args": [
+        "tools/android-bench.mjs",
+        "--trials",
+        "5",
+        "--skip-build",
+        "true",
+        "--session",
+        "15e-final-2026-10-23-1792707720814",
+        "--floors-json",
+        "docs/benchmarks/android-floors-15e-2026-10-23.json",
+        "--platform-json",
+        "docs/benchmarks/android-empty-15e-2026-10-23.json",
+        "--code-json",
+        "docs/benchmarks/android-empty-store-15e-2026-10-23.json",
+        "--evidence-md",
+        "docs/benchmarks/android-parity-15e-evidence-2026-10-23.md",
+        "--gap-adr",
+        "../decisions/0065-phase15e-measured-outcomes.md",
+        "--output",
+        "docs/benchmarks/android-parity-15e-2026-10-23.md"
+      ],
+      "startedAt": "2026-10-22T22:34:15.863Z",
+      "finishedAt": "2026-10-22T22:44:46.993Z",
+      "exitCode": 0
+    }
+  ],
+  "adbFile": "C:\\Development\\ngrx-sqlite-store\\.tmp\\android-sdk\\platform-tools\\adb.exe",
+  "adbVersion": "Android Debug Bridge version 1.0.41\r\nVersion 37.0.1-15733141\r\nInstalled as C:\\Development\\ngrx-sqlite-store\\.tmp\\android-sdk\\platform-tools\\adb.exe\r\nRunning on Windows 10.0.26200",
+  "apkHashes": {
+    "classic": "5e32919619321709a5e0708ec785b7e51b2aa1fd4c7aa30c6964e72c309461f6",
+    "sqlite": "28c63d552d84dbc18e717e400b63ba1e7dc2cb4064e86e5ce993a8261dca5eb5"
+  },
+  "previousBootId": "2e24e00b-17cf-4005-878f-575a90b11e3a",
+  "emulatorPid": 18068,
+  "avdRoot": "C:\\Development\\ngrx-sqlite-store\\.tmp\\phase15e\\avd",
+  "bootId": "b8b0802d-f878-460d-a31e-04eeb47a8125",
+  "bootCompletedAt": "2026-10-22T22:22:44.167Z",
+  "settledAt": "2026-10-22T22:23:44.184Z",
+  "devices": "List of devices attached\r\nemulator-5554\tdevice\r\n\r\n",
+  "meminfo": [
+    "MemTotal:        3048520 kB\r",
+    "MemFree:          411240 kB\r",
+    "MemAvailable:    1526308 kB\r",
+    "Buffers:            9544 kB\r"
+  ],
+  "hardware": [
+    "hw.cpu.ncore = 4",
+    "hw.ramSize = 3072",
+    "hw.lcd.width = 1280",
+    "hw.lcd.height = 2856",
+    "hw.lcd.depth = 16",
+    "hw.lcd.circular = false",
+    "hw.lcd.density = 480",
+    "hw.lcd.backlight = true",
+    "hw.lcd.vsync = 60",
+    "hw.gpu.enabled = true",
+    "hw.gpu.mode = swiftshader_indirect"
+  ],
+  "finishedAt": "2026-10-22T22:44:46.994Z",
+  "counts": {
+    "PASS": 10,
+    "BRIDGE-BOUND": 0,
+    "PLATFORM-BOUND": 9,
+    "CODE-BOUND": 0,
+    "FAIL": 14
+  }
+}

@@ -40,6 +40,8 @@ import { PathCache } from '../selectors/path-cache';
 import { SqliteSelectionEngine } from '../selectors/selection-engine';
 import type { SqliteFeatureConfig, SqliteStoreConfig } from './tokens';
 import type { RegisteredFeature } from './tokens';
+import { PREWARM_READY, prewarmSqliteStore, registerPrewarm, registerPrewarmFeature, takePrewarm } from './prewarm';
+import { getTxReducerMetadata, isTxReducer } from '../reducer/reducer';
 
 export type SqliteRootConfig<T, A extends Action = Action> = RootStoreConfig<T, A> & {
   sqlite?: SqliteStoreConfig;
@@ -70,11 +72,14 @@ function rootProviders<T, A extends Action>(
     ActionReducerMap<T, A> | InjectionToken<ActionReducerMap<T, A>> = {} as ActionReducerMap<T, A>,
   config: SqliteRootConfig<T, A> = {},
 ): Array<Provider | EnvironmentProviders> {
+  let prewarm: ReturnType<typeof takePrewarm>;
   return [
     { provide: STORE_CONFIGURATION, useValue: config },
     {
       provide: SQL_DRIVER,
       useFactory: () => {
+        prewarm = takePrewarm(config.sqlite?.driver);
+        if (prewarm) return prewarm.driver;
         const driver = config.sqlite?.driver;
         return typeof driver === 'function'
           ? driver()
@@ -82,7 +87,14 @@ function rootProviders<T, A extends Action>(
       },
     },
     { provide: STORAGE_ENGINE_OPTIONS, useValue: { migrations: SCHEMA_MIGRATIONS } },
-    StorageEngine,
+    {
+      provide: StorageEngine,
+      useFactory: () => {
+        const driver = inject(SQL_DRIVER);
+        return prewarm?.engine ?? new StorageEngine(driver, inject(STORAGE_ENGINE_OPTIONS));
+      },
+    },
+    { provide: PREWARM_READY, useFactory: () => { inject(SQL_DRIVER); return prewarm?.ready; } },
     SqliteStoreCore,
     PathCache,
     SqliteSelectionEngine,
@@ -149,8 +161,16 @@ export function provideStore<T = object, A extends Action = Action>(
   reducers?: ActionReducerMap<T, A> | InjectionToken<ActionReducerMap<T, A>>,
   config?: SqliteRootConfig<T, A>,
 ): EnvironmentProviders {
-  return makeEnvironmentProviders(rootProviders(reducers, config));
+  const providers = makeEnvironmentProviders(rootProviders(reducers, config));
+  registerPrewarm(providers, config?.sqlite ?? {}, reducers instanceof InjectionToken ? [] :
+    Object.entries(reducers ?? {}).map(([key, reducer]) => ({
+      key, router: key === 'router' && (!isTxReducer(reducer) || !!getTxReducerMetadata(reducer)?.fallback),
+    })),
+  );
+  return providers;
 }
+/** Alias useful to application entrypoints shared with classic @ngrx/store. */
+provideStore.prewarm = prewarmSqliteStore;
 function featureProviders<T, A extends Action>(
   nameOrSlice: string | FeatureSlice<T, A>,
   reducer?:
@@ -208,7 +228,15 @@ export function provideState<T, A extends Action = Action>(
     | InjectionToken<ActionReducer<T, A> | ActionReducerMap<T, A>>,
   config?: SqliteStateConfig<T, A>,
 ): EnvironmentProviders {
-  return makeEnvironmentProviders(featureProviders(nameOrSlice, reducer, config));
+  const providers = makeEnvironmentProviders(featureProviders(nameOrSlice, reducer, config));
+  const key = typeof nameOrSlice === 'string' ? nameOrSlice : nameOrSlice.name;
+  const handler = typeof nameOrSlice === 'string' ? reducer : nameOrSlice.reducer;
+  registerPrewarmFeature(providers, {
+    key, persist: config?.sqlite?.persist,
+    router: key === 'router' && !(handler instanceof InjectionToken) &&
+      (!isTxReducer(handler) || !!getTxReducerMetadata(handler)?.fallback),
+  });
+  return providers;
 }
 
 @NgModule({ providers: [{ provide: ngrx.StoreRootModule, useExisting: StoreRootModule }] })

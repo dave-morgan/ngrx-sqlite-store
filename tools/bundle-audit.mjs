@@ -33,7 +33,11 @@ export function audit(stats) {
   }
   const initial = closure([main]);
   const todos = javascript.find((path) => outputs[path].entryPoint === 'projects/harness/src/app/pages/todos.page.ts');
-  const todosReady = closure([main, ...(todos ? [todos] : [])]);
+  const bootstrap = javascript.filter((path) => ['projects/harness/src/app/app.config.ts', 'projects/harness/src/app/app.ts'].includes(outputs[path].entryPoint));
+  const todosReady = closure([main, ...bootstrap, ...(todos ? [todos] : [])]);
+  const sqliteStore = [...initial].some((path) => Object.keys(outputs[path].inputs ?? {}).some((input) => input.startsWith('projects/ngrx-sqlite-store/src/lib/store/')));
+  const native = sqliteStore ? javascript.filter((path) => ['node_modules/@capacitor-community/sqlite/dist/esm/index.js', 'node_modules/@capacitor/core/dist/index.js'].includes(outputs[path].entryPoint)) : [];
+  const nativeTodosReady = closure([...todosReady, ...native]);
   const bytes = (paths) => [...paths].reduce((sum, path) => sum + outputs[path].bytes, 0);
   function modules(paths) {
     const sizes = new Map();
@@ -53,6 +57,7 @@ export function audit(stats) {
   return {
     initial: { bytes: bytes(initial), outputs: [...initial] },
     todosReady: { bytes: bytes(todosReady), additionalRouteBytes: bytes(todosReady) - bytes(initial), outputs: [...todosReady] },
+    nativeTodosReady: { bytes: bytes(nativeTodosReady), outputs: [...nativeTodosReady] },
     allJavaScriptBytes: bytes(javascript),
     categories: Object.fromEntries(Object.entries(categories).map(([name, predicate]) => [name, {
       initialBytes: total(initialModules, predicate), todosReadyBytes: total(todosModules, predicate), allOutputsBytes: total(allModules, predicate),

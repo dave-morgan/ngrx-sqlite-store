@@ -9,7 +9,7 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0001](0001-preserve-public-ngrx-contract.md) | Preserve public NgRx contract | Brief (D1) | 2026-10-20 | Accepted |
 | [0002](0002-async-backed-selectors.md) | Async-backed selectors that emit like normal ones | Brief (D2) | 2026-10-20 | Accepted |
 | [0003](0003-async-transactional-reducers.md) | Async transactional reducers, serial queue, post-commit notify | Brief (D3) | 2026-10-20 | Accepted |
-| [0004](0004-json-shaped-state-fixed-schema.md) | JSON-shaped state → fixed path-keyed schema | Brief (D4) | 2026-10-20 | Accepted |
+| [0004](0004-json-shaped-state-fixed-schema.md) | JSON-shaped state â†’ fixed path-keyed schema | Brief (D4) | 2026-10-20 | Accepted |
 | [0005](0005-entity-as-first-party-primitive.md) | Entity folded into store; may diverge from `@ngrx/entity` | Brief (D5) | 2026-10-20 | Accepted |
 | [0006](0006-arrays-as-tables.md) | Arrays as tables with hidden ids + fractional pos | Brief (D6) | 2026-10-20 | Accepted |
 | [0007](0007-hybrid-nested-storage.md) | Hybrid inline-JSON / adjacency-list storage | Brief (D7) | 2026-10-20 | Accepted |
@@ -24,7 +24,7 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0016](0016-schema-engine-encoding.md) | Schema engine ordering, encoding, hints and opt-in migration | Phase 3 brief / Agent | 2026-10-20 | Accepted |
 | [0017](0017-store-composition.md) | Store composition: reuse NgRx subjects, 1 tx/action, scanned ordering, seeding, removeReducer keeps data, meta-reducers on bridge only | Agent | 2026-10-20 | Accepted |
 | [0018](0018-selector-engine.md) | Selector engine: reuse NgRx memoize + metadata, PathCache w/ staleness, view state, feature-level dynamic tracking | Agent | 2026-10-20 | Accepted |
-| [0019](0019-entity-adapter.md) | Entity adapter: dual-form ops (classic pure / tx SQL), `adapter.at(tx, path)`, write-time sort order via binary search (Q1); unique-ID collision overwrite policy (§7) | Agent / User (§7) | 2026-10-20 | Accepted |
+| [0019](0019-entity-adapter.md) | Entity adapter: dual-form ops (classic pure / tx SQL), `adapter.at(tx, path)`, write-time sort order via binary search (Q1); unique-ID collision overwrite policy (Â§7) | Agent / User (Â§7) | 2026-10-20 | Accepted |
 | [0020](0020-router-json-snapshots.md) | Persist default router-store snapshots as JSON in the classic bridge | Agent | 2026-10-20 | Accepted |
 | [0021](0021-selector-reference-replacements.md) | Preserve reference-only reducer replacements with transient commit hints | Agent | 2026-10-20 | Accepted |
 | [0022](0022-devtools-compat.md) | Display-only devtools with guarded scanned actions and committed-view reducer; resolves Q4 | Agent / Phase 7 brief | 2026-10-20 | Accepted |
@@ -66,8 +66,12 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0058](0058-startup-preload-batching.md) | Batch independent router and eager feature preloads after registration commits | Agent / Phase 15d | 2026-10-22 | Accepted |
 | [0059](0059-canonical-entity-bulk-json.md) | Skip redundant parsing of validated canonical EntityTx bulk JSON; preserve wire bytes and row caps | Agent | 2026-10-22 | Accepted |
 | [0060](0060-phase15d-residual-overhead.md) | Evidence for eleven remaining Phase 15d FAILs; retain thresholds and labels | Agent / Phase 15d | 2026-10-22 | Accepted |
-| [0061](0061-persistence-is-the-product.md) | Persistence is the product: no in-memory feature mode (resolves Q7); optimisation priority large lists → flat objects → hybrid | User | 2026-10-22 | Accepted |
+| [0061](0061-persistence-is-the-product.md) | Persistence is the product: no in-memory feature mode (resolves Q7); optimisation priority large lists â†’ flat objects â†’ hybrid | User | 2026-10-22 | Accepted |
 | [0062](0062-code-bound-heap.md) | CODE-BOUND heap verdict against an empty-store control, plus mandatory startup code diet (amends ADR-0038) | Agent | 2026-10-23 | Accepted |
+| [0063](0063-explicit-startup-prewarm.md) | Explicit prewarm adoption and startup metadata batching | Agent | 2026-10-23 | Accepted |
+| [0064](0064-bulk-memory-and-render-experiments.md) | Bulk memory reclamation; measured render and code-split experiments | Agent | 2026-10-23 | Accepted |
+
+| [0065](0065-phase15e-measured-outcomes.md) | Measured Phase 15e outcomes and all 14 residual FAILs | Agent | 2026-10-23 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

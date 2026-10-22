@@ -36,6 +36,7 @@ const INITIAL_MIGRATION: Migration = {
     );
   },
 };
+const BULK_RECLAIM_BYTES = 128 * 1024;
 
 /**
  * Owns a single connection. All lifecycle operations, reads and writes share a
@@ -137,6 +138,7 @@ export class StorageEngine {
       const callbacks: Array<() => void | Promise<void>> = [];
       const pending: { sql: string; params?: SqlValue[] }[] = [];
       let pendingBytes = 2; // outer JSON array
+      let writtenBytes = 0;
       let began = false;
       const begin = async () => {
         if (!began) {
@@ -155,6 +157,7 @@ export class StorageEngine {
       const tx: TxContext = {
         write: async (sql, params) => {
           const bytes = statementByteLength(sql, params);
+          writtenBytes += bytes;
           if (pending.length && pendingBytes + 1 + bytes > BATCH_BYTE_BUDGET) await flush();
           pendingBytes += bytes + (pending.length ? 1 : 0);
           pending.push({ sql, params });
@@ -200,6 +203,13 @@ export class StorageEngine {
         throw error;
       }
       try {
+        if (writtenBytes >= BULK_RECLAIM_BYTES && this.driver.releaseBulkMemory) {
+          try { await this.driver.releaseBulkMemory(); }
+          catch (error) {
+            // Maintenance cannot undo a commit or suppress its notifications.
+            console.error('SQLite bulk memory reclamation failed', error);
+          }
+        }
         if (!changes.isEmpty) this.notifications.next(changes);
         for (const callback of callbacks) await callback();
         return { result, changes };

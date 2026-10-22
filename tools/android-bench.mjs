@@ -17,7 +17,8 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
-import { latencyFloor, platformBaseline, seedMemoryFloor, summarize, trialOrder, validateControlProvenance, verdict } from './benchmark-statistics.mjs';
+import { execAdb } from './android-adb.mjs';
+import { codeBaseline, latencyFloor, platformBaseline, seedMemoryFloor, summarize, trialOrder, validateControlProvenance, verdict } from './benchmark-statistics.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const BASE_PKG = 'dev.ngrxsqlite.harness';
@@ -38,12 +39,12 @@ if (sizes.some((size) => !Number.isInteger(size) || size < 1)) throw new Error('
 const toggles = 30;
 
 const sdk = process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT;
-const ADB = join(sdk, 'platform-tools', process.platform === 'win32' ? 'adb.exe' : 'adb');
+const ADB = process.env.BENCH_ADB ?? join(sdk, 'platform-tools', process.platform === 'win32' ? 'adb.exe' : 'adb');
 const JAVA_HOME = process.env.JAVA_HOME_21 ?? 'C:\\Program Files\\Android\\Android Studio\\jbr';
 
 const sh = (cmd, argv, opts = {}) =>
   execFileSync(cmd, argv, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], shell: process.platform === 'win32', ...opts });
-const adb = (...a) => sh(ADB, ['-s', args.serial ?? 'emulator-5554', ...a]);
+const adb = (...a) => execAdb(ADB, ['-s', args.serial ?? 'emulator-5554', ...a], { cwd: ROOT, encoding: 'utf8', timeout: 60000, stdio: ['ignore', 'pipe', 'pipe'] });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const pct = (xs, p) => [...xs].sort((a, b) => a - b)[Math.min(xs.length - 1, Math.floor((p / 100) * xs.length))];
 const log = (...m) => console.log(new Date().toISOString().slice(11, 19), ...m);
@@ -360,6 +361,11 @@ if (floorControls) validateControlProvenance(floorControls, {
   device, sdkLevel, webview, apkHashes,
 });
 const acceptance = [];
+const codeControls = args['code-json'] ? JSON.parse(readFileSync(join(ROOT, args['code-json']), 'utf8')) : undefined;
+if (codeControls) validateControlProvenance(codeControls, {
+  session: replay?.session ?? args.session, date: replay?.date ?? date,
+  device, sdkLevel, webview, apkHashes,
+}, 'Empty-store');
 for (const size of sizes) {
   const probes = results.filter((row) => row.impl === 'sqlite' && row.size === size && row.bridge);
   const bridge = probes.length ? {
@@ -386,10 +392,16 @@ for (const size of sizes) {
       justification: `Five paired empty native-plugin controls in the identical classic APK, ${args['platform-json']}; no Angular injector/store/schema/data. Matching ${platformMetric} units.`,
     } : undefined;
     const floor = floorControls && !metric.endsWith('Mb') ? latencyFloor(floorControls.results, size, metric) : undefined;
-    const decision = verdict(classic, sqlite, bridge, bound, platform, floor);
+    const code = metric.startsWith('heap') && codeControls ? {
+      ...codeBaseline(codeControls.results), metric,
+      justification: `Five paired post-GC real Angular empty stores, zero features/data, ${args['code-json']} (ADR-0062)`,
+    } : undefined;
+    const decision = verdict(classic, sqlite, bridge, bound, platform, floor, code);
     const callMs = bound?.callCost === 'intercept' ? bridge?.interceptMs : bridge?.rttMs;
-    acceptance.push({ size, metric, classic, sqlite, ...decision, ...(platform ? { platform } : {}),
-      explanation: decision.status === 'PASS' ? 'sqlite mean <= classic mean + classic SD' : floor
+    acceptance.push({ size, metric, classic, sqlite, ...decision, ...(platform ? { platform } : {}), ...(code ? { code } : {}),
+      explanation: decision.status === 'PASS' ? 'sqlite mean <= classic mean + classic SD' : decision.status === 'CODE-BOUND'
+        ? `${code.justification}; ${fmt(classic.sd)} + max(0, ${fmt(code.sqlite.mean)} - ${fmt(code.classic.mean)}) = ${fmt(decision.allowance)} MiB; excess=${fmt(decision.excess)} MiB. Control SDs ${fmt(code.classic.sd)} / ${fmt(code.sqlite.sd)}; neither added.` : code && decision.status === 'FAIL'
+        ? `${code.justification}. Both code and native-plugin bounds missed: ${fmt(classic.sd)} + max(0, code delta ${fmt(code.sqlite.mean - code.classic.mean)}, native delta ${fmt(platform ? platform.sqlite.mean - platform.classic.mean : 0)}) = ${fmt(decision.allowance)} MiB; excess=${fmt(decision.excess)} MiB. Code control SDs ${fmt(code.classic.sd)} / ${fmt(code.sqlite.sd)}; neither control nor workload SQLite SD added.` : floor
         ? `${floor.justification}; ${fmt(classic.sd)} + ${fmt(floor.ms)} + ${fmt(sqlite.sd)} = ${fmt(decision.allowance)} ms; excess=${fmt(decision.excess)} ms` : bound && bridge
         ? `${bound.justification} calls_min=${bound.callsMin}, bytes_min=${bound.bytesMin}; ${fmt(classic.sd)} + ${bound.callsMin} * ${fmt(callMs)} ms (${bound.callCost === 'intercept' ? 'intercept' : 'echo RTT'}) + ${bound.bytesMin} / ${fmt(bridge.bytesPerMs)} bytes/ms + ${fmt(sqlite.sd)} = ${fmt(decision.allowance)} ms; excess=${fmt(decision.excess)} ms`
         : platform ? `${platform.justification} ${fmt(classic.sd)} + max(0, ${fmt(platform.sqlite?.mean)} - ${fmt(platform.classic?.mean)}${platform.seed ? `, ${fmt(platform.seed.mean)}` : ''}) = ${fmt(decision.allowance)} MiB; excess=${fmt(decision.excess)} MiB. Empty classic SD=${fmt(platform.classic?.sd)}, empty sqlite SD=${fmt(platform.sqlite?.sd)} (not added).${platform.seed ? ` ${platform.seed.justification}; growth samples [${platform.seed.samples.map(fmt).join(', ')}] MiB, mean=${fmt(platform.seed.mean)} MiB (no SD added).` : ''}`
@@ -401,14 +413,15 @@ for (const size of sizes) {
 }
 const acceptanceTable = ['| Size | Metric | Classic mean ± SD | SQLite mean ± SD | Verdict | Evidence / arithmetic |', '| --- | --- | --- | --- | --- | --- |',
   ...acceptance.map((row) => `| ${row.size} | ${row.metric} | ${row.classic ? `${fmt(row.classic.mean)} ± ${fmt(row.classic.sd)}` : '?'} | ${row.sqlite ? `${fmt(row.sqlite.mean)} ± ${fmt(row.sqlite.sd)}` : '?'} | ${row.status} | ${row.explanation} |`)].join('\n');
-const counts = Object.fromEntries(['PASS', 'BRIDGE-BOUND', 'PLATFORM-BOUND', 'FAIL'].map((status) => [status, acceptance.filter((row) => row.status === status).length]));
+const counts = Object.fromEntries(['PASS', 'BRIDGE-BOUND', 'PLATFORM-BOUND', 'CODE-BOUND', 'FAIL'].map((status) => [status, acceptance.filter((row) => row.status === status).length]));
+const codeEvidence = codeControls ? `\n\n<details><summary>Raw ADR-0062 real empty-store controls</summary>\n\n\`\`\`json\n${JSON.stringify(codeControls, null, 2)}\n\`\`\`\n</details>` : '';
 const evidence = (args['evidence-md'] ? readFileSync(join(ROOT, args['evidence-md']), 'utf8') : '') +
   (platformControls ? `\n\n<details><summary>Raw ADR-0048 paired empty memory controls</summary>\n\n\`\`\`json\n${JSON.stringify(platformControls, null, 2)}\n\`\`\`\n</details>` : '');
 writeFileSync(
   file,
-  `# Android parity benchmark ${date}\n\nDevice: ${device} (API ${sdkLevel}), WebView ${webview}. Toggle samples: ${toggles}. Emission runs: ${runs}. Independent trials: ${trials}.\n\nAPK policy: distinct application IDs ${BASE_PKG}.classic and ${BASE_PKG}.sqlite; each APK installed once before trials. --skip-build reuses .tmp/benchmark-apks/<impl>.apk. Trial implementation order alternates; each size starts from a cleared app and a fresh process. Inactive implementation is force-stopped. RTT is the same-session echo p50 averaged across trials; bandwidth is the average executeSet throughput fit. Report retains sample SD and all raw probes. ${args.profile === 'true' ? 'Profiling enabled: 500 ms dumpsys sampling and requested Java GC perturb timings; use a separate run for acceptance.' : 'No meminfo peak polling during timed startup.'}\n\n${summaryTable}\n\n<details><summary>Per-trial table</summary>\n\n${table}\n\n</details>\n\n<details><summary>Raw per-trial measurements</summary>\n\n\`\`\`json\n${JSON.stringify(results, null, 2)}\n\`\`\`\n</details>\n\n${evidence}\n\n${floorControls ? `<details><summary>Raw ADR-0051 floor controls</summary>\n\n\`\`\`json\n${JSON.stringify(floorControls, null, 2)}\n\`\`\`\n</details>` : ''}\n\nAcceptance: PASS ${counts.PASS} / BRIDGE-BOUND ${counts['BRIDGE-BOUND']} / PLATFORM-BOUND ${counts['PLATFORM-BOUND']} / FAIL ${counts.FAIL}.\n\n${acceptanceTable}\n`,
+  `# Android parity benchmark ${date}\n\nDevice: ${device} (API ${sdkLevel}), WebView ${webview}. Toggle samples: ${toggles}. Emission runs: ${runs}. Independent trials: ${trials}.\n\nAPK policy: distinct application IDs ${BASE_PKG}.classic and ${BASE_PKG}.sqlite; each APK installed once before trials. --skip-build reuses .tmp/benchmark-apks/<impl>.apk. Trial implementation order alternates; each size starts from a cleared app and a fresh process. Inactive implementation is force-stopped. RTT is the same-session echo p50 averaged across trials; bandwidth is the average executeSet throughput fit. Report retains sample SD and all raw probes. ${args.profile === 'true' ? 'Profiling enabled: 500 ms dumpsys sampling and requested Java GC perturb timings; use a separate run for acceptance.' : 'No meminfo peak polling during timed startup.'}\n\n${summaryTable}\n\n<details><summary>Per-trial table</summary>\n\n${table}\n\n</details>\n\n<details><summary>Raw per-trial measurements</summary>\n\n\`\`\`json\n${JSON.stringify(results, null, 2)}\n\`\`\`\n</details>\n\n${evidence}${codeEvidence}\n\n${floorControls ? `<details><summary>Raw ADR-0051 floor controls</summary>\n\n\`\`\`json\n${JSON.stringify(floorControls, null, 2)}\n\`\`\`\n</details>` : ''}\n\nAcceptance: PASS ${counts.PASS} / BRIDGE-BOUND ${counts['BRIDGE-BOUND']} / PLATFORM-BOUND ${counts['PLATFORM-BOUND']} / CODE-BOUND ${counts['CODE-BOUND']} / FAIL ${counts.FAIL}.\n\n${acceptanceTable}\n`,
 );
-writeFileSync(file.replace(/\.md$/, '.json'), JSON.stringify({ date: replay?.date ?? date, session: replay?.session ?? args.session, apkHashes, device, sdkLevel, webview, trials, results, summaries, acceptance, counts, bounds: extraBounds, platformControls, floorControls }, null, 2));
+writeFileSync(file.replace(/\.md$/, '.json'), JSON.stringify({ date: replay?.date ?? date, session: replay?.session ?? args.session, apkHashes, device, sdkLevel, webview, trials, results, summaries, acceptance, counts, bounds: extraBounds, platformControls, floorControls, codeControls }, null, 2));
 log(`wrote ${file}`);
 console.log(acceptanceTable);
 console.log(counts);

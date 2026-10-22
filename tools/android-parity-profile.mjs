@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 // Diagnostic only. Never run alongside android-bench.mjs.
 // --empty: five paired empty-plugin controls per APK; --startup: persisted boot trace.
-import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium } from '@playwright/test';
-import { summarize, trialOrder } from './benchmark-statistics.mjs';
+import { execAdb } from './android-adb.mjs';
+import { emptyControlPlan, summarize } from './benchmark-statistics.mjs';
 
 const argv = process.argv.slice(2);
 const option = (name, fallback) => argv.includes(`--${name}`) ? argv[argv.indexOf(`--${name}`) + 1] : fallback;
-const adbFile = join(process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT, 'platform-tools', 'adb.exe');
-const adb = (...args) => execFileSync(adbFile, ['-s', option('serial', 'emulator-5554'), ...args], {
+const adbFile = process.env.BENCH_ADB ?? join(process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT, 'platform-tools', 'adb.exe');
+const adb = (...args) => execAdb(adbFile, ['-s', option('serial', 'emulator-5554'), ...args], {
   encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
 });
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -62,15 +62,22 @@ const results = [];
 let active;
 let browser;
 try {
-  if (argv.includes('--empty')) {
-    for (const apk of ['classic', 'sqlite']) {
+  if (argv.includes('--empty') || argv.includes('--empty-store')) {
+    const emptyStore = argv.includes('--empty-store');
+    const controlKey = emptyStore ? 'harness:empty-store' : 'harness:empty';
+    const schedule = emptyControlPlan(emptyStore, Number(option('trials', 5)));
+    for (const { apk, pairs } of schedule) {
       active = `${base}.${apk}`;
       ({ browser } = await launch(active));
       let page = browser.contexts()[0].pages()[0];
       await page.waitForFunction(() => window.__harness || window.__emptyReady);
       await page.evaluate(() => { localStorage.removeItem('harness:profile'); });
-      for (const { impl: mode, trial } of trialOrder(['classic', 'sqlite'], Number(option('trials', 5)))) {
-        await page.evaluate((value) => localStorage.setItem('harness:empty', value), mode);
+      for (const { impl: mode, trial } of pairs) {
+        await page.evaluate(({ key, value }) => {
+          localStorage.removeItem('harness:empty');
+          localStorage.removeItem('harness:empty-store');
+          localStorage.setItem(key, value);
+        }, { key: controlKey, value: mode });
         // Chromium batches localStorage disk commits. Force-stop immediately
         // after setItem can discard a control that was visible in the old JS VM.
         await delay(6000);
@@ -79,6 +86,13 @@ try {
         browser = session.browser;
         page = session.page;
         await session.page.waitForFunction(() => window.__emptyReady);
+        if (emptyStore && mode === 'sqlite') {
+          const counts = await page.evaluate(async () => (await window.Capacitor.nativePromise('CapacitorSQLite', 'query', {
+            database: 'ngrx-sqlite-store', readonly: false, values: [],
+            statement: 'SELECT (SELECT count(*) FROM nss_node) + (SELECT count(*) FROM nss_entity) + (SELECT count(*) FROM nss_chunk) AS n',
+          })).values);
+          if (counts?.[0]?.n !== 0) throw new Error('Empty-store control contains state data');
+        }
         await delay(2000);
         const cdp = await session.page.context().newCDPSession(session.page);
         await cdp.send('HeapProfiler.collectGarbage');
@@ -88,11 +102,12 @@ try {
         await cdp.detach();
         const memory = pss(active);
         const timing = await session.page.evaluate(() => window.__emptyReady);
-        const row = { apk, mode, trial, heapMb: heap.usedSize / 1048576, pssTotalMb: memory.totalMb, timing, memory };
+        if (emptyStore && timing.kind !== 'empty-store') throw new Error('Not a real empty store');
+        const row = { apk, mode, trial, kind: emptyStore ? 'empty-store' : 'empty-plugin', heapMb: heap.usedSize / 1048576, pssTotalMb: memory.totalMb, timing, memory };
         results.push(row);
         console.log(JSON.stringify({ ...row, memory: undefined }));
       }
-      await page.evaluate(() => localStorage.removeItem('harness:empty'));
+      await page.evaluate((key) => localStorage.removeItem(key), controlKey);
       await delay(6000);
       await browser.close();
       browser = undefined;
@@ -131,15 +146,17 @@ try {
     browser = session.browser;
     await session.page.waitForFunction(() => window.__harness || window.__emptyReady);
     const seed = option('seed', undefined);
-    await session.page.evaluate(async (size) => {
+    await session.page.evaluate(async ({ size, noPrewarm }) => {
       localStorage.removeItem('harness:empty');
+      if (noPrewarm) localStorage.setItem('harness:no-prewarm', 'true');
+      else localStorage.removeItem('harness:no-prewarm');
       if (size !== undefined) {
-        window.__harness.dispatch({ type: '[Seed] Reset' });
         await window.__harness.settle();
+        await window.__harness.benchSeed(Number(size));
         localStorage.setItem('harness:seed', String(size));
       }
       localStorage.setItem('harness:profile', 'true');
-    }, seed === undefined ? undefined : Number(seed));
+    }, { size: seed === undefined ? undefined : Number(seed), noPrewarm: argv.includes('--no-prewarm') });
     await delay(6000);
     await browser.close();
     session = await launch(active);
@@ -165,7 +182,7 @@ try {
   if (browser) {
     const page = browser.contexts()[0]?.pages()[0];
     await page?.evaluate(() => {
-      localStorage.removeItem('harness:empty'); localStorage.removeItem('harness:profile');
+      localStorage.removeItem('harness:empty'); localStorage.removeItem('harness:empty-store'); localStorage.removeItem('harness:profile'); localStorage.removeItem('harness:no-prewarm');
     }).catch(() => {});
     await delay(6000);
     await browser.close().catch(() => {});

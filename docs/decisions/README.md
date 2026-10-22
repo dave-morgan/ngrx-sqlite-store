@@ -56,6 +56,7 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0048](0048-platform-baseline-and-startup-profiling.md) | Isolated empty-plugin controls, opt-in startup tracing and strictly measured PLATFORM-BOUND memory acceptance | Agent / Phase 15b | 2026-10-22 | Accepted |
 | [0049](0049-batched-feature-version-reads.md) | Batch feature-version reads inside registration transactions with bounded bindings and unchanged seed ordering | Agent / Phase 15b | 2026-10-22 | Accepted |
 | [0050](0050-phase15b-evidenced-parity-gaps.md) | Retain measured residual FAILs with startup, seed, native SQL, dispatch and memory evidence; supersedes ADR-0044 | Agent / Phase 15b | 2026-10-22 | Accepted as evidenced gaps |
+| [0051](0051-platform-floor-controls.md) | Platform-floor controls (durable commit, raw seed insert, DB open) bound latency; amends ADR-0038 | Agent | 2026-10-22 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

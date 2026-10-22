@@ -62,6 +62,7 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0054](0054-bulk-replacement-and-byte-accounting.md) | Coalesce unmaterialized bulk replacement bookkeeping and count escaped transport bytes without allocating copies | Agent / Phase 15c | 2026-10-22 | Accepted |
 | [0055](0055-session-seed-batching.md) | Skip identical session reseeds and buffer feature markers into atomic registration batches | Agent / Phase 15c | 2026-10-22 | Accepted |
 | [0056](0056-production-bundle-and-memory-audits.md) | Defer optional devtools loading and distinguish static bundles, shallow heap and native-cache diagnostic evidence | Agent / Phase 15c | 2026-10-22 | Accepted |
+| [0057](0057-post-write-memory-floor.md) | Post-bulk-write memory floor = max(empty delta, same-session F_seed PSS growth) | Agent | 2026-10-22 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

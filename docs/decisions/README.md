@@ -67,6 +67,7 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0059](0059-canonical-entity-bulk-json.md) | Skip redundant parsing of validated canonical EntityTx bulk JSON; preserve wire bytes and row caps | Agent | 2026-10-22 | Accepted |
 | [0060](0060-phase15d-residual-overhead.md) | Evidence for eleven remaining Phase 15d FAILs; retain thresholds and labels | Agent / Phase 15d | 2026-10-22 | Accepted |
 | [0061](0061-persistence-is-the-product.md) | Persistence is the product: no in-memory feature mode (resolves Q7); optimisation priority large lists → flat objects → hybrid | User | 2026-10-22 | Accepted |
+| [0062](0062-code-bound-heap.md) | CODE-BOUND heap verdict against an empty-store control, plus mandatory startup code diet (amends ADR-0038) | Agent | 2026-10-23 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

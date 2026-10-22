@@ -35,3 +35,6 @@ Top-level feature properties are separate rows and separate sources. Selecting `
 
 ## 5. Session-only state
 Use `sqlite.features[key].persist: false` for slices that shouldn't survive restarts (ADR-0030). The `router` slice already defaults to this.
+
+## 6. Turn off Capacitor bridge logging
+Capacitor's default `loggingBehavior: 'debug'` logs every bridge call with its full payload in debug builds. With devtools attached, those payloads are kept alive. Set `loggingBehavior: 'none'` (or `'production'`) in `capacitor.config.ts` (ADR-0045). On the harness at 50k this cut the JS heap from 14.5 MB to 5.5 MB and halved bridge latency.

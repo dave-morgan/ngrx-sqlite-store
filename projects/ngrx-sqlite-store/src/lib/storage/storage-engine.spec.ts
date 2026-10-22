@@ -80,6 +80,41 @@ describe('StorageEngine', () => {
     ]);
   });
 
+  it.each([false, true])('streams bounded escaped UTF-8 payloads atomically (failure: %s)', async (fails) => {
+    await engine.open();
+    const sizes: number[] = [];
+    const batch = driver.batch.bind(driver);
+    vi.spyOn(driver, 'batch').mockImplementation(async (statements, options) => {
+      sizes.push(new TextEncoder().encode(JSON.stringify(statements.map(({ sql, params }) => ({ statement: sql, values: params ?? [] })))).length);
+      expect(options.transaction).toBe(false);
+      await batch(statements, options);
+    });
+    const begin = vi.spyOn(driver, 'begin');
+    const commit = vi.spyOn(driver, 'commit');
+    const notify = vi.fn();
+    const callback = vi.fn();
+    engine.changes$.subscribe(notify);
+    const payload = '\"\\\n😀'.repeat(8_000);
+    const operation = engine.transaction(async (tx) => {
+      for (let id = 0; id < 8; id++) await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [id, payload]);
+      expect(sizes.length).toBeGreaterThan(0);
+      expect(notify).not.toHaveBeenCalled();
+      tx.changes.add('test');
+      tx.afterCommit(callback);
+      expect(await tx.query('SELECT COUNT(*) AS count FROM test')).toEqual([{ count: 8 }]);
+      await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [9, payload]);
+      if (fails) throw new Error('handler after streaming');
+    });
+    if (fails) await expect(operation).rejects.toThrow('handler after streaming');
+    else await operation;
+    expect(begin).toHaveBeenCalledTimes(1);
+    expect(commit).toHaveBeenCalledTimes(fails ? 0 : 1);
+    expect(sizes.every((size) => size <= 256 * 1024)).toBe(true);
+    expect(await engine.read((sql) => sql.query('SELECT COUNT(*) AS count FROM test'))).toEqual([{ count: fails ? 0 : 9 }]);
+    expect(notify).toHaveBeenCalledTimes(fails ? 0 : 1);
+    expect(callback).toHaveBeenCalledTimes(fails ? 0 : 1);
+  });
+
   it('flushes before reads, then rolls back every flushed write on failure', async () => {
     await engine.open();
     const batch = vi.spyOn(driver, 'batch');
@@ -92,6 +127,25 @@ describe('StorageEngine', () => {
       }),
     ).rejects.toThrow('rollback');
     expect(batch.mock.calls[0][1]).toEqual({ transaction: false });
+    expect(await engine.read((sql) => sql.query('SELECT * FROM test'))).toEqual([]);
+  });
+
+  it('rolls back earlier streamed chunks if a later chunk violates a constraint', async () => {
+    await engine.open();
+    const rollback = vi.spyOn(driver, 'rollback');
+    const notify = vi.fn();
+    engine.changes$.subscribe(notify);
+    await expect(engine.transaction(async (tx) => {
+      const payload = 'x'.repeat(150_000);
+      await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [1, payload]);
+      await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [2, payload]);
+      // The first chunk has already executed, the second remains pending.
+      expect(await driver.query('SELECT id FROM test')).toEqual([{ id: 1 }]);
+      tx.changes.add('test');
+      await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [1, 'duplicate']);
+    })).rejects.toThrow();
+    expect(rollback).toHaveBeenCalledOnce();
+    expect(notify).not.toHaveBeenCalled();
     expect(await engine.read((sql) => sql.query('SELECT * FROM test'))).toEqual([]);
   });
 
@@ -178,6 +232,76 @@ describe('StorageEngine', () => {
     expect((await first).result).toBe(1);
     expect((await second).result).toBe(2);
     expect(log).toEqual(['first enter', 'first exit', 'second enter', 'second exit']);
+  });
+
+  it('reopens a current schema with one read and no transaction or DDL, including concurrent opens', async () => {
+    await engine.open();
+    const data = driver.export();
+    await engine.close();
+    driver = new SqlJsDriver({ data });
+    engine = new StorageEngine(driver, { migrations: [migration] });
+    const opening = vi.spyOn(driver, 'open');
+    const begin = vi.spyOn(driver, 'begin');
+    const exec = vi.spyOn(driver, 'exec');
+    const run = vi.spyOn(driver, 'run');
+    const commit = vi.spyOn(driver, 'commit');
+    const query = vi.spyOn(driver, 'query');
+    await Promise.all([engine.open(), engine.open()]);
+    expect(engine.status()).toBe('ready');
+    expect(opening).toHaveBeenCalledOnce();
+    expect(query).toHaveBeenCalledExactlyOnceWith('SELECT value FROM nss_meta WHERE key = ?', ['schema_version']);
+    expect(begin).not.toHaveBeenCalled();
+    expect(exec).not.toHaveBeenCalled();
+    expect(run).not.toHaveBeenCalled();
+    expect(commit).not.toHaveBeenCalled();
+  });
+
+  it('migrates missing version metadata atomically', async () => {
+    await driver.open();
+    await driver.exec('CREATE TABLE nss_meta(key TEXT PRIMARY KEY,value TEXT NOT NULL)');
+    const begin = vi.spyOn(driver, 'begin');
+    const commit = vi.spyOn(driver, 'commit');
+    await engine.open();
+    expect(begin).toHaveBeenCalledOnce();
+    expect(commit).toHaveBeenCalledOnce();
+    expect(await driver.query('SELECT value FROM nss_meta WHERE key = ?', ['schema_version'])).toEqual([{ value: '2' }]);
+  });
+
+  it.each(['abc', '-1', '1.5', '3'])('rejects invalid/newer schema %s before beginning a transaction', async (version) => {
+    await driver.open();
+    await driver.exec('CREATE TABLE nss_meta(key TEXT PRIMARY KEY,value TEXT NOT NULL)');
+    await driver.run('INSERT INTO nss_meta VALUES (?,?)', ['schema_version', version]);
+    const begin = vi.spyOn(driver, 'begin');
+    const rollback = vi.spyOn(driver, 'rollback');
+    const close = vi.spyOn(driver, 'close');
+    await expect(engine.open()).rejects.toThrow('Unsupported schema version');
+    expect(begin).not.toHaveBeenCalled();
+    expect(rollback).not.toHaveBeenCalled();
+    expect(close).toHaveBeenCalledOnce();
+    expect(engine.status()).toBe('error');
+  });
+
+  it.each([
+    new Error('database is locked'),
+    new Error('no such table: unrelated'),
+    new Error('Query: no such table: nss_meta_other'),
+  ])('does not mask initial schema query failures: %s', async (error) => {
+    const begin = vi.spyOn(driver, 'begin');
+    vi.spyOn(driver, 'query').mockRejectedValueOnce(error);
+    await expect(engine.open()).rejects.toBe(error);
+    expect(begin).not.toHaveBeenCalled();
+    expect(engine.status()).toBe('error');
+  });
+
+  it.each([
+    new Error('no such table: nss_meta'),
+    new Error('Query: no such table: nss_meta (code 1 SQLITE_ERROR)'),
+    'Query: no such table: main.nss_meta',
+  ])('initializes after narrowly recognized missing metadata table: %s', async (error) => {
+    vi.spyOn(driver, 'query').mockRejectedValueOnce(error);
+    await engine.open();
+    expect(engine.status()).toBe('ready');
+    expect(await driver.query('SELECT value FROM nss_meta WHERE key = ?', ['schema_version'])).toEqual([{ value: '2' }]);
   });
 
   it('rolls back failures, discards notifications and callbacks, and continues', async () => {

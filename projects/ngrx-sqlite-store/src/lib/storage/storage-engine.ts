@@ -3,6 +3,7 @@ import { Inject, Injectable, InjectionToken, Optional, signal } from '@angular/c
 import { Subject } from 'rxjs';
 
 import { SQL_DRIVER } from '../driver/sql-driver';
+import { BATCH_BYTE_BUDGET, statementByteLength } from '../driver/batch-budget';
 import type { SqlDriver, SqlValue } from '../driver/sql-driver';
 import { ChangeSet } from './change-set';
 import { WriteQueue } from './write-queue';
@@ -76,22 +77,36 @@ export class StorageEngine {
           versions.add(migration.version);
         }
         await this.driver.open();
+        const sql = this.executor();
+        const latest = migrations[migrations.length - 1].version;
+        const validateVersion = (value: string | undefined) => {
+          const version = value === undefined ? 0 : Number(value);
+          if (!Number.isSafeInteger(version) || version < 0 || version > latest) {
+            throw new Error(`Unsupported schema version: ${value}`);
+          }
+          return version;
+        };
+        let existing: { value: string } | undefined;
+        try {
+          [existing] = await sql.query<{ value: string }>(
+            'SELECT value FROM nss_meta WHERE key = ?', ['schema_version'],
+          );
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          if (!/no such table:\s*(?:main\.)?nss_meta\b/i.test(message)) throw error;
+        }
+        if (validateVersion(existing?.value) === latest) {
+          this.state.set('ready');
+          return;
+        }
         await this.driver.begin();
         began = true;
-        const sql = this.executor();
         await INITIAL_MIGRATION.up(sql);
         const [row] = await sql.query<{ value: string }>(
           'SELECT value FROM nss_meta WHERE key = ?',
           ['schema_version'],
         );
-        const current = row ? Number(row.value) : 0;
-        if (
-          !Number.isSafeInteger(current) ||
-          current < 0 ||
-          current > migrations[migrations.length - 1].version
-        ) {
-          throw new Error(`Unsupported schema version: ${row?.value}`);
-        }
+        const current = validateVersion(row?.value);
         for (const migration of migrations) {
           if (migration.version <= current) continue;
           if (migration.version !== 1) await migration.up(sql);
@@ -121,6 +136,7 @@ export class StorageEngine {
       const changes = new ChangeSet();
       const callbacks: Array<() => void | Promise<void>> = [];
       const pending: { sql: string; params?: SqlValue[] }[] = [];
+      let pendingBytes = 2; // outer JSON array
       let began = false;
       const begin = async () => {
         if (!began) {
@@ -134,10 +150,16 @@ export class StorageEngine {
         if (this.driver.batch) await this.driver.batch(pending, { transaction: false });
         else for (const { sql, params } of pending) await this.driver.run(sql, params);
         pending.length = 0;
+        pendingBytes = 2;
       };
       const tx: TxContext = {
         write: async (sql, params) => {
+          const bytes = statementByteLength(sql, params);
+          if (pending.length && pendingBytes + 1 + bytes > BATCH_BYTE_BUDGET) await flush();
+          pendingBytes += bytes + (pending.length ? 1 : 0);
           pending.push({ sql, params });
+          // A single row can legally exceed the soft transport limit.
+          if (pendingBytes >= BATCH_BYTE_BUDGET) await flush();
         },
         query: async (sql, params) => {
           await flush();

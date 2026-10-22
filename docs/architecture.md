@@ -48,6 +48,11 @@ type SqlValue = string | number | null | Uint8Array;
 - **SqlJsDriver** uses `sql.js` (WASM). It needs no native build, so it runs in Vitest under Node/jsdom and in the browser. It is the default for unit tests (ADR-0012).
 - Under Node 22.12+ the sql.js driver uses `process.getBuiltinModule('module').createRequire()` to load the native Node package entry and resolve `sql.js/dist/sql-wasm.wasm` from `node_modules`. This bypasses the Angular test builder's browser-conditioned bundle in jsdom; no test helper or copied WASM asset is required. Browser apps supply `locateFile` and serve the WASM asset, or inject an initialized module factory with `sqlJs`.
 - Every value crossing the Capacitor bridge is JSON-serialized. That makes the bridge cost proportional to bytes moved, which is another reason to keep rows small (D8).
+- Writable Android connections request WAL after interrupted-transaction recovery
+  (ADR-0042). The synchronous level is retained; the measured SQLCipher default
+  is NORMAL. WAL/NORMAL preserves transaction consistency and process-crash
+  recovery, but recent commits can be lost on device power failure or OS crash
+  before a durable checkpoint. Web, iOS and readonly connections are unchanged.
 - Driver runtimes load lazily so importing the package does not require unused optional peers. The published package includes `@types/sql.js` because the sql.js factory option exposes its module type.
 - A web `saveToStore()` failure after SQLite commits leaves IndexedDB durability uncertain. The commit promise rejects, no changes are emitted, and a failed rollback places the engine in `error`; callers must close and recover rather than retry the write blindly.
 
@@ -379,5 +384,19 @@ Two build configurations, `classic` and `sqlite`, swap the implementation behind
 - **Benchmarks (Phase 9, Q14).** These measure Android RAM and dispatch→emit latency, comparing classic against sqlite.
 
 ### Phase 11: bridge statement budgets (ADR-0029)
+
+Phase 15 bounds buffered executeSet JSON to 256 KiB (ADR-0039). Bulk writes
+stream inside one explicit transaction; small tails retain a single lazy atomic
+batch. RowWriter groups inserts by encoded UTF-8 bytes as well as 999 parameters.
+A single legal row above the soft transport budget is sent alone. All chunks
+roll back together, and notifications follow the final commit.
+
+Groups above the scalar bind limit use one bound JSON row array with JSON1
+insertion (ADR-0041), accounting for double escaping in the bridge budget.
+Small groups retain scalar bindings. Current-schema opens read the version
+without a write transaction; migrations recheck it inside an atomic transaction.
+Bulk entity JSON cells carry raw compact data using SQLite's `->` operator
+(ADR-0043); sentinel, opaque data and whitespace-sensitive lexical input use
+lossless fallbacks. Non-update entity journals share an empty changed-field set.
 
 Subtree range reads transport node, entity and chunk rows in one flat ordered UNION query; the CTE comparison reader retains its traversal. RowWriter batches removed array leaves, deleted entity IDs and independent changed entity rows within 999 bind parameters, retaining minimal single-row UPDATEs and UTF-8 row caps. Explicit feature reset replaces the prefix without materializing previous state; ordinary set remains a diff. Prefix reset records replacement identity hints without reading the old subtree. Transaction reads retain physical locations, containers reload lazily after writes, and targeted entity operations can reuse fresh committed collection metadata. Invalidations cover overlapping identities and cached locations. Acceptance budgets include BEGIN/COMMIT, internal sql.js queries and active whole-store refresh; the same workload generates `spikes/bridge-cost.md`.

@@ -182,5 +182,12 @@ test.describe('ngrx harness', () => {
     await page.locator('#runs').dispatchEvent('change');
     await page.getByTestId('bench').click();
     await expect(page.getByTestId('bench-result')).toContainText('50');
+    const measurement = await page.evaluate(() => (window as unknown as {
+      __harness: { benchEmit(runs: number): Promise<{ runs: number; samples: number[]; p95: number; max: number }> };
+    }).__harness.benchEmit(5));
+    expect(measurement.runs).toBe(5);
+    expect(measurement.samples).toHaveLength(5);
+    expect(measurement.samples.every((sample) => Number.isFinite(sample) && sample >= 0)).toBe(true);
+    expect(measurement.p95).toBeLessThanOrEqual(measurement.max);
   });
 });

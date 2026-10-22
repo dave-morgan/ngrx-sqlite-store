@@ -3,6 +3,8 @@
 # Compiled output
 /dist
 /tmp
+/.tmp
+/android/.tmp/
 /out-tsc
 /bazel-out
 

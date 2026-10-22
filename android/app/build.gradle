@@ -5,6 +5,12 @@ android {
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "dev.ngrxsqlite.harness"
+        // Benchmark APKs coexist, allowing paired alternating trials without reinstalling.
+        if (project.hasProperty('benchmarkImpl')) {
+            def benchmarkImpl = project.property('benchmarkImpl')
+            if (!(benchmarkImpl in ['classic', 'sqlite'])) throw new GradleException('Invalid benchmarkImpl')
+            applicationIdSuffix ".${benchmarkImpl}"
+        }
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

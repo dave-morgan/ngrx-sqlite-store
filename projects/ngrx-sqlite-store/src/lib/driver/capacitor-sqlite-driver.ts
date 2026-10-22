@@ -52,6 +52,14 @@ export class CapacitorSqliteDriver implements SqlDriver {
       if (!((await db.isDBOpen()).result ?? false)) await db.open();
       // A reload can interrupt a transaction mid-flight; never inherit it.
       if ((await db.isTransactionActive()).result) await db.rollbackTransaction();
+      // ADR-0042: retain the connection's synchronous level; WAL avoids the
+      // populated database's rollback-journal cost on every small commit.
+      if (Capacitor.getPlatform() === 'android' && !readonly) {
+        const mode = await db.query('PRAGMA journal_mode=WAL');
+        if (mode.values?.[0]?.journal_mode !== 'wal') {
+          throw new Error('Android SQLite connection did not enable WAL');
+        }
+      }
       this.db = db;
     } catch (error) {
       await this.sqlite.closeConnection(database, readonly);

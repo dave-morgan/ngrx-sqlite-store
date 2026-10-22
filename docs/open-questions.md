@@ -73,10 +73,21 @@ and promoted-row fallback, with JS/SQL equivalence and effect-timing tests.
 See [ADR-0027](decisions/0027-query-selectors.md) and
 [ADR-0028](decisions/0028-query-filter-and-classic-order-semantics.md).
 
-### Q17. Bridge payload peak memory. Status: **Open**
-After a 50k-row bulk write in one session, the Android **app** process holds about 68 MB more than classic (Java plus native). The cause is large `executeSet` payloads crossing the Capacitor bridge, and the memory is not returned until the process restarts. Steady state after a restart is fine: 18 MB below classic.
-- **Options:**
-  - chunk bulk writes into bounded payloads, for example ≤ 1 MB per bridge call, so the peak is capped;
-  - stream inserts in several transactions, which needs an atomicity decision;
-  - investigate the plugin's Java-side buffers.
-- **Resolves when:** device-total PSS after a 50k seed is within about 10% of classic.
+### Q17. Bridge payload peak memory. Status: **Resolved → ADR-0039 / ADR-0041**
+Bound executeSet JSON to 256 KiB and stream writes inside one atomic transaction;
+single legal oversized rows retain the existing 1 MB value cap. Bulk JSON1
+transport also reduces native binding and statement objects. The 50k before/after
+profile reduced sampled app-process peak PSS from 195.7 to 141.6 MiB, with Java
+heap at that peak falling from 69.2 to 18.7 MiB. After-GC device-total PSS was
+255.3 MiB against classic's 250.0 MiB (+2.1%, within Q17's original 10% target).
+The old unbounded payload was reclaimed by explicit GC too; the earlier claim
+that it necessarily survived until restart was too strong. The fix removes the
+large transient allocation without relying on GC timing.
+
+See [ADR-0039](decisions/0039-bounded-bulk-bridge-payloads.md),
+[ADR-0041](decisions/0041-json-bulk-and-current-schema-open.md), and the
+[before](benchmarks/android-q17-before-2026-10-22.md) /
+[after](benchmarks/android-q17-after-2026-10-22.md) profiles with raw meminfo.
+The stricter five-trial ADR-0038 memory acceptance remains independently reported
+in `benchmarks/android-parity-2026-10-22.md`; resolving peak transport retention
+does not turn a statistical memory FAIL into PASS.

@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Phase 9 benchmark: classic @ngrx/store vs ngrx-sqlite-store on a real Android WebView.
 //
-// Usage: node tools/android-bench.mjs [--impl classic,sqlite] [--sizes 1000,10000,50000] [--runs 200] [--skip-build]
+// Usage: node tools/android-bench.mjs [--impl classic,sqlite] [--sizes 1000,10000,50000]
+//   [--runs 200] [--trials 5] [--skip-build] [--serial emulator-5554]
+//   [--profile] [--output docs/benchmarks/custom.md] [--bounds-json tmp/bounds.json]
 // Needs: a booted device/emulator (adb), JDK 21 (JAVA_HOME or Android Studio JBR), debug build (WebView debugging on).
 //
 // Per implementation × seed size it records:
@@ -10,12 +12,15 @@
 //   - process PSS from dumpsys meminfo
 //   - dispatch → DOM latency for toggling a todo (p50/p95), and the in-app selector-emission benchmark
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
+import { summarize, trialOrder, verdict } from './benchmark-statistics.mjs';
 
-const ROOT = new URL('..', import.meta.url).pathname.replace(/^\/([A-Z]:)/, '$1');
-const PKG = 'dev.ngrxsqlite.harness';
+const ROOT = fileURLToPath(new URL('..', import.meta.url));
+const BASE_PKG = 'dev.ngrxsqlite.harness';
+let PKG = BASE_PKG;
 const ORIGIN = 'https://localhost';
 const CDP_PORT = 9333;
 
@@ -25,6 +30,10 @@ const args = Object.fromEntries(
 const impls = (args.impl ?? 'classic,sqlite').split(',');
 const sizes = (args.sizes ?? '1000,10000,50000').split(',').map(Number);
 const runs = Number(args.runs ?? 200);
+const trials = Number(args.trials ?? 5);
+if (!Number.isInteger(trials) || trials < 1) throw new Error('--trials must be a positive integer; >= 2 required for acceptance');
+if (impls.some((impl) => !['classic', 'sqlite'].includes(impl))) throw new Error('Unknown --impl');
+if (sizes.some((size) => !Number.isInteger(size) || size < 1)) throw new Error('Invalid --sizes');
 const toggles = 30;
 
 const sdk = process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT;
@@ -33,31 +42,46 @@ const JAVA_HOME = process.env.JAVA_HOME_21 ?? 'C:\\Program Files\\Android\\Andro
 
 const sh = (cmd, argv, opts = {}) =>
   execFileSync(cmd, argv, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], shell: process.platform === 'win32', ...opts });
-const adb = (...a) => sh(ADB, a);
+const adb = (...a) => sh(ADB, ['-s', args.serial ?? 'emulator-5554', ...a]);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const pct = (xs, p) => [...xs].sort((a, b) => a - b)[Math.min(xs.length - 1, Math.floor((p / 100) * xs.length))];
 const log = (...m) => console.log(new Date().toISOString().slice(11, 19), ...m);
 
 function buildAndInstall(impl) {
+  const apkDir = join(ROOT, '.tmp', 'benchmark-apks');
+  mkdirSync(apkDir, { recursive: true });
+  const cached = join(apkDir, `${impl}.apk`);
+  if (args['skip-build'] === 'true') {
+    if (!existsSync(cached)) throw new Error(`Missing ${cached}; run without --skip-build first`);
+    adb('install', '-r', cached);
+    return;
+  }
   log(`build ${impl}`);
-  sh('npx', ['ng', 'build', 'harness', '-c', `production,${impl}`]);
-  sh('npx', ['cap', 'sync', 'android']);
-  sh(join(ROOT, 'android', process.platform === 'win32' ? 'gradlew.bat' : 'gradlew'), ['assembleDebug', '-q', '--no-daemon'], {
+  sh('npx', ['ng', 'build', 'harness', '-c', `production,${impl}`], { timeout: 300_000 });
+  sh('npx', ['cap', 'sync', 'android'], { timeout: 120_000 });
+  const gradle = process.env.GRADLE_EXECUTABLE ?? join(ROOT, 'android', process.platform === 'win32' ? 'gradlew.bat' : 'gradlew');
+  const gradleArgs = ['assembleDebug', `-PbenchmarkImpl=${impl}`, '-q', '--no-daemon'];
+  if (process.env.GRADLE_USER_HOME) gradleArgs.push('--gradle-user-home', process.env.GRADLE_USER_HOME);
+  if (process.env.BENCH_GRADLE_OFFLINE === 'true') gradleArgs.push('--offline');
+  sh(gradle, gradleArgs, {
     cwd: join(ROOT, 'android'),
     env: { ...process.env, JAVA_HOME },
   });
-  adb('install', '-r', join(ROOT, 'android/app/build/outputs/apk/debug/app-debug.apk'));
+  copyFileSync(join(ROOT, 'android/app/build/outputs/apk/debug/app-debug.apk'), cached);
+  adb('install', '-r', cached);
 }
 
 async function launch() {
   adb('shell', 'am', 'force-stop', PKG);
-  adb('shell', 'am', 'start', '-n', `${PKG}/.MainActivity`);
+  adb('shell', 'am', 'start', '-n', `${PKG}/${BASE_PKG}.MainActivity`);
   let socket;
   // Generous: a cold WebView on a busy emulator can take well over 10 s; adb can also hiccup.
   for (let i = 0; i < 300 && !socket; i++) {
     await sleep(200);
     try {
-      socket = adb('shell', 'cat', '/proc/net/unix').match(/webview_devtools_remote_\d+/)?.[0];
+      const pid = adb('shell', 'pidof', PKG).trim().split(/\s+/)[0];
+      const expected = `webview_devtools_remote_${pid}`;
+      if (adb('shell', 'cat', '/proc/net/unix').includes(expected)) socket = expected;
     } catch {
       /* transient adb daemon restart: retry */
     }
@@ -93,7 +117,7 @@ async function readyMsInner(page, total) {
     total,
     { timeout: 300_000 },
   );
-  return page.evaluate(() => performance.now());
+  return page.evaluate((t) => window.__harness?.ready?.total === t ? window.__harness.ready.ms : performance.now(), total);
 }
 
 async function heapMb(page) {
@@ -103,7 +127,7 @@ async function heapMb(page) {
   await cdp.send('HeapProfiler.collectGarbage');
   const { usedSize } = await cdp.send('Runtime.getHeapUsage');
   await cdp.detach();
-  return +(usedSize / 1048576).toFixed(1);
+  return usedSize / 1048576;
 }
 
 const pssOf = (target) => {
@@ -111,6 +135,17 @@ const pssOf = (target) => {
   const m = out.match(/TOTAL PSS:\s+(\d+)/) ?? out.match(/TOTAL\s+(\d+)/);
   return m ? Number(m[1]) / 1024 : 0;
 };
+
+function appMemory() {
+  const raw = adb('shell', 'dumpsys', 'meminfo', PKG);
+  const category = (label) => Number(raw.match(new RegExp(`${label}:\\s+(\\d+)`))?.[1] ?? 0) / 1024;
+  return {
+    timestamp: Date.now(), javaHeapMb: category('Java Heap'), nativeHeapMb: category('Native Heap'),
+    codeMb: category('Code'), stackMb: category('Stack'), graphicsMb: category('Graphics'),
+    privateOtherMb: category('Private Other'), systemMb: category('System'),
+    totalPssMb: category('TOTAL PSS'), raw,
+  };
+}
 
 /**
  * Device RAM attributable to the app: the app process (Java + native SQLite) PLUS the
@@ -123,7 +158,7 @@ function pssMb() {
     .filter((l) => /sandboxed_process/.test(l))
     .map((l) => l.trim().split(/\s+/)[1])
     .reduce((sum, pid) => sum + pssOf(pid), 0);
-  return { app: +app.toFixed(1), renderer: +renderer.toFixed(1), total: +(app + renderer).toFixed(1) };
+  return { app, renderer, total: app + renderer };
 }
 
 async function toggleLatency(page) {
@@ -152,19 +187,15 @@ async function toggleLatency(page) {
 }
 
 async function emissionBench(page) {
-  await page.locator('#runs').fill(String(runs));
-  await page.locator('#runs').dispatchEvent('change');
-  await page.getByTestId('bench').click();
-  const row = page.getByTestId('bench-result').locator('tr').nth(1);
-  await row.waitFor({ timeout: 600_000 });
-  const [r, p50, p95, max] = (await row.locator('td').allTextContents()).map((s) => Number(s.replace(/,/g, '')));
-  return { runs: r, p50, p95, max };
+  return page.evaluate((n) => window.__harness.benchEmit(n), runs);
 }
 
-async function measure(impl, size) {
+async function measure(impl, size, trial) {
   log(`${impl} · ${size}: fresh install state`);
   adb('shell', 'pm', 'clear', PKG);
   let { browser, page } = await launch();
+  let sampler;
+  try {
   await page.waitForFunction(() => !!window.__harness, null, { timeout: 120_000 });
   // The default boot seeds 500 todos asynchronously. Wait for it, reset, confirm the
   // reset committed, then reboot with the requested size (otherwise the default seed can
@@ -180,11 +211,25 @@ async function measure(impl, size) {
   log('  reboot with seed', size);
   // The Capacitor WebView drops query strings on reload; the harness also reads localStorage.
   await page.evaluate((n) => localStorage.setItem('harness:seed', String(n)), size);
+  const profile = args.profile === 'true' ? { before: appMemory(), samples: [] } : undefined;
+  sampler = profile ? setInterval(() => {
+    try { profile.samples.push(appMemory()); } catch { /* process can transiently disappear during navigation */ }
+  }, 500) : undefined;
   await page.goto(`${ORIGIN}/todos?seed=${size}`);
-  const firstReadyMs = await readyMs(page, size);
+  let firstReadyMs;
+  try { firstReadyMs = await readyMs(page, size); }
+  finally { if (sampler) clearInterval(sampler); }
   log('  ready', Math.round(firstReadyMs), 'ms');
   await page.evaluate(() => window.__harness.settle());
   const heapTodos = await heapMb(page);
+  if (profile) {
+    profile.beforeGc = appMemory();
+    const pid = adb('shell', 'pidof', PKG).trim();
+    adb('shell', 'run-as', PKG, 'kill', '-10', pid);
+    await sleep(2000);
+    profile.afterGc = appMemory();
+    profile.peak = [...profile.samples, profile.beforeGc].reduce((a, b) => a.totalPssMb > b.totalPssMb ? a : b);
+  }
   const pss = pssMb();
   const toggle = await toggleLatency(page);
 
@@ -195,6 +240,7 @@ async function measure(impl, size) {
 
   await page.getByTestId('nav-diagnostics').click();
   const emission = await emissionBench(page);
+  const bridge = impl === 'sqlite' ? await page.evaluate(() => window.__harness.benchBridge()) : undefined;
   await browser.close().catch(() => {});
 
   log(`${impl} · ${size}: relaunch`);
@@ -206,12 +252,14 @@ async function measure(impl, size) {
   await sleep(2000);
   const pssRelaunch = pssMb();
   await browser.close().catch(() => {});
+  adb('shell', 'am', 'force-stop', PKG);
 
   return {
     impl,
     size,
-    firstReadyMs: Math.round(firstReadyMs),
-    relaunchReadyMs: Math.round(relaunchReadyMs),
+    trial,
+    firstReadyMs,
+    relaunchReadyMs,
     heapTodosMb: heapTodos,
     heapNotesMb: heapNotes,
     heapRelaunchMb: heapRelaunch,
@@ -219,37 +267,55 @@ async function measure(impl, size) {
     pssRendererMb: pss.renderer,
     pssTotalMb: pss.total,
     pssRelaunchTotalMb: pssRelaunch.total,
-    toggleP50: +pct(toggle, 50).toFixed(1),
-    toggleP95: +pct(toggle, 95).toFixed(1),
+    toggleP50: pct(toggle, 50),
+    toggleP95: pct(toggle, 95),
     emitP50: emission.p50,
     emitP95: emission.p95,
+    toggleSamples: toggle,
+    emission,
+    bridge,
+    profile,
   };
+  } finally {
+    if (sampler) clearInterval(sampler);
+    await browser.close().catch(() => {});
+    adb('shell', 'am', 'force-stop', PKG);
+  }
 }
 
-const device = adb('shell', 'getprop', 'ro.product.model').trim();
-const sdkLevel = adb('shell', 'getprop', 'ro.build.version.sdk').trim();
-const webview = (adb('shell', 'dumpsys', 'webviewupdate').match(/Current WebView package.*?\(([^)]+)\)/) ?? [])[1] ?? '?';
+const replay = args['report-only'] ? JSON.parse(readFileSync(join(ROOT, args['report-only']), 'utf8')) : undefined;
+const device = replay?.device ?? adb('shell', 'getprop', 'ro.product.model').trim();
+const sdkLevel = replay?.sdkLevel ?? adb('shell', 'getprop', 'ro.build.version.sdk').trim();
+const webview = replay?.webview ?? (adb('shell', 'dumpsys', 'webviewupdate').match(/Current WebView package.*:\s*\(([^)]+)\)/) ?? [])[1] ?? '?';
 log(`device ${device} (API ${sdkLevel}), WebView ${webview}`);
 
-const results = [];
-for (const impl of impls) {
-  if (args['skip-build'] !== 'true') buildAndInstall(impl);
+const results = replay?.results ?? [];
+if (!replay) for (const impl of impls) buildAndInstall(impl);
+// Each paired trial reverses its implementation order. Every size starts with pm clear
+// and a new process; force-stop the inactive implementation to exclude its memory.
+for (const { impl, trial } of replay ? [] : trialOrder(impls, trials)) {
+  for (const pkg of [BASE_PKG, `${BASE_PKG}.classic`, `${BASE_PKG}.sqlite`]) adb('shell', 'am', 'force-stop', pkg);
+  PKG = `${BASE_PKG}.${impl}`;
   for (const size of sizes) {
     let result;
     for (let attempt = 1; attempt <= 2 && !result; attempt++) {
       try {
-        result = await measure(impl, size);
-        log(JSON.stringify(result));
+        result = await measure(impl, size, trial);
+        log(JSON.stringify({ ...result, bridge: undefined, profile: undefined, toggleSamples: undefined,
+          emission: { ...result.emission, samples: undefined } }));
       } catch (e) {
         log(`FAILED ${impl} ${size} (attempt ${attempt}): ${e.message}`);
-        if (attempt === 2) result = { impl, size, error: e.message.slice(0, 200) };
+        if (attempt === 2) result = { impl, size, trial, error: e.message.slice(0, 200) };
       }
     }
     results.push(result);
+    mkdirSync(join(ROOT, '.tmp'), { recursive: true });
+    writeFileSync(join(ROOT, '.tmp', 'android-bench-progress.json'), JSON.stringify(results, null, 2));
   }
 }
 
-const cols = ['impl', 'size', 'firstReadyMs', 'relaunchReadyMs', 'heapTodosMb', 'heapNotesMb', 'heapRelaunchMb', 'pssAppMb', 'pssRendererMb', 'pssTotalMb', 'pssRelaunchTotalMb', 'toggleP50', 'toggleP95', 'emitP50', 'emitP95'];
+const metrics = ['firstReadyMs', 'relaunchReadyMs', 'heapTodosMb', 'heapNotesMb', 'heapRelaunchMb', 'pssTotalMb', 'pssRelaunchTotalMb', 'toggleP50', 'toggleP95', 'emitP50', 'emitP95'];
+const cols = ['impl', 'size', 'trial', ...metrics];
 const table = [
   `| ${cols.join(' | ')} |`,
   `| ${cols.map(() => '---').join(' | ')} |`,
@@ -259,10 +325,53 @@ const table = [
 const date = new Date().toISOString().slice(0, 10);
 const dir = join(ROOT, 'docs', 'benchmarks');
 if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-const file = join(dir, `android-${date}.md`);
+const file = args.output ? join(ROOT, args.output) : join(dir, `android-parity-${date}.md`);
+const fmt = (value) => Number.isFinite(value) ? value.toFixed(3) : '?';
+const summaries = [];
+for (const size of sizes) {
+  for (const impl of impls) {
+    const rows = results.filter((row) => row.impl === impl && row.size === size && !row.error);
+    if (rows.length !== trials || rows.length < 2) continue;
+    for (const metric of metrics) summaries.push({ impl, size, metric, ...summarize(rows.map((row) => row[metric])) });
+  }
+}
+const summaryTable = ['| Impl | Size | Metric | N | Mean | Sample SD |', '| --- | --- | --- | --- | --- | --- |',
+  ...summaries.map((row) => `| ${row.impl} | ${row.size} | ${row.metric} | ${row.n} | ${fmt(row.mean)} | ${fmt(row.sd)} |`)].join('\n');
+// Bounds can only be entered with written minimum-operation evidence. No memory metric
+// can be bridge-bound: its units are MiB, whereas RTT/bandwidth bounds are milliseconds.
+const extraBounds = args['bounds-json'] ? JSON.parse(readFileSync(join(ROOT, args['bounds-json']), 'utf8')) : [];
+const acceptance = [];
+for (const size of sizes) {
+  const probes = results.filter((row) => row.impl === 'sqlite' && row.size === size && row.bridge);
+  const bridge = probes.length ? {
+    rttMs: probes.reduce((sum, row) => sum + row.bridge.echo.p50, 0) / probes.length,
+    bytesPerMs: probes.reduce((sum, row) => sum + row.bridge.bandwidth.bytesPerMs, 0) / probes.length,
+  } : undefined;
+  for (const metric of metrics) {
+    const classic = summaries.find((row) => row.impl === 'classic' && row.size === size && row.metric === metric);
+    const sqlite = summaries.find((row) => row.impl === 'sqlite' && row.size === size && row.metric === metric);
+    if (!classic || !sqlite) {
+      acceptance.push({ size, metric, status: 'FAIL', explanation: 'Insufficient independent trials or failed measurement' });
+      continue;
+    }
+    const defaultBound = /^(toggle|emit)/.test(metric) ? { callsMin: 1, bytesMin: 0, justification: 'One notify-after-commit dispatch requires at least one native commit round trip (ADR-0003).' } : undefined;
+    const supplied = extraBounds.find((row) => row.size === size && row.metric === metric);
+    const bound = metric.endsWith('Mb') ? undefined : supplied ?? defaultBound;
+    const decision = verdict(classic, sqlite, bridge, bound);
+    acceptance.push({ size, metric, classic, sqlite, ...decision,
+      explanation: decision.status === 'PASS' ? 'sqlite mean <= classic mean + classic SD' : bound && bridge
+        ? `${bound.justification} calls_min=${bound.callsMin}, bytes_min=${bound.bytesMin}; ${fmt(classic.sd)} + ${bound.callsMin} * ${fmt(bridge.rttMs)} ms + ${bound.bytesMin} / ${fmt(bridge.bytesPerMs)} bytes/ms + ${fmt(sqlite.sd)} = ${fmt(decision.allowance)} ms; excess=${fmt(decision.excess)} ms`
+        : 'No justified bridge bound (memory uses MiB, timing uses ms).' });
+  }
+}
+const acceptanceTable = ['| Size | Metric | Classic mean ± SD | SQLite mean ± SD | Verdict | Evidence / arithmetic |', '| --- | --- | --- | --- | --- | --- |',
+  ...acceptance.map((row) => `| ${row.size} | ${row.metric} | ${row.classic ? `${fmt(row.classic.mean)} ± ${fmt(row.classic.sd)}` : '?'} | ${row.sqlite ? `${fmt(row.sqlite.mean)} ± ${fmt(row.sqlite.sd)}` : '?'} | ${row.status} | ${row.explanation} |`)].join('\n');
+const counts = Object.fromEntries(['PASS', 'BRIDGE-BOUND', 'FAIL'].map((status) => [status, acceptance.filter((row) => row.status === status).length]));
 writeFileSync(
   file,
-  `# Android benchmark ${date}\n\nDevice: ${device} (API ${sdkLevel}), WebView ${webview}. Toggle samples: ${toggles}. Emission runs: ${runs}.\n\n${table}\n\n<details><summary>raw</summary>\n\n\`\`\`json\n${JSON.stringify(results, null, 2)}\n\`\`\`\n</details>\n`,
+  `# Android parity benchmark ${date}\n\nDevice: ${device} (API ${sdkLevel}), WebView ${webview}. Toggle samples: ${toggles}. Emission runs: ${runs}. Independent trials: ${trials}.\n\nAPK policy: distinct application IDs ${BASE_PKG}.classic and ${BASE_PKG}.sqlite; each APK installed once before trials. --skip-build reuses .tmp/benchmark-apks/<impl>.apk. Trial implementation order alternates; each size starts from a cleared app and a fresh process. Inactive implementation is force-stopped. RTT is the same-session echo p50 averaged across trials; bandwidth is the average executeSet throughput fit. Report retains sample SD and all raw probes. ${args.profile === 'true' ? 'Profiling enabled: 500 ms dumpsys sampling and requested Java GC perturb timings; use a separate run for acceptance.' : 'No meminfo peak polling during timed startup.'}\n\n${summaryTable}\n\n<details><summary>Per-trial table</summary>\n\n${table}\n\n</details>\n\n<details><summary>Raw per-trial measurements</summary>\n\n\`\`\`json\n${JSON.stringify(results, null, 2)}\n\`\`\`\n</details>\n\nAcceptance: PASS ${counts.PASS} / BRIDGE-BOUND ${counts['BRIDGE-BOUND']} / FAIL ${counts.FAIL}.\n\n${acceptanceTable}\n`,
 );
+writeFileSync(file.replace(/\.md$/, '.json'), JSON.stringify({ device, sdkLevel, webview, trials, results, summaries, acceptance, counts }, null, 2));
 log(`wrote ${file}`);
-console.log(table);
+console.log(acceptanceTable);
+console.log(counts);

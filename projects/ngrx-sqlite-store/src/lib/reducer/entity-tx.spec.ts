@@ -5,6 +5,7 @@ import { SCHEMA_MIGRATIONS } from '../schema/migrations';
 import { NodeStore } from '../schema/node-store';
 import { StorageEngine } from '../storage/storage-engine';
 import { StoreTx } from './store-tx';
+import { entityChanges } from '../storage/entity-changes';
 
 describe('transaction entities', () => {
   let engine: StorageEngine;
@@ -22,6 +23,33 @@ describe('transaction entities', () => {
     });
   });
   afterEach(async () => engine.close());
+
+  it('shares empty changed-field sets for inserts, deletes and reorders', async () => {
+    await engine.transaction(async (sql) => {
+      const rows = new StoreTx('items', nodes, sql, sql.changes).entities<{ id: number; value: string }>('');
+      await rows.insert([{ id: 2, entity: { id: 2, value: 'b' } }, { id: 3, entity: { id: 3, value: 'c' } }]);
+      await rows.setPosition(1, 10);
+      const changes = [...entityChanges(sql.changes).get('items')!.values()];
+      expect(changes.map(({ kind }) => kind).sort()).toEqual(['insert', 'insert', 'reorder']);
+      for (const change of changes) {
+        expect([...change.fields]).toEqual([]);
+        expect(change.fields).toBe(changes[0].fields);
+      }
+      await rows.remove([1]);
+      const deleted = [...entityChanges(sql.changes).get('items')!.values()].find(({ kind }) => kind === 'delete')!;
+      expect(deleted.fields).toBe(changes[0].fields);
+    });
+  });
+
+  it('retains exact changed fields for updates', async () => {
+    await engine.transaction(async (sql) => {
+      const rows = new StoreTx('items', nodes, sql, sql.changes).entities<{ id: number; value: string; added?: boolean }>('');
+      await rows.update(1, { id: 1, value: 'updated', added: true });
+      const [change] = entityChanges(sql.changes).get('items')!.values();
+      expect(change.kind).toBe('update');
+      expect([...change.fields].sort()).toEqual(['added', 'value']);
+    });
+  });
 
   it('updates a locally cached row without a read and one buffered UPDATE, invalidates cached state and preserves extras', async () => {
     await engine.transaction(async (sql) => {

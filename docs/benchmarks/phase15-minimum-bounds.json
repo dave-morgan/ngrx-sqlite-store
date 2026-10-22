@@ -1,0 +1,44 @@
+[
+  {
+    "size": 1000,
+    "metric": "firstReadyMs",
+    "callsMin": 2,
+    "bytesMin": 136210,
+    "justification": "The timed first-ready is a WebView reload after default seeding/reset, so an existing native connection may be reused. The fresh JavaScript context must read persisted todos.seedVersion before seedOnInit can request a replacement seed (projects/harness/src/app/state/effects.ts), then make at least one atomic seed write/commit call; the read result causally precedes generateSeed/seedLoaded and cannot share that write call. Thus calls_min=2 without charging native open. JSON-row storage must transfer 136210 UTF-8 bytes for the 1000 deterministic Todo JSON values (generateSeed(size,42), sum Buffer.byteLength(JSON.stringify(todo))). This excludes SQL, bridge envelopes, escaping, duplicate row IDs, users, notes and metadata; those omissions make the bound conservative."
+  },
+  {
+    "size": 1000,
+    "metric": "relaunchReadyMs",
+    "callsMin": 2,
+    "bytesMin": 0,
+    "justification": "A fresh JavaScript context must open the native SQLite database and read persisted state before the todo summary can render. Existing CapacitorSQLite.open cannot execute the subsequent query, so at least two native calls are necessary. No response bytes or observed migration/session calls are charged."
+  },
+  {
+    "size": 10000,
+    "metric": "firstReadyMs",
+    "callsMin": 2,
+    "bytesMin": 1380887,
+    "justification": "The timed first-ready is a WebView reload after default seeding/reset, so an existing native connection may be reused. The fresh JavaScript context must read persisted todos.seedVersion before seedOnInit can request a replacement seed (projects/harness/src/app/state/effects.ts), then make at least one atomic seed write/commit call; the read result causally precedes generateSeed/seedLoaded and cannot share that write call. Thus calls_min=2 without charging native open. JSON-row storage must transfer 1380887 UTF-8 bytes for the 10000 deterministic Todo JSON values (generateSeed(size,42), sum Buffer.byteLength(JSON.stringify(todo))). This excludes SQL, bridge envelopes, escaping, duplicate row IDs, users, notes and metadata; those omissions make the bound conservative."
+  },
+  {
+    "size": 10000,
+    "metric": "relaunchReadyMs",
+    "callsMin": 2,
+    "bytesMin": 0,
+    "justification": "A fresh JavaScript context must open the native SQLite database and read persisted state before the todo summary can render. Existing CapacitorSQLite.open cannot execute the subsequent query, so at least two native calls are necessary. No response bytes or observed migration/session calls are charged."
+  },
+  {
+    "size": 50000,
+    "metric": "firstReadyMs",
+    "callsMin": 2,
+    "bytesMin": 6992197,
+    "justification": "The timed first-ready is a WebView reload after default seeding/reset, so an existing native connection may be reused. The fresh JavaScript context must read persisted todos.seedVersion before seedOnInit can request a replacement seed (projects/harness/src/app/state/effects.ts), then make at least one atomic seed write/commit call; the read result causally precedes generateSeed/seedLoaded and cannot share that write call. Thus calls_min=2 without charging native open. JSON-row storage must transfer 6992197 UTF-8 bytes for the 50000 deterministic Todo JSON values (generateSeed(size,42), sum Buffer.byteLength(JSON.stringify(todo))). This excludes SQL, bridge envelopes, escaping, duplicate row IDs, users, notes and metadata; those omissions make the bound conservative."
+  },
+  {
+    "size": 50000,
+    "metric": "relaunchReadyMs",
+    "callsMin": 2,
+    "bytesMin": 0,
+    "justification": "A fresh JavaScript context must open the native SQLite database and read persisted state before the todo summary can render. Existing CapacitorSQLite.open cannot execute the subsequent query, so at least two native calls are necessary. No response bytes or observed migration/session calls are charged."
+  }
+]

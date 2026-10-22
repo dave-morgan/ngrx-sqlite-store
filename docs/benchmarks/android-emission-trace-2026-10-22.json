@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-22",
+  "serial": "emulator-5554",
+  "packageName": "dev.ngrxsqlite.harness.sqlite",
+  "device": "sdk_gphone64_x86_64",
+  "caveat": "Driver method timings can nest (e.g. commit includes batch), so summing all calls double-counts work. Three emissions are a diagnostic, not acceptance statistics.",
+  "emission": {
+    "runs": 3,
+    "p50": 18.4000000001397,
+    "p95": 30.899999999906868,
+    "max": 30.899999999906868,
+    "samples": [
+      18.4000000001397,
+      30.899999999906868,
+      17.600000000093132
+    ]
+  },
+  "calls": [
+    {
+      "method": "batch",
+      "args": [
+        [],
+        {
+          "transaction": true
+        }
+      ],
+      "ms": 17.199999999953434
+    },
+    {
+      "method": "batch",
+      "args": [
+        [],
+        {
+          "transaction": true
+        }
+      ],
+      "ms": 29.199999999953434
+    },
+    {
+      "method": "batch",
+      "args": [
+        [],
+        {
+          "transaction": true
+        }
+      ],
+      "ms": 15.900000000139698
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-22",
+  "serial": "emulator-5554",
+  "packageName": "dev.ngrxsqlite.harness.sqlite",
+  "device": "sdk_gphone64_x86_64",
+  "caveat": "Read-only verification of driver startup configuration; no PRAGMA settings are changed.",
+  "initial": {
+    "journalMode": {
+      "values": [
+        {
+          "journal_mode": "wal"
+        }
+      ]
+    },
+    "synchronous": {
+      "values": [
+        {
+          "synchronous": 1
+        }
+      ]
+    }
+  },
+  "verification": {
+    "pass": true,
+    "expectedJournalMode": "wal",
+    "journalMode": "wal",
+    "synchronous": 1
+  }
+}

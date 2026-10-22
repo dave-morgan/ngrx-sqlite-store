@@ -1,4 +1,5 @@
 import { committedWrites } from '../storage/committed-writes';
+import { BATCH_BYTE_BUDGET, statementByteLength } from '../driver/batch-budget';
 import type { SqlValue } from '../driver/sql-driver';
 import type { ChangeSet } from '../storage/change-set';
 import { escapeSegment, subtreeRange } from '../storage/path';
@@ -6,6 +7,24 @@ import type { SqlExecutor } from '../storage/storage-engine';
 import { RowCapExceededError } from './errors';
 import type { NodeKind } from './kinds';
 import { utf8ByteLength } from './utf8';
+
+/** Preserve lexical whitespace and avoid adding depth to JSON1's parser limit. */
+function needsStringEnvelope(data: string): boolean {
+  let quoted = false;
+  let depth = 0;
+  for (let index = 0; index < data.length; index++) {
+    const char = data[index];
+    if (quoted && char === '\\') index++;
+    else if (char === '"') quoted = !quoted;
+    else if (!quoted) {
+      if (char === ' ' || char === '\n' || char === '\r' || char === '\t') return true;
+      if (char === '[' || char === '{') {
+        if (++depth > 900) return true;
+      } else if (char === ']' || char === '}') depth--;
+    }
+  }
+  return false;
+}
 
 export interface NodeRow {
   path: string;
@@ -82,17 +101,100 @@ export class RowWriter {
 
   async flush(): Promise<void> {
     for (const [table, { columns, rows }] of this.pending) {
-      const batchSize = Math.floor(999 / columns.length);
-      for (let i = 0; i < rows.length; i += batchSize) {
-        const batch = rows.slice(i, i + batchSize);
-        const placeholders = batch.map(() => `(${columns.map(() => '?').join(',')})`).join(',');
-        await this.write(
-          `INSERT INTO ${table} (${columns.join(',')}) VALUES ${placeholders}`,
-          batch.flat(),
-        );
+      for (const batch of this.insertBatches(
+        rows,
+        `INSERT INTO ${table} (${columns.join(',')}) VALUES `,
+        '',
+        (row) => row,
+      )) {
+        await this.write(batch.sql, batch.params);
       }
     }
     this.pending.clear();
+  }
+
+  /** Size rows once, retaining only one bind/byte-bounded SQL group at a time. */
+  private *insertBatches<T>(
+    rows: readonly T[],
+    prefix: string,
+    suffix: string,
+    values: (row: T) => SqlValue[],
+  ): Generator<{ sql: string; params: SqlValue[]; rows: T[] }> {
+    if (rows.length && rows.length > Math.floor(999 / values(rows[0]).length)) {
+      yield* this.jsonInsertBatches(rows, prefix, suffix, values);
+      return;
+    }
+    let index = 0;
+    while (index < rows.length) {
+      const group: T[] = [];
+      const params: SqlValue[] = [];
+      const placeholders: string[] = [];
+      let bytes = statementByteLength(prefix + suffix) + 2;
+      while (index < rows.length) {
+        const row = rows[index];
+        const fields = values(row);
+        const placeholder = `(${fields.map(() => '?').join(',')})`;
+        const addedBytes =
+          utf8ByteLength(JSON.stringify(fields)) - 2 + placeholder.length + (group.length ? 2 : 0);
+        if (
+          group.length &&
+          (params.length + fields.length > 999 || bytes + addedBytes > BATCH_BYTE_BUDGET)
+        ) break;
+        group.push(row);
+        params.push(...fields);
+        placeholders.push(placeholder);
+        bytes += addedBytes;
+        index++;
+      }
+      yield { sql: prefix + placeholders.join(',') + suffix, params, rows: group };
+    }
+  }
+
+  private *jsonInsertBatches<T>(
+    rows: readonly T[],
+    prefix: string,
+    suffix: string,
+    values: (row: T) => SqlValue[],
+  ): Generator<{ sql: string; params: SqlValue[]; rows: T[] }> {
+    const columns = values(rows[0]).map((_, index) => `json_extract(value,'$[${index}]')`);
+    const entityData = /^INSERT INTO nss_entity\b/.test(prefix);
+    if (entityData) columns[3] = "COALESCE(value -> '$[3].j',json_extract(value,'$[3].s'),'')";
+    const sql = prefix.replace(/VALUES\s*$/, '') +
+      `SELECT ${columns.join(',')} FROM json_each(?) WHERE 1${suffix}`;
+    const framingBytes = statementByteLength(sql, ['[]']) + 2;
+    let index = 0;
+    while (index < rows.length) {
+      const group: T[] = [];
+      const encoded: string[] = [];
+      let bytes = framingBytes;
+      while (index < rows.length) {
+        const row = rows[index];
+        const fields = values(row);
+        let json: string;
+        if (entityData) {
+          const data = fields[3] as string;
+          let encodedData = '{}';
+          if (data) {
+            try {
+              JSON.parse(data);
+              encodedData = needsStringEnvelope(data) ? JSON.stringify({ s: data }) : `{"j":${data}}`;
+            } catch {
+              // RowWriter also accepts opaque data; SQL must preserve its text.
+              encodedData = JSON.stringify({ s: data });
+            }
+          }
+          json = `[${fields.map((field, index) => index === 3 ? encodedData : JSON.stringify(field)).join(',')}]`;
+        } else json = JSON.stringify(fields);
+        // Bound the second JSON encoding used for the native string binding.
+        const addedBytes = utf8ByteLength(JSON.stringify(json)) - 2 + (group.length ? 1 : 0);
+        if (group.length && bytes + addedBytes > BATCH_BYTE_BUDGET) break;
+        encoded.push(json);
+        group.push(row);
+        bytes += addedBytes;
+        index++;
+      }
+      yield { sql, params: [`[${encoded.join(',')}]`], rows: group };
+    }
   }
 
   async updateValue(path: string, value: string | null, changePath = path): Promise<void> {
@@ -142,13 +244,14 @@ export class RowWriter {
       this.check(row.coll, row.sortkey ?? null);
     }
     await this.flush();
-    for (let index = 0; index < rows.length; index += 199) {
-      const batch = rows.slice(index, index + 199);
-      await this.write(
-        `INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES ${batch.map(() => '(?,?,?,?,?)').join(',')} ON CONFLICT(coll,id) DO ${upsert ? 'UPDATE SET data = excluded.data, pos = excluded.pos, sortkey = excluded.sortkey' : 'NOTHING'}`,
-        batch.flatMap(({ coll, id, pos, data, sortkey }) => [coll, id, pos, data, sortkey ?? null]),
-      );
-      for (const row of batch) {
+    for (const batch of this.insertBatches(
+      rows,
+      'INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES ',
+      ` ON CONFLICT(coll,id) DO ${upsert ? 'UPDATE SET data = excluded.data, pos = excluded.pos, sortkey = excluded.sortkey' : 'NOTHING'}`,
+      ({ coll, id, pos, data, sortkey }) => [coll, id, pos, data, sortkey ?? null],
+    )) {
+      await this.write(batch.sql, batch.params);
+      for (const row of batch.rows) {
         const journal = committedWrites(this.changes);
         const previous = journal.entities.get(row.coll)?.get(row.id);
         const unknown =

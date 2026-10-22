@@ -16,6 +16,8 @@ import type { SqlExecutor } from '../storage/storage-engine';
 import { changedFields, entityChanges, recordEntityChange } from '../storage/entity-changes';
 import { escapeSegment } from '../storage/path';
 
+const EMPTY_CHANGED_FIELDS: ReadonlySet<string> = new Set<string>();
+
 export type EntityId = string | number;
 export interface EntityInput<T> {
   id: EntityId;
@@ -111,7 +113,9 @@ export class EntityTx<T> {
             : next === undefined
               ? 'delete'
               : 'update',
-        fields: changedFields(prev, next),
+        fields: !reorder && prev !== undefined && next !== undefined
+          ? changedFields(prev, next)
+          : EMPTY_CHANGED_FIELDS,
       });
     };
   }

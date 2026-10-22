@@ -42,9 +42,13 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0034](0034-seed-retention-contracts.md) | Device retainer paths; preserve action/history/active-lease contracts and scope write journals | Phase 13 brief / Agent | 2026-10-21 | Accepted |
 | [0035](0035-scoped-query-view-retention.md) | Scope query memo metadata to declared sources so evicted pages can collect | Agent / Library retention fix | 2026-10-21 | Accepted |
 | [0036](0036-whole-store-subscriptions-loaded-view.md) | Whole-store subscriptions see loaded-path view by default (`sqlite.wholeStore: loaded|pin-all`); router-store storeState payloads partial | Agent | 2026-10-21 | Accepted |
-
 | [0037](0037-change-aware-query-refresh.md) | Change-aware entity query maintenance and bounded batched refresh | Agent | 2026-10-22 | Accepted |
 | [0038](0038-performance-acceptance-criteria.md) | Performance acceptance: within 1 SD of classic, else bridge-bound with measured RTT/bandwidth arithmetic, else FAIL | User goal / Agent | 2026-10-22 | Accepted |
+| [0039](0039-bounded-bulk-bridge-payloads.md) | Bound bulk bridge JSON to 256 KiB with atomic streaming and byte-bounded row groups | Agent / Phase 15 Q17 | 2026-10-22 | Accepted |
+| [0040](0040-parity-measurement-protocol.md) | Independent alternating Android trials, full-precision observations and measured bridge bounds | Agent | 2026-10-22 | Accepted |
+| [0041](0041-json-bulk-and-current-schema-open.md) | Single-binding JSON1 bulk inserts and read-only current-schema open, retaining atomic migration fallback | Agent / Phase 15 parity | 2026-10-22 | Accepted |
+| [0042](0042-android-wal.md) | Writable Android connections use WAL with the existing synchronous level; power-loss durability tradeoff documented | Agent / Phase 15 parity | 2026-10-22 | Accepted |
+| [0043](0043-raw-json-bulk-and-insert-journals.md) | Raw JSON bulk entity cells and shared empty non-update field sets reduce seed transport and allocation | Agent / Phase 15 trace | 2026-10-22 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

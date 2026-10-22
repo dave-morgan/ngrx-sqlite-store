@@ -1,0 +1,36 @@
+{
+  "session": "15d-final-20261022-03",
+  "diagnosticOnly": true,
+  "caveat": "One ordered indexed/unindexed/indexed sequence after acceptance. Reset, seed and refresh use the normal store. DDL runs separately and is restored in finally; this does not prove safe catch-and-continue or atomic index suspension in production. Timing includes emulator drift; no floor or acceptance allowance derives from it.",
+  "size": 50000,
+  "indexes": [
+    {
+      "name": "nss_query_757365724964",
+      "sql": "CREATE INDEX nss_query_757365724964 ON nss_entity(coll,json_extract(data,'$.userId')) WHERE data != '' AND json_valid(data)"
+    },
+    {
+      "name": "nss_query_646f6e65",
+      "sql": "CREATE INDEX nss_query_646f6e65 ON nss_entity(coll,json_extract(data,'$.done')) WHERE data != '' AND json_valid(data)"
+    }
+  ],
+  "runs": [
+    {
+      "mode": "indexed-before",
+      "generateMs": 89.0999999998603,
+      "reduceMs": 3276.7000000001863,
+      "rebuildMs": 0
+    },
+    {
+      "mode": "unindexed",
+      "generateMs": 98.19999999995343,
+      "reduceMs": 3071.5,
+      "rebuildMs": 0
+    },
+    {
+      "mode": "indexed-after",
+      "generateMs": 83,
+      "reduceMs": 3074.5,
+      "rebuildMs": 158.30000000004657
+    }
+  ]
+}

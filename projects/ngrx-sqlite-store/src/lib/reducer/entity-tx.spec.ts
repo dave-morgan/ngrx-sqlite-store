@@ -24,6 +24,22 @@ describe('transaction entities', () => {
   });
   afterEach(async () => engine.close());
 
+  it('does not parse its already validated canonical JSON during bulk replacement', async () => {
+    const entity = { id: 0, value: 'canonical bulk value "\\\n😀' };
+    const text = JSON.stringify(entity);
+    const parse = vi.spyOn(JSON, 'parse');
+    try {
+      await engine.transaction(async (sql) => {
+        const rows = new StoreTx('items', nodes, sql, sql.changes).entities<typeof entity>('');
+        await rows.replaceAll(Array.from({ length: 220 }, (_, id) => ({ id, entity })));
+      });
+      expect(parse.mock.calls.filter(([value]) => value === text)).toEqual([]);
+    } finally {
+      parse.mockRestore();
+    }
+    expect(await engine.read((sql) => sql.query('SELECT COUNT(*) AS count FROM nss_entity WHERE coll = ?', ['items']))).toEqual([{ count: 220 }]);
+  });
+
   it('shares empty changed-field sets for inserts, deletes and reorders', async () => {
     await engine.transaction(async (sql) => {
       const rows = new StoreTx('items', nodes, sql, sql.changes).entities<{ id: number; value: string }>('');

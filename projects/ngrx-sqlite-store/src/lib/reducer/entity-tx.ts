@@ -344,7 +344,7 @@ export class EntityTx<T> {
           this.changes,
         );
     }
-    await this.writer.writeEntityRows(batch, false, undefined, replace);
+    await this.writer.writeEntityRows(batch, false, undefined, replace, { canonicalJson: true });
     for (const record of deltas) record();
     this.changed();
   }
@@ -393,7 +393,7 @@ export class EntityTx<T> {
         sortkey: row.sortkey,
       });
     }
-    await this.writer.writeEntityRows(batch, true, orderChanges);
+    await this.writer.writeEntityRows(batch, true, orderChanges, false, { canonicalJson: true });
     for (const record of deltas) record();
     this.changed();
   }

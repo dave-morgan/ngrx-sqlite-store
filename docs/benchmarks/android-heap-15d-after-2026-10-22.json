@@ -1,0 +1,4331 @@
+{
+  "method": "V8 snapshot self_size sums: shallow bytes only, not retained sizes or native memory. Groups overlap across tables. Object shapes use up to 24 property names; classes/function names may be minified differently across builds. Compare fresh-process snapshots captured on the same route, data size and GC policy; snapshots are diagnostics, not acceptance trials.",
+  "before": {
+    "path": ".tmp/phase15d-classic-after.heapsnapshot",
+    "nodeCount": 151944,
+    "totalShallowBytes": 7232788,
+    "byType": [
+      {
+        "name": "native",
+        "count": 32940,
+        "shallowBytes": 2911544
+      },
+      {
+        "name": "code",
+        "count": 38588,
+        "shallowBytes": 1977416
+      },
+      {
+        "name": "string",
+        "count": 26275,
+        "shallowBytes": 620132
+      },
+      {
+        "name": "array",
+        "count": 2808,
+        "shallowBytes": 447480
+      },
+      {
+        "name": "object",
+        "count": 14666,
+        "shallowBytes": 414636
+      },
+      {
+        "name": "closure",
+        "count": 14260,
+        "shallowBytes": 408460
+      },
+      {
+        "name": "object shape",
+        "count": 6381,
+        "shallowBytes": 362356
+      },
+      {
+        "name": "concatenated string",
+        "count": 3896,
+        "shallowBytes": 77920
+      },
+      {
+        "name": "number",
+        "count": 12021,
+        "shallowBytes": 12396
+      },
+      {
+        "name": "symbol",
+        "count": 69,
+        "shallowBytes": 256
+      },
+      {
+        "name": "regexp",
+        "count": 8,
+        "shallowBytes": 192
+      },
+      {
+        "name": "synthetic",
+        "count": 32,
+        "shallowBytes": 0
+      }
+    ],
+    "objectClasses": [
+      {
+        "name": "Object",
+        "count": 5429,
+        "shallowBytes": 186224
+      },
+      {
+        "name": "Array",
+        "count": 2948,
+        "shallowBytes": 47168
+      },
+      {
+        "name": "system / Context / scope @62013",
+        "count": 1180,
+        "shallowBytes": 23600
+      },
+      {
+        "name": "t",
+        "count": 135,
+        "shallowBytes": 14744
+      },
+      {
+        "name": "system / Context / scope @85795",
+        "count": 332,
+        "shallowBytes": 11952
+      },
+      {
+        "name": "system / Context / scope @85587",
+        "count": 332,
+        "shallowBytes": 9296
+      },
+      {
+        "name": "e",
+        "count": 297,
+        "shallowBytes": 7208
+      },
+      {
+        "name": "ka",
+        "count": 278,
+        "shallowBytes": 6672
+      },
+      {
+        "name": "system / Context / scope @38989",
+        "count": 332,
+        "shallowBytes": 6640
+      },
+      {
+        "name": "Mn",
+        "count": 98,
+        "shallowBytes": 5488
+      },
+      {
+        "name": "U",
+        "count": 130,
+        "shallowBytes": 4536
+      },
+      {
+        "name": "n",
+        "count": 81,
+        "shallowBytes": 4028
+      },
+      {
+        "name": "system / Context / scope @58789",
+        "count": 1,
+        "shallowBytes": 4004
+      },
+      {
+        "name": "Pa",
+        "count": 105,
+        "shallowBytes": 3360
+      },
+      {
+        "name": "system / Context / scope @98955",
+        "count": 98,
+        "shallowBytes": 3136
+      },
+      {
+        "name": "system / Context / scope @61507",
+        "count": 104,
+        "shallowBytes": 2912
+      },
+      {
+        "name": "Bo",
+        "count": 116,
+        "shallowBytes": 2784
+      },
+      {
+        "name": "La",
+        "count": 105,
+        "shallowBytes": 2520
+      },
+      {
+        "name": "Lt",
+        "count": 52,
+        "shallowBytes": 2496
+      },
+      {
+        "name": "system / Context / scope @71291",
+        "count": 88,
+        "shallowBytes": 2464
+      },
+      {
+        "name": "system / Context / scope @82555",
+        "count": 88,
+        "shallowBytes": 2464
+      },
+      {
+        "name": "system / Context / scope @86057",
+        "count": 105,
+        "shallowBytes": 2100
+      },
+      {
+        "name": "system / Context / scope @99247",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "system / Context / scope @88255",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "system / Context / scope @89009",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "g",
+        "count": 72,
+        "shallowBytes": 2016
+      },
+      {
+        "name": "system / Context / scope @157261",
+        "count": 100,
+        "shallowBytes": 2000
+      },
+      {
+        "name": "system / Context / scope @58807",
+        "count": 1,
+        "shallowBytes": 1684
+      },
+      {
+        "name": "system / Context / scope @82547",
+        "count": 44,
+        "shallowBytes": 1584
+      },
+      {
+        "name": "system / Context / scope @120153",
+        "count": 1,
+        "shallowBytes": 1440
+      },
+      {
+        "name": "cs",
+        "count": 30,
+        "shallowBytes": 1440
+      },
+      {
+        "name": "system / Context / scope @98859",
+        "count": 51,
+        "shallowBytes": 1428
+      },
+      {
+        "name": "Ee",
+        "count": 32,
+        "shallowBytes": 1152
+      },
+      {
+        "name": "system / Context / scope @122929",
+        "count": 57,
+        "shallowBytes": 1140
+      },
+      {
+        "name": "system / Context / scope @82571",
+        "count": 44,
+        "shallowBytes": 1056
+      },
+      {
+        "name": "Map",
+        "count": 59,
+        "shallowBytes": 968
+      },
+      {
+        "name": "system / Context / scope @112733",
+        "count": 13,
+        "shallowBytes": 936
+      },
+      {
+        "name": "Error",
+        "count": 37,
+        "shallowBytes": 892
+      },
+      {
+        "name": "Gt",
+        "count": 5,
+        "shallowBytes": 840
+      },
+      {
+        "name": "system / Context / scope @71463",
+        "count": 29,
+        "shallowBytes": 696
+      },
+      {
+        "name": "TypedArray",
+        "count": 24,
+        "shallowBytes": 672
+      },
+      {
+        "name": "system / Context / scope @59911",
+        "count": 32,
+        "shallowBytes": 640
+      },
+      {
+        "name": "Arguments",
+        "count": 40,
+        "shallowBytes": 640
+      },
+      {
+        "name": "Oe",
+        "count": 16,
+        "shallowBytes": 596
+      },
+      {
+        "name": "Set",
+        "count": 34,
+        "shallowBytes": 568
+      },
+      {
+        "name": "system / Context / scope @98835",
+        "count": 26,
+        "shallowBytes": 520
+      },
+      {
+        "name": "system / Context / scope @118527",
+        "count": 26,
+        "shallowBytes": 520
+      },
+      {
+        "name": "Ni",
+        "count": 32,
+        "shallowBytes": 512
+      },
+      {
+        "name": "system / Context / scope @98937",
+        "count": 21,
+        "shallowBytes": 504
+      },
+      {
+        "name": "at",
+        "count": 15,
+        "shallowBytes": 480
+      },
+      {
+        "name": "ro",
+        "count": 29,
+        "shallowBytes": 464
+      },
+      {
+        "name": "system / Context / scope @98929",
+        "count": 19,
+        "shallowBytes": 456
+      },
+      {
+        "name": "Generator",
+        "count": 10,
+        "shallowBytes": 440
+      },
+      {
+        "name": "Je$1",
+        "count": 3,
+        "shallowBytes": 432
+      },
+      {
+        "name": "ye",
+        "count": 2,
+        "shallowBytes": 416
+      },
+      {
+        "name": "system / Context / scope @63927",
+        "count": 1,
+        "shallowBytes": 412
+      },
+      {
+        "name": "q",
+        "count": 8,
+        "shallowBytes": 384
+      },
+      {
+        "name": "system / Context / scope @113501",
+        "count": 19,
+        "shallowBytes": 380
+      },
+      {
+        "name": "o",
+        "count": 6,
+        "shallowBytes": 368
+      },
+      {
+        "name": "Go",
+        "count": 4,
+        "shallowBytes": 352
+      }
+    ],
+    "objectShapes": [
+      {
+        "name": "Object {consumer,knownValidAtEpoch,lastReadVersion,nextConsumer,nextProducer,prevConsumer,producer}",
+        "count": 1313,
+        "shallowBytes": 52520
+      },
+      {
+        "name": "Array {}",
+        "count": 2946,
+        "shallowBytes": 47136
+      },
+      {
+        "name": "Object {createdAt,done,id,priority,tags,title,userId}",
+        "count": 1001,
+        "shallowBytes": 40040
+      },
+      {
+        "name": "system / Context / scope @62013 {}",
+        "count": 1180,
+        "shallowBytes": 23600
+      },
+      {
+        "name": "Object {consumers,consumersTail,value}",
+        "count": 537,
+        "shallowBytes": 15036
+      },
+      {
+        "name": "Object {attrs,componentOffset,controlDirectiveIndex,customControlIndex,directiveEnd,directiveStart,directiveStylingLast,directiveToIndex,flags,hostDirectiveInputs,hostDirectiveOutputs,index,initialInputs,injectorIndex,inputs,insertBeforeIndex,localNames,mergedAttrs,namespace,outputs,propertyBindings,providerIndexes,type,value,... 39 properties}",
+        "count": 81,
+        "shallowBytes": 13608
+      },
+      {
+        "name": "t {_fragment,_info,_preserveFragment,_queryParams,_queryParamsHandling,_relativeTo,_replaceUrl,_skipLocationChange,_state,_target,applicationErrorHandler,browserUrl,el,hrefAttributeValue,isAnchorElement,locationStrategy,onChanges,options,reactiveHref,reactiveRouterState,renderer,route,router,tabIndexAttribute,... 27 properties}",
+        "count": 104,
+        "shallowBytes": 12480
+      },
+      {
+        "name": "system / Context / scope @85795 {}",
+        "count": 332,
+        "shallowBytes": 11952
+      },
+      {
+        "name": "system / Context / scope @85587 {}",
+        "count": 332,
+        "shallowBytes": 9296
+      },
+      {
+        "name": "ka {$implicit,$index,lContainer}",
+        "count": 278,
+        "shallowBytes": 6672
+      },
+      {
+        "name": "system / Context / scope @38989 {}",
+        "count": 332,
+        "shallowBytes": 6640
+      },
+      {
+        "name": "Object {value}",
+        "count": 214,
+        "shallowBytes": 5992
+      },
+      {
+        "name": "Object {equal,value}",
+        "count": 208,
+        "shallowBytes": 5824
+      },
+      {
+        "name": "Mn {_complete,_error,_finalizers,_next,_parentage,closed,destination,initialTeardown,isStopped,onFinalize,shouldUnsubscribe}",
+        "count": 98,
+        "shallowBytes": 5488
+      },
+      {
+        "name": "U {closed,currentObservers,hasError,isStopped,observers,thrownError}",
+        "count": 124,
+        "shallowBytes": 4464
+      },
+      {
+        "name": "system / Context / scope @58789 {}",
+        "count": 1,
+        "shallowBytes": 4004
+      },
+      {
+        "name": "Object {factory,multi,value}",
+        "count": 161,
+        "shallowBytes": 3864
+      },
+      {
+        "name": "Pa {hostLView,lContainer,needsIndexUpdate,operationsCounter,templateTNode}",
+        "count": 105,
+        "shallowBytes": 3360
+      },
+      {
+        "name": "system / Context / scope @98955 {}",
+        "count": 98,
+        "shallowBytes": 3136
+      },
+      {
+        "name": "Object {consumers,consumersTail,value,version}",
+        "count": 111,
+        "shallowBytes": 3108
+      },
+      {
+        "name": "Object {transformFn,value}",
+        "count": 105,
+        "shallowBytes": 2940
+      },
+      {
+        "name": "system / Context / scope @61507 {}",
+        "count": 104,
+        "shallowBytes": 2912
+      },
+      {
+        "name": "Object {computation,consumers,consumersTail,dirty,lastCleanEpoch,producers,producersTail,recomputing,source,sourceValue,value,version}",
+        "count": 104,
+        "shallowBytes": 2912
+      },
+      {
+        "name": "Object {consumers,consumersTail,equal,value}",
+        "count": 104,
+        "shallowBytes": 2912
+      },
+      {
+        "name": "Object {routerLink}",
+        "count": 104,
+        "shallowBytes": 2912
+      },
+      {
+        "name": "Bo {currentValue,firstChange,previousValue}",
+        "count": 116,
+        "shallowBytes": 2784
+      },
+      {
+        "name": "e {nativeElement}",
+        "count": 171,
+        "shallowBytes": 2736
+      },
+      {
+        "name": "La {hasEmptyBlock,liveCollection,trackByFn}",
+        "count": 105,
+        "shallowBytes": 2520
+      },
+      {
+        "name": "Lt {canSeeViewProviders,componentProviders,factory,index,injectImpl,multi,name,providerFactory,resolving}",
+        "count": 52,
+        "shallowBytes": 2496
+      },
+      {
+        "name": "Object {clearResult,memoized,reset,setResult}",
+        "count": 89,
+        "shallowBytes": 2492
+      },
+      {
+        "name": "system / Context / scope @71291 {}",
+        "count": 88,
+        "shallowBytes": 2464
+      },
+      {
+        "name": "system / Context / scope @82555 {}",
+        "count": 88,
+        "shallowBytes": 2464
+      },
+      {
+        "name": "Object {current,previous}",
+        "count": 114,
+        "shallowBytes": 2280
+      },
+      {
+        "name": "Object {}",
+        "count": 97,
+        "shallowBytes": 2260
+      },
+      {
+        "name": "system / Context / scope @86057 {}",
+        "count": 105,
+        "shallowBytes": 2100
+      },
+      {
+        "name": "system / Context / scope @99247 {}",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "system / Context / scope @88255 {}",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "system / Context / scope @89009 {}",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "Object {bindingStartIndex,blueprint,cleanup,components,contentCheckHooks,contentHooks,contentQueries,data,declTNode,destroyHooks,expandoStartIndex,firstCreatePass,firstUpdatePass,hostBindingOpCodes,preOrderCheckHooks,preOrderHooks,queries,staticContentQueries,staticViewQueries,template,type,viewCheckHooks,viewHooks,viewQuery,... 31 properties}",
+        "count": 15,
+        "shallowBytes": 2040
+      },
+      {
+        "name": "system / Context / scope @157261 {}",
+        "count": 100,
+        "shallowBytes": 2000
+      },
+      {
+        "name": "Object {contentQueries,controlDef,debugInfo,declaredInputs,exportAs,factory,features,hostAttrs,hostBindings,hostDirectives,hostVars,inputConfig,inputs,outputs,providersResolver,resolveHostDirectives,selectors,setInput,signalFormsInputPresence,signals,standalone,type,viewProvidersResolver,viewQuery}",
+        "count": 18,
+        "shallowBytes": 1944
+      },
+      {
+        "name": "g {_desc,ngMetadataName,ɵprov}",
+        "count": 69,
+        "shallowBytes": 1932
+      },
+      {
+        "name": "Object {factory,providedIn,token,value}",
+        "count": 64,
+        "shallowBytes": 1792
+      },
+      {
+        "name": "system / Context / scope @58807 {}",
+        "count": 1,
+        "shallowBytes": 1684
+      },
+      {
+        "name": "Object {name,rtype}",
+        "count": 83,
+        "shallowBytes": 1660
+      },
+      {
+        "name": "system / Context / scope @82547 {}",
+        "count": 44,
+        "shallowBytes": 1584
+      },
+      {
+        "name": "e {_finalizers,_parentage,closed,initialTeardown}",
+        "count": 54,
+        "shallowBytes": 1512
+      },
+      {
+        "name": "system / Context / scope @120153 {}",
+        "count": 1,
+        "shallowBytes": 1440
+      },
+      {
+        "name": "cs {__isAsync,closed,currentObservers,destroyRef,hasError,isStopped,observers,pendingTasks,thrownError}",
+        "count": 30,
+        "shallowBytes": 1440
+      },
+      {
+        "name": "system / Context / scope @98859 {}",
+        "count": 51,
+        "shallowBytes": 1428
+      },
+      {
+        "name": "Ee {_finalizers,_parentage,closed,destination,initialTeardown,isStopped}",
+        "count": 32,
+        "shallowBytes": 1152
+      },
+      {
+        "name": "system / Context / scope @122929 {}",
+        "count": 57,
+        "shallowBytes": 1140
+      },
+      {
+        "name": "system / Context / scope @82571 {}",
+        "count": 44,
+        "shallowBytes": 1056
+      },
+      {
+        "name": "n {__ngContext__,_element,_renderer,_select,_value,id}",
+        "count": 28,
+        "shallowBytes": 1008
+      },
+      {
+        "name": "n {_changeDetectorRef,_composedAsyncValidatorFn,_composedValidatorFn,_onDestroyCallbacks,_parent,_rawAsyncValidators,_rawValidators,_registered,_selectedValueAccessor,callSetDisabledState,control,customControlBindings,injector,isCustomControlBased,isNativeFormElement,name,parseErrorsValidator,rawValueAccessors,renderer,requiredValidatorViaDi,resetSubscription,subscription,userOnReset,valueAccessor,... 32 properties}",
+        "count": 5,
+        "shallowBytes": 960
+      },
+      {
+        "name": "system / Context / scope @112733 {}",
+        "count": 13,
+        "shallowBytes": 936
+      },
+      {
+        "name": "Map {}",
+        "count": 57,
+        "shallowBytes": 912
+      },
+      {
+        "name": "Object {computation,consumers,consumersTail,dirty,lastCleanEpoch,producers,producersTail,recomputing,value,version}",
+        "count": 32,
+        "shallowBytes": 896
+      },
+      {
+        "name": "n {__ngContext__,_element,_renderer,_select,id}",
+        "count": 28,
+        "shallowBytes": 896
+      },
+      {
+        "name": "Gt {_asyncValidationSubscription,_composedAsyncValidatorFn,_composedValidatorFn,_events,_hasOwnPendingAsyncValidator,_hasRequired,_onCollectionChange,_parent,_pendingDirty,_pendingTouched,_pristine,_rawAsyncValidators,_rawValidators,_status,_touched,_updateOn,errors,events,pristineReactive,statusChanges,statusReactive,touchedReactive,value,valueChanges,... 29 properties}",
+        "count": 5,
+        "shallowBytes": 840
+      }
+    ],
+    "functions": [
+      {
+        "name": "(anonymous)",
+        "count": 4831,
+        "shallowBytes": 138304
+      },
+      {
+        "name": "r",
+        "count": 1711,
+        "shallowBytes": 49660
+      },
+      {
+        "name": "native_bind",
+        "count": 1302,
+        "shallowBytes": 31248
+      },
+      {
+        "name": "equal",
+        "count": 313,
+        "shallowBytes": 8764
+      },
+      {
+        "name": "u",
+        "count": 138,
+        "shallowBytes": 4404
+      },
+      {
+        "name": "i",
+        "count": 108,
+        "shallowBytes": 3032
+      },
+      {
+        "name": "a",
+        "count": 95,
+        "shallowBytes": 3024
+      },
+      {
+        "name": "c",
+        "count": 94,
+        "shallowBytes": 2996
+      },
+      {
+        "name": "s",
+        "count": 91,
+        "shallowBytes": 2912
+      },
+      {
+        "name": "t",
+        "count": 75,
+        "shallowBytes": 2260
+      },
+      {
+        "name": "toString",
+        "count": 79,
+        "shallowBytes": 2212
+      },
+      {
+        "name": "e",
+        "count": 61,
+        "shallowBytes": 1864
+      },
+      {
+        "name": "ɵfac",
+        "count": 51,
+        "shallowBytes": 1632
+      },
+      {
+        "name": "next",
+        "count": 36,
+        "shallowBytes": 1008
+      },
+      {
+        "name": "n",
+        "count": 30,
+        "shallowBytes": 912
+      },
+      {
+        "name": "queryAll",
+        "count": 31,
+        "shallowBytes": 868
+      },
+      {
+        "name": "factory",
+        "count": 30,
+        "shallowBytes": 840
+      },
+      {
+        "name": "valueOf",
+        "count": 24,
+        "shallowBytes": 672
+      },
+      {
+        "name": "f",
+        "count": 21,
+        "shallowBytes": 616
+      },
+      {
+        "name": "toJSON",
+        "count": 20,
+        "shallowBytes": 560
+      },
+      {
+        "name": "toLocaleString",
+        "count": 20,
+        "shallowBytes": 560
+      },
+      {
+        "name": "ngOnDestroy",
+        "count": 20,
+        "shallowBytes": 560
+      },
+      {
+        "name": "supportedLocalesOf",
+        "count": 20,
+        "shallowBytes": 560
+      },
+      {
+        "name": "resolvedOptions",
+        "count": 20,
+        "shallowBytes": 560
+      },
+      {
+        "name": "get",
+        "count": 19,
+        "shallowBytes": 532
+      },
+      {
+        "name": "add",
+        "count": 19,
+        "shallowBytes": 532
+      },
+      {
+        "name": "matches",
+        "count": 18,
+        "shallowBytes": 504
+      },
+      {
+        "name": "destroy",
+        "count": 16,
+        "shallowBytes": 448
+      },
+      {
+        "name": "get [Symbol.species]",
+        "count": 16,
+        "shallowBytes": 448
+      },
+      {
+        "name": "h",
+        "count": 15,
+        "shallowBytes": 428
+      },
+      {
+        "name": "from",
+        "count": 14,
+        "shallowBytes": 392
+      },
+      {
+        "name": "forEach",
+        "count": 14,
+        "shallowBytes": 392
+      },
+      {
+        "name": "has",
+        "count": 14,
+        "shallowBytes": 392
+      },
+      {
+        "name": "toSource",
+        "count": 14,
+        "shallowBytes": 392
+      },
+      {
+        "name": "p",
+        "count": 13,
+        "shallowBytes": 364
+      },
+      {
+        "name": "set",
+        "count": 12,
+        "shallowBytes": 336
+      },
+      {
+        "name": "values",
+        "count": 11,
+        "shallowBytes": 308
+      },
+      {
+        "name": "entries",
+        "count": 11,
+        "shallowBytes": 308
+      },
+      {
+        "name": "with",
+        "count": 11,
+        "shallowBytes": 308
+      },
+      {
+        "name": "at",
+        "count": 10,
+        "shallowBytes": 292
+      },
+      {
+        "name": "error",
+        "count": 10,
+        "shallowBytes": 280
+      },
+      {
+        "name": "return",
+        "count": 10,
+        "shallowBytes": 280
+      },
+      {
+        "name": "remove",
+        "count": 10,
+        "shallowBytes": 280
+      },
+      {
+        "name": "slice",
+        "count": 10,
+        "shallowBytes": 280
+      },
+      {
+        "name": "delete",
+        "count": 10,
+        "shallowBytes": 280
+      },
+      {
+        "name": "formatToParts",
+        "count": 10,
+        "shallowBytes": 280
+      },
+      {
+        "name": "hostBindings",
+        "count": 8,
+        "shallowBytes": 256
+      },
+      {
+        "name": "find",
+        "count": 9,
+        "shallowBytes": 252
+      },
+      {
+        "name": "clear",
+        "count": 9,
+        "shallowBytes": 252
+      },
+      {
+        "name": "keys",
+        "count": 9,
+        "shallowBytes": 252
+      },
+      {
+        "name": "complete",
+        "count": 9,
+        "shallowBytes": 252
+      },
+      {
+        "name": "includes",
+        "count": 8,
+        "shallowBytes": 224
+      },
+      {
+        "name": "create",
+        "count": 8,
+        "shallowBytes": 224
+      },
+      {
+        "name": "get byteLength",
+        "count": 8,
+        "shallowBytes": 224
+      },
+      {
+        "name": "toCSS",
+        "count": 8,
+        "shallowBytes": 224
+      },
+      {
+        "name": "of",
+        "count": 7,
+        "shallowBytes": 200
+      },
+      {
+        "name": "some",
+        "count": 7,
+        "shallowBytes": 196
+      },
+      {
+        "name": "map",
+        "count": 7,
+        "shallowBytes": 196
+      },
+      {
+        "name": "filter",
+        "count": 7,
+        "shallowBytes": 196
+      },
+      {
+        "name": "onDestroy",
+        "count": 7,
+        "shallowBytes": 196
+      }
+    ],
+    "code": [
+      {
+        "name": "system / InstructionStream",
+        "count": 972,
+        "shallowBytes": 594816
+      },
+      {
+        "name": "system / BytecodeArray",
+        "count": 2393,
+        "shallowBytes": 312840
+      },
+      {
+        "name": "system / ScopeInfo",
+        "count": 2631,
+        "shallowBytes": 132192
+      },
+      {
+        "name": "system / TrustedByteArray",
+        "count": 2391,
+        "shallowBytes": 120708
+      },
+      {
+        "name": "system / FeedbackVector",
+        "count": 888,
+        "shallowBytes": 76908
+      },
+      {
+        "name": "(constant pool)",
+        "count": 2065,
+        "shallowBytes": 73616
+      },
+      {
+        "name": "system / Code",
+        "count": 972,
+        "shallowBytes": 69984
+      },
+      {
+        "name": "system / FeedbackCell",
+        "count": 4265,
+        "shallowBytes": 68224
+      },
+      {
+        "name": "system / FeedbackMetadata",
+        "count": 2271,
+        "shallowBytes": 62032
+      },
+      {
+        "name": "system / SharedFunctionInfo",
+        "count": 966,
+        "shallowBytes": 44496
+      },
+      {
+        "name": "system / UncompiledDataWithoutPreparseData",
+        "count": 1850,
+        "shallowBytes": 37000
+      },
+      {
+        "name": "(context local names)",
+        "count": 4,
+        "shallowBytes": 34896
+      },
+      {
+        "name": "system / WeakFixedArray",
+        "count": 380,
+        "shallowBytes": 32756
+      },
+      {
+        "name": "system / ObjectBoilerplateDescription",
+        "count": 543,
+        "shallowBytes": 20768
+      },
+      {
+        "name": "system / BytecodeWrapper",
+        "count": 2393,
+        "shallowBytes": 19144
+      },
+      {
+        "name": "system / ClosureFeedbackCellArray",
+        "count": 588,
+        "shallowBytes": 18976
+      },
+      {
+        "name": "system / LoadHandler",
+        "count": 864,
+        "shallowBytes": 13900
+      },
+      {
+        "name": "system / ProtectedFixedArray",
+        "count": 75,
+        "shallowBytes": 11916
+      },
+      {
+        "name": "system / CodeWrapper",
+        "count": 3500,
+        "shallowBytes": 7776
+      },
+      {
+        "name": "(constant elements)",
+        "count": 273,
+        "shallowBytes": 5516
+      },
+      {
+        "name": "system / SharedFunctionInfo / t",
+        "count": 97,
+        "shallowBytes": 4656
+      },
+      {
+        "name": "system / ArrayBoilerplateDescription",
+        "count": 385,
+        "shallowBytes": 4608
+      },
+      {
+        "name": "system / SharedFunctionInfo / e",
+        "count": 92,
+        "shallowBytes": 4416
+      },
+      {
+        "name": "system / AllocationSite",
+        "count": 144,
+        "shallowBytes": 3864
+      },
+      {
+        "name": "system / SharedFunctionInfo / toString",
+        "count": 66,
+        "shallowBytes": 2544
+      },
+      {
+        "name": "(object elements)",
+        "count": 96,
+        "shallowBytes": 2512
+      },
+      {
+        "name": "system / SharedFunctionInfo / ɵfac",
+        "count": 51,
+        "shallowBytes": 2448
+      },
+      {
+        "name": "system / TrustedWeakFixedArray",
+        "count": 75,
+        "shallowBytes": 2424
+      },
+      {
+        "name": "system / SharedFunctionInfo / n",
+        "count": 47,
+        "shallowBytes": 2256
+      },
+      {
+        "name": "system / PreparseData",
+        "count": 31,
+        "shallowBytes": 1472
+      },
+      {
+        "name": "system / SharedFunctionInfo / factory",
+        "count": 30,
+        "shallowBytes": 1440
+      },
+      {
+        "name": "system / SharedFunctionInfo / queryAll",
+        "count": 21,
+        "shallowBytes": 1008
+      },
+      {
+        "name": "system / SharedFunctionInfo / ngOnDestroy",
+        "count": 20,
+        "shallowBytes": 960
+      },
+      {
+        "name": "system / StoreHandler",
+        "count": 74,
+        "shallowBytes": 912
+      },
+      {
+        "name": "system / SharedFunctionInfo / toJSON",
+        "count": 19,
+        "shallowBytes": 864
+      },
+      {
+        "name": "system / SharedFunctionInfo / destroy",
+        "count": 16,
+        "shallowBytes": 768
+      },
+      {
+        "name": "system / SharedFunctionInfo / r",
+        "count": 15,
+        "shallowBytes": 720
+      },
+      {
+        "name": "system / SharedFunctionInfo / toSource",
+        "count": 14,
+        "shallowBytes": 672
+      },
+      {
+        "name": "system / SharedFunctionInfo / matches",
+        "count": 14,
+        "shallowBytes": 672
+      },
+      {
+        "name": "system / SharedFunctionInfo / get",
+        "count": 16,
+        "shallowBytes": 624
+      },
+      {
+        "name": "system / SharedFunctionInfo / add",
+        "count": 16,
+        "shallowBytes": 624
+      },
+      {
+        "name": "system / SharedFunctionInfo / next",
+        "count": 24,
+        "shallowBytes": 528
+      },
+      {
+        "name": "system / UncompiledDataWithPreparseData",
+        "count": 22,
+        "shallowBytes": 528
+      },
+      {
+        "name": "system / SharedFunctionInfo / remove",
+        "count": 10,
+        "shallowBytes": 480
+      },
+      {
+        "name": "system / SharedFunctionInfo / complete",
+        "count": 10,
+        "shallowBytes": 480
+      },
+      {
+        "name": "system / IrRegExpData",
+        "count": 4,
+        "shallowBytes": 448
+      },
+      {
+        "name": "system / SharedFunctionInfo / valueOf",
+        "count": 16,
+        "shallowBytes": 432
+      },
+      {
+        "name": "system / SharedFunctionInfo / toLocaleString",
+        "count": 14,
+        "shallowBytes": 384
+      },
+      {
+        "name": "system / SharedFunctionInfo / from",
+        "count": 11,
+        "shallowBytes": 384
+      },
+      {
+        "name": "system / SharedFunctionInfo / error",
+        "count": 9,
+        "shallowBytes": 384
+      },
+      {
+        "name": "system / SharedFunctionInfo / hostBindings",
+        "count": 8,
+        "shallowBytes": 384
+      },
+      {
+        "name": "system / SharedFunctionInfo / with",
+        "count": 9,
+        "shallowBytes": 336
+      },
+      {
+        "name": "system / SharedFunctionInfo / reset",
+        "count": 7,
+        "shallowBytes": 336
+      },
+      {
+        "name": "system / SharedFunctionInfo / o",
+        "count": 7,
+        "shallowBytes": 336
+      },
+      {
+        "name": "system / SharedFunctionInfo / u",
+        "count": 7,
+        "shallowBytes": 336
+      },
+      {
+        "name": "system / SharedFunctionInfo / i",
+        "count": 7,
+        "shallowBytes": 336
+      },
+      {
+        "name": "system / SharedFunctionInfo / onDestroy",
+        "count": 7,
+        "shallowBytes": 336
+      },
+      {
+        "name": "system / SharedFunctionInfo / compare",
+        "count": 7,
+        "shallowBytes": 336
+      },
+      {
+        "name": "system / SharedFunctionInfo / subtract",
+        "count": 7,
+        "shallowBytes": 336
+      },
+      {
+        "name": "system / SharedFunctionInfo / equals",
+        "count": 7,
+        "shallowBytes": 336
+      }
+    ]
+  },
+  "after": {
+    "path": ".tmp/phase15d-sqlite-after.heapsnapshot",
+    "nodeCount": 155636,
+    "totalShallowBytes": 8202837,
+    "byType": [
+      {
+        "name": "native",
+        "count": 33496,
+        "shallowBytes": 3191849
+      },
+      {
+        "name": "code",
+        "count": 45644,
+        "shallowBytes": 2799152
+      },
+      {
+        "name": "string",
+        "count": 25022,
+        "shallowBytes": 610980
+      },
+      {
+        "name": "closure",
+        "count": 14945,
+        "shallowBytes": 428020
+      },
+      {
+        "name": "object shape",
+        "count": 7260,
+        "shallowBytes": 403964
+      },
+      {
+        "name": "object",
+        "count": 13705,
+        "shallowBytes": 386100
+      },
+      {
+        "name": "array",
+        "count": 2285,
+        "shallowBytes": 366876
+      },
+      {
+        "name": "concatenated string",
+        "count": 681,
+        "shallowBytes": 13620
+      },
+      {
+        "name": "number",
+        "count": 12479,
+        "shallowBytes": 1668
+      },
+      {
+        "name": "symbol",
+        "count": 79,
+        "shallowBytes": 416
+      },
+      {
+        "name": "regexp",
+        "count": 8,
+        "shallowBytes": 192
+      },
+      {
+        "name": "synthetic",
+        "count": 32,
+        "shallowBytes": 0
+      }
+    ],
+    "objectClasses": [
+      {
+        "name": "Object",
+        "count": 4911,
+        "shallowBytes": 160600
+      },
+      {
+        "name": "Array",
+        "count": 2140,
+        "shallowBytes": 34240
+      },
+      {
+        "name": "system / Context / scope @94967",
+        "count": 1192,
+        "shallowBytes": 23840
+      },
+      {
+        "name": "n",
+        "count": 224,
+        "shallowBytes": 19528
+      },
+      {
+        "name": "system / Context / scope @122907",
+        "count": 332,
+        "shallowBytes": 11952
+      },
+      {
+        "name": "system / Context / scope @101521",
+        "count": 332,
+        "shallowBytes": 9296
+      },
+      {
+        "name": "e",
+        "count": 302,
+        "shallowBytes": 6984
+      },
+      {
+        "name": "Oa",
+        "count": 278,
+        "shallowBytes": 6672
+      },
+      {
+        "name": "system / Context / scope @122897",
+        "count": 332,
+        "shallowBytes": 6640
+      },
+      {
+        "name": "Mn",
+        "count": 84,
+        "shallowBytes": 4704
+      },
+      {
+        "name": "U",
+        "count": 131,
+        "shallowBytes": 4572
+      },
+      {
+        "name": "system / Context / scope @62417",
+        "count": 1,
+        "shallowBytes": 3908
+      },
+      {
+        "name": "La",
+        "count": 105,
+        "shallowBytes": 3360
+      },
+      {
+        "name": "system / Context / scope @103955",
+        "count": 104,
+        "shallowBytes": 2912
+      },
+      {
+        "name": "Bo",
+        "count": 116,
+        "shallowBytes": 2784
+      },
+      {
+        "name": "system / Context / scope @170129",
+        "count": 98,
+        "shallowBytes": 2744
+      },
+      {
+        "name": "system / Context / scope @104573",
+        "count": 98,
+        "shallowBytes": 2744
+      },
+      {
+        "name": "system / Context / scope @106059",
+        "count": 84,
+        "shallowBytes": 2688
+      },
+      {
+        "name": "ka",
+        "count": 105,
+        "shallowBytes": 2520
+      },
+      {
+        "name": "Lt",
+        "count": 52,
+        "shallowBytes": 2496
+      },
+      {
+        "name": "system / Context / scope @40783",
+        "count": 1,
+        "shallowBytes": 2332
+      },
+      {
+        "name": "system / Context / scope @103975",
+        "count": 105,
+        "shallowBytes": 2100
+      },
+      {
+        "name": "system / Context / scope @123135",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "system / Context / scope @95127",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "system / Context / scope @124695",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "b",
+        "count": 73,
+        "shallowBytes": 2028
+      },
+      {
+        "name": "system / Context / scope @122853",
+        "count": 100,
+        "shallowBytes": 2000
+      },
+      {
+        "name": "Ee",
+        "count": 51,
+        "shallowBytes": 1836
+      },
+      {
+        "name": "system / Context / scope @170099",
+        "count": 49,
+        "shallowBytes": 1764
+      },
+      {
+        "name": "Map",
+        "count": 107,
+        "shallowBytes": 1736
+      },
+      {
+        "name": "system / Context / scope @105627",
+        "count": 61,
+        "shallowBytes": 1708
+      },
+      {
+        "name": "Set",
+        "count": 97,
+        "shallowBytes": 1576
+      },
+      {
+        "name": "system / Context / scope @63207",
+        "count": 15,
+        "shallowBytes": 1560
+      },
+      {
+        "name": "system / Context / scope @215539",
+        "count": 1,
+        "shallowBytes": 1440
+      },
+      {
+        "name": "as",
+        "count": 30,
+        "shallowBytes": 1440
+      },
+      {
+        "name": "system / Context / scope @104629",
+        "count": 49,
+        "shallowBytes": 1176
+      },
+      {
+        "name": "Gt",
+        "count": 11,
+        "shallowBytes": 1152
+      },
+      {
+        "name": "system / Context / scope @96103",
+        "count": 47,
+        "shallowBytes": 940
+      },
+      {
+        "name": "system / Context / scope @62745",
+        "count": 13,
+        "shallowBytes": 936
+      },
+      {
+        "name": "Error",
+        "count": 40,
+        "shallowBytes": 928
+      },
+      {
+        "name": "Generator",
+        "count": 21,
+        "shallowBytes": 860
+      },
+      {
+        "name": "Mi",
+        "count": 51,
+        "shallowBytes": 816
+      },
+      {
+        "name": "system / Context / scope @64871",
+        "count": 30,
+        "shallowBytes": 720
+      },
+      {
+        "name": "TypedArray",
+        "count": 24,
+        "shallowBytes": 672
+      },
+      {
+        "name": "system / Context / scope @94905",
+        "count": 31,
+        "shallowBytes": 620
+      },
+      {
+        "name": "Oe",
+        "count": 18,
+        "shallowBytes": 580
+      },
+      {
+        "name": "Arguments",
+        "count": 36,
+        "shallowBytes": 576
+      },
+      {
+        "name": "system / Context / scope @250013",
+        "count": 28,
+        "shallowBytes": 560
+      },
+      {
+        "name": "system / Context / scope @250003",
+        "count": 28,
+        "shallowBytes": 560
+      },
+      {
+        "name": "system / Context / scope @170553",
+        "count": 26,
+        "shallowBytes": 520
+      },
+      {
+        "name": "st",
+        "count": 15,
+        "shallowBytes": 480
+      },
+      {
+        "name": "system / Context / scope @63995",
+        "count": 17,
+        "shallowBytes": 476
+      },
+      {
+        "name": "ro",
+        "count": 29,
+        "shallowBytes": 464
+      },
+      {
+        "name": "fn",
+        "count": 3,
+        "shallowBytes": 432
+      },
+      {
+        "name": "et$1",
+        "count": 2,
+        "shallowBytes": 416
+      },
+      {
+        "name": "system / Context / scope @55227",
+        "count": 1,
+        "shallowBytes": 412
+      },
+      {
+        "name": "ot$1",
+        "count": 6,
+        "shallowBytes": 408
+      },
+      {
+        "name": "system / Context / scope @62625",
+        "count": 16,
+        "shallowBytes": 384
+      },
+      {
+        "name": "system / Context / scope @64283",
+        "count": 19,
+        "shallowBytes": 380
+      },
+      {
+        "name": "le",
+        "count": 6,
+        "shallowBytes": 360
+      }
+    ],
+    "objectShapes": [
+      {
+        "name": "Object {consumer,knownValidAtEpoch,lastReadVersion,nextConsumer,nextProducer,prevConsumer,producer}",
+        "count": 1322,
+        "shallowBytes": 52880
+      },
+      {
+        "name": "Array {}",
+        "count": 2138,
+        "shallowBytes": 34208
+      },
+      {
+        "name": "system / Context / scope @94967 {}",
+        "count": 1192,
+        "shallowBytes": 23840
+      },
+      {
+        "name": "Object {consumers,consumersTail,value}",
+        "count": 537,
+        "shallowBytes": 15036
+      },
+      {
+        "name": "Object {attrs,componentOffset,controlDirectiveIndex,customControlIndex,directiveEnd,directiveStart,directiveStylingLast,directiveToIndex,flags,hostDirectiveInputs,hostDirectiveOutputs,index,initialInputs,injectorIndex,inputs,insertBeforeIndex,localNames,mergedAttrs,namespace,outputs,propertyBindings,providerIndexes,type,value,... 39 properties}",
+        "count": 88,
+        "shallowBytes": 14784
+      },
+      {
+        "name": "n {_fragment,_info,_preserveFragment,_queryParams,_queryParamsHandling,_relativeTo,_replaceUrl,_skipLocationChange,_state,_target,applicationErrorHandler,browserUrl,el,hrefAttributeValue,isAnchorElement,locationStrategy,onChanges,options,reactiveHref,reactiveRouterState,renderer,route,router,tabIndexAttribute,... 27 properties}",
+        "count": 104,
+        "shallowBytes": 12480
+      },
+      {
+        "name": "system / Context / scope @122907 {}",
+        "count": 332,
+        "shallowBytes": 11952
+      },
+      {
+        "name": "system / Context / scope @101521 {}",
+        "count": 332,
+        "shallowBytes": 9296
+      },
+      {
+        "name": "Oa {$implicit,$index,lContainer}",
+        "count": 278,
+        "shallowBytes": 6672
+      },
+      {
+        "name": "system / Context / scope @122897 {}",
+        "count": 332,
+        "shallowBytes": 6640
+      },
+      {
+        "name": "Object {value}",
+        "count": 218,
+        "shallowBytes": 6056
+      },
+      {
+        "name": "Object {equal,value}",
+        "count": 208,
+        "shallowBytes": 5824
+      },
+      {
+        "name": "Mn {_complete,_error,_finalizers,_next,_parentage,closed,destination,initialTeardown,isStopped,onFinalize,shouldUnsubscribe}",
+        "count": 84,
+        "shallowBytes": 4704
+      },
+      {
+        "name": "U {closed,currentObservers,hasError,isStopped,observers,thrownError}",
+        "count": 125,
+        "shallowBytes": 4500
+      },
+      {
+        "name": "Object {createdAt,done,id,priority,tags,title,userId}",
+        "count": 101,
+        "shallowBytes": 4040
+      },
+      {
+        "name": "system / Context / scope @62417 {}",
+        "count": 1,
+        "shallowBytes": 3908
+      },
+      {
+        "name": "Object {factory,multi,value}",
+        "count": 144,
+        "shallowBytes": 3456
+      },
+      {
+        "name": "Object {consumers,consumersTail,value,version}",
+        "count": 122,
+        "shallowBytes": 3416
+      },
+      {
+        "name": "La {hostLView,lContainer,needsIndexUpdate,operationsCounter,templateTNode}",
+        "count": 105,
+        "shallowBytes": 3360
+      },
+      {
+        "name": "Object {}",
+        "count": 133,
+        "shallowBytes": 3268
+      },
+      {
+        "name": "Object {transformFn,value}",
+        "count": 105,
+        "shallowBytes": 2940
+      },
+      {
+        "name": "Object {computation,consumers,consumersTail,dirty,lastCleanEpoch,producers,producersTail,recomputing,source,sourceValue,value,version}",
+        "count": 104,
+        "shallowBytes": 2912
+      },
+      {
+        "name": "Object {consumers,consumersTail,equal,value}",
+        "count": 104,
+        "shallowBytes": 2912
+      },
+      {
+        "name": "Object {routerLink}",
+        "count": 104,
+        "shallowBytes": 2912
+      },
+      {
+        "name": "system / Context / scope @103955 {}",
+        "count": 104,
+        "shallowBytes": 2912
+      },
+      {
+        "name": "Object {coll,data,id,pos,promoted,sortkey}",
+        "count": 100,
+        "shallowBytes": 2800
+      },
+      {
+        "name": "Bo {currentValue,firstChange,previousValue}",
+        "count": 116,
+        "shallowBytes": 2784
+      },
+      {
+        "name": "Object {clearResult,memoized,reset,setResult}",
+        "count": 99,
+        "shallowBytes": 2772
+      },
+      {
+        "name": "system / Context / scope @170129 {}",
+        "count": 98,
+        "shallowBytes": 2744
+      },
+      {
+        "name": "system / Context / scope @104573 {}",
+        "count": 98,
+        "shallowBytes": 2744
+      },
+      {
+        "name": "e {nativeElement}",
+        "count": 171,
+        "shallowBytes": 2736
+      },
+      {
+        "name": "system / Context / scope @106059 {}",
+        "count": 84,
+        "shallowBytes": 2688
+      },
+      {
+        "name": "ka {hasEmptyBlock,liveCollection,trackByFn}",
+        "count": 105,
+        "shallowBytes": 2520
+      },
+      {
+        "name": "Lt {canSeeViewProviders,componentProviders,factory,index,injectImpl,multi,name,providerFactory,resolving}",
+        "count": 52,
+        "shallowBytes": 2496
+      },
+      {
+        "name": "system / Context / scope @40783 {}",
+        "count": 1,
+        "shallowBytes": 2332
+      },
+      {
+        "name": "Object {current,previous}",
+        "count": 114,
+        "shallowBytes": 2280
+      },
+      {
+        "name": "system / Context / scope @103975 {}",
+        "count": 105,
+        "shallowBytes": 2100
+      },
+      {
+        "name": "system / Context / scope @123135 {}",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "system / Context / scope @95127 {}",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "system / Context / scope @124695 {}",
+        "count": 104,
+        "shallowBytes": 2080
+      },
+      {
+        "name": "Object {factory,providedIn,token,value}",
+        "count": 73,
+        "shallowBytes": 2044
+      },
+      {
+        "name": "Object {bindingStartIndex,blueprint,cleanup,components,contentCheckHooks,contentHooks,contentQueries,data,declTNode,destroyHooks,expandoStartIndex,firstCreatePass,firstUpdatePass,hostBindingOpCodes,preOrderCheckHooks,preOrderHooks,queries,staticContentQueries,staticViewQueries,template,type,viewCheckHooks,viewHooks,viewQuery,... 31 properties}",
+        "count": 15,
+        "shallowBytes": 2040
+      },
+      {
+        "name": "system / Context / scope @122853 {}",
+        "count": 100,
+        "shallowBytes": 2000
+      },
+      {
+        "name": "Object {contentQueries,controlDef,debugInfo,declaredInputs,exportAs,factory,features,hostAttrs,hostBindings,hostDirectives,hostVars,inputConfig,inputs,outputs,providersResolver,resolveHostDirectives,selectors,setInput,signalFormsInputPresence,signals,standalone,type,viewProvidersResolver,viewQuery}",
+        "count": 18,
+        "shallowBytes": 1944
+      },
+      {
+        "name": "b {_desc,ngMetadataName,ɵprov}",
+        "count": 69,
+        "shallowBytes": 1932
+      },
+      {
+        "name": "Ee {_finalizers,_parentage,closed,destination,initialTeardown,isStopped}",
+        "count": 51,
+        "shallowBytes": 1836
+      },
+      {
+        "name": "e {_finalizers,_parentage,closed,initialTeardown}",
+        "count": 64,
+        "shallowBytes": 1792
+      },
+      {
+        "name": "system / Context / scope @170099 {}",
+        "count": 49,
+        "shallowBytes": 1764
+      },
+      {
+        "name": "system / Context / scope @105627 {}",
+        "count": 61,
+        "shallowBytes": 1708
+      },
+      {
+        "name": "Map {}",
+        "count": 105,
+        "shallowBytes": 1680
+      },
+      {
+        "name": "Object {name,rtype}",
+        "count": 83,
+        "shallowBytes": 1660
+      },
+      {
+        "name": "system / Context / scope @63207 {}",
+        "count": 15,
+        "shallowBytes": 1560
+      },
+      {
+        "name": "Set {}",
+        "count": 95,
+        "shallowBytes": 1520
+      },
+      {
+        "name": "system / Context / scope @215539 {}",
+        "count": 1,
+        "shallowBytes": 1440
+      },
+      {
+        "name": "as {__isAsync,closed,currentObservers,destroyRef,hasError,isStopped,observers,pendingTasks,thrownError}",
+        "count": 30,
+        "shallowBytes": 1440
+      },
+      {
+        "name": "Object {complete,error,next}",
+        "count": 52,
+        "shallowBytes": 1248
+      },
+      {
+        "name": "system / Context / scope @104629 {}",
+        "count": 49,
+        "shallowBytes": 1176
+      },
+      {
+        "name": "n {__ngContext__,_element,_renderer,_select,_value,id}",
+        "count": 28,
+        "shallowBytes": 1008
+      },
+      {
+        "name": "n {_changeDetectorRef,_composedAsyncValidatorFn,_composedValidatorFn,_onDestroyCallbacks,_parent,_rawAsyncValidators,_rawValidators,_registered,_selectedValueAccessor,callSetDisabledState,control,customControlBindings,injector,isCustomControlBased,isNativeFormElement,name,parseErrorsValidator,rawValueAccessors,renderer,requiredValidatorViaDi,resetSubscription,subscription,userOnReset,valueAccessor,... 32 properties}",
+        "count": 5,
+        "shallowBytes": 960
+      },
+      {
+        "name": "system / Context / scope @96103 {}",
+        "count": 47,
+        "shallowBytes": 940
+      }
+    ],
+    "functions": [
+      {
+        "name": "(anonymous)",
+        "count": 4875,
+        "shallowBytes": 139240
+      },
+      {
+        "name": "r",
+        "count": 1714,
+        "shallowBytes": 49744
+      },
+      {
+        "name": "native_bind",
+        "count": 1314,
+        "shallowBytes": 31536
+      },
+      {
+        "name": "equal",
+        "count": 313,
+        "shallowBytes": 8764
+      },
+      {
+        "name": "u",
+        "count": 155,
+        "shallowBytes": 4944
+      },
+      {
+        "name": "c",
+        "count": 122,
+        "shallowBytes": 3832
+      },
+      {
+        "name": "a",
+        "count": 107,
+        "shallowBytes": 3408
+      },
+      {
+        "name": "i",
+        "count": 117,
+        "shallowBytes": 3300
+      },
+      {
+        "name": "s",
+        "count": 103,
+        "shallowBytes": 3292
+      },
+      {
+        "name": "n",
+        "count": 106,
+        "shallowBytes": 3224
+      },
+      {
+        "name": "toString",
+        "count": 79,
+        "shallowBytes": 2212
+      },
+      {
+        "name": "e",
+        "count": 61,
+        "shallowBytes": 1864
+      },
+      {
+        "name": "ɵfac",
+        "count": 58,
+        "shallowBytes": 1856
+      },
+      {
+        "name": "next",
+        "count": 40,
+        "shallowBytes": 1120
+      },
+      {
+        "name": "factory",
+        "count": 31,
+        "shallowBytes": 868
+      },
+      {
+        "name": "queryAll",
+        "count": 31,
+        "shallowBytes": 868
+      },
+      {
+        "name": "get",
+        "count": 29,
+        "shallowBytes": 812
+      },
+      {
+        "name": "p",
+        "count": 29,
+        "shallowBytes": 812
+      },
+      {
+        "name": "ngOnDestroy",
+        "count": 25,
+        "shallowBytes": 700
+      },
+      {
+        "name": "valueOf",
+        "count": 24,
+        "shallowBytes": 672
+      },
+      {
+        "name": "f",
+        "count": 22,
+        "shallowBytes": 640
+      },
+      {
+        "name": "add",
+        "count": 20,
+        "shallowBytes": 560
+      },
+      {
+        "name": "toLocaleString",
+        "count": 20,
+        "shallowBytes": 560
+      },
+      {
+        "name": "toJSON",
+        "count": 20,
+        "shallowBytes": 560
+      },
+      {
+        "name": "supportedLocalesOf",
+        "count": 20,
+        "shallowBytes": 560
+      },
+      {
+        "name": "resolvedOptions",
+        "count": 20,
+        "shallowBytes": 560
+      },
+      {
+        "name": "matches",
+        "count": 18,
+        "shallowBytes": 504
+      },
+      {
+        "name": "D",
+        "count": 16,
+        "shallowBytes": 452
+      },
+      {
+        "name": "destroy",
+        "count": 16,
+        "shallowBytes": 448
+      },
+      {
+        "name": "get [Symbol.species]",
+        "count": 16,
+        "shallowBytes": 448
+      },
+      {
+        "name": "useFactory",
+        "count": 16,
+        "shallowBytes": 448
+      },
+      {
+        "name": "t",
+        "count": 15,
+        "shallowBytes": 428
+      },
+      {
+        "name": "h",
+        "count": 15,
+        "shallowBytes": 428
+      },
+      {
+        "name": "has",
+        "count": 15,
+        "shallowBytes": 420
+      },
+      {
+        "name": "forEach",
+        "count": 14,
+        "shallowBytes": 392
+      },
+      {
+        "name": "delete",
+        "count": 14,
+        "shallowBytes": 392
+      },
+      {
+        "name": "from",
+        "count": 14,
+        "shallowBytes": 392
+      },
+      {
+        "name": "toSource",
+        "count": 14,
+        "shallowBytes": 392
+      },
+      {
+        "name": "set",
+        "count": 13,
+        "shallowBytes": 364
+      },
+      {
+        "name": "error",
+        "count": 13,
+        "shallowBytes": 364
+      },
+      {
+        "name": "values",
+        "count": 12,
+        "shallowBytes": 340
+      },
+      {
+        "name": "remove",
+        "count": 12,
+        "shallowBytes": 336
+      },
+      {
+        "name": "complete",
+        "count": 12,
+        "shallowBytes": 336
+      },
+      {
+        "name": "entries",
+        "count": 11,
+        "shallowBytes": 308
+      },
+      {
+        "name": "with",
+        "count": 11,
+        "shallowBytes": 308
+      },
+      {
+        "name": "at",
+        "count": 10,
+        "shallowBytes": 292
+      },
+      {
+        "name": "clear",
+        "count": 10,
+        "shallowBytes": 280
+      },
+      {
+        "name": "slice",
+        "count": 10,
+        "shallowBytes": 280
+      },
+      {
+        "name": "formatToParts",
+        "count": 10,
+        "shallowBytes": 280
+      },
+      {
+        "name": "return",
+        "count": 10,
+        "shallowBytes": 280
+      },
+      {
+        "name": "w",
+        "count": 10,
+        "shallowBytes": 280
+      },
+      {
+        "name": "hostBindings",
+        "count": 8,
+        "shallowBytes": 256
+      },
+      {
+        "name": "keys",
+        "count": 9,
+        "shallowBytes": 252
+      },
+      {
+        "name": "find",
+        "count": 9,
+        "shallowBytes": 252
+      },
+      {
+        "name": "query",
+        "count": 9,
+        "shallowBytes": 252
+      },
+      {
+        "name": "of",
+        "count": 8,
+        "shallowBytes": 232
+      },
+      {
+        "name": "create",
+        "count": 8,
+        "shallowBytes": 224
+      },
+      {
+        "name": "get byteLength",
+        "count": 8,
+        "shallowBytes": 224
+      },
+      {
+        "name": "includes",
+        "count": 8,
+        "shallowBytes": 224
+      },
+      {
+        "name": "toCSS",
+        "count": 8,
+        "shallowBytes": 224
+      }
+    ],
+    "code": [
+      {
+        "name": "system / InstructionStream",
+        "count": 1222,
+        "shallowBytes": 1011456
+      },
+      {
+        "name": "system / BytecodeArray",
+        "count": 2849,
+        "shallowBytes": 431608
+      },
+      {
+        "name": "system / TrustedByteArray",
+        "count": 3059,
+        "shallowBytes": 189228
+      },
+      {
+        "name": "system / ScopeInfo",
+        "count": 3147,
+        "shallowBytes": 157432
+      },
+      {
+        "name": "system / FeedbackVector",
+        "count": 1125,
+        "shallowBytes": 118680
+      },
+      {
+        "name": "(constant pool)",
+        "count": 2492,
+        "shallowBytes": 96232
+      },
+      {
+        "name": "system / Code",
+        "count": 1222,
+        "shallowBytes": 87984
+      },
+      {
+        "name": "system / FeedbackMetadata",
+        "count": 2713,
+        "shallowBytes": 79380
+      },
+      {
+        "name": "system / FeedbackCell",
+        "count": 4940,
+        "shallowBytes": 79024
+      },
+      {
+        "name": "system / SharedFunctionInfo",
+        "count": 1096,
+        "shallowBytes": 50736
+      },
+      {
+        "name": "system / UncompiledDataWithoutPreparseData",
+        "count": 2069,
+        "shallowBytes": 41380
+      },
+      {
+        "name": "system / WeakFixedArray",
+        "count": 538,
+        "shallowBytes": 40144
+      },
+      {
+        "name": "(context local names)",
+        "count": 4,
+        "shallowBytes": 34896
+      },
+      {
+        "name": "system / ObjectBoilerplateDescription",
+        "count": 715,
+        "shallowBytes": 26648
+      },
+      {
+        "name": "system / LoadHandler",
+        "count": 1629,
+        "shallowBytes": 26140
+      },
+      {
+        "name": "system / ClosureFeedbackCellArray",
+        "count": 710,
+        "shallowBytes": 22988
+      },
+      {
+        "name": "system / BytecodeWrapper",
+        "count": 2849,
+        "shallowBytes": 22792
+      },
+      {
+        "name": "system / ProtectedFixedArray",
+        "count": 85,
+        "shallowBytes": 14684
+      },
+      {
+        "name": "system / CodeWrapper",
+        "count": 3750,
+        "shallowBytes": 9776
+      },
+      {
+        "name": "(constant elements)",
+        "count": 402,
+        "shallowBytes": 8488
+      },
+      {
+        "name": "system / SharedFunctionInfo / n",
+        "count": 161,
+        "shallowBytes": 7728
+      },
+      {
+        "name": "system / AllocationSite",
+        "count": 260,
+        "shallowBytes": 7088
+      },
+      {
+        "name": "system / ArrayBoilerplateDescription",
+        "count": 457,
+        "shallowBytes": 5472
+      },
+      {
+        "name": "system / SharedFunctionInfo / e",
+        "count": 93,
+        "shallowBytes": 4464
+      },
+      {
+        "name": "system / SharedFunctionInfo / ɵfac",
+        "count": 58,
+        "shallowBytes": 2784
+      },
+      {
+        "name": "system / TrustedWeakFixedArray",
+        "count": 85,
+        "shallowBytes": 2664
+      },
+      {
+        "name": "system / SharedFunctionInfo / toString",
+        "count": 66,
+        "shallowBytes": 2544
+      },
+      {
+        "name": "system / SharedFunctionInfo / factory",
+        "count": 31,
+        "shallowBytes": 1488
+      },
+      {
+        "name": "system / PreparseData",
+        "count": 31,
+        "shallowBytes": 1468
+      },
+      {
+        "name": "system / SharedFunctionInfo / ngOnDestroy",
+        "count": 25,
+        "shallowBytes": 1200
+      },
+      {
+        "name": "system / SharedFunctionInfo / get",
+        "count": 25,
+        "shallowBytes": 1056
+      },
+      {
+        "name": "system / StoreHandler",
+        "count": 84,
+        "shallowBytes": 1036
+      },
+      {
+        "name": "system / SharedFunctionInfo / queryAll",
+        "count": 21,
+        "shallowBytes": 1008
+      },
+      {
+        "name": "(object elements)",
+        "count": 35,
+        "shallowBytes": 888
+      },
+      {
+        "name": "system / SharedFunctionInfo / toJSON",
+        "count": 19,
+        "shallowBytes": 864
+      },
+      {
+        "name": "system / SharedFunctionInfo / r",
+        "count": 17,
+        "shallowBytes": 816
+      },
+      {
+        "name": "system / SharedFunctionInfo / destroy",
+        "count": 16,
+        "shallowBytes": 768
+      },
+      {
+        "name": "system / AtomRegExpData",
+        "count": 10,
+        "shallowBytes": 760
+      },
+      {
+        "name": "system / SharedFunctionInfo / next",
+        "count": 27,
+        "shallowBytes": 672
+      },
+      {
+        "name": "system / SharedFunctionInfo / add",
+        "count": 17,
+        "shallowBytes": 672
+      },
+      {
+        "name": "system / IrRegExpData",
+        "count": 6,
+        "shallowBytes": 672
+      },
+      {
+        "name": "system / SharedFunctionInfo / matches",
+        "count": 14,
+        "shallowBytes": 672
+      },
+      {
+        "name": "system / SharedFunctionInfo / toSource",
+        "count": 14,
+        "shallowBytes": 672
+      },
+      {
+        "name": "system / SharedFunctionInfo / query",
+        "count": 13,
+        "shallowBytes": 624
+      },
+      {
+        "name": "system / SharedFunctionInfo / remove",
+        "count": 12,
+        "shallowBytes": 576
+      },
+      {
+        "name": "system / SharedFunctionInfo / complete",
+        "count": 12,
+        "shallowBytes": 576
+      },
+      {
+        "name": "system / SharedFunctionInfo / c",
+        "count": 11,
+        "shallowBytes": 528
+      },
+      {
+        "name": "system / UncompiledDataWithPreparseData",
+        "count": 22,
+        "shallowBytes": 528
+      },
+      {
+        "name": "system / SharedFunctionInfo / error",
+        "count": 11,
+        "shallowBytes": 480
+      },
+      {
+        "name": "system / SharedFunctionInfo / o",
+        "count": 10,
+        "shallowBytes": 480
+      },
+      {
+        "name": "system / SharedFunctionInfo / i",
+        "count": 10,
+        "shallowBytes": 480
+      },
+      {
+        "name": "system / SharedFunctionInfo / useFactory",
+        "count": 10,
+        "shallowBytes": 480
+      },
+      {
+        "name": "system / SharedFunctionInfo / valueOf",
+        "count": 16,
+        "shallowBytes": 432
+      },
+      {
+        "name": "system / SharedFunctionInfo / a",
+        "count": 9,
+        "shallowBytes": 432
+      },
+      {
+        "name": "system / SharedFunctionInfo / toLocaleString",
+        "count": 14,
+        "shallowBytes": 384
+      },
+      {
+        "name": "system / SharedFunctionInfo / from",
+        "count": 11,
+        "shallowBytes": 384
+      },
+      {
+        "name": "system / SharedFunctionInfo / hostBindings",
+        "count": 8,
+        "shallowBytes": 384
+      },
+      {
+        "name": "system / SharedFunctionInfo / u",
+        "count": 8,
+        "shallowBytes": 384
+      },
+      {
+        "name": "system / SharedFunctionInfo / with",
+        "count": 9,
+        "shallowBytes": 336
+      },
+      {
+        "name": "system / SharedFunctionInfo / open",
+        "count": 7,
+        "shallowBytes": 336
+      }
+    ]
+  },
+  "delta": {
+    "shallowBytesDelta": 970049,
+    "nodeCountDelta": 3692,
+    "byType": [
+      {
+        "name": "code",
+        "beforeCount": 38588,
+        "afterCount": 45644,
+        "countDelta": 7056,
+        "shallowBytesDelta": 821736
+      },
+      {
+        "name": "native",
+        "beforeCount": 32940,
+        "afterCount": 33496,
+        "countDelta": 556,
+        "shallowBytesDelta": 280305
+      },
+      {
+        "name": "array",
+        "beforeCount": 2808,
+        "afterCount": 2285,
+        "countDelta": -523,
+        "shallowBytesDelta": -80604
+      },
+      {
+        "name": "concatenated string",
+        "beforeCount": 3896,
+        "afterCount": 681,
+        "countDelta": -3215,
+        "shallowBytesDelta": -64300
+      },
+      {
+        "name": "object shape",
+        "beforeCount": 6381,
+        "afterCount": 7260,
+        "countDelta": 879,
+        "shallowBytesDelta": 41608
+      },
+      {
+        "name": "object",
+        "beforeCount": 14666,
+        "afterCount": 13705,
+        "countDelta": -961,
+        "shallowBytesDelta": -28536
+      },
+      {
+        "name": "closure",
+        "beforeCount": 14260,
+        "afterCount": 14945,
+        "countDelta": 685,
+        "shallowBytesDelta": 19560
+      },
+      {
+        "name": "number",
+        "beforeCount": 12021,
+        "afterCount": 12479,
+        "countDelta": 458,
+        "shallowBytesDelta": -10728
+      },
+      {
+        "name": "string",
+        "beforeCount": 26275,
+        "afterCount": 25022,
+        "countDelta": -1253,
+        "shallowBytesDelta": -9152
+      },
+      {
+        "name": "symbol",
+        "beforeCount": 69,
+        "afterCount": 79,
+        "countDelta": 10,
+        "shallowBytesDelta": 160
+      },
+      {
+        "name": "regexp",
+        "beforeCount": 8,
+        "afterCount": 8,
+        "countDelta": 0,
+        "shallowBytesDelta": 0
+      },
+      {
+        "name": "synthetic",
+        "beforeCount": 32,
+        "afterCount": 32,
+        "countDelta": 0,
+        "shallowBytesDelta": 0
+      }
+    ],
+    "objectClasses": [
+      {
+        "name": "Object",
+        "beforeCount": 5429,
+        "afterCount": 4911,
+        "countDelta": -518,
+        "shallowBytesDelta": -25624
+      },
+      {
+        "name": "system / Context / scope @94967",
+        "beforeCount": 0,
+        "afterCount": 1192,
+        "countDelta": 1192,
+        "shallowBytesDelta": 23840
+      },
+      {
+        "name": "system / Context / scope @62013",
+        "beforeCount": 1180,
+        "afterCount": 0,
+        "countDelta": -1180,
+        "shallowBytesDelta": -23600
+      },
+      {
+        "name": "n",
+        "beforeCount": 81,
+        "afterCount": 224,
+        "countDelta": 143,
+        "shallowBytesDelta": 15500
+      },
+      {
+        "name": "t",
+        "beforeCount": 135,
+        "afterCount": 0,
+        "countDelta": -135,
+        "shallowBytesDelta": -14744
+      },
+      {
+        "name": "Array",
+        "beforeCount": 2948,
+        "afterCount": 2140,
+        "countDelta": -808,
+        "shallowBytesDelta": -12928
+      },
+      {
+        "name": "system / Context / scope @85795",
+        "beforeCount": 332,
+        "afterCount": 0,
+        "countDelta": -332,
+        "shallowBytesDelta": -11952
+      },
+      {
+        "name": "system / Context / scope @122907",
+        "beforeCount": 0,
+        "afterCount": 332,
+        "countDelta": 332,
+        "shallowBytesDelta": 11952
+      },
+      {
+        "name": "system / Context / scope @85587",
+        "beforeCount": 332,
+        "afterCount": 0,
+        "countDelta": -332,
+        "shallowBytesDelta": -9296
+      },
+      {
+        "name": "system / Context / scope @101521",
+        "beforeCount": 0,
+        "afterCount": 332,
+        "countDelta": 332,
+        "shallowBytesDelta": 9296
+      },
+      {
+        "name": "Oa",
+        "beforeCount": 0,
+        "afterCount": 278,
+        "countDelta": 278,
+        "shallowBytesDelta": 6672
+      },
+      {
+        "name": "system / Context / scope @38989",
+        "beforeCount": 332,
+        "afterCount": 0,
+        "countDelta": -332,
+        "shallowBytesDelta": -6640
+      },
+      {
+        "name": "system / Context / scope @122897",
+        "beforeCount": 0,
+        "afterCount": 332,
+        "countDelta": 332,
+        "shallowBytesDelta": 6640
+      },
+      {
+        "name": "ka",
+        "beforeCount": 278,
+        "afterCount": 105,
+        "countDelta": -173,
+        "shallowBytesDelta": -4152
+      },
+      {
+        "name": "system / Context / scope @58789",
+        "beforeCount": 1,
+        "afterCount": 0,
+        "countDelta": -1,
+        "shallowBytesDelta": -4004
+      },
+      {
+        "name": "system / Context / scope @62417",
+        "beforeCount": 0,
+        "afterCount": 1,
+        "countDelta": 1,
+        "shallowBytesDelta": 3908
+      },
+      {
+        "name": "Pa",
+        "beforeCount": 105,
+        "afterCount": 0,
+        "countDelta": -105,
+        "shallowBytesDelta": -3360
+      },
+      {
+        "name": "system / Context / scope @98955",
+        "beforeCount": 98,
+        "afterCount": 0,
+        "countDelta": -98,
+        "shallowBytesDelta": -3136
+      },
+      {
+        "name": "system / Context / scope @61507",
+        "beforeCount": 104,
+        "afterCount": 0,
+        "countDelta": -104,
+        "shallowBytesDelta": -2912
+      },
+      {
+        "name": "system / Context / scope @103955",
+        "beforeCount": 0,
+        "afterCount": 104,
+        "countDelta": 104,
+        "shallowBytesDelta": 2912
+      },
+      {
+        "name": "system / Context / scope @170129",
+        "beforeCount": 0,
+        "afterCount": 98,
+        "countDelta": 98,
+        "shallowBytesDelta": 2744
+      },
+      {
+        "name": "system / Context / scope @104573",
+        "beforeCount": 0,
+        "afterCount": 98,
+        "countDelta": 98,
+        "shallowBytesDelta": 2744
+      },
+      {
+        "name": "system / Context / scope @106059",
+        "beforeCount": 0,
+        "afterCount": 84,
+        "countDelta": 84,
+        "shallowBytesDelta": 2688
+      },
+      {
+        "name": "system / Context / scope @71291",
+        "beforeCount": 88,
+        "afterCount": 0,
+        "countDelta": -88,
+        "shallowBytesDelta": -2464
+      },
+      {
+        "name": "system / Context / scope @82555",
+        "beforeCount": 88,
+        "afterCount": 0,
+        "countDelta": -88,
+        "shallowBytesDelta": -2464
+      },
+      {
+        "name": "system / Context / scope @40783",
+        "beforeCount": 0,
+        "afterCount": 1,
+        "countDelta": 1,
+        "shallowBytesDelta": 2332
+      },
+      {
+        "name": "system / Context / scope @86057",
+        "beforeCount": 105,
+        "afterCount": 0,
+        "countDelta": -105,
+        "shallowBytesDelta": -2100
+      },
+      {
+        "name": "system / Context / scope @103975",
+        "beforeCount": 0,
+        "afterCount": 105,
+        "countDelta": 105,
+        "shallowBytesDelta": 2100
+      },
+      {
+        "name": "system / Context / scope @99247",
+        "beforeCount": 104,
+        "afterCount": 0,
+        "countDelta": -104,
+        "shallowBytesDelta": -2080
+      },
+      {
+        "name": "system / Context / scope @88255",
+        "beforeCount": 104,
+        "afterCount": 0,
+        "countDelta": -104,
+        "shallowBytesDelta": -2080
+      },
+      {
+        "name": "system / Context / scope @89009",
+        "beforeCount": 104,
+        "afterCount": 0,
+        "countDelta": -104,
+        "shallowBytesDelta": -2080
+      },
+      {
+        "name": "system / Context / scope @123135",
+        "beforeCount": 0,
+        "afterCount": 104,
+        "countDelta": 104,
+        "shallowBytesDelta": 2080
+      },
+      {
+        "name": "system / Context / scope @95127",
+        "beforeCount": 0,
+        "afterCount": 104,
+        "countDelta": 104,
+        "shallowBytesDelta": 2080
+      },
+      {
+        "name": "system / Context / scope @124695",
+        "beforeCount": 0,
+        "afterCount": 104,
+        "countDelta": 104,
+        "shallowBytesDelta": 2080
+      },
+      {
+        "name": "g",
+        "beforeCount": 72,
+        "afterCount": 0,
+        "countDelta": -72,
+        "shallowBytesDelta": -2016
+      },
+      {
+        "name": "b",
+        "beforeCount": 1,
+        "afterCount": 73,
+        "countDelta": 72,
+        "shallowBytesDelta": 2016
+      },
+      {
+        "name": "system / Context / scope @157261",
+        "beforeCount": 100,
+        "afterCount": 0,
+        "countDelta": -100,
+        "shallowBytesDelta": -2000
+      },
+      {
+        "name": "system / Context / scope @122853",
+        "beforeCount": 0,
+        "afterCount": 100,
+        "countDelta": 100,
+        "shallowBytesDelta": 2000
+      },
+      {
+        "name": "system / Context / scope @170099",
+        "beforeCount": 0,
+        "afterCount": 49,
+        "countDelta": 49,
+        "shallowBytesDelta": 1764
+      },
+      {
+        "name": "system / Context / scope @105627",
+        "beforeCount": 0,
+        "afterCount": 61,
+        "countDelta": 61,
+        "shallowBytesDelta": 1708
+      },
+      {
+        "name": "system / Context / scope @58807",
+        "beforeCount": 1,
+        "afterCount": 0,
+        "countDelta": -1,
+        "shallowBytesDelta": -1684
+      },
+      {
+        "name": "system / Context / scope @82547",
+        "beforeCount": 44,
+        "afterCount": 0,
+        "countDelta": -44,
+        "shallowBytesDelta": -1584
+      },
+      {
+        "name": "system / Context / scope @63207",
+        "beforeCount": 0,
+        "afterCount": 15,
+        "countDelta": 15,
+        "shallowBytesDelta": 1560
+      },
+      {
+        "name": "system / Context / scope @120153",
+        "beforeCount": 1,
+        "afterCount": 0,
+        "countDelta": -1,
+        "shallowBytesDelta": -1440
+      },
+      {
+        "name": "cs",
+        "beforeCount": 30,
+        "afterCount": 0,
+        "countDelta": -30,
+        "shallowBytesDelta": -1440
+      },
+      {
+        "name": "system / Context / scope @215539",
+        "beforeCount": 0,
+        "afterCount": 1,
+        "countDelta": 1,
+        "shallowBytesDelta": 1440
+      },
+      {
+        "name": "as",
+        "beforeCount": 0,
+        "afterCount": 30,
+        "countDelta": 30,
+        "shallowBytesDelta": 1440
+      },
+      {
+        "name": "system / Context / scope @98859",
+        "beforeCount": 51,
+        "afterCount": 0,
+        "countDelta": -51,
+        "shallowBytesDelta": -1428
+      },
+      {
+        "name": "system / Context / scope @104629",
+        "beforeCount": 0,
+        "afterCount": 49,
+        "countDelta": 49,
+        "shallowBytesDelta": 1176
+      },
+      {
+        "name": "system / Context / scope @122929",
+        "beforeCount": 57,
+        "afterCount": 0,
+        "countDelta": -57,
+        "shallowBytesDelta": -1140
+      },
+      {
+        "name": "system / Context / scope @82571",
+        "beforeCount": 44,
+        "afterCount": 0,
+        "countDelta": -44,
+        "shallowBytesDelta": -1056
+      },
+      {
+        "name": "Set",
+        "beforeCount": 34,
+        "afterCount": 97,
+        "countDelta": 63,
+        "shallowBytesDelta": 1008
+      },
+      {
+        "name": "system / Context / scope @96103",
+        "beforeCount": 0,
+        "afterCount": 47,
+        "countDelta": 47,
+        "shallowBytesDelta": 940
+      },
+      {
+        "name": "system / Context / scope @112733",
+        "beforeCount": 13,
+        "afterCount": 0,
+        "countDelta": -13,
+        "shallowBytesDelta": -936
+      },
+      {
+        "name": "system / Context / scope @62745",
+        "beforeCount": 0,
+        "afterCount": 13,
+        "countDelta": 13,
+        "shallowBytesDelta": 936
+      },
+      {
+        "name": "La",
+        "beforeCount": 105,
+        "afterCount": 105,
+        "countDelta": 0,
+        "shallowBytesDelta": 840
+      },
+      {
+        "name": "Mi",
+        "beforeCount": 0,
+        "afterCount": 51,
+        "countDelta": 51,
+        "shallowBytesDelta": 816
+      },
+      {
+        "name": "Mn",
+        "beforeCount": 98,
+        "afterCount": 84,
+        "countDelta": -14,
+        "shallowBytesDelta": -784
+      },
+      {
+        "name": "Map",
+        "beforeCount": 59,
+        "afterCount": 107,
+        "countDelta": 48,
+        "shallowBytesDelta": 768
+      },
+      {
+        "name": "system / Context / scope @64871",
+        "beforeCount": 0,
+        "afterCount": 30,
+        "countDelta": 30,
+        "shallowBytesDelta": 720
+      }
+    ],
+    "objectShapes": [
+      {
+        "name": "Object {createdAt,done,id,priority,tags,title,userId}",
+        "beforeCount": 1001,
+        "afterCount": 101,
+        "countDelta": -900,
+        "shallowBytesDelta": -36000
+      },
+      {
+        "name": "system / Context / scope @94967 {}",
+        "beforeCount": 0,
+        "afterCount": 1192,
+        "countDelta": 1192,
+        "shallowBytesDelta": 23840
+      },
+      {
+        "name": "system / Context / scope @62013 {}",
+        "beforeCount": 1180,
+        "afterCount": 0,
+        "countDelta": -1180,
+        "shallowBytesDelta": -23600
+      },
+      {
+        "name": "Array {}",
+        "beforeCount": 2946,
+        "afterCount": 2138,
+        "countDelta": -808,
+        "shallowBytesDelta": -12928
+      },
+      {
+        "name": "t {_fragment,_info,_preserveFragment,_queryParams,_queryParamsHandling,_relativeTo,_replaceUrl,_skipLocationChange,_state,_target,applicationErrorHandler,browserUrl,el,hrefAttributeValue,isAnchorElement,locationStrategy,onChanges,options,reactiveHref,reactiveRouterState,renderer,route,router,tabIndexAttribute,... 27 properties}",
+        "beforeCount": 104,
+        "afterCount": 0,
+        "countDelta": -104,
+        "shallowBytesDelta": -12480
+      },
+      {
+        "name": "n {_fragment,_info,_preserveFragment,_queryParams,_queryParamsHandling,_relativeTo,_replaceUrl,_skipLocationChange,_state,_target,applicationErrorHandler,browserUrl,el,hrefAttributeValue,isAnchorElement,locationStrategy,onChanges,options,reactiveHref,reactiveRouterState,renderer,route,router,tabIndexAttribute,... 27 properties}",
+        "beforeCount": 0,
+        "afterCount": 104,
+        "countDelta": 104,
+        "shallowBytesDelta": 12480
+      },
+      {
+        "name": "system / Context / scope @85795 {}",
+        "beforeCount": 332,
+        "afterCount": 0,
+        "countDelta": -332,
+        "shallowBytesDelta": -11952
+      },
+      {
+        "name": "system / Context / scope @122907 {}",
+        "beforeCount": 0,
+        "afterCount": 332,
+        "countDelta": 332,
+        "shallowBytesDelta": 11952
+      },
+      {
+        "name": "system / Context / scope @85587 {}",
+        "beforeCount": 332,
+        "afterCount": 0,
+        "countDelta": -332,
+        "shallowBytesDelta": -9296
+      },
+      {
+        "name": "system / Context / scope @101521 {}",
+        "beforeCount": 0,
+        "afterCount": 332,
+        "countDelta": 332,
+        "shallowBytesDelta": 9296
+      },
+      {
+        "name": "ka {$implicit,$index,lContainer}",
+        "beforeCount": 278,
+        "afterCount": 0,
+        "countDelta": -278,
+        "shallowBytesDelta": -6672
+      },
+      {
+        "name": "Oa {$implicit,$index,lContainer}",
+        "beforeCount": 0,
+        "afterCount": 278,
+        "countDelta": 278,
+        "shallowBytesDelta": 6672
+      },
+      {
+        "name": "system / Context / scope @38989 {}",
+        "beforeCount": 332,
+        "afterCount": 0,
+        "countDelta": -332,
+        "shallowBytesDelta": -6640
+      },
+      {
+        "name": "system / Context / scope @122897 {}",
+        "beforeCount": 0,
+        "afterCount": 332,
+        "countDelta": 332,
+        "shallowBytesDelta": 6640
+      },
+      {
+        "name": "system / Context / scope @58789 {}",
+        "beforeCount": 1,
+        "afterCount": 0,
+        "countDelta": -1,
+        "shallowBytesDelta": -4004
+      },
+      {
+        "name": "system / Context / scope @62417 {}",
+        "beforeCount": 0,
+        "afterCount": 1,
+        "countDelta": 1,
+        "shallowBytesDelta": 3908
+      },
+      {
+        "name": "Pa {hostLView,lContainer,needsIndexUpdate,operationsCounter,templateTNode}",
+        "beforeCount": 105,
+        "afterCount": 0,
+        "countDelta": -105,
+        "shallowBytesDelta": -3360
+      },
+      {
+        "name": "La {hostLView,lContainer,needsIndexUpdate,operationsCounter,templateTNode}",
+        "beforeCount": 0,
+        "afterCount": 105,
+        "countDelta": 105,
+        "shallowBytesDelta": 3360
+      },
+      {
+        "name": "system / Context / scope @98955 {}",
+        "beforeCount": 98,
+        "afterCount": 0,
+        "countDelta": -98,
+        "shallowBytesDelta": -3136
+      },
+      {
+        "name": "system / Context / scope @61507 {}",
+        "beforeCount": 104,
+        "afterCount": 0,
+        "countDelta": -104,
+        "shallowBytesDelta": -2912
+      },
+      {
+        "name": "system / Context / scope @103955 {}",
+        "beforeCount": 0,
+        "afterCount": 104,
+        "countDelta": 104,
+        "shallowBytesDelta": 2912
+      },
+      {
+        "name": "Object {coll,data,id,pos,promoted,sortkey}",
+        "beforeCount": 0,
+        "afterCount": 100,
+        "countDelta": 100,
+        "shallowBytesDelta": 2800
+      },
+      {
+        "name": "system / Context / scope @170129 {}",
+        "beforeCount": 0,
+        "afterCount": 98,
+        "countDelta": 98,
+        "shallowBytesDelta": 2744
+      },
+      {
+        "name": "system / Context / scope @104573 {}",
+        "beforeCount": 0,
+        "afterCount": 98,
+        "countDelta": 98,
+        "shallowBytesDelta": 2744
+      },
+      {
+        "name": "system / Context / scope @106059 {}",
+        "beforeCount": 0,
+        "afterCount": 84,
+        "countDelta": 84,
+        "shallowBytesDelta": 2688
+      },
+      {
+        "name": "La {hasEmptyBlock,liveCollection,trackByFn}",
+        "beforeCount": 105,
+        "afterCount": 0,
+        "countDelta": -105,
+        "shallowBytesDelta": -2520
+      },
+      {
+        "name": "ka {hasEmptyBlock,liveCollection,trackByFn}",
+        "beforeCount": 0,
+        "afterCount": 105,
+        "countDelta": 105,
+        "shallowBytesDelta": 2520
+      },
+      {
+        "name": "system / Context / scope @71291 {}",
+        "beforeCount": 88,
+        "afterCount": 0,
+        "countDelta": -88,
+        "shallowBytesDelta": -2464
+      },
+      {
+        "name": "system / Context / scope @82555 {}",
+        "beforeCount": 88,
+        "afterCount": 0,
+        "countDelta": -88,
+        "shallowBytesDelta": -2464
+      },
+      {
+        "name": "system / Context / scope @40783 {}",
+        "beforeCount": 0,
+        "afterCount": 1,
+        "countDelta": 1,
+        "shallowBytesDelta": 2332
+      },
+      {
+        "name": "system / Context / scope @86057 {}",
+        "beforeCount": 105,
+        "afterCount": 0,
+        "countDelta": -105,
+        "shallowBytesDelta": -2100
+      },
+      {
+        "name": "system / Context / scope @103975 {}",
+        "beforeCount": 0,
+        "afterCount": 105,
+        "countDelta": 105,
+        "shallowBytesDelta": 2100
+      },
+      {
+        "name": "system / Context / scope @99247 {}",
+        "beforeCount": 104,
+        "afterCount": 0,
+        "countDelta": -104,
+        "shallowBytesDelta": -2080
+      },
+      {
+        "name": "system / Context / scope @88255 {}",
+        "beforeCount": 104,
+        "afterCount": 0,
+        "countDelta": -104,
+        "shallowBytesDelta": -2080
+      },
+      {
+        "name": "system / Context / scope @89009 {}",
+        "beforeCount": 104,
+        "afterCount": 0,
+        "countDelta": -104,
+        "shallowBytesDelta": -2080
+      },
+      {
+        "name": "system / Context / scope @123135 {}",
+        "beforeCount": 0,
+        "afterCount": 104,
+        "countDelta": 104,
+        "shallowBytesDelta": 2080
+      },
+      {
+        "name": "system / Context / scope @95127 {}",
+        "beforeCount": 0,
+        "afterCount": 104,
+        "countDelta": 104,
+        "shallowBytesDelta": 2080
+      },
+      {
+        "name": "system / Context / scope @124695 {}",
+        "beforeCount": 0,
+        "afterCount": 104,
+        "countDelta": 104,
+        "shallowBytesDelta": 2080
+      },
+      {
+        "name": "system / Context / scope @157261 {}",
+        "beforeCount": 100,
+        "afterCount": 0,
+        "countDelta": -100,
+        "shallowBytesDelta": -2000
+      },
+      {
+        "name": "system / Context / scope @122853 {}",
+        "beforeCount": 0,
+        "afterCount": 100,
+        "countDelta": 100,
+        "shallowBytesDelta": 2000
+      },
+      {
+        "name": "g {_desc,ngMetadataName,ɵprov}",
+        "beforeCount": 69,
+        "afterCount": 0,
+        "countDelta": -69,
+        "shallowBytesDelta": -1932
+      },
+      {
+        "name": "b {_desc,ngMetadataName,ɵprov}",
+        "beforeCount": 0,
+        "afterCount": 69,
+        "countDelta": 69,
+        "shallowBytesDelta": 1932
+      },
+      {
+        "name": "system / Context / scope @170099 {}",
+        "beforeCount": 0,
+        "afterCount": 49,
+        "countDelta": 49,
+        "shallowBytesDelta": 1764
+      },
+      {
+        "name": "system / Context / scope @105627 {}",
+        "beforeCount": 0,
+        "afterCount": 61,
+        "countDelta": 61,
+        "shallowBytesDelta": 1708
+      },
+      {
+        "name": "system / Context / scope @58807 {}",
+        "beforeCount": 1,
+        "afterCount": 0,
+        "countDelta": -1,
+        "shallowBytesDelta": -1684
+      },
+      {
+        "name": "system / Context / scope @82547 {}",
+        "beforeCount": 44,
+        "afterCount": 0,
+        "countDelta": -44,
+        "shallowBytesDelta": -1584
+      },
+      {
+        "name": "system / Context / scope @63207 {}",
+        "beforeCount": 0,
+        "afterCount": 15,
+        "countDelta": 15,
+        "shallowBytesDelta": 1560
+      },
+      {
+        "name": "system / Context / scope @120153 {}",
+        "beforeCount": 1,
+        "afterCount": 0,
+        "countDelta": -1,
+        "shallowBytesDelta": -1440
+      },
+      {
+        "name": "cs {__isAsync,closed,currentObservers,destroyRef,hasError,isStopped,observers,pendingTasks,thrownError}",
+        "beforeCount": 30,
+        "afterCount": 0,
+        "countDelta": -30,
+        "shallowBytesDelta": -1440
+      },
+      {
+        "name": "system / Context / scope @215539 {}",
+        "beforeCount": 0,
+        "afterCount": 1,
+        "countDelta": 1,
+        "shallowBytesDelta": 1440
+      },
+      {
+        "name": "as {__isAsync,closed,currentObservers,destroyRef,hasError,isStopped,observers,pendingTasks,thrownError}",
+        "beforeCount": 0,
+        "afterCount": 30,
+        "countDelta": 30,
+        "shallowBytesDelta": 1440
+      },
+      {
+        "name": "system / Context / scope @98859 {}",
+        "beforeCount": 51,
+        "afterCount": 0,
+        "countDelta": -51,
+        "shallowBytesDelta": -1428
+      },
+      {
+        "name": "Object {attrs,componentOffset,controlDirectiveIndex,customControlIndex,directiveEnd,directiveStart,directiveStylingLast,directiveToIndex,flags,hostDirectiveInputs,hostDirectiveOutputs,index,initialInputs,injectorIndex,inputs,insertBeforeIndex,localNames,mergedAttrs,namespace,outputs,propertyBindings,providerIndexes,type,value,... 39 properties}",
+        "beforeCount": 81,
+        "afterCount": 88,
+        "countDelta": 7,
+        "shallowBytesDelta": 1176
+      },
+      {
+        "name": "system / Context / scope @104629 {}",
+        "beforeCount": 0,
+        "afterCount": 49,
+        "countDelta": 49,
+        "shallowBytesDelta": 1176
+      },
+      {
+        "name": "system / Context / scope @122929 {}",
+        "beforeCount": 57,
+        "afterCount": 0,
+        "countDelta": -57,
+        "shallowBytesDelta": -1140
+      },
+      {
+        "name": "system / Context / scope @82571 {}",
+        "beforeCount": 44,
+        "afterCount": 0,
+        "countDelta": -44,
+        "shallowBytesDelta": -1056
+      },
+      {
+        "name": "Object {}",
+        "beforeCount": 97,
+        "afterCount": 133,
+        "countDelta": 36,
+        "shallowBytesDelta": 1008
+      },
+      {
+        "name": "Set {}",
+        "beforeCount": 32,
+        "afterCount": 95,
+        "countDelta": 63,
+        "shallowBytesDelta": 1008
+      },
+      {
+        "name": "system / Context / scope @96103 {}",
+        "beforeCount": 0,
+        "afterCount": 47,
+        "countDelta": 47,
+        "shallowBytesDelta": 940
+      },
+      {
+        "name": "system / Context / scope @112733 {}",
+        "beforeCount": 13,
+        "afterCount": 0,
+        "countDelta": -13,
+        "shallowBytesDelta": -936
+      }
+    ],
+    "functions": [
+      {
+        "name": "n",
+        "beforeCount": 30,
+        "afterCount": 106,
+        "countDelta": 76,
+        "shallowBytesDelta": 2312
+      },
+      {
+        "name": "t",
+        "beforeCount": 75,
+        "afterCount": 15,
+        "countDelta": -60,
+        "shallowBytesDelta": -1832
+      },
+      {
+        "name": "(anonymous)",
+        "beforeCount": 4831,
+        "afterCount": 4875,
+        "countDelta": 44,
+        "shallowBytesDelta": 936
+      },
+      {
+        "name": "c",
+        "beforeCount": 94,
+        "afterCount": 122,
+        "countDelta": 28,
+        "shallowBytesDelta": 836
+      },
+      {
+        "name": "u",
+        "beforeCount": 138,
+        "afterCount": 155,
+        "countDelta": 17,
+        "shallowBytesDelta": 540
+      },
+      {
+        "name": "D",
+        "beforeCount": 0,
+        "afterCount": 16,
+        "countDelta": 16,
+        "shallowBytesDelta": 452
+      },
+      {
+        "name": "p",
+        "beforeCount": 13,
+        "afterCount": 29,
+        "countDelta": 16,
+        "shallowBytesDelta": 448
+      },
+      {
+        "name": "useFactory",
+        "beforeCount": 2,
+        "afterCount": 16,
+        "countDelta": 14,
+        "shallowBytesDelta": 392
+      },
+      {
+        "name": "a",
+        "beforeCount": 95,
+        "afterCount": 107,
+        "countDelta": 12,
+        "shallowBytesDelta": 384
+      },
+      {
+        "name": "s",
+        "beforeCount": 91,
+        "afterCount": 103,
+        "countDelta": 12,
+        "shallowBytesDelta": 380
+      },
+      {
+        "name": "native_bind",
+        "beforeCount": 1302,
+        "afterCount": 1314,
+        "countDelta": 12,
+        "shallowBytesDelta": 288
+      },
+      {
+        "name": "get",
+        "beforeCount": 19,
+        "afterCount": 29,
+        "countDelta": 10,
+        "shallowBytesDelta": 280
+      },
+      {
+        "name": "w",
+        "beforeCount": 0,
+        "afterCount": 10,
+        "countDelta": 10,
+        "shallowBytesDelta": 280
+      },
+      {
+        "name": "i",
+        "beforeCount": 108,
+        "afterCount": 117,
+        "countDelta": 9,
+        "shallowBytesDelta": 268
+      },
+      {
+        "name": "ɵfac",
+        "beforeCount": 51,
+        "afterCount": 58,
+        "countDelta": 7,
+        "shallowBytesDelta": 224
+      },
+      {
+        "name": "x",
+        "beforeCount": 0,
+        "afterCount": 6,
+        "countDelta": 6,
+        "shallowBytesDelta": 172
+      },
+      {
+        "name": "ngOnDestroy",
+        "beforeCount": 20,
+        "afterCount": 25,
+        "countDelta": 5,
+        "shallowBytesDelta": 140
+      },
+      {
+        "name": "M",
+        "beforeCount": 2,
+        "afterCount": 7,
+        "countDelta": 5,
+        "shallowBytesDelta": 140
+      },
+      {
+        "name": "K",
+        "beforeCount": 1,
+        "afterCount": 6,
+        "countDelta": 5,
+        "shallowBytesDelta": 140
+      },
+      {
+        "name": "d",
+        "beforeCount": 0,
+        "afterCount": 4,
+        "countDelta": 4,
+        "shallowBytesDelta": 124
+      },
+      {
+        "name": "next",
+        "beforeCount": 36,
+        "afterCount": 40,
+        "countDelta": 4,
+        "shallowBytesDelta": 112
+      },
+      {
+        "name": "delete",
+        "beforeCount": 10,
+        "afterCount": 14,
+        "countDelta": 4,
+        "shallowBytesDelta": 112
+      },
+      {
+        "name": "query",
+        "beforeCount": 5,
+        "afterCount": 9,
+        "countDelta": 4,
+        "shallowBytesDelta": 112
+      },
+      {
+        "name": "test",
+        "beforeCount": 2,
+        "afterCount": 6,
+        "countDelta": 4,
+        "shallowBytesDelta": 112
+      },
+      {
+        "name": "insert",
+        "beforeCount": 1,
+        "afterCount": 5,
+        "countDelta": 4,
+        "shallowBytesDelta": 112
+      },
+      {
+        "name": "selectId",
+        "beforeCount": 1,
+        "afterCount": 5,
+        "countDelta": 4,
+        "shallowBytesDelta": 112
+      },
+      {
+        "name": "web",
+        "beforeCount": 0,
+        "afterCount": 4,
+        "countDelta": 4,
+        "shallowBytesDelta": 112
+      },
+      {
+        "name": "I",
+        "beforeCount": 1,
+        "afterCount": 5,
+        "countDelta": 4,
+        "shallowBytesDelta": 108
+      },
+      {
+        "name": "g",
+        "beforeCount": 3,
+        "afterCount": 0,
+        "countDelta": -3,
+        "shallowBytesDelta": -96
+      },
+      {
+        "name": "r",
+        "beforeCount": 1711,
+        "afterCount": 1714,
+        "countDelta": 3,
+        "shallowBytesDelta": 84
+      },
+      {
+        "name": "error",
+        "beforeCount": 10,
+        "afterCount": 13,
+        "countDelta": 3,
+        "shallowBytesDelta": 84
+      },
+      {
+        "name": "complete",
+        "beforeCount": 9,
+        "afterCount": 12,
+        "countDelta": 3,
+        "shallowBytesDelta": 84
+      },
+      {
+        "name": "open",
+        "beforeCount": 4,
+        "afterCount": 7,
+        "countDelta": 3,
+        "shallowBytesDelta": 84
+      },
+      {
+        "name": "close",
+        "beforeCount": 3,
+        "afterCount": 6,
+        "countDelta": 3,
+        "shallowBytesDelta": 84
+      },
+      {
+        "name": "up",
+        "beforeCount": 1,
+        "afterCount": 4,
+        "countDelta": 3,
+        "shallowBytesDelta": 84
+      },
+      {
+        "name": "read",
+        "beforeCount": 0,
+        "afterCount": 3,
+        "countDelta": 3,
+        "shallowBytesDelta": 84
+      },
+      {
+        "name": "reducer",
+        "beforeCount": 0,
+        "afterCount": 3,
+        "countDelta": 3,
+        "shallowBytesDelta": 84
+      },
+      {
+        "name": "H",
+        "beforeCount": 4,
+        "afterCount": 2,
+        "countDelta": -2,
+        "shallowBytesDelta": -68
+      },
+      {
+        "name": "b",
+        "beforeCount": 3,
+        "afterCount": 5,
+        "countDelta": 2,
+        "shallowBytesDelta": 64
+      },
+      {
+        "name": "Ma",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "wa",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "pu",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "Iu",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "Su",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "Hu",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "Bu",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "Gs",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "Ys",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "ga",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "Ua",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "Cp",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "yp",
+        "beforeCount": 2,
+        "afterCount": 0,
+        "countDelta": -2,
+        "shallowBytesDelta": -64
+      },
+      {
+        "name": "m",
+        "beforeCount": 1,
+        "afterCount": 3,
+        "countDelta": 2,
+        "shallowBytesDelta": 64
+      },
+      {
+        "name": "li",
+        "beforeCount": 0,
+        "afterCount": 2,
+        "countDelta": 2,
+        "shallowBytesDelta": 64
+      },
+      {
+        "name": "Ai",
+        "beforeCount": 0,
+        "afterCount": 2,
+        "countDelta": 2,
+        "shallowBytesDelta": 64
+      },
+      {
+        "name": "Ii",
+        "beforeCount": 0,
+        "afterCount": 2,
+        "countDelta": 2,
+        "shallowBytesDelta": 64
+      },
+      {
+        "name": "zi",
+        "beforeCount": 0,
+        "afterCount": 2,
+        "countDelta": 2,
+        "shallowBytesDelta": 64
+      },
+      {
+        "name": "sh",
+        "beforeCount": 0,
+        "afterCount": 2,
+        "countDelta": 2,
+        "shallowBytesDelta": 64
+      },
+      {
+        "name": "Dc",
+        "beforeCount": 0,
+        "afterCount": 2,
+        "countDelta": 2,
+        "shallowBytesDelta": 64
+      },
+      {
+        "name": "kl",
+        "beforeCount": 0,
+        "afterCount": 2,
+        "countDelta": 2,
+        "shallowBytesDelta": 64
+      }
+    ],
+    "code": [
+      {
+        "name": "system / InstructionStream",
+        "beforeCount": 972,
+        "afterCount": 1222,
+        "countDelta": 250,
+        "shallowBytesDelta": 416640
+      },
+      {
+        "name": "system / BytecodeArray",
+        "beforeCount": 2393,
+        "afterCount": 2849,
+        "countDelta": 456,
+        "shallowBytesDelta": 118768
+      },
+      {
+        "name": "system / TrustedByteArray",
+        "beforeCount": 2391,
+        "afterCount": 3059,
+        "countDelta": 668,
+        "shallowBytesDelta": 68520
+      },
+      {
+        "name": "system / FeedbackVector",
+        "beforeCount": 888,
+        "afterCount": 1125,
+        "countDelta": 237,
+        "shallowBytesDelta": 41772
+      },
+      {
+        "name": "system / ScopeInfo",
+        "beforeCount": 2631,
+        "afterCount": 3147,
+        "countDelta": 516,
+        "shallowBytesDelta": 25240
+      },
+      {
+        "name": "(constant pool)",
+        "beforeCount": 2065,
+        "afterCount": 2492,
+        "countDelta": 427,
+        "shallowBytesDelta": 22616
+      },
+      {
+        "name": "system / Code",
+        "beforeCount": 972,
+        "afterCount": 1222,
+        "countDelta": 250,
+        "shallowBytesDelta": 18000
+      },
+      {
+        "name": "system / FeedbackMetadata",
+        "beforeCount": 2271,
+        "afterCount": 2713,
+        "countDelta": 442,
+        "shallowBytesDelta": 17348
+      },
+      {
+        "name": "system / LoadHandler",
+        "beforeCount": 864,
+        "afterCount": 1629,
+        "countDelta": 765,
+        "shallowBytesDelta": 12240
+      },
+      {
+        "name": "system / FeedbackCell",
+        "beforeCount": 4265,
+        "afterCount": 4940,
+        "countDelta": 675,
+        "shallowBytesDelta": 10800
+      },
+      {
+        "name": "system / WeakFixedArray",
+        "beforeCount": 380,
+        "afterCount": 538,
+        "countDelta": 158,
+        "shallowBytesDelta": 7388
+      },
+      {
+        "name": "system / SharedFunctionInfo",
+        "beforeCount": 966,
+        "afterCount": 1096,
+        "countDelta": 130,
+        "shallowBytesDelta": 6240
+      },
+      {
+        "name": "system / ObjectBoilerplateDescription",
+        "beforeCount": 543,
+        "afterCount": 715,
+        "countDelta": 172,
+        "shallowBytesDelta": 5880
+      },
+      {
+        "name": "system / SharedFunctionInfo / n",
+        "beforeCount": 47,
+        "afterCount": 161,
+        "countDelta": 114,
+        "shallowBytesDelta": 5472
+      },
+      {
+        "name": "system / UncompiledDataWithoutPreparseData",
+        "beforeCount": 1850,
+        "afterCount": 2069,
+        "countDelta": 219,
+        "shallowBytesDelta": 4380
+      },
+      {
+        "name": "system / SharedFunctionInfo / t",
+        "beforeCount": 97,
+        "afterCount": 6,
+        "countDelta": -91,
+        "shallowBytesDelta": -4368
+      },
+      {
+        "name": "system / ClosureFeedbackCellArray",
+        "beforeCount": 588,
+        "afterCount": 710,
+        "countDelta": 122,
+        "shallowBytesDelta": 4012
+      },
+      {
+        "name": "system / BytecodeWrapper",
+        "beforeCount": 2393,
+        "afterCount": 2849,
+        "countDelta": 456,
+        "shallowBytesDelta": 3648
+      },
+      {
+        "name": "system / AllocationSite",
+        "beforeCount": 144,
+        "afterCount": 260,
+        "countDelta": 116,
+        "shallowBytesDelta": 3224
+      },
+      {
+        "name": "(constant elements)",
+        "beforeCount": 273,
+        "afterCount": 402,
+        "countDelta": 129,
+        "shallowBytesDelta": 2972
+      },
+      {
+        "name": "system / ProtectedFixedArray",
+        "beforeCount": 75,
+        "afterCount": 85,
+        "countDelta": 10,
+        "shallowBytesDelta": 2768
+      },
+      {
+        "name": "system / CodeWrapper",
+        "beforeCount": 3500,
+        "afterCount": 3750,
+        "countDelta": 250,
+        "shallowBytesDelta": 2000
+      },
+      {
+        "name": "(object elements)",
+        "beforeCount": 96,
+        "afterCount": 35,
+        "countDelta": -61,
+        "shallowBytesDelta": -1624
+      },
+      {
+        "name": "system / ArrayBoilerplateDescription",
+        "beforeCount": 385,
+        "afterCount": 457,
+        "countDelta": 72,
+        "shallowBytesDelta": 864
+      },
+      {
+        "name": "system / AtomRegExpData",
+        "beforeCount": 4,
+        "afterCount": 10,
+        "countDelta": 6,
+        "shallowBytesDelta": 456
+      },
+      {
+        "name": "system / SharedFunctionInfo / get",
+        "beforeCount": 16,
+        "afterCount": 25,
+        "countDelta": 9,
+        "shallowBytesDelta": 432
+      },
+      {
+        "name": "system / SharedFunctionInfo / query",
+        "beforeCount": 5,
+        "afterCount": 13,
+        "countDelta": 8,
+        "shallowBytesDelta": 384
+      },
+      {
+        "name": "system / SharedFunctionInfo / useFactory",
+        "beforeCount": 2,
+        "afterCount": 10,
+        "countDelta": 8,
+        "shallowBytesDelta": 384
+      },
+      {
+        "name": "system / SharedFunctionInfo / ɵfac",
+        "beforeCount": 51,
+        "afterCount": 58,
+        "countDelta": 7,
+        "shallowBytesDelta": 336
+      },
+      {
+        "name": "system / SharedFunctionInfo / c",
+        "beforeCount": 5,
+        "afterCount": 11,
+        "countDelta": 6,
+        "shallowBytesDelta": 288
+      },
+      {
+        "name": "system / TrustedWeakFixedArray",
+        "beforeCount": 75,
+        "afterCount": 85,
+        "countDelta": 10,
+        "shallowBytesDelta": 240
+      },
+      {
+        "name": "system / SharedFunctionInfo / ngOnDestroy",
+        "beforeCount": 20,
+        "afterCount": 25,
+        "countDelta": 5,
+        "shallowBytesDelta": 240
+      },
+      {
+        "name": "system / IrRegExpData",
+        "beforeCount": 4,
+        "afterCount": 6,
+        "countDelta": 2,
+        "shallowBytesDelta": 224
+      },
+      {
+        "name": "system / SharedFunctionInfo / run",
+        "beforeCount": 3,
+        "afterCount": 7,
+        "countDelta": 4,
+        "shallowBytesDelta": 192
+      },
+      {
+        "name": "system / SharedFunctionInfo / delete",
+        "beforeCount": 6,
+        "afterCount": 10,
+        "countDelta": 4,
+        "shallowBytesDelta": 192
+      },
+      {
+        "name": "system / SharedFunctionInfo / insert",
+        "beforeCount": 1,
+        "afterCount": 5,
+        "countDelta": 4,
+        "shallowBytesDelta": 192
+      },
+      {
+        "name": "system / SharedFunctionInfo / web",
+        "beforeCount": 0,
+        "afterCount": 4,
+        "countDelta": 4,
+        "shallowBytesDelta": 192
+      },
+      {
+        "name": "(script line ends)",
+        "beforeCount": 4,
+        "afterCount": 6,
+        "countDelta": 2,
+        "shallowBytesDelta": 176
+      },
+      {
+        "name": "system / WeakArrayList",
+        "beforeCount": 4,
+        "afterCount": 10,
+        "countDelta": 6,
+        "shallowBytesDelta": 168
+      },
+      {
+        "name": "system / SharedFunctionInfo / next",
+        "beforeCount": 24,
+        "afterCount": 27,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / o",
+        "beforeCount": 7,
+        "afterCount": 10,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / i",
+        "beforeCount": 7,
+        "afterCount": 10,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / a",
+        "beforeCount": 6,
+        "afterCount": 9,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / open",
+        "beforeCount": 4,
+        "afterCount": 7,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / close",
+        "beforeCount": 3,
+        "afterCount": 6,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / write",
+        "beforeCount": 2,
+        "afterCount": 5,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / C",
+        "beforeCount": 1,
+        "afterCount": 4,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / up",
+        "beforeCount": 1,
+        "afterCount": 4,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / p",
+        "beforeCount": 1,
+        "afterCount": 4,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / exec",
+        "beforeCount": 1,
+        "afterCount": 4,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / read",
+        "beforeCount": 0,
+        "afterCount": 3,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / D",
+        "beforeCount": 0,
+        "afterCount": 3,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / SharedFunctionInfo / d",
+        "beforeCount": 0,
+        "afterCount": 3,
+        "countDelta": 3,
+        "shallowBytesDelta": 144
+      },
+      {
+        "name": "system / StoreHandler",
+        "beforeCount": 74,
+        "afterCount": 84,
+        "countDelta": 10,
+        "shallowBytesDelta": 124
+      },
+      {
+        "name": "system / RegExpBoilerplateDescription",
+        "beforeCount": 8,
+        "afterCount": 18,
+        "countDelta": 10,
+        "shallowBytesDelta": 120
+      },
+      {
+        "name": "system / SharedFunctionInfo / r",
+        "beforeCount": 15,
+        "afterCount": 17,
+        "countDelta": 2,
+        "shallowBytesDelta": 96
+      },
+      {
+        "name": "system / SharedFunctionInfo / remove",
+        "beforeCount": 10,
+        "afterCount": 12,
+        "countDelta": 2,
+        "shallowBytesDelta": 96
+      },
+      {
+        "name": "system / SharedFunctionInfo / complete",
+        "beforeCount": 10,
+        "afterCount": 12,
+        "countDelta": 2,
+        "shallowBytesDelta": 96
+      },
+      {
+        "name": "system / SharedFunctionInfo / error",
+        "beforeCount": 9,
+        "afterCount": 11,
+        "countDelta": 2,
+        "shallowBytesDelta": 96
+      },
+      {
+        "name": "system / SharedFunctionInfo / s",
+        "beforeCount": 5,
+        "afterCount": 7,
+        "countDelta": 2,
+        "shallowBytesDelta": 96
+      }
+    ]
+  }
+}

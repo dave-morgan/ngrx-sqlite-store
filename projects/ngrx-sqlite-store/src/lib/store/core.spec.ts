@@ -31,6 +31,20 @@ function configure(reducers: Record<string, ActionReducer<unknown>>) {
 }
 
 describe('feature registration metadata query budgets', () => {
+  it('preloads the registered router and eager roots in one read after seeding', async () => {
+    const driver = new SqlJsDriver();
+    const query = vi.spyOn(driver, 'query');
+    TestBed.configureTestingModule({ providers: [provideStore({
+      router: (state = { route: 'initial' }) => state,
+      ui: (state = { ready: true }) => state,
+    }, { sqlite: { driver, eager: ['ui'] } })] });
+    core = TestBed.inject(SqliteStoreCore);
+    await core.initialize();
+    const preloads = query.mock.calls.filter(([sql]) =>
+      sql.includes('SELECT 0 AS slot') && sql.includes('FROM nss_node WHERE path'),
+    );
+    expect(preloads).toHaveLength(1);
+  });
   it('installs declared indexes during registration and performs no index work on dispatch', async () => {
     const adapter = createEntityAdapter<{ id: string; done: boolean }>({ query: { index: ['done'] } });
     const setup = configure({ todos: createReducer<unknown>(adapter.getInitialState()) });

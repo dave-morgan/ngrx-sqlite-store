@@ -63,6 +63,10 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0055](0055-session-seed-batching.md) | Skip identical session reseeds and buffer feature markers into atomic registration batches | Agent / Phase 15c | 2026-10-22 | Accepted |
 | [0056](0056-production-bundle-and-memory-audits.md) | Defer optional devtools loading and distinguish static bundles, shallow heap and native-cache diagnostic evidence | Agent / Phase 15c | 2026-10-22 | Accepted |
 | [0057](0057-post-write-memory-floor.md) | Post-bulk-write memory floor = max(empty delta, same-session F_seed PSS growth) | Agent | 2026-10-22 | Accepted |
+| [0058](0058-startup-preload-batching.md) | Batch independent router and eager feature preloads after registration commits | Agent / Phase 15d | 2026-10-22 | Accepted |
+| [0059](0059-canonical-entity-bulk-json.md) | Skip redundant parsing of validated canonical EntityTx bulk JSON; preserve wire bytes and row caps | Agent | 2026-10-22 | Accepted |
+| [0060](0060-phase15d-residual-overhead.md) | Evidence for eleven remaining Phase 15d FAILs; retain thresholds and labels | Agent / Phase 15d | 2026-10-22 | Accepted |
+| [0061](0061-persistence-is-the-product.md) | Persistence is the product: no in-memory feature mode (resolves Q7); optimisation priority large lists → flat objects → hybrid | User | 2026-10-22 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

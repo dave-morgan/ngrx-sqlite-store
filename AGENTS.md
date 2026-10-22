@@ -31,13 +31,14 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - [x] Phase 13 bridge floor + retention; brief docs/briefs/phase-13-bridge-floor-and-retention.md
 - [x] Phase 14 query refresh (change-aware invalidation, batched refresh); brief docs/briefs/phase-14-query-refresh.md
 - [x] Phase 15 parity (Q17 + ADR-0038 statistical acceptance); brief docs/briefs/phase-15-parity.md
+- [x] Phase 15d store overhead (ADR-0057/0058/0059/0060; 13 PASS / 9 PLATFORM-BOUND / 0 BRIDGE-BOUND / 11 FAIL, all remaining FAILs evidenced); brief docs/briefs/phase-15d-store-overhead.md
 
 ## Harness (orchestrator-owned; agents don't touch unless briefed)
 - `projects/harness`: README there. Aliases `@store`, `@store/entity`, `@impl` per build config (`-c classic|sqlite`). Shared code in `src/app/state`, pages in `src/app/pages`; only reducers differ (`store-impl/{classic,sqlite}`).
-- Status (2026-10-22, HEAD 43a1704): 256 lib tests; e2e 26/26 (13 classic + 13 sqlite, `npx playwright test`); 1 harness unit test.
+- Status (2026-10-22, Phase 15d): 322 library tests; 13 tool tests; e2e 26/26 (13 classic + 13 sqlite, `npx.cmd playwright test`); 1 harness test. Library and both production APK builds pass. No commit.
 - sqlite harness lists/details/counts use query selectors (`@impl` visibleTodos/todoById/count); devtools dev-only; Seed Applied releases bulk payload (docs/guides/ram.md).
 - Android: `android/` (Capacitor 8). Gradle needs JDK 21: `JAVA_HOME="C:\Program Files\Android\Android Studio\jbr"`. Emulator `Pixel_9_Pro` (headless). Bench: `node tools/android-bench.mjs [--impl] [--sizes] [--runs] [--skip-build]`; heap retainers: `node tools/heap-retainers.mjs --seed N`. Capacitor WebView drops query strings on reload → seed size via localStorage `harness:seed`. Emulator degrades over long sessions: reboot before benchmarking.
-- Latest numbers: docs/benchmarks/android-after-phase14-2026-10-22.md.
+- Latest numbers: docs/benchmarks/android-parity-15d-2026-10-22.md (session 15d-final-20261022-03; 13 PASS / 9 PLATFORM-BOUND / 0 BRIDGE-BOUND / 11 FAIL). Residual evidence: ADR-0060.
 
 ## Codex handoff (Windows)
 - Launch directly: `node <codex plugin>/scripts/codex-companion.mjs task --background --write --fresh --model gpt-6.1-sol "<ONE-LINE prompt>"` — cmd truncates multi-line prompts at the first newline. Codex sandbox can't write `.git`: orchestrator commits. Monitor `jobs/<id>.json` status + `.log` for `usage limit|rate.?limit|at capacity|insufficient_quota`.
@@ -47,7 +48,7 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - None.
 
 ## Next steps
-- Q17: cap post-bulk-write app-process memory (+68 MB after 50k seed in-session) — chunk executeSet payloads.
+- Remaining Phase 15d overhead: 1k heap, 1k/10k post-seed PSS, 1k/10k toggles and 10k/50k first-ready; measurements and next work in ADR-0060.
 - Real-device (non-emulator) benchmark; iOS not yet attempted.
 - Packaging: publishable build of `ngrx-sqlite-store` + verify Q15 (`@ngrx/store` path alias with prebuilt lib in node_modules).
 

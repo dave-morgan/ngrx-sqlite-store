@@ -4,7 +4,7 @@ Repo: `C:\Development\ngrx-sqlite-store`. **Gate (user, 2026-10-22): start ONLY 
 
 Read these first:
 - `CLAUDE.md`
-- ADR-0038, 0048, 0051, 0057 and **0058**. ADR-0058 makes persistence the product, so there is no in-memory mode.
+- ADR-0038, 0048, 0051, 0057 and **0061**. ADR-0061 makes persistence the product, so there is no in-memory mode.
 - ADR-0007, 0016, 0025 and 0026 (nested storage and promotion)
 - The phase 15d report
 

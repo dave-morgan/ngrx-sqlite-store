@@ -1,0 +1,878 @@
+{
+  "date": "2026-10-22",
+  "serial": "emulator-5554",
+  "packageName": "dev.ngrxsqlite.harness.sqlite",
+  "device": "sdk_gphone64_x86_64",
+  "caveat": "Native trace includes reset calls preceding the timed generate/reduce hook phases. Native elapsed includes bridge transport and native SQL, not native-only CPU. JSON byte counting happens before each native timer but perturbs total elapsed. Calls may overlap; sums need not equal wall time. Full bulk payloads are never retained. Diagnostic only.",
+  "size": 50000,
+  "timing": {
+    "generateMs": 54.40000000037253,
+    "reduceMs": 2462.199999999255
+  },
+  "totalElapsedMs": 2597.0999999996275,
+  "resetAndOtherMs": 80.5,
+  "nativeSummary": {
+    "calls": 57,
+    "executeSetCalls": 44,
+    "encodedOptionBytes": 9358565,
+    "executeSetOptionBytes": 9353160,
+    "executeSetElapsedMs": 1443.3000000044703,
+    "nativeElapsedMs": 1815.6000000014901
+  },
+  "calls": [
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "query",
+      "encodedOptionBytes": 140,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 3935.199999999255,
+      "ms": 5.099999999627471
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "beginTransaction",
+      "encodedOptionBytes": 27,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 3941.199999999255,
+      "ms": 4.699999999254942
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 813,
+      "statementCount": 4,
+      "sqlPrefixes": [
+        "DELETE FROM nss_node WHERE path = ? OR (path >= ? AND path < ?)",
+        "DELETE FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?)",
+        "DELETE FROM nss_entity WHERE coll = ? OR (coll >= ? AND coll < ?)",
+        "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+      ],
+      "start": 3946,
+      "ms": 19.09999999962747
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "query",
+      "encodedOptionBytes": 140,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 3965.199999999255,
+      "ms": 4.199999999254942
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 580,
+      "statementCount": 4,
+      "sqlPrefixes": [
+        "DELETE FROM nss_node WHERE path = ? OR (path >= ? AND path < ?)",
+        "DELETE FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?)",
+        "DELETE FROM nss_entity WHERE coll = ? OR (coll >= ? AND coll < ?)",
+        "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?)"
+      ],
+      "start": 3969.7999999988824,
+      "ms": 16.09999999962747
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "query",
+      "encodedOptionBytes": 140,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 3986.0999999996275,
+      "ms": 3.400000000372529
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 673,
+      "statementCount": 4,
+      "sqlPrefixes": [
+        "DELETE FROM nss_node WHERE path = ? OR (path >= ? AND path < ?)",
+        "DELETE FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?)",
+        "DELETE FROM nss_entity WHERE coll = ? OR (coll >= ? AND coll < ?)",
+        "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+      ],
+      "start": 3989.7999999988824,
+      "ms": 15.099999999627471
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "commitTransaction",
+      "encodedOptionBytes": 27,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 4005.0999999996275,
+      "ms": 2.900000000372529
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "query",
+      "encodedOptionBytes": 1025,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 4009.0999999996275,
+      "ms": 4.199999999254942
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "beginTransaction",
+      "encodedOptionBytes": 27,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 4537.699999999255,
+      "ms": 5.199999999254942
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 425,
+      "statementCount": 3,
+      "sqlPrefixes": [
+        "DELETE FROM nss_node WHERE path >= ? AND path < ?",
+        "DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+        "DELETE FROM nss_entity WHERE coll >= ? AND coll < ? OR coll = ?"
+      ],
+      "start": 4544.199999999255,
+      "ms": 30.40000000037253
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262198,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 4585.199999999255,
+      "ms": 38.80000000074506
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262130,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 4630.89999999851,
+      "ms": 34.30000000074506
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262236,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 4671.199999999255,
+      "ms": 34.40000000037253
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262178,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 4712.299999998882,
+      "ms": 32.30000000074506
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262234,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 4750.39999999851,
+      "ms": 37.600000001490116
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262096,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 4795,
+      "ms": 36
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262146,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 4837.299999998882,
+      "ms": 35.5
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262105,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 4880.39999999851,
+      "ms": 36.100000001490116
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262110,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 4922.5,
+      "ms": 37.899999998509884
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262232,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 4967.39999999851,
+      "ms": 35.70000000111759
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262110,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5009.5999999996275,
+      "ms": 34.79999999888241
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262138,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5050.89999999851,
+      "ms": 36.40000000037253
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262226,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5094.799999998882,
+      "ms": 33.80000000074506
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262153,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5134.39999999851,
+      "ms": 36
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262134,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5177,
+      "ms": 33.399999998509884
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262118,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5217,
+      "ms": 33.899999998509884
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262153,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5256.799999998882,
+      "ms": 34.09999999962747
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262156,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5298.799999998882,
+      "ms": 35.90000000037253
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262069,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5342.39999999851,
+      "ms": 37.100000001490116
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262154,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5385.39999999851,
+      "ms": 37.90000000037253
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262227,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5435.5999999996275,
+      "ms": 41.5
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262088,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5483.5,
+      "ms": 34.399999998509884
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262214,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5523.5999999996275,
+      "ms": 40.19999999925494
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262118,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5570,
+      "ms": 35.19999999925494
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262104,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5611.89999999851,
+      "ms": 36.20000000111759
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262184,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5655,
+      "ms": 37.899999998509884
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262137,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5699.299999998882,
+      "ms": 36.40000000037253
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262112,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5742.299999998882,
+      "ms": 37.40000000037253
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262102,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5786.199999999255,
+      "ms": 32.90000000037253
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262234,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5826.89999999851,
+      "ms": 33.90000000037253
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262063,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5866.5999999996275,
+      "ms": 34.79999999888241
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262107,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5907.89999999851,
+      "ms": 35.600000001490116
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262124,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 5950.0999999996275,
+      "ms": 90.09999999962747
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262181,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 6046.5999999996275,
+      "ms": 41.09999999962747
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 262221,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 6091.799999998882,
+      "ms": 35
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 169531,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,"
+      ],
+      "start": 6129.5,
+      "ms": 24.09999999962747
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "query",
+      "encodedOptionBytes": 875,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 6153.799999998882,
+      "ms": 3.599999999627471
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 199,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "UPDATE nss_node SET value = ? WHERE path = ?"
+      ],
+      "start": 6157.699999999255,
+      "ms": 6.800000000745058
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "query",
+      "encodedOptionBytes": 920,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 6164.799999998882,
+      "ms": 5
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 201,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "UPDATE nss_node SET value = ? WHERE path = ?"
+      ],
+      "start": 6172.89999999851,
+      "ms": 8.700000001117587
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "query",
+      "encodedOptionBytes": 148,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 6181.89999999851,
+      "ms": 3.800000000745058
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 1799,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,"
+      ],
+      "start": 6188.299999998882,
+      "ms": 4.200000001117587
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "query",
+      "encodedOptionBytes": 884,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 6192.5999999996275,
+      "ms": 5
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "executeSet",
+      "encodedOptionBytes": 3647,
+      "statementCount": 1,
+      "sqlPrefixes": [
+        "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+      ],
+      "start": 6198.299999998882,
+      "ms": 4.300000000745058
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "commitTransaction",
+      "encodedOptionBytes": 27,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 6202.699999999255,
+      "ms": 204.69999999925494
+    },
+    {
+      "plugin": "CapacitorSQLite",
+      "method": "query",
+      "encodedOptionBytes": 1025,
+      "statementCount": 0,
+      "sqlPrefixes": [],
+      "start": 6408.699999999255,
+      "ms": 120.5
+    }
+  ],
+  "cpuSelfTime": [
+    {
+      "functionName": "(idle)",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 1726.268
+    },
+    {
+      "functionName": "(program)",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 254.243
+    },
+    {
+      "functionName": "(garbage collector)",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 141.005
+    },
+    {
+      "functionName": "data",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 12,
+      "selfMs": 80.705
+    },
+    {
+      "functionName": "jsonInsertBatches",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 11,
+      "selfMs": 77.245
+    },
+    {
+      "functionName": "capacitor.nativePromise",
+      "url": "",
+      "lineNumber": 14,
+      "selfMs": 76.895
+    },
+    {
+      "functionName": "removeEventListener",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 47.08
+    },
+    {
+      "functionName": "Vt",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 10,
+      "selfMs": 41.632
+    },
+    {
+      "functionName": "M$1",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 0,
+      "selfMs": 33.911
+    },
+    {
+      "functionName": "lu",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 14,
+      "selfMs": 31.077
+    },
+    {
+      "functionName": "Vt",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 10,
+      "selfMs": 31.069
+    },
+    {
+      "functionName": "lu",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 14,
+      "selfMs": 28.34
+    },
+    {
+      "functionName": "Ff",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 10,
+      "selfMs": 26.578
+    },
+    {
+      "functionName": "Vt",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 10,
+      "selfMs": 24.547
+    },
+    {
+      "functionName": "Vt",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 10,
+      "selfMs": 19.425
+    },
+    {
+      "functionName": "Ae",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 10,
+      "selfMs": 18.522
+    },
+    {
+      "functionName": "Ae",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 10,
+      "selfMs": 16.913
+    },
+    {
+      "functionName": "insertRows",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 12,
+      "selfMs": 15.375
+    },
+    {
+      "functionName": "postToNative",
+      "url": "",
+      "lineNumber": 843,
+      "selfMs": 13.323
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 12,
+      "selfMs": 9.848
+    },
+    {
+      "functionName": "writeEntityRows",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 11,
+      "selfMs": 9.795
+    },
+    {
+      "functionName": "ZD",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 38,
+      "selfMs": 9.653
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 38,
+      "selfMs": 9.209
+    },
+    {
+      "functionName": "l",
+      "url": "https://localhost/chunk-D8FFP2mw.js",
+      "lineNumber": 0,
+      "selfMs": 8.944
+    },
+    {
+      "functionName": "insertRows",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 12,
+      "selfMs": 8.893
+    },
+    {
+      "functionName": "Ht",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 10,
+      "selfMs": 8.438
+    },
+    {
+      "functionName": "lu",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 14,
+      "selfMs": 6.62
+    },
+    {
+      "functionName": "M$1",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 0,
+      "selfMs": 5.652
+    },
+    {
+      "functionName": "f",
+      "url": "https://localhost/chunk-D8FFP2mw.js",
+      "lineNumber": 0,
+      "selfMs": 5.53
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 38,
+      "selfMs": 4.828
+    },
+    {
+      "functionName": "x",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 0,
+      "selfMs": 4.537
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 38,
+      "selfMs": 4.032
+    },
+    {
+      "functionName": "reorderRows",
+      "url": "https://localhost/chunk-BD_ra2o-.js",
+      "lineNumber": 0,
+      "selfMs": 3.364
+    },
+    {
+      "functionName": "insertBatches",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 11,
+      "selfMs": 3.337
+    },
+    {
+      "functionName": "now",
+      "url": "",
+      "lineNumber": -1,
+      "selfMs": 2.976
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 12,
+      "selfMs": 2.757
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 38,
+      "selfMs": 2.562
+    },
+    {
+      "functionName": "innerSerialize",
+      "url": "",
+      "lineNumber": 213,
+      "selfMs": 2.439
+    },
+    {
+      "functionName": "lu",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 14,
+      "selfMs": 2.435
+    },
+    {
+      "functionName": "encodeInput",
+      "url": "https://localhost/main-DVKAXBB2.js",
+      "lineNumber": 12,
+      "selfMs": 2.247
+    }
+  ]
+}

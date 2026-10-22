@@ -121,9 +121,10 @@ export class RowWriter {
     prefix: string,
     suffix: string,
     values: (row: T) => SqlValue[],
+    canonicalJson = false,
   ): Generator<{ sql: string; params: SqlValue[]; rows: T[] }> {
     if (rows.length && rows.length > Math.floor(999 / values(rows[0]).length)) {
-      yield* this.jsonInsertBatches(rows, prefix, suffix, values);
+      yield* this.jsonInsertBatches(rows, prefix, suffix, values, canonicalJson);
       return;
     }
     let index = 0;
@@ -157,6 +158,7 @@ export class RowWriter {
     prefix: string,
     suffix: string,
     values: (row: T) => SqlValue[],
+    canonicalJson: boolean,
   ): Generator<{ sql: string; params: SqlValue[]; rows: T[] }> {
     const entityData = /^INSERT INTO nss_entity\b/.test(prefix);
     const firstFields = values(rows[0]);
@@ -184,7 +186,9 @@ export class RowWriter {
           let encodedData = 'null';
           if (data) {
             try {
-              JSON.parse(data);
+              // EntityTx already validated this state before JSON.stringify.
+              // Keep the depth/envelope scan and hard row cap on both paths.
+              if (!canonicalJson) JSON.parse(data);
               encodedData = needsStringEnvelope(data) ? JSON.stringify(data) : `[${data}]`;
             } catch {
               // RowWriter also accepts opaque data; SQL must preserve its text.
@@ -251,6 +255,7 @@ export class RowWriter {
     upsert: boolean,
     orderChanges?: ReadonlySet<string>,
     collectionReplacement = false,
+    options: { canonicalJson?: boolean } = {},
   ): Promise<void> {
     for (const row of rows) {
       this.check(row.coll, row.data);
@@ -262,6 +267,7 @@ export class RowWriter {
       'INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES ',
       ` ON CONFLICT(coll,id) DO ${upsert ? 'UPDATE SET data = excluded.data, pos = excluded.pos, sortkey = excluded.sortkey' : 'NOTHING'}`,
       ({ coll, id, pos, data, sortkey }) => [coll, id, pos, data, sortkey ?? null],
+      options.canonicalJson,
     )) {
       await this.write(batch.sql, batch.params);
       if (collectionReplacement) continue;

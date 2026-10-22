@@ -26,6 +26,23 @@ export function platformBaseline(results, metric) {
   return Object.fromEntries(groups.map((rows, index) => [index ? 'sqlite' : 'classic', summarize(rows.map((row) => row[metric]))]));
 }
 
+/** ADR-0057: raw app-process PSS growth before shrink, scoped to post-seed PSS. */
+export function seedMemoryFloor(results, size, metric) {
+  if (metric !== 'pssTotalMb') return undefined;
+  const matching = results.filter((row) => row.size === size);
+  if (matching.length > 1) throw new Error(`Duplicate seed memory controls for ${size}`);
+  if (!matching.length) throw new Error(`Missing seed memory controls for ${size}`);
+  const diagnostic = matching[0].memoryDiagnostic;
+  const observations = diagnostic?.samples ?? [diagnostic];
+  if (!Array.isArray(observations) || !observations.length || observations.some((row) =>
+      !Number.isFinite(row?.beforeSeed) || row.beforeSeed < 0 || !Number.isFinite(row?.afterSeed) || row.afterSeed < 0)) {
+    throw new Error('Seed memory controls require finite nonnegative beforeSeed/afterSeed app PSS observations');
+  }
+  const samples = observations.map((row) => row.afterSeed - row.beforeSeed);
+  return { samples, mean: samples.reduce((sum, value) => sum + value, 0) / samples.length,
+    justification: `F_seed(${size}) app-process PSS growth before shrink_memory (ADR-0057)` };
+}
+
 export function verdict(classic, sqlite, bridge, bound, platform, floor) {
   const excess = sqlite.mean - classic.mean;
   if (excess <= classic.sd) return { status: 'PASS', excess, allowance: classic.sd };
@@ -36,7 +53,11 @@ export function verdict(classic, sqlite, bridge, bound, platform, floor) {
   if (platform?.justification && [platform.classic, platform.sqlite].every((control) =>
       control && Number.isInteger(control.n) && control.n >= 5 && Number.isFinite(control.mean) &&
       Number.isFinite(control.sd) && control.sd >= 0)) {
-    const allowance = classic.sd + Math.max(0, platform.sqlite.mean - platform.classic.mean);
+    const seed = platform.seed;
+    const seedDelta = seed?.justification && Array.isArray(seed.samples) && seed.samples.length &&
+      seed.samples.every(Number.isFinite) && Number.isFinite(seed.mean)
+      ? seed.samples.reduce((sum, value) => sum + value, 0) / seed.samples.length : 0;
+    const allowance = classic.sd + Math.max(0, platform.sqlite.mean - platform.classic.mean, seedDelta);
     return { status: excess <= allowance ? 'PLATFORM-BOUND' : 'FAIL', excess, allowance };
   }
   const callMs = bound?.callCost === 'intercept' ? bridge?.interceptMs : bridge?.rttMs;

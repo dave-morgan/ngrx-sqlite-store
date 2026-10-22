@@ -251,9 +251,12 @@ export class SqliteStoreCore {
     });
     for (const feature of features) feature.seeded = true;
     // NgRx router-store uses its own pipeable select, outside our path leases.
-    // Pin only its conventional bridge slice, including on lazy registration.
+    // Pin its conventional bridge slice with this registration's eager roots.
+    // All session seeds above have committed before these reads are queued.
     await this.injector.get(SELECTION_ENGINE).preload(
-      features.filter((feature) => feature.router).map((feature) => feature.key),
+      features.filter((feature) =>
+        feature.router || this.config.sqlite?.eager?.includes(feature.key),
+      ).map((feature) => feature.key),
     );
     await Promise.all(this.hooks.map((hook) => hook(changes)));
   }

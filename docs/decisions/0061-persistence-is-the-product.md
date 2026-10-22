@@ -1,4 +1,4 @@
-# ADR-0058: Persistence is the product, so there is no in-memory feature mode (resolves Q7)
+# ADR-0061: Persistence is the product, so there is no in-memory feature mode (resolves Q7)
 
 Status: Accepted (User decision, 2026-10-22)
 

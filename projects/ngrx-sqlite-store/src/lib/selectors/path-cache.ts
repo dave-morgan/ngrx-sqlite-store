@@ -23,6 +23,8 @@ import { releaseEntityChanges } from '../storage/entity-changes';
 import { refreshQuery } from './query-refresh';
 import type { SqlReader } from './query-selector';
 
+const SUBTREE_COLUMNS = ['path', 'parent', 'kind', 'pos', 'value', 'source', 'coll', 'id', 'data', 'sortkey', 'seq'];
+
 interface Entry {
   query?: QuerySource;
   entityRows?: Map<string, EntityRow>;
@@ -233,41 +235,71 @@ export class PathCache {
     );
     return operation;
   }
-  private async load(path: string): Promise<void> {
-    await this.engine.read(async (sql) => {
-      if (this.ready(path)) return;
-      const existing = this.owner(path);
-      if (existing) {
-        await this.refreshEntry(sql, ...existing);
-        return;
-      }
-      // Logical array indices and inline/entity children have no physical row.
-      // Cache their owning container so physical-id changes invalidate them too.
-      const resolved = await this.resolveRead(sql, path);
-      const root = resolved.path;
-      let value = resolved.value;
-      for (const [descendant, entry] of this.entries) {
-        if (entry.query) continue;
-        if (!isAncestorOrSelf(root, descendant)) continue;
-        const suffix = descendant === root ? [] : descendant.slice(root.length + 1).split('/');
-        const loaded = at(value, suffix);
-        const shared = share(entry.value, loaded, entry.replaced, descendant);
-        if (shared !== loaded) value = put(value, suffix, shared);
-        this.entries.delete(descendant);
-      }
-      this.entries.set(root, {
-        value,
-        location: resolved.location,
-        refcount: 0,
-        version: this.revision,
-        lastUsed: ++this.clock,
-        dirty: new ChangeSet(),
-        replaced: new Set(),
-      });
-      this.recount();
+  /** Independent feature roots share a bounded transport inside one queued read. */
+  async ensureMany(paths: readonly string[]): Promise<void> {
+    const unique = [...new Set(paths)];
+    const roots = unique.filter((path) =>
+      path !== '' && !path.includes('/') && !this.owner(path) && !this.pending.has(path),
+    );
+    if (roots.length < 2) {
+      await Promise.all(unique.map((path) => this.ensure(path)));
+      return;
+    }
+    const operation = this.engine.read(async (sql) => {
+      const batched = queryBatch(sql);
+      const reader: SqlExecutor = {
+        ...sql,
+        query: <R>(statement: string, params?: SqlValue[]) =>
+          batched.query<R>(statement, params, SUBTREE_COLUMNS),
+      };
+      await Promise.all(roots.map((path) => this.loadEntry(reader, path)));
+    }).then(() => {
+      this.publish();
+      this.evict();
     });
+    for (const path of roots) this.pending.set(path, operation);
+    const cleanup = () => {
+      for (const path of roots) this.pending.delete(path);
+    };
+    void operation.then(cleanup, cleanup);
+    await Promise.all(unique.map((path) => this.ensure(path)));
+  }
+  private async load(path: string): Promise<void> {
+    await this.engine.read((sql) => this.loadEntry(sql, path));
     this.publish();
     this.evict();
+  }
+  private async loadEntry(sql: SqlExecutor, path: string): Promise<void> {
+    if (this.ready(path)) return;
+    const existing = this.owner(path);
+    if (existing) {
+      await this.refreshEntry(sql, ...existing);
+      return;
+    }
+    // Logical array indices and inline/entity children have no physical row.
+    // Cache their owning container so physical-id changes invalidate them too.
+    const resolved = await this.resolveRead(sql, path);
+    const root = resolved.path;
+    let value = resolved.value;
+    for (const [descendant, entry] of this.entries) {
+      if (entry.query) continue;
+      if (!isAncestorOrSelf(root, descendant)) continue;
+      const suffix = descendant === root ? [] : descendant.slice(root.length + 1).split('/');
+      const loaded = at(value, suffix);
+      const shared = share(entry.value, loaded, entry.replaced, descendant);
+      if (shared !== loaded) value = put(value, suffix, shared);
+      this.entries.delete(descendant);
+    }
+    this.entries.set(root, {
+      value,
+      location: resolved.location,
+      refcount: 0,
+      version: this.revision,
+      lastUsed: ++this.clock,
+      dirty: new ChangeSet(),
+      replaced: new Set(),
+    });
+    this.recount();
   }
   private async read(sql: SqlExecutor, path: string, entry?: Entry): Promise<unknown> {
     const value = await this.nodes.read(sql, path, (rows) => {

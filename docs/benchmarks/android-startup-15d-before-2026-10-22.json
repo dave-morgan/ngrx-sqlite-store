@@ -1,0 +1,487 @@
+{
+  "date": "2026-10-22",
+  "session": "15d-diagnostic-20261022-03",
+  "device": "sdk_gphone64_x86_64",
+  "sdkLevel": "35",
+  "webview": "com.google.android.webview, 154.0.8037.106",
+  "apkHashes": {
+    "classic": "d5152d92740c31e6f6624702293df8bdf25a8647d9d31fc7a15d9a236e0be26b",
+    "sqlite": "e39c1cf67d8696ca5b47a42164122e72a1d366927a602c40fa6dfc02a0175515"
+  },
+  "results": [
+    {
+      "ready": {
+        "total": 1000,
+        "ms": 4096.800000000745
+      },
+      "calls": [
+        {
+          "transaction": 0,
+          "method": "checkConnectionsConsistency",
+          "start": 1460,
+          "ms": 20.200000001117587,
+          "bytes": 29,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 1480.300000000745,
+          "ms": 25.299999998882413,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 1505.7000000011176,
+          "ms": 62.5,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1568.4000000003725,
+          "ms": 26.09999999962747,
+          "bytes": 109,
+          "sql": [
+            "PRAGMA journal_mode=WAL"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1594.9000000003725,
+          "ms": 4.599999999627471,
+          "bytes": 142,
+          "sql": [
+            "SELECT value FROM nss_meta WHERE key = ?"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1600.7000000011176,
+          "ms": 5.599999999627471,
+          "bytes": 178,
+          "sql": [
+            "SELECT name,tbl_name,sql FROM sqlite_master WHERE type = 'index' AND name GLOB 'nss_query_*'"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1606.9000000003725,
+          "ms": 5.900000000372529,
+          "bytes": 259,
+          "sql": [
+            "SELECT key, value FROM nss_meta WHERE key IN (?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1613.2000000011176,
+          "ms": 6.599999999627471,
+          "bytes": 821,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "executeSet",
+          "start": 1623,
+          "ms": 40.09999999962747,
+          "bytes": 582,
+          "sql": [
+            "DELETE FROM nss_node WHERE path = ? OR (path >= ? AND path < ?)",
+            "DELETE FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?)",
+            "DELETE FROM nss_entity WHERE coll = ? OR (coll >= ? AND coll < ?)",
+            "INSERT OR REPLACE INTO nss_meta (key, value) VALUES (?, ?)"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1664.2000000011176,
+          "ms": 6.599999999627471,
+          "bytes": 821,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1674.5999999996275,
+          "ms": 5.400000000372529,
+          "bytes": 1025,
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"id\",?, \"value\")) AS payload FROM (SELECT id, "
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1680.9000000003725,
+          "ms": 7.400000000372529,
+          "bytes": 785,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1745.9000000003725,
+          "ms": 27.09999999962747,
+          "bytes": 821,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1776.800000000745,
+          "ms": 12.400000000372529,
+          "bytes": 821,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1789.800000000745,
+          "ms": 737.1999999992549,
+          "bytes": 821,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 2527.2000000011176,
+          "ms": 43.59999999962747,
+          "bytes": 875,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 2572.7000000011176,
+          "ms": 6.699999999254942,
+          "bytes": 866,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 2580.7000000011176,
+          "ms": 7.5,
+          "bytes": 875,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 2589.300000000745,
+          "ms": 8.5,
+          "bytes": 812,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 2599.800000000745,
+          "ms": 1151.199999999255,
+          "bytes": 951,
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"id\",?, \"pos\",?, \"sortkey\",?, \"data\",?, \"promo"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 3756.800000000745,
+          "ms": 14.699999999254942,
+          "bytes": 920,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 3774.5999999996275,
+          "ms": 8,
+          "bytes": 821,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 3784.7000000011176,
+          "ms": 25.799999998882413,
+          "bytes": 821,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 3810.800000000745,
+          "ms": 3.699999999254942,
+          "bytes": 141,
+          "sql": [
+            "SELECT parent, pos FROM nss_node WHERE path = ?"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 3817.0999999996275,
+          "ms": 5.600000001490116,
+          "bytes": 141,
+          "sql": [
+            "SELECT parent, pos FROM nss_node WHERE path = ?"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "executeSet",
+          "start": 3832.2000000011176,
+          "ms": 29.699999999254942,
+          "bytes": 1371,
+          "sql": [
+            "DELETE FROM nss_node WHERE path = ? OR (path >= ? AND path < ?)",
+            "DELETE FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?)",
+            "DELETE FROM nss_entity WHERE coll = ? OR (coll >= ? AND coll < ?)",
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 3878.9000000003725,
+          "ms": 4.199999999254942,
+          "bytes": 857,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 3883.4000000003725,
+          "ms": 2.900000000372529,
+          "bytes": 150,
+          "sql": [
+            "SELECT path, pos FROM nss_node WHERE parent = ? ORDER BY pos"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "beginTransaction",
+          "start": 3917.300000000745,
+          "ms": 5.400000000372529,
+          "bytes": 27,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 3922.9000000003725,
+          "ms": 41.80000000074506,
+          "bytes": 179935,
+          "sql": [
+            "DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "DELETE FROM nss_entity WHERE coll >= ? AND coll < ? OR coll = ?",
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "query",
+          "start": 3964.7000000011176,
+          "ms": 3.199999999254942,
+          "bytes": 875,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 3968.2000000011176,
+          "ms": 5.099999999627471,
+          "bytes": 199,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "query",
+          "start": 3973.4000000003725,
+          "ms": 3.900000000372529,
+          "bytes": 920,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 3980,
+          "ms": 5,
+          "bytes": 201,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "query",
+          "start": 3985.0999999996275,
+          "ms": 4.400000000372529,
+          "bytes": 148,
+          "sql": [
+            "DELETE FROM nss_entity WHERE coll = ? RETURNING id,data"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 3991.4000000003725,
+          "ms": 5.699999999254942,
+          "bytes": 1799,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "query",
+          "start": 3997.0999999996275,
+          "ms": 3.400000000372529,
+          "bytes": 884,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 4001.2000000011176,
+          "ms": 4.799999998882413,
+          "bytes": 3658,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "commitTransaction",
+          "start": 4006.2000000011176,
+          "ms": 5.699999999254942,
+          "bytes": 27,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 4,
+          "method": "query",
+          "start": 4012.9000000003725,
+          "ms": 4.300000000745058,
+          "bytes": 875,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 4,
+          "method": "query",
+          "start": 4017.4000000003725,
+          "ms": 4.900000000372529,
+          "bytes": 866,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 4,
+          "method": "query",
+          "start": 4022.4000000003725,
+          "ms": 3.400000000372529,
+          "bytes": 875,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 4,
+          "method": "query",
+          "start": 4028.0999999996275,
+          "ms": 15.400000000372529,
+          "bytes": 1902,
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"id\",?, \"value\")) AS payload FROM (SELECT id, "
+          ]
+        }
+      ],
+      "profileFlag": "true",
+      "marks": [
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1381.0999999996275
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1709.5999999996275
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1839.5
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1861.7000000011176
+        },
+        {
+          "name": "harness:seed:generation:start",
+          "startTime": 3867.0999999996275
+        },
+        {
+          "name": "harness:seed:generation:end",
+          "startTime": 3869.800000000745
+        }
+      ]
+    }
+  ]
+}

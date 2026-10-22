@@ -335,11 +335,13 @@ export class SqliteSelectionEngine implements SelectionEngine {
     };
   }
   async preload(paths: string[]): Promise<void> {
+    const required: string[] = [];
     for (const key of paths) {
       const path = escapeSegment(key);
       if (!this.eager.has(path)) this.eager.set(path, this.cache.retain(path));
-      await this.cache.ensure(path);
+      required.push(path);
     }
+    await this.cache.ensureMany(required);
   }
   async materialize(): Promise<object> {
     await this.core.initialize();

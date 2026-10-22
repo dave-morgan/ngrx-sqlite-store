@@ -11,6 +11,44 @@ describe('RowWriter bounded bridge groups', () => {
   const engine = new StorageEngine(driver, { migrations: SCHEMA_MIGRATIONS });
   afterEach(async () => { await engine.close(); vi.restoreAllMocks(); });
 
+  it('reuses canonical entity JSON without parsing again and preserves exact transport bytes and deep values', async () => {
+    await engine.open();
+    const values = [JSON.stringify({ text: '"\\\n😀', value: [1, null, true] }),
+      '['.repeat(950) + '0' + ']'.repeat(950), '"escaped\\u0061"', 'null', 'false', '12'];
+    const rows = Array.from({ length: 220 }, (_, id) => ({
+      coll: 'todos', id: String(id), pos: id, data: values[id % values.length], sortkey: null,
+    }));
+    const statements: string[][] = [[], []];
+    let phase = 0;
+    const batch = driver.batch.bind(driver);
+    vi.spyOn(driver, 'batch').mockImplementation(async (pending, options) => {
+      statements[phase].push(...pending.map((statement) => JSON.stringify(statement)));
+      await batch(pending, options);
+    });
+    await engine.transaction(async (tx) => {
+      await new RowWriter(tx, tx.changes, 1_000_000).writeEntityRows(rows, true);
+    });
+    phase = 1;
+    const parse = vi.spyOn(JSON, 'parse');
+    await engine.transaction(async (tx) => {
+      await new RowWriter(tx, tx.changes, 1_000_000).writeEntityRows(rows, true, undefined, false, { canonicalJson: true });
+    });
+    expect(parse.mock.calls.filter(([text]) => values.includes(text))).toEqual([]);
+    parse.mockRestore();
+    expect(statements[1]).toEqual(statements[0]);
+    expect(await engine.read((sql) => sql.query('SELECT coll,id,pos,data,sortkey FROM nss_entity ORDER BY pos'))).toEqual(rows);
+  });
+
+  it('enforces the hard UTF-8 cap for canonical entity data before writing', async () => {
+    await engine.open();
+    await expect(engine.transaction(async (tx) => {
+      await new RowWriter(tx, tx.changes, 10).writeEntityRows([
+        { coll: 'todos', id: '1', pos: 1, data: JSON.stringify({ value: '😀'.repeat(5) }) },
+      ], false, undefined, false, { canonicalJson: true });
+    })).rejects.toThrow(/cap/i);
+    expect(await engine.read((sql) => sql.query('SELECT * FROM nss_entity'))).toEqual([]);
+  });
+
   it.each([false, true])('bounds multirow insert JSON including escaping (upsert: %s)', async (upsert) => {
     await engine.open();
     const sizes: number[] = [];

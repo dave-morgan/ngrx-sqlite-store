@@ -31,6 +31,7 @@ import { Store } from './store';
 import { State } from './state';
 import { NSS_DEPS, NSS_SOURCE } from '../selectors/metadata';
 import { PathCache } from '../selectors/path-cache';
+import { SqliteSelectionEngine } from '../selectors/selection-engine';
 import { NodeStore } from '../schema/node-store';
 import { brandEntityState } from '../schema/entity-brand';
 import { share } from '../selectors/view-state';
@@ -67,6 +68,48 @@ async function boot(eager: string[] = [], wholeStore?: 'loaded' | 'pin-all') {
 }
 
 describe('phase 4b selectors', () => {
+  it('preloads independent roots in one bounded read transport', async () => {
+    const driver = new SqlJsDriver();
+    TestBed.configureTestingModule({
+      providers: [provideStore({
+        first: ngrx.createReducer({ value: 'one' }),
+        second: ngrx.createReducer({ value: 'two' }),
+      }, { sqlite: { driver } })],
+    });
+    const store = TestBed.inject(Store);
+    core = TestBed.inject(SqliteStoreCore);
+    await store.settle();
+    const query = vi.spyOn(driver, 'query');
+    const cache = TestBed.inject(PathCache);
+    await Promise.all([
+      TestBed.inject(SqliteSelectionEngine).preload(['first', 'second', 'first']),
+      cache.ensure('first'),
+    ]);
+    expect(query).toHaveBeenCalledTimes(1);
+    expect(cache.peek('first')).toEqual({ value: 'one' });
+    expect(cache.peek('second')).toEqual({ value: 'two' });
+  });
+  it('falls back to a flat subtree read when a preload exceeds the JSON transport cap', async () => {
+    const driver = new SqlJsDriver();
+    const large = { text: 'x'.repeat(1_100_000) };
+    TestBed.configureTestingModule({
+      providers: [provideStore({
+        large: ngrx.createReducer(large),
+        'a/b': ngrx.createReducer({ value: 'small' }),
+      }, { sqlite: { driver } })],
+    });
+    const store = TestBed.inject(Store);
+    core = TestBed.inject(SqliteStoreCore);
+    await store.settle();
+    const query = vi.spyOn(driver, 'query');
+    await TestBed.inject(SqliteSelectionEngine).preload(['large', 'a/b']);
+    expect(query).toHaveBeenCalledTimes(2);
+    expect(query.mock.calls[0][0]).toContain('1048576');
+    expect(query.mock.calls[1][0]).not.toContain('json_group_array');
+    const cache = TestBed.inject(PathCache);
+    expect(cache.peek('large')).toEqual(large);
+    expect(cache.peek('a~1b')).toEqual({ value: 'small' });
+  });
   it('shares only own state properties, never inherited containers', () => {
     const inherited = { value: 1 };
     const previous = Object.create({ nested: inherited });

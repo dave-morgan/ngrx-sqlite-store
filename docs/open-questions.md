@@ -31,7 +31,7 @@ Devtools, router-store, and some meta-reducers expect one full state object.
 ### Q6. Reducer API shape. Status: **Resolved â†’ ADR-0013, ADR-0014**
 `on()` handlers are tx reducers, and `onState()` / `fromSyncReducer()` cover classic ones. Handlers can write imperatively and/or return a partial that gets diffed. Reads go through the identity cache. The detailed `tx` method list is in architecture Â§3.2.
 
-### Q7. Mixed mode. Status: **Provisional**
+### Q7. Mixed mode. Status: **Resolved → ADR-0061 (no in-memory mode)**
 Can small UI slices stay fully in memory with classic sync reducers?
 - Current: no in-memory slices. Classic reducers are supported only through the SQLite-backed compat bridge, which loads, reduces, and diffs. A true in-memory mode would be a flag per feature, `storage: 'memory'`, deferred.
 

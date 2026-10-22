@@ -41,7 +41,7 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 
 ## Codex handoff (Windows)
 - Launch directly: `node <codex plugin>/scripts/codex-companion.mjs task --background --write --fresh --model gpt-6.1-sol "<ONE-LINE prompt>"` — cmd truncates multi-line prompts at the first newline. Codex sandbox can't write `.git`: orchestrator commits. Monitor `jobs/<id>.json` status + `.log` for `usage limit|rate.?limit|at capacity|insufficient_quota`.
-- AGENTS.md must stay a hard link to CLAUDE.md (git operations can break it: `cmd /c mklink /H AGENTS.md CLAUDE.md`).
+- AGENTS.md must stay a hard link to CLAUDE.md. `sed -i`/rewrite-style edits break it (they create a new file): edit in place or re-run `cmd /c mklink /H AGENTS.md CLAUDE.md` after.
 
 ## Blocking / awaiting user
 - None.

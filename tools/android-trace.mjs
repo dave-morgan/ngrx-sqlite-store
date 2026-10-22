@@ -138,13 +138,19 @@ try {
         return { iterations, calls };
       } finally { capacitor.nativePromise = original; }
     }) : seed === undefined ? await page.evaluate(() => window.__harness.benchTrace())
-      : await page.evaluate(async (size) => {
+      : await page.evaluate(async ({ size, nativeClock }) => {
         if (!window.__harness.benchSeed) throw new Error('APK has no benchSeed hook; rebuild first');
         const capacitor = window.Capacitor;
         const original = capacitor.nativePromise;
         if (typeof original !== 'function') throw new Error('No Capacitor.nativePromise');
         const calls = [];
         const encoder = new TextEncoder();
+        const base = { database: 'ngrx-harness', readonly: false };
+        const direct = (method, options) => original.call(capacitor, 'CapacitorSQLite', method, { ...base, ...options });
+        if (nativeClock) await direct('execute', {
+          statements: 'CREATE TEMP TABLE IF NOT EXISTS __nss_profile_clock (id INTEGER PRIMARY KEY, start REAL, end REAL); DELETE FROM __nss_profile_clock;',
+          transaction: false,
+        });
         const beganAt = performance.now();
         capacitor.nativePromise = function (...values) {
           const options = values[2];
@@ -159,17 +165,35 @@ try {
             start: performance.now(), ms: undefined,
           };
           calls.push(row);
+          if (nativeClock && values[0] === 'CapacitorSQLite' && values[1] === 'executeSet') {
+            const id = calls.length;
+            row.clockId = id;
+            const clock = "(julianday('now') - 2440587.5) * 86400000.0";
+            values[2] = { ...options, set: [
+              { statement: `INSERT INTO __nss_profile_clock (id,start) VALUES (?,${clock})`, values: [id] },
+              ...statements,
+              { statement: `UPDATE __nss_profile_clock SET end=${clock} WHERE id=?`, values: [id] },
+            ] };
+          }
           return Promise.resolve(original.apply(this, values)).finally(() => { row.ms = performance.now() - row.start; });
         };
         let timing;
+        let nativeSqlWindows;
         try {
           timing = await window.__harness.benchSeed(size);
           await window.__harness.settle();
-        } finally { capacitor.nativePromise = original; }
+          if (nativeClock) nativeSqlWindows = (await direct('query', {
+            statement: 'SELECT id, start, end, end-start AS ms FROM __nss_profile_clock ORDER BY id', values: [],
+          })).values;
+        } finally {
+          capacitor.nativePromise = original;
+          if (nativeClock) await direct('execute', { statements: 'DROP TABLE IF EXISTS temp.__nss_profile_clock', transaction: false });
+        }
         const totalElapsedMs = performance.now() - beganAt;
         const batches = calls.filter((call) => call.plugin === 'CapacitorSQLite' && call.method === 'executeSet');
         return {
           size, timing, totalElapsedMs, resetAndOtherMs: totalElapsedMs - timing.generateMs - timing.reduceMs,
+          nativeSqlWindows,
           nativeSummary: {
             calls: calls.length, executeSetCalls: batches.length,
             encodedOptionBytes: calls.reduce((sum, call) => sum + call.encodedOptionBytes, 0),
@@ -179,7 +203,7 @@ try {
           },
           calls,
         };
-      }, seed);
+      }, { size: seed, nativeClock: args.includes('--native-sql-clock') });
   } finally {
     if (cdp) {
       ({ profile: cpuProfile } = await cdp.send('Profiler.stop'));
@@ -198,7 +222,9 @@ try {
   };
   const directory = join(root, 'docs', 'benchmarks');
   mkdirSync(directory, { recursive: true });
-  const basename = toggle ? `android-toggle-trace-${date}` : seed === undefined ? `android-emission-trace-${date}` : `android-seed-trace-${seed}-${date}`;
+  const label = option('label', '');
+  if (label && !/^[a-z0-9-]+$/i.test(label)) throw new Error('Invalid trace label');
+  const basename = (toggle ? `android-toggle-trace-${date}` : seed === undefined ? `android-emission-trace-${date}` : `android-seed-trace-${seed}-${date}`) + (label ? `-${label}` : '');
   if (cpuProfile) {
     writeFileSync(join(directory, `${basename}.cpuprofile`), JSON.stringify(cpuProfile));
     const self = new Map();

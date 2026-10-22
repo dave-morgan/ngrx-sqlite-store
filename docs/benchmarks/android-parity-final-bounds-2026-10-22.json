@@ -1,0 +1,47 @@
+[
+  {
+    "size": 1000,
+    "metric": "firstReadyMs",
+    "callsMin": 2,
+    "bytesMin": 136210,
+    "callCost": "intercept",
+    "justification": "Persisted seed-version read causally precedes seed generation and at least one atomic durable write call (two minimum calls). Minimum bytes are exact UTF-8 lengths of deterministic stored Todo JSON values only; all SQL, transport escaping, duplicate IDs, positions, users, folders and metadata are excluded. Uses same-session executeSet regression intercept and effective bandwidth (including native insert work)."
+  },
+  {
+    "size": 1000,
+    "metric": "relaunchReadyMs",
+    "callsMin": 2,
+    "bytesMin": 0,
+    "justification": "Fresh native process must open SQLite before reading persisted state: at least one open and one causally subsequent read. No observed redundant probes, schema checks, effect commits or unisolated native-open cost are charged as a hard bound."
+  },
+  {
+    "size": 10000,
+    "metric": "firstReadyMs",
+    "callsMin": 2,
+    "bytesMin": 1380887,
+    "callCost": "intercept",
+    "justification": "Persisted seed-version read causally precedes seed generation and at least one atomic durable write call (two minimum calls). Minimum bytes are exact UTF-8 lengths of deterministic stored Todo JSON values only; all SQL, transport escaping, duplicate IDs, positions, users, folders and metadata are excluded. Uses same-session executeSet regression intercept and effective bandwidth (including native insert work)."
+  },
+  {
+    "size": 10000,
+    "metric": "relaunchReadyMs",
+    "callsMin": 2,
+    "bytesMin": 0,
+    "justification": "Fresh native process must open SQLite before reading persisted state: at least one open and one causally subsequent read. No observed redundant probes, schema checks, effect commits or unisolated native-open cost are charged as a hard bound."
+  },
+  {
+    "size": 50000,
+    "metric": "firstReadyMs",
+    "callsMin": 2,
+    "bytesMin": 6992197,
+    "callCost": "intercept",
+    "justification": "Persisted seed-version read causally precedes seed generation and at least one atomic durable write call (two minimum calls). Minimum bytes are exact UTF-8 lengths of deterministic stored Todo JSON values only; all SQL, transport escaping, duplicate IDs, positions, users, folders and metadata are excluded. Uses same-session executeSet regression intercept and effective bandwidth (including native insert work)."
+  },
+  {
+    "size": 50000,
+    "metric": "relaunchReadyMs",
+    "callsMin": 2,
+    "bytesMin": 0,
+    "justification": "Fresh native process must open SQLite before reading persisted state: at least one open and one causally subsequent read. No observed redundant probes, schema checks, effect commits or unisolated native-open cost are charged as a hard bound."
+  }
+]

@@ -212,26 +212,35 @@ export class SqliteStoreCore {
   }
   private async seed(features: Feature[]): Promise<void> {
     const { changes } = await this.engine.transaction(async (tx) => {
+      const versions = new Map<string, string>();
+      const parameterLimit = 999;
+      for (let offset = 0; offset < features.length; offset += parameterLimit) {
+        const keys = features.slice(offset, offset + parameterLimit)
+          .map((feature) => `feature:${feature.key}:version`);
+        const rows = await tx.query<{ key: string; value: string }>(
+          `SELECT key, value FROM nss_meta WHERE key IN (${keys.map(() => '?').join(',')})`,
+          keys,
+        );
+        for (const row of rows) versions.set(row.key, row.value);
+      }
       for (const feature of features) {
         const options = feature.sqlite ?? this.config.sqlite?.features?.[feature.key];
         const version = options?.version ?? 1;
         const key = `feature:${feature.key}:version`;
-        const [row] = await tx.query<{ value: string }>(
-          'SELECT value FROM nss_meta WHERE key = ?',
-          [key],
-        );
-        if (feature.persist && row && row.value === String(version)) continue;
-        if (feature.persist && row && options?.onVersionMismatch !== 'reseed')
+        const previousVersion = versions.get(key);
+        if (feature.persist && previousVersion === String(version)) continue;
+        if (feature.persist && previousVersion !== undefined && options?.onVersionMismatch !== 'reseed')
           throw new Error(`Feature version mismatch: ${feature.key}`);
         // Some foreign reducers (notably routerReducer) have no state until their first action.
         if (feature.seed !== undefined)
           await feature.nodes.write(tx, escapeSegment(feature.key), feature.seed, tx.changes);
-        else if (row || !feature.persist)
+        else if (previousVersion !== undefined || !feature.persist)
           await feature.nodes.delete(tx, escapeSegment(feature.key), tx.changes);
         await tx.run('INSERT OR REPLACE INTO nss_meta (key, value) VALUES (?, ?)', [
           key,
           String(version),
         ]);
+        versions.set(key, String(version));
       }
     });
     for (const feature of features) feature.seeded = true;

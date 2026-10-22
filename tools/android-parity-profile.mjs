@@ -1,0 +1,146 @@
+#!/usr/bin/env node
+// Diagnostic only. Never run alongside android-bench.mjs.
+// --empty: five paired empty-plugin controls per APK; --startup: persisted boot trace.
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { chromium } from '@playwright/test';
+import { summarize, trialOrder } from './benchmark-statistics.mjs';
+
+const argv = process.argv.slice(2);
+const option = (name, fallback) => argv.includes(`--${name}`) ? argv[argv.indexOf(`--${name}`) + 1] : fallback;
+const adbFile = join(process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT, 'platform-tools', 'adb.exe');
+const adb = (...args) => execFileSync(adbFile, ['-s', option('serial', 'emulator-5554'), ...args], {
+  encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
+});
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const base = 'dev.ngrxsqlite.harness';
+const date = new Date().toISOString().slice(0, 10);
+const provenance = {
+  date, session: option('session', undefined),
+  device: adb('shell', 'getprop', 'ro.product.model').trim(),
+  sdkLevel: adb('shell', 'getprop', 'ro.build.version.sdk').trim(),
+  webview: (adb('shell', 'dumpsys', 'webviewupdate').match(/Current WebView package.*:\s*\(([^)]+)\)/) ?? [])[1] ?? '?',
+  apkHashes: Object.fromEntries(['classic', 'sqlite'].map((impl) => [impl,
+    createHash('sha256').update(readFileSync(`.tmp/benchmark-apks/${impl}.apk`)).digest('hex')])),
+};
+
+async function launch(pkg) {
+  for (const name of [base, `${base}.classic`, `${base}.sqlite`]) adb('shell', 'am', 'force-stop', name);
+  adb('shell', 'am', 'start', '-n', `${pkg}/${base}.MainActivity`);
+  for (let i = 0; i < 150; i++) {
+    await delay(200);
+    try {
+      const pid = adb('shell', 'pidof', pkg).trim().split(/\s+/)[0];
+      const socket = `webview_devtools_remote_${pid}`;
+      if (!adb('shell', 'cat', '/proc/net/unix').includes(socket)) continue;
+      adb('forward', 'tcp:9336', `localabstract:${socket}`);
+      const browser = await chromium.connectOverCDP('http://localhost:9336');
+      const page = browser.contexts()[0]?.pages()[0];
+      if (page) return { browser, page };
+      await browser.close();
+    } catch { /* socket and page can appear independently */ }
+  }
+  throw new Error(`Cannot attach to ${pkg}`);
+}
+
+function pss(pkg) {
+  const read = (target) => {
+    const raw = adb('shell', 'dumpsys', 'meminfo', target);
+    const match = raw.match(/TOTAL PSS:\s+(\d+)/) ?? raw.match(/TOTAL\s+(\d+)/);
+    if (!match) throw new Error(`No PSS for ${target}`);
+    return { mb: Number(match[1]) / 1024, raw };
+  };
+  const app = read(pkg);
+  const renderers = adb('shell', 'ps', '-A').split(/\r?\n/)
+    .filter((line) => /sandboxed_process/.test(line)).map((line) => read(line.trim().split(/\s+/)[1]));
+  return { app, renderers, totalMb: app.mb + renderers.reduce((sum, row) => sum + row.mb, 0) };
+}
+
+const results = [];
+let active;
+let browser;
+try {
+  if (argv.includes('--empty')) {
+    for (const apk of ['classic', 'sqlite']) {
+      active = `${base}.${apk}`;
+      ({ browser } = await launch(active));
+      let page = browser.contexts()[0].pages()[0];
+      await page.waitForFunction(() => window.__harness || window.__emptyReady);
+      await page.evaluate(() => { localStorage.removeItem('harness:profile'); });
+      for (const { impl: mode, trial } of trialOrder(['classic', 'sqlite'], Number(option('trials', 5)))) {
+        await page.evaluate((value) => localStorage.setItem('harness:empty', value), mode);
+        // Chromium batches localStorage disk commits. Force-stop immediately
+        // after setItem can discard a control that was visible in the old JS VM.
+        await delay(6000);
+        await browser.close();
+        const session = await launch(active);
+        browser = session.browser;
+        page = session.page;
+        await session.page.waitForFunction(() => window.__emptyReady);
+        await delay(2000);
+        const cdp = await session.page.context().newCDPSession(session.page);
+        await cdp.send('HeapProfiler.collectGarbage');
+        await delay(300);
+        await cdp.send('HeapProfiler.collectGarbage');
+        const heap = await cdp.send('Runtime.getHeapUsage');
+        await cdp.detach();
+        const memory = pss(active);
+        const timing = await session.page.evaluate(() => window.__emptyReady);
+        const row = { apk, mode, trial, heapMb: heap.usedSize / 1048576, pssTotalMb: memory.totalMb, timing, memory };
+        results.push(row);
+        console.log(JSON.stringify({ ...row, memory: undefined }));
+      }
+      await page.evaluate(() => localStorage.removeItem('harness:empty'));
+      await delay(6000);
+      await browser.close();
+      browser = undefined;
+    }
+  } else {
+    active = `${base}.sqlite`;
+    let session = await launch(active);
+    browser = session.browser;
+    await session.page.waitForFunction(() => window.__harness || window.__emptyReady);
+    const seed = option('seed', undefined);
+    await session.page.evaluate(async (size) => {
+      localStorage.removeItem('harness:empty');
+      if (size !== undefined) {
+        window.__harness.dispatch({ type: '[Seed] Reset' });
+        await window.__harness.settle();
+        localStorage.setItem('harness:seed', String(size));
+      }
+      localStorage.setItem('harness:profile', 'true');
+    }, seed === undefined ? undefined : Number(seed));
+    await delay(6000);
+    await browser.close();
+    session = await launch(active);
+    browser = session.browser;
+    await session.page.waitForFunction(() => window.__harness?.ready, null, { timeout: 300_000 });
+    await session.page.evaluate(() => window.__harness.settle());
+    const startup = await session.page.evaluate(() => ({
+      ready: window.__harness.ready, calls: window.__startupTrace,
+      profileFlag: localStorage.getItem('harness:profile'),
+      marks: performance.getEntriesByType('mark').map(({ name, startTime }) => ({ name, startTime })),
+    }));
+    if (!startup.calls?.length || startup.profileFlag !== 'true') throw new Error('Startup trace missing after restart: control not persisted');
+    results.push(startup);
+  }
+  const summaries = argv.includes('--empty') ? ['classic', 'sqlite'].flatMap((apk) => ['classic', 'sqlite'].flatMap((mode) =>
+    ['heapMb', 'pssTotalMb'].map((metric) => ({ apk, mode, metric,
+      ...summarize(results.filter((row) => row.apk === apk && row.mode === mode).map((row) => row[metric])),
+    })))) : undefined;
+  const file = option('output', `docs/benchmarks/android-${argv.includes('--empty') ? 'empty-platform' : 'startup'}-${date}.json`);
+  writeFileSync(file, JSON.stringify({ ...provenance, results, summaries }, null, 2) + '\n');
+  console.log(file, summaries ?? '');
+} finally {
+  if (browser) {
+    const page = browser.contexts()[0]?.pages()[0];
+    await page?.evaluate(() => {
+      localStorage.removeItem('harness:empty'); localStorage.removeItem('harness:profile');
+    }).catch(() => {});
+    await delay(6000);
+    await browser.close().catch(() => {});
+  }
+  if (active) adb('shell', 'am', 'force-stop', active);
+}

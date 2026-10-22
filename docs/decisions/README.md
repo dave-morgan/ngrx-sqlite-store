@@ -49,8 +49,13 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0041](0041-json-bulk-and-current-schema-open.md) | Single-binding JSON1 bulk inserts and read-only current-schema open, retaining atomic migration fallback | Agent / Phase 15 parity | 2026-10-22 | Accepted |
 | [0042](0042-android-wal.md) | Writable Android connections use WAL with the existing synchronous level; power-loss durability tradeoff documented | Agent / Phase 15 parity | 2026-10-22 | Accepted |
 | [0043](0043-raw-json-bulk-and-insert-journals.md) | Raw JSON bulk entity cells and shared empty non-update field sets reduce seed transport and allocation | Agent / Phase 15 trace | 2026-10-22 | Accepted |
-| [0044](0044-parity-residual-gaps.md) | Parity residual gaps (phase 15, in progress) | Agent / Phase 15 | 2026-10-22 | Draft |
+| [0044](0044-parity-residual-gaps.md) | Earlier parity residual gaps; superseded by ADR-0050 logging-off measurements | Agent / Phase 15 | 2026-10-22 | Superseded |
 | [0045](0045-capacitor-bridge-logging.md) | Capacitor loggingBehavior none for benchmarks/production: debug bridge logging retained payloads and skewed store metrics | Agent | 2026-10-22 | Accepted |
+| [0046](0046-fresh-native-connection-startup.md) | Skip redundant open/transaction probes on freshly created native connections; preserve reload recovery | Agent / Phase 15b | 2026-10-22 | Accepted |
+| [0047](0047-compact-entity-transport.md) | Compact raw JSON entity cells, omit null sortkeys and share collection bindings without changing bulk ordering or byte caps | Agent / Phase 15b | 2026-10-22 | Accepted |
+| [0048](0048-platform-baseline-and-startup-profiling.md) | Isolated empty-plugin controls, opt-in startup tracing and strictly measured PLATFORM-BOUND memory acceptance | Agent / Phase 15b | 2026-10-22 | Accepted |
+| [0049](0049-batched-feature-version-reads.md) | Batch feature-version reads inside registration transactions with bounded bindings and unchanged seed ordering | Agent / Phase 15b | 2026-10-22 | Accepted |
+| [0050](0050-phase15b-evidenced-parity-gaps.md) | Retain measured residual FAILs with startup, seed, native SQL, dispatch and memory evidence; supersedes ADR-0044 | Agent / Phase 15b | 2026-10-22 | Accepted as evidenced gaps |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

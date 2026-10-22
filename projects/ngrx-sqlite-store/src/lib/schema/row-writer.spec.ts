@@ -47,7 +47,7 @@ describe('RowWriter bounded bridge groups', () => {
     expect(await engine.read((sql) => sql.query('SELECT data FROM nss_entity'))).toEqual([{ data }]);
   });
 
-  it.each(['insert', 'upsert'] as const)('uses bounded single JSON bindings for bulk %s with exact stored values', async (mode) => {
+  it.each(['insert', 'upsert'] as const)('uses bounded JSON bindings with a shared collection for bulk %s with exact stored values', async (mode) => {
     await engine.open();
     const statements: { sql: string; params?: unknown[] }[] = [];
     const batch = driver.batch.bind(driver);
@@ -73,7 +73,8 @@ describe('RowWriter bounded bridge groups', () => {
     expect(statements.length).toBeLessThan(Math.ceil(rows.length / 199));
     for (const { sql, params } of statements) {
       expect(sql).toContain('json_each');
-      expect(params).toHaveLength(1);
+      expect(params).toHaveLength(2);
+      expect(params![0]).toBe('todos/~escaped');
       expect(new TextEncoder().encode(JSON.stringify([{ statement: sql, values: params }])).length).toBeLessThanOrEqual(256 * 1024);
     }
     expect(await engine.read((sql) => sql.query<EntityRow>('SELECT coll,id,pos,data,sortkey FROM nss_entity ORDER BY pos'))).toEqual(rows);
@@ -106,8 +107,9 @@ describe('RowWriter bounded bridge groups', () => {
     const payloads: unknown[][] = [];
     vi.spyOn(driver, 'batch').mockImplementation(async (pending, options) => {
       for (const { sql, params } of pending) {
-        expect(sql).toContain("value -> '$[3].j'");
-        payloads.push(...JSON.parse(params![0] as string));
+        expect(sql).toContain("value -> '$[2][0]'");
+        expect(params![0]).toBe('todos');
+        payloads.push(...JSON.parse(params![1] as string));
         expect(new TextEncoder().encode(JSON.stringify([{ statement: sql, values: params }])).length).toBeLessThanOrEqual(256 * 1024);
       }
       await batch(pending, options);
@@ -117,9 +119,9 @@ describe('RowWriter bounded bridge groups', () => {
       if (upsert) await writer.writeEntityRows(rows, true);
       else { for (const row of rows) writer.insertEntity(row); await writer.flush(); }
     });
-    expect(payloads[0][3]).toEqual({ j: JSON.parse(data[0]) });
-    expect(payloads[8][3]).toEqual({});
-    expect(payloads[9][3]).toEqual({ s: data[9] });
+    expect(payloads[0]).toEqual(['0', 0, [JSON.parse(data[0])]]);
+    expect(payloads[8][2]).toBeNull();
+    expect(payloads[9][2]).toBe(data[9]);
     expect(await engine.read((sql) => sql.query('SELECT coll,id,pos,data FROM nss_entity ORDER BY pos'))).toEqual(rows);
   });
 
@@ -135,16 +137,44 @@ describe('RowWriter bounded bridge groups', () => {
     expect(await engine.read((sql) => sql.query('SELECT data FROM nss_entity'))).toEqual(rows.map(() => ({ data })));
   });
 
+  it.each([false, true])('keeps mixed collections in one ordered transport group (upsert: %s)', async (upsert) => {
+    await engine.open();
+    const rows = Array.from({ length: 450 }, (_, index) => ({
+      coll: index % 2 ? 'other' : 'todos', id: String(index % 17), pos: index,
+      data: index % 3 ? JSON.stringify({ index }) : 'opaque',
+      sortkey: index % 5 ? null : `sort${index}`,
+    }));
+    const executeBatch = driver.batch.bind(driver);
+    const statements: { sql: string; params?: unknown[] }[] = [];
+    const batch = vi.spyOn(driver, 'batch').mockImplementation(async (pending, options) => {
+      statements.push(...pending.map(({ sql, params }) => ({ sql, params: params?.slice() })));
+      await executeBatch(pending, options);
+    });
+    await engine.transaction(async (tx) => {
+      await new RowWriter(tx, tx.changes, 1_000_000).writeEntityRows(rows, upsert);
+    });
+    expect(batch).toHaveBeenCalledTimes(1);
+    expect(statements).toHaveLength(1);
+    expect(statements[0].params).toHaveLength(1);
+    const expected = new Map<string, EntityRow>();
+    for (const row of rows) {
+      const key = `${row.coll}/${row.id}`;
+      if (upsert || !expected.has(key)) expected.set(key, row);
+    }
+    const stored = await engine.read((sql) => sql.query<EntityRow>('SELECT coll,id,pos,data,sortkey FROM nss_entity'));
+    expect(new Map(stored.map((row) => [`${row.coll}/${row.id}`, row]))).toEqual(expected);
+  });
+
   it('keeps a legal oversized JSON bulk row alone and rolls back every flushed chunk', async () => {
     await engine.open();
     const lengths: { bytes: number; rows: number }[] = [];
     const batch = driver.batch.bind(driver);
     vi.spyOn(driver, 'batch').mockImplementation(async (pending, options) => {
       for (const { sql, params } of pending) {
-        expect(params).toHaveLength(1);
+        expect(params).toHaveLength(2);
         lengths.push({
           bytes: new TextEncoder().encode(JSON.stringify([{ statement: sql, values: params }])).length,
-          rows: JSON.parse(params![0] as string).length,
+          rows: JSON.parse(params![1] as string).length,
         });
       }
       await batch(pending, options);

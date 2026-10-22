@@ -20,6 +20,8 @@ Single-run emulator numbers are too noisy to judge against that. Classic toggle 
      - `rtt` and `bandwidth` are measured in the same session with a bridge microbenchmark: a `CapacitorSQLite.echo` round trip, and `executeSet` payloads of increasing size.
      - `calls_min` and `bytes_min` are the **minimum** bridge calls and bytes the operation must make under the store's contract. For example, one commit round trip per dispatch, because notify-after-commit (ADR-0003) cannot be relaxed.
      - The justification for `calls_min` and `bytes_min` is written next to each such metric.
+   - For seed transport, use the same-session executeSet regression intercept as the per-call cost when explicitly stated, as required by Phase 15b. Keep echo RTT for individual dispatches. An invalid or negative fitted intercept cannot justify a bound.
+   - **PLATFORM-BOUND** applies only to memory missing PASS, when `mean_sqlite - mean_classic <= sd_classic + max(0, mean_empty_sqlite - mean_empty_classic)`. At least five independent paired empty controls in the same session must isolate plugin/native SQLite loading without store data, with matching units and written causal evidence. Report both control SDs; neither control SD nor workload SQLite SD increases this allowance. See ADR-0048. Latency never receives this memory allowance.
    - **FAIL** otherwise. A FAIL is a bug to fix, or a gap to explain in an ADR.
 3. **Metrics in scope** (all sizes 1k / 10k / 50k):
    - first-ready, which includes the seed write;

@@ -1,6 +1,6 @@
 # ADR-0044: Retain measured parity failures after Phase 15 optimization
 
-Status: Accepted as an evidenced gap, not statistical acceptance. Date: 2026-10-22.
+Status: Superseded by [ADR-0050](0050-phase15b-evidenced-parity-gaps.md) and the logging-off Phase 15b final report. The historical observations below retain their original context. Date: 2026-10-22.
 Authority: Phase 15 brief and ADR-0038 §2; user permits remaining FAILs explained in an ADR.
 
 ## Decision

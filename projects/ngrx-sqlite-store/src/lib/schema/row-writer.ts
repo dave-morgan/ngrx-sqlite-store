@@ -156,12 +156,18 @@ export class RowWriter {
     suffix: string,
     values: (row: T) => SqlValue[],
   ): Generator<{ sql: string; params: SqlValue[]; rows: T[] }> {
-    const columns = values(rows[0]).map((_, index) => `json_extract(value,'$[${index}]')`);
     const entityData = /^INSERT INTO nss_entity\b/.test(prefix);
-    if (entityData) columns[3] = "COALESCE(value -> '$[3].j',json_extract(value,'$[3].s'),'')";
+    const firstFields = values(rows[0]);
+    const sharedCollection = entityData && rows.every((row) => values(row)[0] === firstFields[0]);
+    const columns = firstFields.map((_, index) =>
+      sharedCollection && index === 0 ? '?' : `json_extract(value,'$[${index - (sharedCollection ? 1 : 0)}]')`,
+    );
+    const dataIndex = sharedCollection ? 2 : 3;
+    if (entityData) columns[3] = `COALESCE(value -> '$[${dataIndex}][0]',json_extract(value,'$[${dataIndex}]'),'')`;
     const sql = prefix.replace(/VALUES\s*$/, '') +
       `SELECT ${columns.join(',')} FROM json_each(?) WHERE 1${suffix}`;
-    const framingBytes = statementByteLength(sql, ['[]']) + 2;
+    const bindings: SqlValue[] = sharedCollection ? [firstFields[0]] : [];
+    const framingBytes = statementByteLength(sql, [...bindings, '[]']) + 2;
     let index = 0;
     while (index < rows.length) {
       const group: T[] = [];
@@ -173,17 +179,21 @@ export class RowWriter {
         let json: string;
         if (entityData) {
           const data = fields[3] as string;
-          let encodedData = '{}';
+          let encodedData = 'null';
           if (data) {
             try {
               JSON.parse(data);
-              encodedData = needsStringEnvelope(data) ? JSON.stringify({ s: data }) : `{"j":${data}}`;
+              encodedData = needsStringEnvelope(data) ? JSON.stringify(data) : `[${data}]`;
             } catch {
               // RowWriter also accepts opaque data; SQL must preserve its text.
-              encodedData = JSON.stringify({ s: data });
+              encodedData = JSON.stringify(data);
             }
           }
-          json = `[${fields.map((field, index) => index === 3 ? encodedData : JSON.stringify(field)).join(',')}]`;
+          // Missing trailing sortkey extracts as SQL NULL. Keep mixed collections
+          // in their original order instead of splitting them into tiny groups.
+          const collection = sharedCollection ? '' : `${JSON.stringify(fields[0])},`;
+          const sortkey = fields[4] === null ? '' : `,${JSON.stringify(fields[4])}`;
+          json = `[${collection}${JSON.stringify(fields[1])},${JSON.stringify(fields[2])},${encodedData}${sortkey}]`;
         } else json = JSON.stringify(fields);
         // Bound the second JSON encoding used for the native string binding.
         const addedBytes = utf8ByteLength(JSON.stringify(json)) - 2 + (group.length ? 1 : 0);
@@ -193,7 +203,7 @@ export class RowWriter {
         bytes += addedBytes;
         index++;
       }
-      yield { sql, params: [`[${encoded.join(',')}]`], rows: group };
+      yield { sql, params: [...bindings, `[${encoded.join(',')}]`], rows: group };
     }
   }
 

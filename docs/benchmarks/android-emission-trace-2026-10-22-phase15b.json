@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-22",
+  "serial": "emulator-5554",
+  "packageName": "dev.ngrxsqlite.harness.sqlite",
+  "device": "sdk_gphone64_x86_64",
+  "caveat": "Driver method timings can nest (e.g. commit includes batch), so summing all calls double-counts work. Three emissions are a diagnostic, not acceptance statistics.",
+  "emission": {
+    "runs": 3,
+    "p50": 10.099999999976717,
+    "p95": 12.100000000093132,
+    "max": 12.100000000093132,
+    "samples": [
+      7.300000000046566,
+      10.099999999976717,
+      12.100000000093132
+    ]
+  },
+  "calls": [
+    {
+      "method": "batch",
+      "args": [
+        [
+          {
+            "sql": "UPDATE nss_node SET value = ? WHERE path = ?",
+            "params": [
+              "201",
+              "ui/benchmarkCount"
+            ]
+          }
+        ],
+        {
+          "transaction": true
+        }
+      ],
+      "ms": 5.300000000046566
+    },
+    {
+      "method": "batch",
+      "args": [
+        [
+          {
+            "sql": "UPDATE nss_node SET value = ? WHERE path = ?",
+            "params": [
+              "202",
+              "ui/benchmarkCount"
+            ]
+          }
+        ],
+        {
+          "transaction": true
+        }
+      ],
+      "ms": 7.699999999953434
+    },
+    {
+      "method": "batch",
+      "args": [
+        [
+          {
+            "sql": "UPDATE nss_node SET value = ? WHERE path = ?",
+            "params": [
+              "203",
+              "ui/benchmarkCount"
+            ]
+          }
+        ],
+        {
+          "transaction": true
+        }
+      ],
+      "ms": 10.5
+    }
+  ]
+}

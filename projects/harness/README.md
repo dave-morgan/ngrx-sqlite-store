@@ -43,6 +43,15 @@ Query params: `?seed=<n>` sets the number of seeded todos (default 500). Seeding
 
 On web, `window.__harness` exposes `{ impl, dispatch, settle }` for tests.
 
+Private Android diagnostics: set `localStorage['harness:profile']='true'` and
+restart to collect `window.__startupTrace` (method timestamps, SQL prefixes,
+encoded bytes; no retained payloads). `harness:empty=classic|sqlite` bypasses
+Angular bootstrap and opens either no database or an empty native SQLite
+database, without store/schema/data. Remove these keys to restore the app.
+`node tools/android-parity-profile.mjs --empty` measures five alternating
+paired controls in each APK; without `--empty` it records a persisted boot.
+Run these separately from statistical benchmarks. See ADR-0048.
+
 ## Android
 
 ```bash

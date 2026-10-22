@@ -40,7 +40,13 @@ export const loadSeed = createEffect(
   (actions$ = inject(Actions)) =>
     actions$.pipe(
       ofType(SeedActions.seedRequested),
-      map(({ size }) => SeedActions.seedLoaded({ data: generateSeed(size), version: SEED_VERSION })),
+      map(({ size }) => {
+        const profile = localStorage.getItem('harness:profile') === 'true';
+        if (profile) performance.mark('harness:seed:generation:start');
+        const data = generateSeed(size);
+        if (profile) performance.mark('harness:seed:generation:end');
+        return SeedActions.seedLoaded({ data, version: SEED_VERSION });
+      }),
     ),
   { functional: true },
 );

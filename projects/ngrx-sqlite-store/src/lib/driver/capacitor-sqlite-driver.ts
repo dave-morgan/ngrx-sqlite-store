@@ -38,20 +38,26 @@ export class CapacitorSqliteDriver implements SqlDriver {
       version = 1,
       readonly = false,
     } = this.options;
-    // Native connections outlive the WebView: after a page reload (location.reload, live
-    // reload, devtools refresh) the plugin still holds the previous connection, and
-    // createConnection would throw "Connection ... already exists". Re-sync the JS and
-    // native connection registries, then reuse the existing connection if present.
+    // Native connections outlive the WebView. With an empty JS registry this sweep
+    // closes surviving native handles (including interrupted transactions) before
+    // creating a new one. isConnection/retrieveConnection are local JS lookups.
     const consistent = (await this.sqlite.checkConnectionsConsistency()).result ?? false;
     const exists = (await this.sqlite.isConnection(database, readonly)).result ?? false;
+    const reused = consistent && exists;
     const db =
-      consistent && exists
+      reused
         ? await this.sqlite.retrieveConnection(database, readonly)
         : await this.sqlite.createConnection(database, encrypted, mode, version, readonly);
     try {
-      if (!((await db.isDBOpen()).result ?? false)) await db.open();
-      // A reload can interrupt a transaction mid-flight; never inherit it.
-      if ((await db.isTransactionActive()).result) await db.rollbackTransaction();
+      // ADR-0046: native createConnection allocates a fresh closed handle. Web
+      // creation can share an existing underlying DB, so preserve its probes.
+      if (reused || this.web) {
+        if (!((await db.isDBOpen()).result ?? false)) await db.open();
+        // Transaction APIs resolve writable handles only, including on web.
+        if (!readonly && (await db.isTransactionActive()).result) await db.rollbackTransaction();
+      } else {
+        await db.open();
+      }
       // ADR-0042: retain the connection's synchronous level; WAL avoids the
       // populated database's rollback-journal cost on every small commit.
       if (Capacitor.getPlatform() === 'android' && !readonly) {

@@ -49,6 +49,8 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0041](0041-json-bulk-and-current-schema-open.md) | Single-binding JSON1 bulk inserts and read-only current-schema open, retaining atomic migration fallback | Agent / Phase 15 parity | 2026-10-22 | Accepted |
 | [0042](0042-android-wal.md) | Writable Android connections use WAL with the existing synchronous level; power-loss durability tradeoff documented | Agent / Phase 15 parity | 2026-10-22 | Accepted |
 | [0043](0043-raw-json-bulk-and-insert-journals.md) | Raw JSON bulk entity cells and shared empty non-update field sets reduce seed transport and allocation | Agent / Phase 15 trace | 2026-10-22 | Accepted |
+| [0044](0044-parity-residual-gaps.md) | Parity residual gaps (phase 15, in progress) | Agent / Phase 15 | 2026-10-22 | Draft |
+| [0045](0045-capacitor-bridge-logging.md) | Capacitor loggingBehavior none for benchmarks/production: debug bridge logging retained payloads and skewed store metrics | Agent | 2026-10-22 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

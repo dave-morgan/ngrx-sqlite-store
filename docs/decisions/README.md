@@ -44,6 +44,7 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0036](0036-whole-store-subscriptions-loaded-view.md) | Whole-store subscriptions see loaded-path view by default (`sqlite.wholeStore: loaded|pin-all`); router-store storeState payloads partial | Agent | 2026-10-21 | Accepted |
 
 | [0037](0037-change-aware-query-refresh.md) | Change-aware entity query maintenance and bounded batched refresh | Agent | 2026-10-22 | Accepted |
+| [0038](0038-performance-acceptance-criteria.md) | Performance acceptance: within 1 SD of classic, else bridge-bound with measured RTT/bandwidth arithmetic, else FAIL | User goal / Agent | 2026-10-22 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

@@ -1,6 +1,6 @@
 # Brief: Phase 16 — Large flat objects and hybrid workflow state
 
-Repo: `C:\Development\ngrx-sqlite-store`. **Start only after phase 15d is committed.**
+Repo: `C:\Development\ngrx-sqlite-store`. **Gate (user, 2026-10-22): start ONLY after every large-list ADR-0038 metric is PASS, PLATFORM-BOUND or BRIDGE-BOUND, or is proven impossible in an ADR. Large lists remain the primary goal: keep iterating phases 15d, 15e, … until then.**
 
 Read these first:
 - `CLAUDE.md`

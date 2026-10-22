@@ -2,13 +2,19 @@
 export async function floorBenchmark(): Promise<void> {
   const { CapacitorSQLite: plugin } = await import('@capacitor-community/sqlite');
   const database = 'ngrx-harness';
+  // Native connections outlive a WebView reload (ADR-0046): close any left by a previous
+  // page in this process. Untimed — a fresh process has none, so F_open is unaffected.
+  await plugin.checkConnectionsConsistency({ dbNames: [], openModes: [] }).catch(() => undefined);
   const start = performance.now(); // first plugin call through first persisted row
   await plugin.createConnection({ database, version: 1, encrypted: false, mode: 'no-encryption', readonly: false });
   await plugin.open({ database, readonly: false });
   const persisted = await plugin.query({ database, statement: 'SELECT k FROM nss_bench LIMIT 1', values: [], readonly: false });
   const openMs = performance.now() - start;
   if (!persisted.values?.length) throw new Error('F_open requires a populated scratch table');
-  await plugin.execute({ database, statements: 'PRAGMA journal_mode=WAL; CREATE TABLE IF NOT EXISTS nss_bench(k INTEGER PRIMARY KEY, v TEXT)', transaction: false, readonly: false });
+  // `PRAGMA journal_mode=…` returns a row; Android's execute() rejects row-returning
+  // statements ("Queries can be performed using … rawQuery only"), so use query().
+  await plugin.query({ database, statement: 'PRAGMA journal_mode=WAL', values: [], readonly: false });
+  await plugin.execute({ database, statements: 'CREATE TABLE IF NOT EXISTS nss_bench(k INTEGER PRIMARY KEY, v TEXT)', transaction: false, readonly: false });
   const pragmas = {
     journalMode: (await plugin.query({ database, statement: 'PRAGMA journal_mode', values: [] })).values,
     synchronous: (await plugin.query({ database, statement: 'PRAGMA synchronous', values: [] })).values,
@@ -38,12 +44,25 @@ export async function floorBenchmark(): Promise<void> {
       // Pad ASCII values, so JSON-encoded plugin option sizes match exactly.
       const total = chunkBytes.reduce((sum, value) => sum + value, 0);
       let nextId = 1;
-      const counts = chunkBytes.map((target) => Math.max(1, Math.floor(size * target / total)));
+      // Chunks too small to frame even one scratch row (e.g. a version-marker write) are
+      // mirrored by a padded no-op write: same call count and wire bytes, zero rows. Their
+      // rows go to the other chunks.
+      const TINY = 512;
+      const counts = chunkBytes.map((target) => (target < TINY ? 0 : Math.max(1, Math.floor(size * target / total))));
       const largest = chunkBytes.indexOf(Math.max(...chunkBytes));
       counts[largest] += size - counts.reduce((sum, count) => sum + count, 0);
       if (counts[largest] < 1) throw new Error('Too many wire chunks for scratch row count');
       const payloads = chunkBytes.map((target, index) => {
         const count = counts[index];
+        if (count === 0) {
+          const noop = [{ statement: 'DELETE FROM nss_bench WHERE 0', values: [] as (string | number)[] }];
+          const payload = options(noop);
+          const padding = target - bytes(payload);
+          if (padding < 0) throw new Error(`No-op framing exceeds measured chunk: ${bytes(payload)} > ${target}`);
+          noop[0].statement += ' '.repeat(padding);
+          if (bytes(payload) !== target) throw new Error('F_seed wire size mismatch');
+          return payload;
+        }
         const rows: (number | string)[][] = Array.from({ length: count }, () => [nextId++, '']);
         const set = [{ statement: "INSERT INTO nss_bench SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]') FROM json_each(?)", values: [JSON.stringify(rows)] }];
         const payload = options(set);
@@ -56,7 +75,8 @@ export async function floorBenchmark(): Promise<void> {
       });
       const timings = [];
       for (let i = 0; i < samples; i++) {
-        await plugin.execute({ database, statements: 'DELETE FROM nss_bench', transaction: true });
+        // execute(..., transaction:true) silently applied nothing on Android for writes; use executeSet.
+        await plugin.executeSet(options([{ statement: 'DELETE FROM nss_bench', values: [] }], true));
         const began = performance.now();
         await plugin.beginTransaction({ database });
         for (const payload of payloads) await plugin.executeSet(payload);

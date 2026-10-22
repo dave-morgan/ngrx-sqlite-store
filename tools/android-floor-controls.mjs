@@ -14,6 +14,12 @@ const adb = (...args) => execFileSync(adbFile, ['-s', option('serial', 'emulator
   encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
 });
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+/** App-process TOTAL PSS in MB (diagnostic only; acceptance uses android-bench's app+renderer total). */
+const pss = (pkg) => {
+  const out = adb('shell', 'dumpsys', 'meminfo', pkg);
+  const m = out.match(/TOTAL PSS:\s+(\d+)/) ?? out.match(/TOTAL\s+(\d+)/);
+  return m ? Number(m[1]) / 1024 : null;
+};
 const base = 'dev.ngrxsqlite.harness';
 const date = new Date().toISOString().slice(0, 10);
 const provenance = {
@@ -59,10 +65,16 @@ try {
     await page.waitForFunction(() => window.__harness?.ready || window.__floor || window.__emptyReady, null, { timeout: 300000 });
     // Reset using a normal store run, then profile an actual fresh seed separately
     // from the controls. Its wire chunk bytes are the control input.
-    await page.evaluate((n) => {
+    // The first launch seeded the default size; reset it so the reload seeds `size`
+    // (otherwise the persisted seed version skips seeding and `ready` never fires).
+    await page.evaluate(async (n) => {
       localStorage.removeItem('harness:empty');
       localStorage.removeItem('harness:profile');
       localStorage.setItem('harness:seed', String(n));
+      if (window.__harness?.dispatch) {
+        window.__harness.dispatch({ type: '[Seed] Reset' });
+        await window.__harness.settle();
+      }
     }, size);
     await page.reload();
     await page.waitForFunction(() => window.__harness?.ready, null, { timeout: 300000 });
@@ -85,13 +97,25 @@ try {
     if (!seedCalls?.some((row) => row.sql.some((sql) => sql.includes('nss_entity')))) throw new Error('Actual seed transaction not identified');
     const chunkBytes = seedCalls.map((row) => row.bytes);
     await page.evaluate(async () => {
-      await window.Capacitor.nativePromise('CapacitorSQLite', 'execute', {
-        database: 'ngrx-harness', statements: "CREATE TABLE IF NOT EXISTS nss_bench(k INTEGER PRIMARY KEY,v TEXT); INSERT OR REPLACE INTO nss_bench VALUES(1,'open')", transaction: true, readonly: false,
+      // Multi-statement `execute` with transaction:true silently applies no INSERT on the
+      // Android plugin (changes:0). Create with execute, insert with executeSet, and verify.
+      const native = (method, options) =>
+        window.Capacitor.nativePromise('CapacitorSQLite', method, { database: 'ngrx-harness', readonly: false, ...options });
+      await native('execute', { statements: 'CREATE TABLE IF NOT EXISTS nss_bench(k INTEGER PRIMARY KEY,v TEXT)', transaction: false });
+      await native('executeSet', {
+        set: [{ statement: 'INSERT OR REPLACE INTO nss_bench(k,v) VALUES (?,?)', values: [1, 'open'] }],
+        transaction: true, returnMode: 'no', isSQL92: true,
       });
+      const check = await native('query', { statement: 'SELECT k FROM nss_bench LIMIT 1', values: [] });
+      if (!check.values?.length) throw new Error('scratch row was not persisted');
       localStorage.removeItem('harness:profile');
       localStorage.setItem('harness:empty', 'floor');
     });
-    await delay(6000);
+    // WebView flushes localStorage lazily; a force-stop can drop the key. An in-process
+    // reload commits it and proves floor mode boots before the fresh-process relaunch.
+    await page.reload();
+    await page.waitForFunction(() => window.__floor, null, { timeout: 120000 });
+    await delay(2000);
     await browser.close();
     session = await launch(active);
     browser = session.browser;

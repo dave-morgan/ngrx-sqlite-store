@@ -9,6 +9,7 @@ import {
   ɵgetEntityOrder,
   ɵsetEntityOrder,
   ɵbrandEntityState,
+  ɵvalidateQueryIndexes,
   ɵisStoreTx,
 } from 'ngrx-sqlite-store';
 import { entityQueries } from './query';
@@ -21,21 +22,25 @@ const PAGE_SIZE = 500;
 export function createEntityAdapter<T extends { id: string | number }>(options?: {
   sortComparer?: false | Comparer<T>;
   sortKey?: (entity: T) => string | number;
+  query?: { index: readonly string[] };
 }): EntityAdapter<T, T extends { id: infer U } ? U : never>;
 export function createEntityAdapter<T>(options: {
   selectId: (entity: T) => string;
   sortComparer?: false | Comparer<T>;
   sortKey?: (entity: T) => string | number;
+  query?: { index: readonly string[] };
 }): EntityAdapter<T, string>;
 export function createEntityAdapter<T>(options: {
   selectId: (entity: T) => number;
   sortComparer?: false | Comparer<T>;
   sortKey?: (entity: T) => string | number;
+  query?: { index: readonly string[] };
 }): EntityAdapter<T, number>;
 export function createEntityAdapter<T>(options: {
   selectId: IdSelector<T>;
   sortComparer?: false | Comparer<T>;
   sortKey?: (entity: T) => string | number;
+  query?: { index: readonly string[] };
 }): EntityAdapter<T>;
 export function createEntityAdapter<T>(): EntityAdapter<T>;
 export function createEntityAdapter<T, IdType = string | number>(
@@ -43,6 +48,8 @@ export function createEntityAdapter<T, IdType = string | number>(
 ): EntityAdapter<T, IdType> {
   if (options.sortKey && options.sortComparer && isDevMode())
     throw new TypeError('sortKey and sortComparer are mutually exclusive');
+  const indexes = ɵvalidateQueryIndexes(options.query?.index ?? []);
+  const brand = <S extends object>(value: S): S => ɵbrandEntityState(value, indexes);
   const insertionOrders = new WeakMap<object, Id[]>();
   const classic = classicAdapter<T>(
     options as { selectId: IdSelector<T>; sortComparer?: false | Comparer<T> },
@@ -184,9 +191,8 @@ export function createEntityAdapter<T, IdType = string | number>(
         for (const entity of entities) await setOne(entity);
       },
       async setAll(entities) {
-        await collection.clear();
         const models = comparer ? [...entities].sort(comparer) : entities;
-        await collection.insert(models.map(row));
+        await collection.replaceAll(models.map(row));
       },
       removeOne: (id) => collection.remove([id]),
       async removeMany(idsOrPredicate) {
@@ -271,7 +277,7 @@ export function createEntityAdapter<T, IdType = string | number>(
   const adapter = {
     ...classic,
     at,
-    getInitialState: (extra?: object) => ɵbrandEntityState(classic.getInitialState(extra ?? {})),
+    getInitialState: (extra?: object) => brand(classic.getInitialState(extra ?? {})),
     getSelectors,
     query: <S>(selectState?: (state: S) => EntityState<T>) =>
       entityQueries<S, T, IdType>(selectState, selectId, !!comparer),
@@ -300,7 +306,7 @@ export function createEntityAdapter<T, IdType = string | number>(
           const operation = at(first, '')[name] as (...args: unknown[]) => Promise<void>;
           return operation(...args);
         }
-        if (!options.sortKey) return ɵbrandEntityState(classicOperation(first, ...args) as object);
+        if (!options.sortKey) return brand(classicOperation(first, ...args) as object);
         const original = (name === 'removeAll' ? first : args[0]) as EntityState<T>;
         const storedOrder = ɵgetEntityOrder(original);
         const order =
@@ -335,7 +341,7 @@ export function createEntityAdapter<T, IdType = string | number>(
           positions: new Map(insertion.map((id, index) => [id, index + 1])),
           keys: new Map(insertion.map((id) => [ɵencodeEntityId(id), keys.get(id)!])),
         });
-        return ɵbrandEntityState(output);
+        return brand(output);
       },
     });
   }

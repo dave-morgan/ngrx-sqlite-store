@@ -1,4 +1,5 @@
 import { committedWrites } from '../storage/committed-writes';
+import { entityChanges } from '../storage/entity-changes';
 import { BATCH_BYTE_BUDGET, statementByteLength } from '../driver/batch-budget';
 import type { SqlValue } from '../driver/sql-driver';
 import type { ChangeSet } from '../storage/change-set';
@@ -7,6 +8,7 @@ import type { SqlExecutor } from '../storage/storage-engine';
 import { RowCapExceededError } from './errors';
 import type { NodeKind } from './kinds';
 import { utf8ByteLength } from './utf8';
+import { serializedStringSize } from './size';
 
 /** Preserve lexical whitespace and avoid adding depth to JSON1's parser limit. */
 function needsStringEnvelope(data: string): boolean {
@@ -196,7 +198,7 @@ export class RowWriter {
           json = `[${collection}${JSON.stringify(fields[1])},${JSON.stringify(fields[2])},${encodedData}${sortkey}]`;
         } else json = JSON.stringify(fields);
         // Bound the second JSON encoding used for the native string binding.
-        const addedBytes = utf8ByteLength(JSON.stringify(json)) - 2 + (group.length ? 1 : 0);
+        const addedBytes = serializedStringSize(json) - 2 + (group.length ? 1 : 0);
         if (group.length && bytes + addedBytes > BATCH_BYTE_BUDGET) break;
         encoded.push(json);
         group.push(row);
@@ -248,6 +250,7 @@ export class RowWriter {
     rows: EntityRow[],
     upsert: boolean,
     orderChanges?: ReadonlySet<string>,
+    collectionReplacement = false,
   ): Promise<void> {
     for (const row of rows) {
       this.check(row.coll, row.data);
@@ -261,6 +264,7 @@ export class RowWriter {
       ({ coll, id, pos, data, sortkey }) => [coll, id, pos, data, sortkey ?? null],
     )) {
       await this.write(batch.sql, batch.params);
+      if (collectionReplacement) continue;
       for (const row of batch.rows) {
         const journal = committedWrites(this.changes);
         const previous = journal.entities.get(row.coll)?.get(row.id);
@@ -333,6 +337,22 @@ export class RowWriter {
     }
     if (deleted.length) this.changes.addEntityOrder(coll);
     return deleted;
+  }
+
+  /** Delete entity data and promoted entity subtrees, preserving collection extras. */
+  async clearEntities(coll: string): Promise<void> {
+    await this.flush();
+    const lower = `${coll}/~2`;
+    const upper = `${coll}/~3`;
+    for (const [table, column] of [['nss_node', 'path'], ['nss_chunk', 'path'], ['nss_entity', 'coll']]) {
+      await this.write(
+        `DELETE FROM ${table} WHERE ${column} >= ? AND ${column} < ?${table === 'nss_entity' ? ' OR coll = ?' : ''}`,
+        table === 'nss_entity' ? [lower, upper, coll] : [lower, upper],
+      );
+    }
+    this.changes.add(coll);
+    for (const key of entityChanges(this.changes).keys())
+      if (key === coll || (key >= lower && key < upper)) entityChanges(this.changes).delete(key);
   }
 
   async updateEntityPosition(coll: string, id: string, pos: number): Promise<void> {

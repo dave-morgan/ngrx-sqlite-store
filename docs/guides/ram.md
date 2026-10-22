@@ -16,6 +16,19 @@ export const selectTodo = (id: string) =>
 
 Query selectors also work on plain state, so `MockStore`, unit tests, and classic `@ngrx/store` keep working (ADR-0027).
 
+Declare frequently filtered fields when creating the SQLite adapter:
+
+```ts
+const todoAdapter = createEntityAdapter<Todo>({ query: { index: ['done', 'userId'] } });
+```
+
+Feature registration installs missing expression indexes, including on existing
+populated databases, before startup actions run. Selectors never create indexes.
+Declarations accept at most eight identifier-style field paths per adapter and
+32 persisted indexes per database. Indexes speed typed equality queries and cost
+space and work on inserts/updates; removal requires an explicit application
+migration. See [ADR-0053](../decisions/0053-declarative-query-indexes.md).
+
 ## 2. Watch long-lived subscriptions
 These hold their sources for the lifetime of the app:
 - the header and other always-mounted components;

@@ -4,7 +4,11 @@ import { Attachment, EffectObservation, Folder, Theme, Todo, TodoFilter, User } 
 
 // Adapters are shared: creation and getSelectors() are identical in both
 // implementations. Only reducer-side adapter *operations* differ (ADR-0005).
-export const todoAdapter = createEntityAdapter<Todo>();
+const todoOptions = {
+  selectId: (todo: Todo) => todo.id,
+  query: { index: ['done', 'userId'] },
+};
+export const todoAdapter = createEntityAdapter<Todo>(todoOptions);
 export const userAdapter = createEntityAdapter<User>({
   sortComparer: (a, b) => a.name.localeCompare(b.name),
 });

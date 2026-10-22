@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { platformBaseline, summarize, verdict, trialOrder } from './benchmark-statistics.mjs';
+import { latencyFloor, platformBaseline, summarize, verdict, trialOrder, validateControlProvenance } from './benchmark-statistics.mjs';
 
 test('sample SD uses n - 1 and preserves unrounded mean', () => {
   assert.deepEqual(summarize([1, 2, 3]), { n: 3, mean: 2, sd: 1 });
@@ -62,4 +62,32 @@ test('platform summaries are recomputed from complete independent paired control
   assert.throws(() => platformBaseline(rows.slice(1), 'heapMb'), /paired/);
   assert.throws(() => platformBaseline([...rows, rows[0]], 'heapMb'), /paired/);
   assert.throws(() => platformBaseline(rows.map((row) => ({ ...row, heapMb: NaN })), 'heapMb'), /finite/);
+});
+
+test('ADR-0051 latency floor uses matching percentile and both workload SDs', () => {
+  const rows = [{ size: 1000, database: 'ngrx-harness', commit: Array.from({ length: 20 }, (_, i) => i + 1),
+    open: [1, 2, 3, 4, 5], seed: { samples: [10, 20, 30, 40, 50], chunkBytes: [200, 300], totalBytes: 500, rows: 1000 },
+    seedTrace: [{ bytes: 200 }, { bytes: 300 }], pragmas: { journalMode: [{ journal_mode: 'wal' }], synchronous: [{ synchronous: 1 }] } }];
+  assert.equal(latencyFloor(rows, 1000, 'emitP50').ms, 11);
+  assert.equal(latencyFloor(rows, 1000, 'toggleP95').ms, 20);
+  assert.equal(latencyFloor(rows, 1000, 'firstReadyMs').ms, 33);
+  assert.equal(latencyFloor(rows, 1000, 'relaunchReadyMs').ms, 3);
+  const floor = latencyFloor(rows, 1000, 'emitP50');
+  assert.equal(verdict({ mean: 10, sd: 2 }, { mean: 26, sd: 3 }, undefined, undefined, undefined, floor).status, 'PLATFORM-BOUND');
+  assert.equal(verdict({ mean: 10, sd: 2 }, { mean: 26.001, sd: 3 }, undefined, undefined, undefined, floor).status, 'FAIL');
+  assert.throws(() => latencyFloor([{ ...rows[0], commit: [1, 2] }], 1000, 'emitP50'), /20 commit/);
+  assert.throws(() => latencyFloor([{ ...rows[0], seed: { ...rows[0].seed, chunkBytes: [201, 299] } }], 1000, 'firstReadyMs'), /wire chunks/);
+  assert.throws(() => latencyFloor([{ ...rows[0], database: 'another' }], 1000, 'emitP50'), /harness database/);
+});
+
+test('floor provenance rejects stale sessions, dates, devices, APIs, WebViews and APK hashes', () => {
+  const expected = { session: 'test-session', date: '2026-10-22', device: 'Pixel', sdkLevel: '36', webview: '143',
+    apkHashes: { classic: 'a'.repeat(64), sqlite: 'b'.repeat(64) } };
+  assert.doesNotThrow(() => validateControlProvenance(expected, expected));
+  for (const key of ['session', 'date', 'device', 'sdkLevel', 'webview']) {
+    assert.throws(() => validateControlProvenance({ ...expected, [key]: 'stale' }, expected), /must match/);
+  }
+  assert.throws(() => validateControlProvenance({ ...expected, apkHashes: { ...expected.apkHashes, sqlite: 'c'.repeat(64) } }, expected), /APK hashes/);
+  assert.throws(() => validateControlProvenance({ ...expected, apkHashes: {} }, { ...expected, apkHashes: {} }), /APK hashes/);
+  assert.throws(() => latencyFloor([{ size: 1000 }, { size: 1000 }], 1000, 'emitP50'), /Duplicate/);
 });

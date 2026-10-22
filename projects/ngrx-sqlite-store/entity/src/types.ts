@@ -66,6 +66,7 @@ export type EntityAdapter<T, IdType = string | number> = Omit<
   };
 
 export interface EntityOptions<T> {
+  query?: { index: readonly string[] };
   sortKey?: (entity: T) => string | number;
   selectId?: (entity: T) => string | number;
   sortComparer?: false | Comparer<T>;

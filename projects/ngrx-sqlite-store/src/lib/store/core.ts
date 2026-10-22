@@ -24,6 +24,7 @@ import {
 import { StoreTx } from '../reducer/store-tx';
 import { NodeStore } from '../schema/node-store';
 import { StoragePolicy } from '../schema/policy';
+import { ensureQueryIndexes } from '../schema/query-indexes';
 import { serializedSize } from '../schema/size';
 import { escapeSegment, splitPath } from '../storage/path';
 import { StorageEngine } from '../storage/storage-engine';
@@ -212,6 +213,7 @@ export class SqliteStoreCore {
   }
   private async seed(features: Feature[]): Promise<void> {
     const { changes } = await this.engine.transaction(async (tx) => {
+      for (const feature of features) await ensureQueryIndexes(tx, feature.seed);
       const versions = new Map<string, string>();
       const parameterLimit = 999;
       for (let offset = 0; offset < features.length; offset += parameterLimit) {
@@ -231,12 +233,16 @@ export class SqliteStoreCore {
         if (feature.persist && previousVersion === String(version)) continue;
         if (feature.persist && previousVersion !== undefined && options?.onVersionMismatch !== 'reseed')
           throw new Error(`Feature version mismatch: ${feature.key}`);
+        if (!feature.persist && previousVersion === String(version)) {
+          const stored = await feature.nodes.read(tx, escapeSegment(feature.key));
+          if (JSON.stringify(stored) === JSON.stringify(feature.seed)) continue;
+        }
         // Some foreign reducers (notably routerReducer) have no state until their first action.
         if (feature.seed !== undefined)
           await feature.nodes.write(tx, escapeSegment(feature.key), feature.seed, tx.changes);
         else if (previousVersion !== undefined || !feature.persist)
           await feature.nodes.delete(tx, escapeSegment(feature.key), tx.changes);
-        await tx.run('INSERT OR REPLACE INTO nss_meta (key, value) VALUES (?, ?)', [
+        await (tx.write ?? tx.run)('INSERT OR REPLACE INTO nss_meta (key, value) VALUES (?, ?)', [
           key,
           String(version),
         ]);

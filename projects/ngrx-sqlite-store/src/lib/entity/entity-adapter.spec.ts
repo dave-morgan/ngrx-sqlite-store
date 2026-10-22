@@ -11,6 +11,7 @@ import { SCHEMA_MIGRATIONS } from '../schema/migrations';
 import { NodeStore } from '../schema/node-store';
 import { createFeatureSelector } from '../selectors/selectors';
 import { StorageEngine } from '../storage/storage-engine';
+import { entityChanges } from '../storage/entity-changes';
 import { SqliteStoreCore } from '../store/core';
 import { provideStore } from '../store/provide';
 import { Store } from '../store/store';
@@ -256,6 +257,69 @@ describe('dual-form entity adapter', () => {
       expect(entityReads).toHaveLength(1);
       expect(writes).toHaveLength(1);
       expect(writes[0][0]).toMatch(/^UPDATE nss_entity\b/i);
+    });
+  });
+
+  it('replaces a collection without reading old rows or recording per-ID changes, preserving extras', async () => {
+    const adapter = createEntityAdapter<Item>();
+    const old = { id: 'old', rank: 0, name: 'old', payload: 'x'.repeat(1_100_000) };
+    await seed(adapter.setAll([old], adapter.getInitialState({ loading: true })));
+    const rows = [{ id: 'a', rank: 1, name: 'first' }, { id: 'a', rank: 2, name: 'duplicate' }, { id: 'b', rank: 3, name: 'last' }];
+    await engine.transaction(async (sql) => {
+      const query = vi.spyOn(sql, 'query');
+      const tx = new StoreTx('items', nodes, sql, sql.changes);
+      await adapter.setAll(tx, rows);
+      expect(query).not.toHaveBeenCalled();
+      expect(sql.changes.paths()).toEqual(['items']);
+      expect(await tx.get('')).toEqual({ ids: ['a', 'b'], entities: { a: rows[0], b: rows[2] }, loading: true });
+      expect(await sql.query('SELECT path FROM nss_node WHERE path >= ? AND path < ?', ['items/~2', 'items/~3'])).toEqual([]);
+    });
+    await expect(engine.transaction(async (sql) => {
+      await adapter.setAll(new StoreTx('items', nodes, sql, sql.changes), [{ id: 'failed', rank: 1, name: 'failed' }]);
+      throw new Error('rollback replacement');
+    })).rejects.toThrow('rollback replacement');
+    expect(await engine.read((sql) => nodes.read(sql, 'items'))).toEqual({ ids: ['a', 'b'], entities: { a: rows[0], b: rows[2] }, loading: true });
+  });
+
+  it('clears promoted data and keeps escaped extra keys intact', async () => {
+    const adapter = createEntityAdapter<Item>();
+    const old = { id: 'old/~escaped', rank: 0, name: 'old', payload: 'x'.repeat(1_100_000) };
+    await seed(adapter.setAll([old], adapter.getInitialState({ '~2extra': { keep: true } })));
+    await engine.transaction(async (sql) => {
+      const tx = new StoreTx('items', nodes, sql, sql.changes);
+      await adapter.removeAll(tx);
+      expect(await tx.get('')).toEqual({ ids: [], entities: {}, '~2extra': { keep: true } });
+      expect(await sql.query('SELECT path FROM nss_chunk WHERE path >= ? AND path < ?', ['items/~2', 'items/~3'])).toEqual([]);
+    });
+  });
+
+  it('leaves existing rows intact when replacement validation is caught inside the transaction', async () => {
+    const adapter = createEntityAdapter<Item>();
+    const original = { id: 'original', rank: 0, name: 'keep' };
+    await seed(adapter.addOne(original, adapter.getInitialState()));
+    await engine.transaction(async (sql) => {
+      const collection = new StoreTx('items', nodes, sql, sql.changes).entities<Item>();
+      await expect(collection.replaceAll([{ id: 'bad', entity: original, pos: Infinity }])).rejects.toThrow('Invalid entity position');
+    });
+    expect(await engine.read((sql) => nodes.read(sql, 'items'))).toEqual({ ids: ['original'], entities: { original } });
+    await engine.transaction(async (sql) => {
+      const collection = new StoreTx('items', nodes, sql, sql.changes).entities<Item>();
+      await collection.prepareSortKey(() => 'key');
+      await collection.prepareSortKey(() => 'x'.repeat(600_000));
+      await expect(collection.replaceAll([{ id: 'bad', entity: original }])).rejects.toThrow('Row cap exceeded');
+    });
+    expect(await engine.read((sql) => nodes.read(sql, 'items'))).toEqual({ ids: ['original'], entities: { original } });
+  });
+
+  it('discards earlier entity deltas when a later full replacement supersedes them', async () => {
+    const adapter = createEntityAdapter<Item>();
+    await seed(adapter.getInitialState());
+    await engine.transaction(async (sql) => {
+      const tx = new StoreTx('items', nodes, sql, sql.changes);
+      await adapter.addOne(tx, { id: 'earlier', rank: 0, name: 'discard' });
+      await adapter.setAll(tx, [{ id: 'replacement', rank: 1, name: 'keep' }]);
+      expect(entityChanges(sql.changes).has('items')).toBe(false);
+      expect(await tx.get('')).toEqual({ ids: ['replacement'], entities: { replacement: { id: 'replacement', rank: 1, name: 'keep' } } });
     });
   });
 

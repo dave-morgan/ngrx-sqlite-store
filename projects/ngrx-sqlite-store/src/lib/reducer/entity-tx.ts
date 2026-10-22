@@ -11,6 +11,8 @@ import { RowWriter } from '../schema/row-writer';
 import type { EntityRow } from '../schema/row-writer';
 import { serializedSize } from '../schema/size';
 import { encodeSortKey } from '../schema/sort-key';
+import { RowCapExceededError } from '../schema/errors';
+import { utf8ByteLength } from '../schema/utf8';
 import type { ChangeSet } from '../storage/change-set';
 import type { SqlExecutor } from '../storage/storage-engine';
 import { changedFields, entityChanges, recordEntityChange } from '../storage/entity-changes';
@@ -240,11 +242,29 @@ export class EntityTx<T> {
       ? ''
       : JSON.stringify(entity);
   }
+  private encodeInput(row: EntityInput<T>, position?: number): { data: string; sortkey: string | undefined } {
+    if (position !== undefined && !Number.isFinite(position))
+      throw new RangeError('Invalid entity position');
+    const sortkey = this.key(row.entity);
+    if (sortkey !== undefined) {
+      const bytes = utf8ByteLength(sortkey);
+      if (bytes > this.nodes.policy.rowCap)
+        throw new RowCapExceededError(this.coll, bytes, this.nodes.policy.rowCap);
+    }
+    return { data: this.data(row.id, row.entity), sortkey };
+  }
   async insert(
     rows: readonly EntityInput<T>[],
     options: { pos?: number | readonly number[] } = {},
   ): Promise<void> {
-    if (!rows.length) return;
+    await this.insertRows(rows, options, false);
+  }
+  private async insertRows(
+    rows: readonly EntityInput<T>[],
+    options: { pos?: number | readonly number[] },
+    replace = false,
+  ): Promise<void> {
+    if (!rows.length && !replace) return;
     const seen = new Set<string>();
     const encoded = rows
       .filter(({ id }) => {
@@ -253,10 +273,9 @@ export class EntityTx<T> {
         seen.add(key);
         return true;
       })
-      .map((row) => ({
+      .map((row, index) => ({
         ...row,
-        data: this.data(row.id, row.entity),
-        sortkey: this.key(row.entity),
+        ...this.encodeInput(row, row.pos ?? (typeof options.pos === 'number' ? options.pos + index : options.pos?.[index])),
       }));
     // One indexed transport supplies both the append endpoint and conflict ids.
     // Knowing which rows actually insert makes aggregate deltas exact without
@@ -269,7 +288,10 @@ export class EntityTx<T> {
         (typeof options.pos === 'number' ? options.pos + index : options.pos?.[index]) ===
           undefined,
     );
-    if (this.snapshot) {
+    if (replace) {
+      await this.writer.clearEntities(this.coll);
+      last = 0;
+    } else if (this.snapshot) {
       for (const row of encoded)
         if (getEntityOrder(this.snapshot)!.positions.get(row.id) !== undefined)
           existing.add(encodeEntityId(row.id));
@@ -294,12 +316,14 @@ export class EntityTx<T> {
     for (const [index, row] of encoded.entries()) {
       // A duplicate promoted insert must leave the existing promoted subtree intact.
       if (row.data === '' && existing.has(encodeEntityId(row.id))) continue;
-      const record = this.track(encodeEntityId(row.id));
-      deltas.push(() =>
-        existing.has(encodeEntityId(row.id))
-          ? record(undefined, undefined, true)
-          : record(undefined, row.entity),
-      );
+      if (!replace) {
+        const record = this.track(encodeEntityId(row.id));
+        deltas.push(() =>
+          existing.has(encodeEntityId(row.id))
+            ? record(undefined, undefined, true)
+            : record(undefined, row.entity),
+        );
+      }
       const explicit =
         row.pos ?? (typeof options.pos === 'number' ? options.pos + index : options.pos?.[index]);
       if (explicit === undefined && last === undefined) last = await this.lastPosition();
@@ -320,9 +344,21 @@ export class EntityTx<T> {
           this.changes,
         );
     }
-    await this.writer.writeEntityRows(batch, false);
+    await this.writer.writeEntityRows(batch, false, undefined, replace);
     for (const record of deltas) record();
     this.changed();
+  }
+  /** Full replacement invalidates the collection instead of retaining one delta per row. */
+  async replaceAll(rows: readonly EntityInput<T>[]): Promise<void> {
+    if (this.snapshot) {
+      // A materialized collection can refresh from precise deltas without a
+      // collection read-back. Query-only consumers use the coarse bulk path.
+      for (const row of rows) this.encodeInput(row, row.pos);
+      await this.clear();
+      await this.insert(rows);
+      return;
+    }
+    await this.insertRows(rows, {}, true);
   }
   async upsert(rows: readonly EntityInput<T>[]): Promise<void> {
     if (!rows.length) return;

@@ -57,6 +57,11 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0049](0049-batched-feature-version-reads.md) | Batch feature-version reads inside registration transactions with bounded bindings and unchanged seed ordering | Agent / Phase 15b | 2026-10-22 | Accepted |
 | [0050](0050-phase15b-evidenced-parity-gaps.md) | Retain measured residual FAILs with startup, seed, native SQL, dispatch and memory evidence; supersedes ADR-0044 | Agent / Phase 15b | 2026-10-22 | Accepted as evidenced gaps |
 | [0051](0051-platform-floor-controls.md) | Platform-floor controls (durable commit, raw seed insert, DB open) bound latency; amends ADR-0038 | Agent | 2026-10-22 | Accepted |
+| [0052](0052-floor-control-methodology.md) | Measure same-database commit, byte-identical seed chunks and fresh-process open controls with provenance-checked ADR-0051 acceptance | Agent / Phase 15c | 2026-10-22 | Accepted |
+| [0053](0053-declarative-query-indexes.md) | Bounded declarative query-field indexes installed during registration, with indexed typed equality and persisted upgrades | Agent / Phase 15c | 2026-10-22 | Accepted |
+| [0054](0054-bulk-replacement-and-byte-accounting.md) | Coalesce unmaterialized bulk replacement bookkeeping and count escaped transport bytes without allocating copies | Agent / Phase 15c | 2026-10-22 | Accepted |
+| [0055](0055-session-seed-batching.md) | Skip identical session reseeds and buffer feature markers into atomic registration batches | Agent / Phase 15c | 2026-10-22 | Accepted |
+| [0056](0056-production-bundle-and-memory-audits.md) | Defer optional devtools loading and distinguish static bundles, shallow heap and native-cache diagnostic evidence | Agent / Phase 15c | 2026-10-22 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

@@ -97,6 +97,34 @@ try {
       await browser.close();
       browser = undefined;
     }
+  } else if (argv.includes('--memory')) {
+    active = `${base}.sqlite`;
+    const session = await launch(active);
+    browser = session.browser;
+    const page = session.page;
+    await page.waitForFunction(() => window.__harness?.ready, null, { timeout: 300_000 });
+    for (const size of option('sizes', '1000,10000,50000').split(',').map(Number)) {
+      await page.evaluate(() => window.__harness.settle());
+      const beforeSeed = pss(active);
+      const seed = await page.evaluate((n) => window.__harness.benchSeed(n), size);
+      const afterSeed = pss(active);
+      const cache = await page.evaluate(async () => {
+        const stats = {};
+        for (const name of ['cache_size', 'page_size', 'page_count', 'freelist_count'])
+          stats[name] = (await window.Capacitor.nativePromise('CapacitorSQLite', 'query', {
+            database: 'ngrx-harness', statement: `PRAGMA ${name}`, values: [], readonly: false,
+          })).values;
+        await window.Capacitor.nativePromise('CapacitorSQLite', 'execute', {
+          database: 'ngrx-harness', statements: 'PRAGMA shrink_memory', transaction: false, readonly: false,
+        });
+        return stats;
+      });
+      const afterShrink = pss(active);
+      const row = { size, seed, beforeSeed, afterSeed, afterShrink, cache };
+      results.push(row);
+      console.log(JSON.stringify({ size, seed, beforeSeed: beforeSeed.totalMb,
+        afterSeed: afterSeed.totalMb, afterShrink: afterShrink.totalMb, cache }));
+    }
   } else {
     active = `${base}.sqlite`;
     let session = await launch(active);

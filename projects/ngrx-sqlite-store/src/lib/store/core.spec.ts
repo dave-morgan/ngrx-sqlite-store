@@ -4,6 +4,7 @@ import type { ActionReducer } from '@ngrx/store';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SqlJsDriver } from '../driver/sqljs-driver';
+import { createEntityAdapter } from '../../../entity/src/entity-adapter';
 import { createReducer } from '../reducer/reducer';
 import { NodeStore } from '../schema/node-store';
 import { nssReducerError, SqliteStoreCore } from './core';
@@ -30,6 +31,46 @@ function configure(reducers: Record<string, ActionReducer<unknown>>) {
 }
 
 describe('feature registration metadata query budgets', () => {
+  it('installs declared indexes during registration and performs no index work on dispatch', async () => {
+    const adapter = createEntityAdapter<{ id: string; done: boolean }>({ query: { index: ['done'] } });
+    const setup = configure({ todos: createReducer<unknown>(adapter.getInitialState()) });
+    await setup.core.initialize();
+    await setup.core.settle();
+    expect(await setup.driver.query("SELECT name FROM sqlite_master WHERE name = 'nss_query_646f6e65'"))
+      .toEqual([{ name: 'nss_query_646f6e65' }]);
+    setup.query.mockClear();
+    const exec = vi.spyOn(setup.driver, 'exec');
+    await TestBed.inject(Store).dispatchAsync({ type: 'irrelevant' });
+    expect(exec).not.toHaveBeenCalled();
+    expect(setup.query.mock.calls.filter(([sql]) => sql.includes('sqlite_master'))).toHaveLength(0);
+  });
+
+  it('resets a changed session feature with one atomic batch and no separate marker write', async () => {
+    const setup = configure({});
+    await setup.core.initialize();
+    await setup.core.settle();
+    const reducer = (state = { value: 0 }) => state;
+    setup.core.addFeatures([{ key: 'session', reducers: reducer, sqlite: { persist: false } }]);
+    await setup.core.settle();
+    await setup.core.engine.transaction(async (tx) => {
+      await new NodeStore().write(tx, 'session', { value: 42 }, tx.changes);
+    });
+    const batch = vi.spyOn(setup.driver, 'batch');
+    const begin = vi.spyOn(setup.driver, 'begin');
+    const run = vi.spyOn(setup.driver, 'run');
+    setup.core.addFeatures([{ key: 'session', reducers: reducer, sqlite: { persist: false } }]);
+    await setup.core.settle();
+    expect(batch.mock.calls).toHaveLength(1);
+    expect(batch.mock.calls[0][1]).toEqual({ transaction: true });
+    expect(begin).not.toHaveBeenCalled();
+    expect(run.mock.calls.filter(([sql]) => sql.includes('nss_meta'))).toHaveLength(0);
+    expect(await setup.core.engine.read((tx) => new NodeStore().read(tx, 'session'))).toEqual({ value: 0 });
+    batch.mockClear();
+    setup.core.addFeatures([{ key: 'session', reducers: reducer, sqlite: { persist: false } }]);
+    await setup.core.settle();
+    expect(batch).not.toHaveBeenCalled();
+  });
+
   it('reads four feature markers in one query without changing their seeded values', async () => {
     const setup = configure(Object.fromEntries(
       ['a', 'b', 'c', 'd'].map((key) => [key, (state = key) => state]),

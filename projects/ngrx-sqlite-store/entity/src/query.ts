@@ -135,9 +135,10 @@ export function compileWhere(where: Where = {}): {
         const comparisons = values.map((value: unknown) => {
           scalar(value);
           if (value === null && !['eq', 'ne', 'in'].includes(op)) return '0';
-          const path = '$.' + field;
-          const json = () => `json_extract(data, ${bind(path)})`;
-          const type = () => `json_type(data, ${bind(path)})`;
+          // The validated path is a SQL literal so SQLite can match expression indexes.
+          const path = "'$." + field + "'";
+          const json = () => `json_extract(data, ${path})`;
+          const type = () => `json_type(data, ${path})`;
           const guard =
             value === null
               ? `${json()} IS NULL`
@@ -158,12 +159,15 @@ export function compileWhere(where: Where = {}): {
               like: 'LIKE',
             } as Record<string, string>
           )[op];
+          if (value !== null && ['eq', 'ne', 'in'].includes(op))
+            return `(COALESCE(${guard}, 0) AND ${json()} IS ${bind(typeof value === 'boolean' ? Number(value) : value)})`;
           const expression =
             value === null
               ? ['eq', 'ne', 'in'].includes(op)
                 ? guard
                 : '0'
               : `(${guard} AND ${json()} ${operator} ${bind(typeof value === 'boolean' ? Number(value) : value)})`;
+          if (value === null) return expression;
           return `COALESCE(${expression}, 0)`;
         });
         const expression = comparisons.length ? '(' + comparisons.join(' OR ') + ')' : '0';
@@ -255,7 +259,7 @@ export function entityQueries<S, T, Id = string | number>(
           throw new Error(
             'SQLite entity queries require a selectState selector with a single collection path',
           );
-        const predicate = `coll = ? AND data != '' AND ${filter.sql}`;
+        const predicate = `coll = ? AND data != '' AND json_valid(data) AND ${filter.sql}`;
         if (kind === 'count' || kind === 'exists') {
           // Transport aggregate and promoted-row fallbacks in one bridge call.
           const transport = await sql.query<{ id: string | null; value: number | null }>(

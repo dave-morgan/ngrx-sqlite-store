@@ -26,9 +26,13 @@ export function platformBaseline(results, metric) {
   return Object.fromEntries(groups.map((rows, index) => [index ? 'sqlite' : 'classic', summarize(rows.map((row) => row[metric]))]));
 }
 
-export function verdict(classic, sqlite, bridge, bound, platform) {
+export function verdict(classic, sqlite, bridge, bound, platform, floor) {
   const excess = sqlite.mean - classic.mean;
   if (excess <= classic.sd) return { status: 'PASS', excess, allowance: classic.sd };
+  if (floor?.justification && Number.isFinite(floor.ms) && floor.ms >= 0) {
+    const allowance = classic.sd + floor.ms + sqlite.sd;
+    return { status: excess <= allowance ? 'PLATFORM-BOUND' : 'FAIL', excess, allowance };
+  }
   if (platform?.justification && [platform.classic, platform.sqlite].every((control) =>
       control && Number.isInteger(control.n) && control.n >= 5 && Number.isFinite(control.mean) &&
       Number.isFinite(control.sd) && control.sd >= 0)) {
@@ -44,4 +48,40 @@ export function verdict(classic, sqlite, bridge, bound, platform) {
     return { status: 'FAIL', excess, allowance };
   }
   return { status: 'FAIL', excess, allowance: classic.sd };
+}
+
+/** ADR-0051: derive floors from raw samples, rejecting undersampled controls. */
+export function latencyFloor(results, size, metric) {
+  const matching = results.filter((row) => row.size === size);
+  if (matching.length > 1) throw new Error(`Duplicate floor controls for ${size}`);
+  const control = matching[0];
+  if (!control) throw new Error(`Missing floor controls for ${size}`);
+  const valid = (values, count) => Array.isArray(values) && values.length >= count && values.every((value) => Number.isFinite(value) && value >= 0);
+  if (!valid(control.commit, 20) || !valid(control.seed?.samples, 5) || !valid(control.open, 5)) throw new Error('Floors require 20 commit and five seed/open finite samples');
+  const chunks = control.seed.chunkBytes;
+  if (!Array.isArray(chunks) || !chunks.length || chunks.some((value) => !Number.isInteger(value) || value <= 0) ||
+      control.seed.totalBytes !== chunks.reduce((sum, value) => sum + value, 0) || control.seed.rows !== size ||
+      JSON.stringify(chunks) !== JSON.stringify(control.seedTrace?.map((row) => row.bytes))) throw new Error('Seed floor must match actual seed wire chunks and row count');
+  if (control.database !== 'ngrx-harness' || control.pragmas?.journalMode?.[0]?.journal_mode !== 'wal' ||
+      control.pragmas?.synchronous?.[0]?.synchronous !== 1) throw new Error('Floors require the harness database with WAL/NORMAL');
+  const percentile = (values, p) => [...values].sort((a, b) => a - b)[Math.min(values.length - 1, Math.floor(values.length * p))];
+  if (/^(emit|toggle)P(50|95)$/.test(metric)) {
+    const percentileValue = metric.endsWith('50') ? 0.5 : 0.95;
+    return { ms: percentile(control.commit, percentileValue), justification: `F_commit p${percentileValue * 100}; 32-byte atomic scratch insert, same DB WAL/NORMAL` };
+  }
+  if (metric === 'relaunchReadyMs') return { ms: summarize(control.open).mean, justification: 'F_open mean; fresh process first plugin call through one populated-row read' };
+  if (metric === 'firstReadyMs') return { ms: summarize(control.seed.samples).mean + summarize(control.open).mean,
+    justification: `F_seed(${size}) mean + F_open mean; ${control.seed.totalBytes} measured seed wire bytes, exact chunks [${chunks.join(', ')}], plain scratch rows in one transaction` };
+  return undefined;
+}
+
+/** Reject controls from another build/device/session; never trust absent hashes. */
+export function validateControlProvenance(control, benchmark, label = 'Floor') {
+  const keys = ['session', 'date', 'device', 'sdkLevel', 'webview'];
+  if (keys.some((key) => typeof control?.[key] !== 'string' || !control[key].length || control[key] !== benchmark[key]) ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(control.date) ||
+      ['classic', 'sqlite'].some((impl) => !/^[a-f0-9]{64}$/.test(control.apkHashes?.[impl] ?? '') ||
+        control.apkHashes[impl] !== benchmark.apkHashes?.[impl])) {
+    throw new Error(`${label} controls must match benchmark session, device, WebView, date and APK hashes`);
+  }
 }

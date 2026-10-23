@@ -72,6 +72,9 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0064](0064-bulk-memory-and-render-experiments.md) | Bulk memory reclamation; measured render and code-split experiments | Agent | 2026-10-23 | Accepted |
 
 | [0065](0065-phase15e-measured-outcomes.md) | Measured Phase 15e outcomes and all 14 residual FAILs | Agent | 2026-10-23 | Accepted |
+| [0066](0066-phase15f-located-costs.md) | Phase 15f decomposition: real-row F_seed, pipelined bulk batches, idle WAL maintenance, optimistic native open, NgRx production runtime-check semantics | Agent / Phase 15f | 2026-10-23 | Accepted |
+| [0067](0067-workload-code-control.md) | CODE-BOUND uses same-session, same-workload V8 code-space controls with data parity (amends ADR-0062) | Agent / Phase 15f | 2026-10-23 | Accepted |
+| [0068](0068-phase15f-measured-outcomes.md) | Measured Phase 15f outcomes: 13 PASS / 12 PB / 2 CB / 6 FAIL; Phase 16 remains gated | Agent | 2026-10-24 | Accepted |
 
 ## Provisional choices (still open questions; listed so they're visible)
 

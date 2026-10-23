@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { codeBaseline, emptyControlPlan, latencyFloor, platformBaseline, summarize, verdict, trialOrder, validateControlProvenance } from './benchmark-statistics.mjs';
+import { workloadCodeBaseline, codeBaseline, emptyControlPlan, latencyFloor, platformBaseline, summarize, verdict, trialOrder, validateControlProvenance } from './benchmark-statistics.mjs';
 
 test('real empty stores alternate APKs and keep each store paired with its own implementation', () => {
   const plan = emptyControlPlan(true, 5);
@@ -93,11 +93,19 @@ test('platform summaries are recomputed from complete independent paired control
 
 test('ADR-0051 latency floor uses matching percentile and both workload SDs', () => {
   const rows = [{ size: 1000, database: 'ngrx-harness', commit: Array.from({ length: 20 }, (_, i) => i + 1),
+    commitPaced: Array.from({ length: 30 }, (_, i) => i + 101),
     open: [1, 2, 3, 4, 5], seed: { samples: [10, 20, 30, 40, 50], chunkBytes: [200, 300], totalBytes: 500, rows: 1000 },
+    seedRows: { samples: [40, 50, 60, 70, 80], rows: 1012, calls: 2, wireBytes: 480 },
     seedTrace: [{ bytes: 200 }, { bytes: 300 }], pragmas: { journalMode: [{ journal_mode: 'wal' }], synchronous: [{ synchronous: 1 }] } }];
   assert.equal(latencyFloor(rows, 1000, 'emitP50').ms, 11);
-  assert.equal(latencyFloor(rows, 1000, 'toggleP95').ms, 20);
-  assert.equal(latencyFloor(rows, 1000, 'firstReadyMs').ms, 33);
+  // ADR-0066: toggle floors use the paced control (30 samples: p95 index 28).
+  assert.equal(latencyFloor(rows, 1000, 'toggleP95').ms, 129);
+  assert.equal(latencyFloor(rows, 1000, 'emitP95').ms, 20);
+  assert.throws(() => latencyFloor([{ ...rows[0], commitPaced: undefined }], 1000, 'toggleP50'), /paced/);
+  assert.equal(latencyFloor(rows, 1000, 'firstReadyMs').ms, 63);
+  // ADR-0066: the real-row control is required; the padded-byte control alone is rejected.
+  assert.throws(() => latencyFloor([{ ...rows[0], seedRows: undefined }], 1000, 'firstReadyMs'), /seedRows/);
+  assert.throws(() => latencyFloor([{ ...rows[0], seedRows: { ...rows[0].seedRows, rows: 999 } }], 1000, 'firstReadyMs'), /seedRows/);
   assert.equal(latencyFloor(rows, 1000, 'relaunchReadyMs').ms, 3);
   const floor = latencyFloor(rows, 1000, 'emitP50');
   assert.equal(verdict({ mean: 10, sd: 2 }, { mean: 26, sd: 3 }, undefined, undefined, undefined, floor).status, 'PLATFORM-BOUND');
@@ -117,4 +125,21 @@ test('floor provenance rejects stale sessions, dates, devices, APIs, WebViews an
   assert.throws(() => validateControlProvenance({ ...expected, apkHashes: { ...expected.apkHashes, sqlite: 'c'.repeat(64) } }, expected), /APK hashes/);
   assert.throws(() => validateControlProvenance({ ...expected, apkHashes: {} }, { ...expected, apkHashes: {} }), /APK hashes/);
   assert.throws(() => latencyFloor([{ size: 1000 }, { size: 1000 }], 1000, 'emitP50'), /Duplicate/);
+});
+
+test('ADR-0067 workload code control: code delta allowance only with data parity', () => {
+  const rows = [];
+  for (let trial = 1; trial <= 5; trial++) {
+    rows.push({ kind: 'workload-code', impl: 'classic', size: 1000, trial, point: 'todos', codeMb: 1.9, dataMb: 3.0 + trial / 1000 });
+    rows.push({ kind: 'workload-code', impl: 'sqlite', size: 1000, trial, point: 'todos', codeMb: 2.7, dataMb: 2.9 });
+  }
+  const code = { ...workloadCodeBaseline(rows, 1000, 'heapTodosMb'), metric: 'heapTodosMb', justification: 'test' };
+  assert.equal(code.point, 'todos');
+  assert.equal(workloadCodeBaseline(rows, 10000, 'heapTodosMb'), undefined);
+  assert.equal(verdict({ mean: 4.6, sd: 0.001 }, { mean: 5.38, sd: 0.01 }, undefined, undefined, undefined, undefined, code).status, 'CODE-BOUND');
+  assert.equal(verdict({ mean: 4.6, sd: 0.001 }, { mean: 5.5, sd: 0.01 }, undefined, undefined, undefined, undefined, code).status, 'FAIL');
+  const heavy = rows.map((row) => row.impl === 'sqlite' ? { ...row, dataMb: 3.2 } : row);
+  const noParity = { ...workloadCodeBaseline(heavy, 1000, 'heapTodosMb'), metric: 'heapTodosMb', justification: 'test' };
+  assert.equal(verdict({ mean: 4.6, sd: 0.001 }, { mean: 5.38, sd: 0.01 }, undefined, undefined, undefined, undefined, noParity).status, 'FAIL');
+  assert.throws(() => workloadCodeBaseline(rows.slice(2), 1000, 'heapTodosMb'), /five unique paired/);
 });

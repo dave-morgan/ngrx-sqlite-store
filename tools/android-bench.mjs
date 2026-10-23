@@ -18,7 +18,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
 import { execAdb } from './android-adb.mjs';
-import { codeBaseline, latencyFloor, platformBaseline, seedMemoryFloor, summarize, trialOrder, validateControlProvenance, verdict } from './benchmark-statistics.mjs';
+import { codeBaseline, workloadCodeBaseline, latencyFloor, platformBaseline, seedMemoryFloor, summarize, trialOrder, validateControlProvenance, verdict } from './benchmark-statistics.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const BASE_PKG = 'dev.ngrxsqlite.harness';
@@ -392,7 +392,12 @@ for (const size of sizes) {
       justification: `Five paired empty native-plugin controls in the identical classic APK, ${args['platform-json']}; no Angular injector/store/schema/data. Matching ${platformMetric} units.`,
     } : undefined;
     const floor = floorControls && !metric.endsWith('Mb') ? latencyFloor(floorControls.results, size, metric) : undefined;
-    const code = metric.startsWith('heap') && codeControls ? {
+    const workload = metric.startsWith('heap') && codeControls?.results?.some((row) => row.kind === 'workload-code')
+      ? workloadCodeBaseline(codeControls.results, size, metric) : undefined;
+    const code = workload ? {
+      ...workload, metric,
+      justification: `Five paired post-GC ${workload.point} snapshots of the same workload (${args['code-json']}): V8 code space delta ${(workload.sqlite.mean - workload.classic.mean).toFixed(3)} MiB; data ${workload.data.classic.mean.toFixed(3)} -> ${workload.data.sqlite.mean.toFixed(3)} MiB (ADR-0067)`,
+    } : metric.startsWith('heap') && codeControls?.results?.some((row) => row.kind === 'empty-store') ? {
       ...codeBaseline(codeControls.results), metric,
       justification: `Five paired post-GC real Angular empty stores, zero features/data, ${args['code-json']} (ADR-0062)`,
     } : undefined;

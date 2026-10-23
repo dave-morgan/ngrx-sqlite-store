@@ -28,7 +28,11 @@ export async function floorBenchmark(): Promise<void> {
     ({ database, set, transaction, readonly: false, returnMode: 'no', isSQL92: true });
   const hook = {
     openMs, pragmas,
-    async commit(samples = 20) {
+    /**
+     * F_commit. `gapMs` paces samples like the workload they bound: the toggle loop waits
+     * 20 ms between toggles, so its floor includes the same idle-thread wake-ups (ADR-0066).
+     */
+    async commit(samples = 20, gapMs = 0) {
       if (samples < 20) throw new Error('F_commit needs at least 20 samples');
       const timings = [];
       for (let i = 0; i < samples; i++) {
@@ -36,6 +40,7 @@ export async function floorBenchmark(): Promise<void> {
         const began = performance.now();
         await plugin.executeSet(payload);
         timings.push(performance.now() - began);
+        if (gapMs) await new Promise((resolve) => setTimeout(resolve, gapMs));
       }
       return timings;
     },
@@ -84,6 +89,54 @@ export async function floorBenchmark(): Promise<void> {
         timings.push(performance.now() - began);
       }
       return { samples: timings, chunkBytes: payloads.map(bytes), totalBytes: total, rows: size };
+    },
+    /**
+     * ADR-0066 F_seed: the store's own persisted entity rows (real JSON, not padding)
+     * into the minimal (k INTEGER PRIMARY KEY, v TEXT) table, cheapest JSON1 transport,
+     * <=256 KiB executeSet groups, one transaction. WAL auto-checkpoint matches the
+     * store's configuration; the checkpoint itself runs untimed after each sample.
+     */
+    async seedRows(samples = 5) {
+      if (samples < 5) throw new Error('F_seed needs five samples');
+      const data: string[] = [];
+      for (let offset = 0; ; offset += 5000) {
+        const page = (await plugin.query({ database, statement:
+          "SELECT data FROM nss_entity WHERE data != '' ORDER BY coll, pos LIMIT 5000 OFFSET ?", values: [offset] })).values ?? [];
+        for (const row of page) data.push(row['data'] as string);
+        if (page.length < 5000) break;
+      }
+      if (!data.length) throw new Error('F_seed requires the persisted seed rows');
+      const statement = "INSERT INTO nss_bench(k,v) SELECT json_extract(value,'$[0]'),value -> '$[1][0]' FROM json_each(?)";
+      const payloads: ReturnType<typeof options>[] = [];
+      let group: string[] = [];
+      let groupBytes = 0;
+      const flush = () => {
+        payloads.push(options([{ statement, values: [`[${group.join(',')}]`] }]));
+        group = [];
+        groupBytes = 0;
+      };
+      data.forEach((json, index) => {
+        const item = `[${index + 2},[${json}]]`; // k=1 is the F_open scratch row
+        const added = bytes(item);
+        if (group.length && groupBytes + added > 256 * 1024) flush();
+        group.push(item);
+        groupBytes += added;
+      });
+      if (group.length) flush();
+      await plugin.query({ database, statement: 'PRAGMA wal_autocheckpoint=10000', values: [] });
+      const timings = [];
+      for (let i = 0; i < samples; i++) {
+        await plugin.executeSet(options([{ statement: 'DELETE FROM nss_bench WHERE k > 1', values: [] }], true));
+        await plugin.query({ database, statement: 'PRAGMA wal_checkpoint(TRUNCATE)', values: [] });
+        const began = performance.now();
+        await plugin.beginTransaction({ database });
+        for (const payload of payloads) await plugin.executeSet(payload);
+        await plugin.commitTransaction({ database });
+        timings.push(performance.now() - began);
+      }
+      await plugin.executeSet(options([{ statement: 'DELETE FROM nss_bench WHERE k > 1', values: [] }], true));
+      await plugin.query({ database, statement: 'PRAGMA wal_checkpoint(TRUNCATE)', values: [] });
+      return { samples: timings, rows: data.length, calls: payloads.length, wireBytes: payloads.reduce((n, p) => n + bytes(p), 0) };
     },
   };
   Object.defineProperty(window, '__floor', { configurable: true, value: hook });

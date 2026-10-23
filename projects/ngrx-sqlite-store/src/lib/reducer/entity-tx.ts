@@ -237,7 +237,7 @@ export class EntityTx<T> {
     return row?.pos ?? 0;
   }
   private data(id: EntityId, entity: T): string {
-    return serializedSize(entity, entityValuePath(this.coll, encodeEntityId(id))) >
+    return serializedSize(entity, () => entityValuePath(this.coll, encodeEntityId(id))) >
       this.nodes.policy.rowCap
       ? ''
       : JSON.stringify(entity);

@@ -80,7 +80,7 @@ class SubtreeWriter {
           const encoded = encodeEntityId(id);
           const data = entity.entities[String(id)];
           const oversized =
-            serializedSize(data, entityValuePath(path, encoded)) > this.policy.rowCap;
+            serializedSize(data, () => entityValuePath(path, encoded)) > this.policy.rowCap;
           this.rows.insertEntity({
             coll: path,
             id: encoded,

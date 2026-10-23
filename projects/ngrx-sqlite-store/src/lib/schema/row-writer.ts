@@ -189,7 +189,10 @@ export class RowWriter {
               // EntityTx already validated this state before JSON.stringify.
               // Keep the depth/envelope scan and hard row cap on both paths.
               if (!canonicalJson) JSON.parse(data);
-              encodedData = needsStringEnvelope(data) ? JSON.stringify(data) : `[${data}]`;
+              // JSON.stringify output has no insignificant whitespace, and nesting
+              // deeper than 900 needs at least 1802 characters: skip the scan.
+              const envelope = canonicalJson && data.length < 1802 ? false : needsStringEnvelope(data);
+              encodedData = envelope ? JSON.stringify(data) : `[${data}]`;
             } catch {
               // RowWriter also accepts opaque data; SQL must preserve its text.
               encodedData = JSON.stringify(data);

@@ -37,6 +37,12 @@ const INITIAL_MIGRATION: Migration = {
   },
 };
 const BULK_RECLAIM_BYTES = 128 * 1024;
+/** Issued-but-unresolved pipelined batches; bounds bridge payload memory (ADR-0039). */
+const MAX_INFLIGHT_BATCHES = 2;
+/** Queue idle time before WAL maintenance runs (ADR-0066). */
+const MAINTENANCE_IDLE_MS = 200;
+/** Small commits between idle PASSIVE checkpoints; bounds WAL growth off the commit path. */
+const CHECKPOINT_EVERY_COMMITS = 64;
 
 /**
  * Owns a single connection. All lifecycle operations, reads and writes share a
@@ -51,6 +57,11 @@ export class StorageEngine {
   private readonly notifications = new Subject<ChangeSet>();
   readonly status = this.state.asReadonly();
   readonly changes$ = this.notifications.asObservable();
+  private maintenance?: Promise<void>;
+  private finishMaintenance?: () => void;
+  private maintenanceTimer?: ReturnType<typeof setTimeout>;
+  private maintenanceKind?: 'bulk' | 'checkpoint';
+  private commitsSinceCheckpoint = 0;
 
   constructor(
     @Inject(SQL_DRIVER) private readonly driver: SqlDriver,
@@ -146,13 +157,35 @@ export class StorageEngine {
           began = true;
         }
       };
+      // Pipelined bulk writes (ADR-0066): with an order-preserving transport the next
+      // batch is issued while the previous one executes natively, overlapping JS row
+      // encoding with SQLite work. Every read, statement, commit and rollback first
+      // drains these, so ordering and atomicity are unchanged.
+      const inflight: Promise<void>[] = [];
+      let bulk = false;
+      const drain = async () => {
+        while (inflight.length) await inflight.shift();
+      };
       const flush = async () => {
         if (!pending.length) return;
         await begin();
-        if (this.driver.batch) await this.driver.batch(pending, { transaction: false });
-        else for (const { sql, params } of pending) await this.driver.run(sql, params);
-        pending.length = 0;
+        const statements = pending.splice(0);
         pendingBytes = 2;
+        if (this.driver.batch && this.driver.pipelined) {
+          if (!bulk) {
+            bulk = true;
+            this.driver.beginBulk?.();
+          }
+          const sent = this.driver.batch(statements, { transaction: false });
+          sent.catch(() => undefined); // surfaced by drain(); avoid an unhandled rejection
+          inflight.push(sent);
+          if (inflight.length > MAX_INFLIGHT_BATCHES) await inflight.shift();
+        } else if (this.driver.batch) await this.driver.batch(statements, { transaction: false });
+        else for (const { sql, params } of statements) await this.driver.run(sql, params);
+      };
+      const settle = async () => {
+        await flush();
+        await drain();
       };
       const tx: TxContext = {
         write: async (sql, params) => {
@@ -165,17 +198,17 @@ export class StorageEngine {
           if (pendingBytes >= BATCH_BYTE_BUDGET) await flush();
         },
         query: async (sql, params) => {
-          await flush();
+          await settle();
           if (!/^\s*(SELECT|EXPLAIN)\b/i.test(sql)) await begin();
           return this.driver.query(sql, params);
         },
         run: async (sql, params) => {
-          await flush();
+          await settle();
           await begin();
           return this.driver.run(sql, params);
         },
         exec: async (sql) => {
-          await flush();
+          await settle();
           await begin();
           await this.driver.exec(sql);
         },
@@ -193,23 +226,26 @@ export class StorageEngine {
           await this.driver.batch(pending, { transaction: true });
           pending.length = 0;
         } else {
-          await flush();
+          await settle();
           if (began) await this.driver.commit();
         }
       } catch (error) {
         pending.length = 0;
+        // Native executes in call order; settle every issued batch before rollback.
+        await Promise.allSettled(inflight.splice(0));
         releaseWrites(changes);
         if (began) await this.rollback(error);
+        // Restore the bulk transaction's checkpoint configuration (ADR-0066).
+        if (bulk) this.requestMaintenance('bulk');
         throw error;
       }
       try {
-        if (writtenBytes >= BULK_RECLAIM_BYTES && this.driver.releaseBulkMemory) {
-          try { await this.driver.releaseBulkMemory(); }
-          catch (error) {
-            // Maintenance cannot undo a commit or suppress its notifications.
-            console.error('SQLite bulk memory reclamation failed', error);
-          }
-        }
+        // ADR-0066: WAL checkpoints and bulk reclamation run when the queue is idle,
+        // never between a commit and its notification.
+        if (writtenBytes >= BULK_RECLAIM_BYTES || bulk) this.requestMaintenance('bulk');
+        else if (writtenBytes > 0 && ++this.commitsSinceCheckpoint >= CHECKPOINT_EVERY_COMMITS)
+          this.requestMaintenance('checkpoint');
+        else if (this.maintenanceTimer !== undefined) this.postponeMaintenance();
         if (!changes.isEmpty) this.notifications.next(changes);
         for (const callback of callbacks) await callback();
         return { result, changes };
@@ -229,7 +265,66 @@ export class StorageEngine {
     });
   }
 
+  /** Resolves once no idle maintenance is scheduled or running. */
+  async maintained(): Promise<void> {
+    while (this.maintenance) await this.maintenance;
+  }
+
+  private requestMaintenance(kind: 'bulk' | 'checkpoint'): void {
+    if (!(kind === 'bulk' ? this.driver.releaseBulkMemory : this.driver.checkpoint)) return;
+    if (kind === 'bulk' || !this.maintenanceKind) this.maintenanceKind = kind;
+    this.commitsSinceCheckpoint = 0;
+    if (!this.maintenance) {
+      let finish!: () => void;
+      this.maintenance = new Promise<void>((resolve) => (finish = resolve));
+      this.finishMaintenance = finish;
+    }
+    this.postponeMaintenance();
+  }
+
+  /** Debounce: maintenance waits for MAINTENANCE_IDLE_MS without any commit. */
+  private postponeMaintenance(): void {
+    clearTimeout(this.maintenanceTimer);
+    this.maintenanceTimer = setTimeout(() => this.runMaintenance(), MAINTENANCE_IDLE_MS);
+  }
+
+  private runMaintenance(): void {
+    this.maintenanceTimer = undefined;
+    // Busy: retry once the queue has drained and stayed idle.
+    if (this.queue.size > 0) {
+      this.maintenanceTimer = setTimeout(() => this.runMaintenance(), MAINTENANCE_IDLE_MS);
+      return;
+    }
+    const kind = this.maintenanceKind;
+    this.maintenanceKind = undefined;
+    void this.queue
+      .enqueue(async () => {
+        if (this.state() !== 'ready') return;
+        try {
+          if (kind === 'bulk') await this.driver.releaseBulkMemory?.();
+          else await this.driver.checkpoint?.();
+        } catch (error) {
+          // Maintenance cannot undo a commit or suppress its notifications.
+          console.error('SQLite idle maintenance failed', error);
+        }
+      })
+      .finally(() => {
+        if (this.maintenanceTimer !== undefined || this.maintenanceKind) return;
+        const finish = this.finishMaintenance;
+        this.maintenance = undefined;
+        this.finishMaintenance = undefined;
+        finish?.();
+      });
+  }
+
   close(): Promise<void> {
+    clearTimeout(this.maintenanceTimer);
+    this.maintenanceTimer = undefined;
+    this.maintenanceKind = undefined;
+    const finish = this.finishMaintenance;
+    this.maintenance = undefined;
+    this.finishMaintenance = undefined;
+    finish?.();
     return this.queue.enqueue(async () => {
       try {
         await this.driver.close();

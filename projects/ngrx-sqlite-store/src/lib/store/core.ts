@@ -379,6 +379,7 @@ export class SqliteStoreCore {
         emission = this.emission;
       await Promise.all([work, emission, ...this.maintenance]);
       await this.engine.read(async () => undefined);
+      await this.engine.maintained();
       if (work === this.work && emission === this.emission && this.maintenance.size === 0) return;
     } while (true);
   }

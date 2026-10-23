@@ -27,7 +27,7 @@ describe('StorageEngine', () => {
     await engine.close();
   });
 
-  it('reclaims bulk memory after commit, never during a transaction or small dispatch', async () => {
+  it('reclaims bulk memory when idle after commit and notification, never for a small dispatch', async () => {
     await engine.open();
     const order: string[] = [];
     const commit = driver.batch.bind(driver);
@@ -37,10 +37,34 @@ describe('StorageEngine', () => {
     });
     const releaseBulkMemory = vi.fn(async () => { order.push('reclaim'); });
     Object.assign(driver, { releaseBulkMemory });
+    const sub = engine.changes$.subscribe(() => order.push('notify'));
     await engine.transaction(async (tx) => { await tx.write!('INSERT INTO test(name) VALUES (?)', ['tiny']); });
+    await engine.maintained();
     expect(releaseBulkMemory).not.toHaveBeenCalled();
-    await engine.transaction(async (tx) => { await tx.write!('INSERT INTO test(name) VALUES (?)', ['x'.repeat(150000)]); });
-    expect(order).toEqual(['commit', 'commit', 'reclaim']);
+    await engine.transaction(async (tx) => {
+      await tx.write!('INSERT INTO test(name) VALUES (?)', ['x'.repeat(150000)]);
+      tx.changes.add('test');
+    });
+    // Resolution (and the selector refresh behind it) is not delayed by maintenance.
+    expect(order).toEqual(['commit', 'commit', 'notify']);
+    // A read queued meanwhile still runs before the idle maintenance.
+    await engine.read(async () => order.push('read'));
+    await engine.maintained();
+    expect(order).toEqual(['commit', 'commit', 'notify', 'read', 'reclaim']);
+    sub.unsubscribe();
+  });
+
+  it('checkpoints when idle after every 64 small commits', async () => {
+    await engine.open();
+    const checkpoint = vi.fn(async () => undefined);
+    Object.assign(driver, { checkpoint });
+    for (let i = 0; i < 63; i++)
+      await engine.transaction(async (tx) => { await tx.write!('INSERT INTO test(name) VALUES (?)', ['t']); });
+    await engine.maintained();
+    expect(checkpoint).not.toHaveBeenCalled();
+    await engine.transaction(async (tx) => { await tx.write!('INSERT INTO test(name) VALUES (?)', ['t']); });
+    await engine.maintained();
+    expect(checkpoint).toHaveBeenCalledOnce();
   });
 
   it('does not suppress committed changes or attempt rollback if optional reclamation fails', async () => {
@@ -56,6 +80,7 @@ describe('StorageEngine', () => {
         tx.changes.add('test');
       });
       expect(notify).toHaveBeenCalledTimes(1);
+      await engine.maintained();
       expect(rollback).not.toHaveBeenCalled();
       expect(log).toHaveBeenCalledTimes(1);
       expect(await engine.read((sql) => sql.query('SELECT length(name) AS n FROM test'))).toEqual([{ n: 150000 }]);
@@ -182,6 +207,72 @@ describe('StorageEngine', () => {
     expect(rollback).toHaveBeenCalledOnce();
     expect(notify).not.toHaveBeenCalled();
     expect(await engine.read((sql) => sql.query('SELECT * FROM test'))).toEqual([]);
+  });
+
+  /** Simulates an order-preserving native plugin thread with delayed resolution. */
+  function pipelineDriver(): string[] {
+    const log: string[] = [];
+    let thread = Promise.resolve();
+    const serial = <T>(name: string, work: () => Promise<T>): Promise<T> => {
+      const run = thread.then(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 2));
+        log.push(`run:${name}`);
+        return work();
+      });
+      thread = run.then(() => undefined, () => undefined);
+      return run;
+    };
+    const batch = driver.batch.bind(driver);
+    const query = driver.query.bind(driver);
+    const commit = driver.commit.bind(driver);
+    let calls = 0;
+    Object.defineProperty(driver, 'pipelined', { value: true, configurable: true });
+    vi.spyOn(driver, 'batch').mockImplementation((statements, opts) => {
+      const name = `batch${++calls}`;
+      log.push(`call:${name}`);
+      return serial(name, () => batch(statements, opts));
+    });
+    vi.spyOn(driver, 'query').mockImplementation((sql, params) => serial('query', () => query(sql, params)));
+    vi.spyOn(driver, 'commit').mockImplementation(() => serial('commit', commit));
+    return log;
+  }
+
+  it('pipelines streamed batches on ordered transports and drains before reads and commit', async () => {
+    await engine.open();
+    const log = pipelineDriver();
+    const payload = 'x'.repeat(150_000);
+    await engine.transaction(async (tx) => {
+      for (let id = 1; id <= 4; id++) await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [id, payload]);
+      expect(await tx.query('SELECT count(*) n FROM test')).toEqual([{ n: 4 }]);
+      await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [5, 'tail']);
+      tx.changes.add('test');
+    });
+    // The second batch is issued before the first one has executed.
+    expect(log.indexOf('call:batch2')).toBeLessThan(log.indexOf('run:batch1'));
+    expect(log.filter((entry) => entry.startsWith('run:'))).toEqual([
+      'run:batch1', 'run:batch2', 'run:batch3', 'run:batch4', 'run:query', 'run:batch5', 'run:commit',
+    ]);
+    expect(await engine.read((sql) => sql.query('SELECT count(*) n FROM test'))).toEqual([{ n: 5 }]);
+  });
+
+  it('settles every pipelined batch, then rolls back when one fails', async () => {
+    await engine.open();
+    pipelineDriver();
+    const rollback = vi.spyOn(driver, 'rollback');
+    const notify = vi.fn();
+    engine.changes$.subscribe(notify);
+    const payload = 'x'.repeat(150_000);
+    await expect(engine.transaction(async (tx) => {
+      tx.changes.add('test');
+      await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [1, payload]);
+      await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [1, payload]); // conflict
+      await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [2, payload]);
+    })).rejects.toThrow();
+    expect(rollback).toHaveBeenCalledOnce();
+    expect(notify).not.toHaveBeenCalled();
+    expect(await engine.read((sql) => sql.query('SELECT * FROM test'))).toEqual([]);
+    await engine.transaction(async (tx) => { await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [9, 'ok']); });
+    expect(await engine.read((sql) => sql.query('SELECT id FROM test'))).toEqual([{ id: 9 }]);
   });
 
   it('uses one atomic batch after initial reads and supports drivers without batching', async () => {

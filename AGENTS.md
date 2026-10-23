@@ -33,15 +33,15 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - [x] Phase 15 parity (Q17 + ADR-0038 statistical acceptance); brief docs/briefs/phase-15-parity.md
 - [x] Phase 15d store overhead (ADR-0057/0058/0059/0060; 13 PASS / 9 PLATFORM-BOUND / 0 BRIDGE-BOUND / 11 FAIL, all remaining FAILs evidenced); brief docs/briefs/phase-15d-store-overhead.md
 - [x] Phase 15e targeted overhead (ADR-0062 CODE-BOUND, 0063 prewarm, 0064 bulk memory, 0065 outcomes; clean: 10 PASS / 9 PB / 0 CB / 14 FAIL); brief docs/briefs/phase-15e-targeted-overhead.md
-- [ ] Phase 15f — next large-list iteration (see ADR-0065 "Next work")
+- [ ] Phase 15f: clean acceptance 13 PASS / 12 PB / 0 BB / 2 CB / 6 FAIL; parity incomplete (ADR-0068)
 - [ ] Phase 16 flat objects + hybrid (GATED until every large-list metric is PASS/PB/BB/CB or proven impossible in an ADR; baseline on branch `phase16-baseline`, worktree `../ngrx-sqlite-store-p16`)
 
 ## Harness (orchestrator-owned; agents don't touch unless briefed)
 - `projects/harness`: README there. Aliases `@store`, `@store/entity`, `@impl` per build config (`-c classic|sqlite`). Shared code in `src/app/state`, pages in `src/app/pages`; only reducers differ (`store-impl/{classic,sqlite}`).
-- Status (2026-10-22, Phase 15d): 322 library tests; 13 tool tests; e2e 26/26 (13 classic + 13 sqlite, `npx.cmd playwright test`); 1 harness test. Library and both production APK builds pass. No commit.
+- Status (2026-10-24, Phase 15f acceptance): 336 library tests; 18 tool tests; e2e 26/26; 1 harness test. Library and both production-configured harness APK builds pass. No commit.
 - sqlite harness lists/details/counts use query selectors (`@impl` visibleTodos/todoById/count); devtools dev-only; Seed Applied releases bulk payload (docs/guides/ram.md).
 - Android: `android/` (Capacitor 8). Gradle needs JDK 21: `JAVA_HOME="C:\Program Files\Android\Android Studio\jbr"`. Emulator `Pixel_9_Pro` (headless). Bench: `node tools/android-bench.mjs [--impl] [--sizes] [--runs] [--skip-build]`; heap retainers: `node tools/heap-retainers.mjs --seed N`. Capacitor WebView drops query strings on reload → seed size via localStorage `harness:seed`. Emulator degrades over long sessions: reboot before benchmarking.
-- Latest numbers: docs/benchmarks/android-parity-15e-2026-10-23.md (clean session; 10 PASS / 9 PB / 0 BB / 0 CB / 14 FAIL). Residual evidence: ADR-0065. Only clean sessions count (reboot, 60 s settle, nothing else running); 15d non-clean report was contended noise.
+- Latest numbers: docs/benchmarks/android-parity-15f-2026-10-23.md (clean session 15f-resume-1792751019; 13 PASS / 12 PB / 0 BB / 2 CB / 6 FAIL). Residual evidence: ADR-0068; full comparison and controls in android-ladders-15f-2026-10-23.md and android-session-15f-2026-10-23.json. Phase 15f remains incomplete; Phase 16 is gated.
 - Priority (user, ADR-0061): persistence is the product (no in-memory mode). Large lists to 1-SD parity first; only then Phase 16.
 
 ## Codex handoff (Windows)
@@ -52,7 +52,7 @@ SQLite-backed replacement for @ngrx/store (Capacitor/Android). Design: `docs/` (
 - None.
 
 ## Next steps
-- Phase 15f: the 14 FAILs in ADR-0065 (50k seed native schema cost, relaunch critical path, toggle commit→DOM, 1k live-state heap retainers, native PSS ownership).
+- Phase 15f residuals (ADR-0068): 1k notes heap; 1k/10k post-seed PSS; 1k toggle p50/p95 and 10k toggle p95. Finish commit-to-DOM attribution, native PSS ownership and notes workload reconciliation. Original profiled-reload createConnection hang remains unproven fixed.
 - Real-device (non-emulator) benchmark; iOS not yet attempted.
 - Packaging: publishable build of `ngrx-sqlite-store` + verify Q15 (`@ngrx/store` path alias with prebuilt lib in node_modules).
 

@@ -133,9 +133,13 @@ try {
     // Open controls precede bulk scratch inserts so F_open sees precisely the
     // populated store plus one scratch row, not a second N-row data set.
     const commit = await page.evaluate(() => window.__floor.commit(20));
+    // ADR-0066: paced like android-bench's toggle loop (20 ms between toggles).
+    const commitPaced = await page.evaluate(() => window.__floor.commit(30, 20));
     const beforeSeed = pss(active);
     const seed = await page.evaluate(({ size, chunkBytes }) => window.__floor.seed(size, chunkBytes, 5), { size, chunkBytes });
     const afterSeed = pss(active);
+    // ADR-0066 F_seed (real persisted rows); after the legacy control, outside its PSS bracket.
+    const seedRows = await page.evaluate(() => window.__floor.seedRows(5));
     const cache = await page.evaluate(async () => {
       const native = (method, options) => window.Capacitor.nativePromise('CapacitorSQLite', method, { database: 'ngrx-harness', readonly: false, ...options });
       const stats = {};
@@ -146,7 +150,7 @@ try {
     });
     const afterShrink = pss(active);
     const pragmas = await page.evaluate(() => window.__floor.pragmas);
-    const row = { size, database: 'ngrx-harness', commit, seed, open, pragmas, seedTrace: seedCalls,
+    const row = { size, database: 'ngrx-harness', commit, commitPaced, seed, seedRows, open, pragmas, seedTrace: seedCalls,
       memoryDiagnostic: { beforeSeed, afterSeed, afterShrink, cache } };
     results.push(row);
     console.log(JSON.stringify(row));

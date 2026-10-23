@@ -50,7 +50,11 @@ const native = vi.hoisted(() => {
       handle(options).transaction = false;
       return { changes: { changes: 0 } };
     }),
-    query: vi.fn(async () => {
+    query: vi.fn(async ({ statement }: { statement: string }) => {
+      if (/wal_autocheckpoint/.test(statement)) {
+        calls.push('autocheckpoint');
+        return { values: [{ wal_autocheckpoint: 10000 }] };
+      }
       calls.push('wal');
       return { values: [{ journal_mode: state.wal }] };
     }),
@@ -104,11 +108,12 @@ describe('CapacitorSqliteDriver startup', () => {
     native.state.wal = 'wal';
   });
 
-  it('opens a fresh native handle with four bridge calls and no redundant probes', async () => {
+  it('opens a fresh native handle with two awaited bridge calls and no redundant probes', async () => {
     const driver = new CapacitorSqliteDriver({ database: 'test' });
     await driver.open();
     await driver.open();
-    expect(native.calls).toEqual(['consistency', 'create', 'open', 'wal']);
+    // ADR-0066: optimistic creation; the WAL pragma is issued in order, unawaited.
+    expect(native.calls).toEqual(['create', 'open', 'wal']);
     expect(native.handles.get('RW_test')).toEqual({ open: true, transaction: false });
   });
 
@@ -116,7 +121,8 @@ describe('CapacitorSqliteDriver startup', () => {
     const stale = { open: true, transaction: true };
     native.handles.set('RW_test', stale);
     await new CapacitorSqliteDriver({ database: 'test' }).open();
-    expect(native.calls).toEqual(['consistency', 'create', 'open', 'wal']);
+    // The surviving handle makes optimistic creation fail; the sweep closes it first.
+    expect(native.calls).toEqual(['create', 'consistency', 'create', 'open', 'wal']);
     expect(native.handles.get('RW_test')).not.toBe(stale);
     expect(native.handles.get('RW_test')?.transaction).toBe(false);
   });
@@ -140,14 +146,14 @@ describe('CapacitorSqliteDriver startup', () => {
 
   it('opens readonly native handles without writable-only transaction probes or WAL', async () => {
     await new CapacitorSqliteDriver({ database: 'test', readonly: true }).open();
-    expect(native.calls).toEqual(['consistency', 'create', 'open']);
+    expect(native.calls).toEqual(['create', 'open']);
     expect(native.handles.get('RO_test')?.open).toBe(true);
   });
 
   it('opens iOS handles without Android PRAGMAs or redundant native probes', async () => {
     native.state.platform = 'ios';
     await new CapacitorSqliteDriver({ database: 'test' }).open();
-    expect(native.calls).toEqual(['consistency', 'create', 'open']);
+    expect(native.calls).toEqual(['create', 'open']);
   });
 
   it('opens readonly web handles without looking up a writable transaction', async () => {
@@ -171,10 +177,15 @@ describe('CapacitorSqliteDriver startup', () => {
   it('cleans up a rejected WAL mode and can retry opening', async () => {
     const driver = new CapacitorSqliteDriver({ database: 'test' });
     native.state.wal = 'delete';
-    await expect(driver.open()).rejects.toThrow('did not enable WAL');
+    await driver.open();
+    // Verified before the next operation resolves; the engine then closes the driver.
+    await expect(driver.query('SELECT 1')).rejects.toThrow('did not enable WAL');
+    await expect(driver.batch([{ sql: 'SELECT 1' }], { transaction: true })).rejects.toThrow('did not enable WAL');
+    await driver.close();
     expect(native.handles.size).toBe(0);
     native.state.wal = 'wal';
     await driver.open();
+    await driver.query('SELECT 1');
     expect(native.handles.get('RW_test')?.open).toBe(true);
   });
 

@@ -1,8 +1,19 @@
 import { escapeSegment } from '../storage/path';
 import { NonSerializableStateError } from './errors';
 
+const NON_ASCII_OR_CONTROL = /[\u0000-\u001f\u0080-￿]/;
+function occurrences(value: string, char: string): number {
+  let count = 0;
+  for (let i = value.indexOf(char); i !== -1; i = value.indexOf(char, i + 1)) count++;
+  return count;
+}
+
 /** JSON string bytes without allocating the encoded string. */
 export function serializedStringSize(value: string): number {
+  // Printable ASCII only escapes quote and backslash. Native regex/indexOf scans are
+  // several times cheaper than a per-character JS loop on bulk payloads (Phase 15f).
+  if (!NON_ASCII_OR_CONTROL.test(value))
+    return value.length + 2 + occurrences(value, '"') + occurrences(value, '\\');
   let bytes = 2;
   for (let i = 0; i < value.length; i++) {
     const c = value.charCodeAt(i);
@@ -36,46 +47,75 @@ export function isPlainObject(value: unknown): value is Record<string, unknown> 
   return prototype === Object.prototype || prototype === null;
 }
 
+// Entity collections repeat the same property names: size each key once.
+const KEY_CACHE_LIMIT = 4096;
+const keySizes = new Map<string, number>();
+function keySize(key: string): number {
+  let size = keySizes.get(key);
+  if (size === undefined) {
+    size = serializedStringSize(key);
+    if (keySizes.size >= KEY_CACHE_LIMIT) keySizes.clear();
+    keySizes.set(key, size);
+  }
+  return size;
+}
+
+/** Carries a failure location outward; path segments are only built on failure. */
+class SizePathError {
+  readonly segments: string[] = [];
+}
+
 /** Immutable JSON state only. Each object's validated size is memoized once. */
-export function serializedSize(
-  value: unknown,
-  path = '',
-  visiting = new WeakSet<object>(),
-): number {
+export function serializedSize(value: unknown, path: string | (() => string) = ''): number {
+  try {
+    return measure(value, new WeakSet<object>());
+  } catch (error) {
+    if (!(error instanceof SizePathError)) throw error;
+    const suffix = error.segments.reverse().map((segment) => `/${segment}`).join('');
+    throw new NonSerializableStateError((typeof path === 'function' ? path() : path) + suffix);
+  }
+}
+
+function measure(value: unknown, visiting: WeakSet<object>): number {
   if (value === null) return 4;
   if (typeof value === 'string') return serializedStringSize(value);
   if (typeof value === 'boolean') return value ? 4 : 5;
   if (typeof value === 'number' && Number.isFinite(value)) return String(value).length;
   if (typeof value !== 'object' || (!Array.isArray(value) && !isPlainObject(value))) {
-    throw new NonSerializableStateError(path);
+    throw new SizePathError();
   }
   if (Array.isArray(value) && Object.getPrototypeOf(value) !== Array.prototype) {
-    throw new NonSerializableStateError(path);
+    throw new SizePathError();
   }
   const jsonHook = Object.getOwnPropertyDescriptor(value, 'toJSON');
   if (jsonHook && (!('value' in jsonHook) || typeof jsonHook.value === 'function')) {
-    throw new NonSerializableStateError(path);
+    throw new SizePathError();
   }
-  if (visiting.has(value)) throw new NonSerializableStateError(path);
+  if (visiting.has(value)) throw new SizePathError();
   const cached = sizes.get(value);
   if (cached !== undefined) return cached;
   visiting.add(value);
   let bytes = 2;
   if (Array.isArray(value)) {
     for (let i = 0; i < value.length; i++) {
-      bytes += (i ? 1 : 0) + serializedSize(value[i], `${path}/${i}`, visiting);
+      try {
+        bytes += (i ? 1 : 0) + measure(value[i], visiting);
+      } catch (error) {
+        if (error instanceof SizePathError) error.segments.push(String(i));
+        throw error;
+      }
     }
   } else {
     let count = 0;
     for (const key of Object.keys(value)) {
       const descriptor = Object.getOwnPropertyDescriptor(value, key)!;
-      if (!('value' in descriptor))
-        throw new NonSerializableStateError(`${path}/${escapeSegment(key)}`);
-      bytes +=
-        (count++ ? 1 : 0) +
-        serializedStringSize(key) +
-        1 +
-        serializedSize(value[key], `${path}/${escapeSegment(key)}`, visiting);
+      try {
+        if (!('value' in descriptor)) throw new SizePathError();
+        bytes += (count++ ? 1 : 0) + keySize(key) + 1 + measure(descriptor.value, visiting);
+      } catch (error) {
+        if (error instanceof SizePathError) error.segments.push(escapeSegment(key));
+        throw error;
+      }
     }
   }
   visiting.delete(value);

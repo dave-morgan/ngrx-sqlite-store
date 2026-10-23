@@ -1,0 +1,49 @@
+{
+  "session": "15f-resume-1792751019",
+  "benchmarkDate": "2026-10-23",
+  "verifiedOn": "2026-10-24",
+  "bootIds": {
+    "controls": "b3532735-4dd2-400d-9730-8edac4da975a",
+    "acceptance": "5929f501-0b36-4cae-b3d5-ce1451532712"
+  },
+  "apkHashes": {
+    "classic": "5d70344ce90a2e8137ebfc0a7db49239bc0a4b86e2b23de2c7bed8a10fd4dc1a",
+    "sqlite": "cb2a50137da7dae400a892fbdd0d3ff2de099ab79e9dc502aef8e4bc21470d19"
+  },
+  "preservedApks": ".tmp/15f-accepted-apks",
+  "trials": 30,
+  "controls": [
+    "android-floors-15f-2026-10-23.json",
+    "android-empty-15f-2026-10-23.json",
+    "android-code-control-15f-2026-10-23.json"
+  ],
+  "counts": {
+    "PASS": 13,
+    "BRIDGE-BOUND": 0,
+    "PLATFORM-BOUND": 12,
+    "CODE-BOUND": 2,
+    "FAIL": 6
+  },
+  "validation": {
+    "date": "2026-10-24",
+    "libraryTests": 336,
+    "toolTests": 18,
+    "harnessTests": 1,
+    "e2eTests": 26,
+    "libraryBuild": "passed",
+    "productionHarnessApks": [
+      "classic",
+      "sqlite"
+    ],
+    "logs": [
+      ".tmp/15f-validation-library.log",
+      ".tmp/15f-validation-tools.log",
+      ".tmp/15f-validation-harness.log",
+      ".tmp/15f-validation-e2e.log",
+      ".tmp/15f-validation-build.log",
+      ".tmp/15f-validation-apks.log"
+    ]
+  },
+  "pipelineExit": 0,
+  "note": "Interrupted setup and diagnostic rerun excluded. APK build validation ran after acceptance; preserved APKs retain the measured binaries."
+}

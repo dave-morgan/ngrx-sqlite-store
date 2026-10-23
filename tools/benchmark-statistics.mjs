@@ -59,6 +59,28 @@ export function codeBaseline(results) {
   return platformBaseline(rows.map((row) => ({ ...row, apk: 'classic' })), 'heapMb');
 }
 
+const HEAP_POINTS = { heapTodosMb: 'todos', heapNotesMb: 'notes', heapRelaunchMb: 'relaunch' };
+
+/**
+ * ADR-0067: same-session paired snapshots of the same workload point, split into V8 code
+ * space and data. Returns code means (the allowance input) and data means (the condition).
+ */
+export function workloadCodeBaseline(results, size, metric) {
+  const point = HEAP_POINTS[metric];
+  if (!point) return undefined;
+  const rows = results.filter((row) => row.kind === 'workload-code' && row.size === size && row.point === point);
+  if (!rows.length) return undefined;
+  const group = (impl) => rows.filter((row) => row.impl === impl);
+  const ids = ['classic', 'sqlite'].map((impl) => group(impl).map((row) => row.trial).sort((a, b) => a - b));
+  if (ids.some((values) => values.length < 5 || new Set(values).size !== values.length) ||
+      JSON.stringify(ids[0]) !== JSON.stringify(ids[1]) ||
+      rows.some((row) => ![row.codeMb, row.dataMb].every((value) => Number.isFinite(value) && value >= 0)))
+    throw new Error('Workload code controls require five unique paired finite trials per point (ADR-0067)');
+  const summary = (key) => ({ classic: summarize(group('classic').map((row) => row[key])), sqlite: summarize(group('sqlite').map((row) => row[key])) });
+  const code = summary('codeMb');
+  return { ...code, data: summary('dataMb'), point };
+}
+
 export function verdict(classic, sqlite, bridge, bound, platform, floor, code) {
   const excess = sqlite.mean - classic.mean;
   let codeAllowance = 0;
@@ -68,7 +90,9 @@ export function verdict(classic, sqlite, bridge, bound, platform, floor, code) {
       Number.isFinite(control.sd) && control.sd >= 0)) {
     const allowance = classic.sd + Math.max(0, code.sqlite.mean - code.classic.mean);
     codeAllowance = allowance;
-    if (excess <= allowance) return { status: 'CODE-BOUND', excess, allowance };
+    // ADR-0067: workload code controls only cover code; store data must be at parity.
+    const dataParity = !code.data || code.data.sqlite.mean <= code.data.classic.mean + code.data.classic.sd;
+    if (dataParity && excess <= allowance) return { status: 'CODE-BOUND', excess, allowance };
   }
   if (floor?.justification && Number.isFinite(floor.ms) && floor.ms >= 0) {
     const allowance = classic.sd + floor.ms + sqlite.sd;
@@ -113,11 +137,23 @@ export function latencyFloor(results, size, metric) {
   const percentile = (values, p) => [...values].sort((a, b) => a - b)[Math.min(values.length - 1, Math.floor(values.length * p))];
   if (/^(emit|toggle)P(50|95)$/.test(metric)) {
     const percentileValue = metric.endsWith('50') ? 0.5 : 0.95;
-    return { ms: percentile(control.commit, percentileValue), justification: `F_commit p${percentileValue * 100}; 32-byte atomic scratch insert, same DB WAL/NORMAL` };
+    if (metric.startsWith('toggle')) {
+      // ADR-0066: toggles are paced 20 ms apart; their floor is paced the same way.
+      if (!valid(control.commitPaced, 30)) throw new Error('Toggle floors require 30 paced F_commit samples (ADR-0066)');
+      return { ms: percentile(control.commitPaced, percentileValue), justification: `F_commit paced 20 ms like the toggle loop, p${percentileValue * 100}; 32-byte atomic scratch insert, same DB WAL/NORMAL; unpaced p${percentileValue * 100} ${percentile(control.commit, percentileValue).toFixed(1)} ms` };
+    }
+    return { ms: percentile(control.commit, percentileValue), justification: `F_commit p${percentileValue * 100}; 32-byte atomic scratch insert back-to-back like the emission loop, same DB WAL/NORMAL` };
   }
   if (metric === 'relaunchReadyMs') return { ms: summarize(control.open).mean, justification: 'F_open mean; fresh process first plugin call through one populated-row read' };
-  if (metric === 'firstReadyMs') return { ms: summarize(control.seed.samples).mean + summarize(control.open).mean,
-    justification: `F_seed(${size}) mean + F_open mean; ${control.seed.totalBytes} measured seed wire bytes, exact chunks [${chunks.join(', ')}], plain scratch rows in one transaction` };
+  if (metric === 'firstReadyMs') {
+    // ADR-0066: F_seed writes the store's own persisted rows; the padded-byte control
+    // (ADR-0051) understated per-row JSON work and remains reported, not used.
+    const rows = control.seedRows;
+    if (!valid(rows?.samples, 5) || !Number.isInteger(rows.rows) || rows.rows < size || !(rows.wireBytes > 0))
+      throw new Error('firstReadyMs floor requires ADR-0066 seedRows with five samples of at least size real rows');
+    return { ms: summarize(rows.samples).mean + summarize(control.open).mean,
+      justification: `F_seed(${size}) mean + F_open mean; ${rows.rows} persisted entity rows (${rows.wireBytes} wire bytes, ${rows.calls} calls) into (k INTEGER PRIMARY KEY, v TEXT), one transaction (ADR-0066); padded-byte control mean ${summarize(control.seed.samples).mean.toFixed(1)} ms over chunks [${chunks.join(', ')}]` };
+  }
   return undefined;
 }
 

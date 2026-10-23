@@ -130,15 +130,28 @@ function rootProviders<T, A extends Action>(
     { provide: ngrx.USER_RUNTIME_CHECKS, useValue: config.runtimeChecks ?? {} },
     {
       provide: ngrx.ACTIVE_RUNTIME_CHECKS,
-      useFactory: () => ({
-        strictStateImmutability: isDevMode(),
-        strictActionImmutability: isDevMode(),
-        strictStateSerializability: true,
-        strictActionSerializability: false,
-        strictActionWithinNgZone: false,
-        strictActionTypeUniqueness: false,
-        ...config.runtimeChecks,
-      }),
+      // NgRx semantics (createActiveRuntimeChecks): user checks apply in dev mode only;
+      // production disables every check. State serializability is not a check here but
+      // a persistence requirement, so it stays on (ADR-0066).
+      useFactory: () =>
+        isDevMode()
+          ? {
+              strictStateImmutability: true,
+              strictActionImmutability: true,
+              strictStateSerializability: true,
+              strictActionSerializability: false,
+              strictActionWithinNgZone: false,
+              strictActionTypeUniqueness: false,
+              ...config.runtimeChecks,
+            }
+          : {
+              strictStateImmutability: false,
+              strictActionImmutability: false,
+              strictStateSerializability: true,
+              strictActionSerializability: false,
+              strictActionWithinNgZone: false,
+              strictActionTypeUniqueness: false,
+            },
     },
     { provide: ngrx.REDUCER_FACTORY, useValue: config.reducerFactory ?? ngrx.combineReducers },
     {
@@ -150,7 +163,7 @@ function rootProviders<T, A extends Action>(
         // NgRx devtools is activated lazily by its StateObservable provider.
         // Resolve it for initialization only; our services read State directly.
         inject(ngrx.StateObservable);
-        if (config.runtimeChecks?.strictActionTypeUniqueness) checkActionTypes();
+        if (inject(ngrx.ACTIVE_RUNTIME_CHECKS).strictActionTypeUniqueness) checkActionTypes();
       },
     },
     provideEnvironmentInitializer(() => inject(ngrx.ROOT_STORE_PROVIDER)),

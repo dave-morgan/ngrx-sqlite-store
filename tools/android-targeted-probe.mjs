@@ -1,3 +1,4 @@
+import { benchmarkSerial } from './android-benchmark-target.mjs';
 // Phase 15e diagnostic experiments; never run alongside acceptance or another probe.
 // Interposes only on the diagnostic seed; restores bridge, indexes and cache in finally.
 import { execFileSync } from 'node:child_process';
@@ -8,7 +9,7 @@ import { chromium } from '@playwright/test';
 const args = process.argv.slice(2);
 const option = (name, fallback) => args.includes(`--${name}`) ? args[args.indexOf(`--${name}`) + 1] : fallback;
 const adb = (...values) => execFileSync(join(process.env.ANDROID_HOME, 'platform-tools/adb.exe'),
-  ['-s', 'emulator-5554', ...values], { encoding: 'utf8' });
+  ['-s', benchmarkSerial(), ...values], { encoding: 'utf8' });
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const pkg = 'dev.ngrxsqlite.harness.sqlite';
 for (const name of [pkg, 'dev.ngrxsqlite.harness.classic', 'dev.ngrxsqlite.harness']) adb('shell', 'am', 'force-stop', name);

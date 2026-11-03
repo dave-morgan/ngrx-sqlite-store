@@ -1,0 +1,15 @@
+# Empty insert-flush guards16ag: candidate
+
+Source: RowWriter's scalar updates await an insert flush even with no pending rows, and NodeWriter.diffWrite awaits another empty drain after each update. Candidate guards14internal pre-write drains bypending.size and the2NodeWriter terminal drains byreadonlyhasPendingRows. Explicitflush still returnsPromise and drains actualinserts unchanged. Realwrites/awaits/nativeSQL/coalescing/caps/FIFO/commit/notifications unchanged; noaddedcache/lifecycle/schema/StoreAPI.
+
+RegressionRED100emptyflushcalls for50changedphysicalscalarpropertiesvs0,whileonecoalescedUPDATE/persistedvalues/oldinitialstate alreadycorrect. CandidateGREEN424lib; pendingINSERT?UPDATEordering testedbothdirectDeletesflags,allotherstorage/rowcap/rollbackcontracts pass.25tools/1harness/30e2e/library+SQLiteAPKbuildPASS. Source/baseline archives16ag-source/16ag-source-baseline. Frozen .tmp/16ag-apks/sqlite.apk SHA256bdebd3bba55cfb419f3a3e1082112770df38aa6e8fea00d22d17de9f579651ea;baseline frozen16r8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5.16afRejected/reverted/post421lib+allchecksPASS,NOTbaseline.
+
+Active .tmp/16ag-run.ps1 PID18204/logs .tmp/16ag-run.stdout.log/.stderr.log. Mandatorylp21guard3A3Bvs15aa with existingUNTIMED300swaitperleg(~30min),thenA1/B1/B2/A2eachverifiedcoldboot+60settle/K5000flatSetKey/flatSetKeys/flatReplace40actions each. Helper .tmp/16ag-flat-probe.mjs capturesinstalledhash/boot/session/background50todos/5000keys/actions/nativecalls/SQLproof5001rows+target. No GC,heap,PSSorCPUcapture. Both APK modes use this same timing-only protocol; no direct protocol-equivalenceclaim to olderGC/memoryprobes. Native wrapper spans/residuals include scheduling/wrapper overhead,notSQLCPU/exactstoreCPU/acceptance/floor. Allerrors/partials preserved/nooverwrite/automaticretry. On16AG_DONE16ag-verify.cjs checks6guards/4boots/480finiteactions+nativecalls/atomicSQL/hash-session-seed/persistedproof;allpairedadversechannelsrequired.
+
+No devicebenefit or retentionclaim yet. Fullmatchedshapes+listacceptance/meanheapguard required if evidence warrants retention. No unchangedbaselineacceptancevariancehunt.
+
+
+## Outcome: rejected and reverted
+16AG_DONE independentlyverified6guards4hash/session/seedreports4distinctboots480finiteactions+atomicUPDATEcalls/SQL5001rows+targetproof. Guard15aa1467.133333SD47.092922?16ag1470.266667SD14.843293ms,+3.133333withinsumSD61.936215/no startupwin. Tenkeytotalmean-1.1525/+1.2075ms,residual-.575/+.6275;replacetotal+.540/-3.175,residual+.5275/-1.670/P50+1.4/-.5/P95-1.2/+3.3;singleP95+1.4/+1.1adverseboth. AllrawandadversedeltasintheaccompanyingJSON. No repeatabletargetbenefit/native/schedulingmovementnotisolatedsourcecausation.
+
+Reject16agdespitevalid100?0emptyflushcalls. ExactRowWriter/NodeWriterbaselinebytesrestored/asserted/nogitcheckout;allcandidate/source/tests/APKs/rawpreserved. Onlyspy/assertion/importsremoved,threegenericcorrectnesstestssavedactive. Postrevertallchecksrequired;no unchangedfullacceptancevariancehunt. Nextinvestigateactualflatdispatch/native/renderphaseandcontrolprotocolfromsourcebeforeanotherPromise/microallocationchange;no floorchanges.

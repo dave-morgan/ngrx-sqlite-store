@@ -1,3 +1,5 @@
+import { benchmarkSerial } from './android-benchmark-target.mjs';
+if (benchmarkSerial() !== 'emulator-5554') throw Error('Legacy all-emulator runner is disabled for isolated benchmarks');
 // Clean Phase 15e pipeline, adapted from /tmp/run15d-clean.sh.
 // Prerequisites: both final APKs already built; writable Pixel_9_Pro AVD mirror.
 // Never run alongside a build, test, profiler, other benchmark or emulator.

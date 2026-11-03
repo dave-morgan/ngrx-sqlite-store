@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { benchmarkSerial, benchmarkPort } from './android-benchmark-target.mjs';
 // Diagnostic only. Never run alongside android-bench.mjs.
 // --empty: five paired empty-plugin controls per APK; --startup: persisted boot trace.
 import { createHash } from 'node:crypto';
@@ -11,7 +12,7 @@ import { emptyControlPlan, summarize } from './benchmark-statistics.mjs';
 const argv = process.argv.slice(2);
 const option = (name, fallback) => argv.includes(`--${name}`) ? argv[argv.indexOf(`--${name}`) + 1] : fallback;
 const adbFile = process.env.BENCH_ADB ?? join(process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT, 'platform-tools', 'adb.exe');
-const adb = (...args) => execAdb(adbFile, ['-s', option('serial', 'emulator-5554'), ...args], {
+const adb = (...args) => execAdb(adbFile, ['-s', benchmarkSerial(option('serial')), ...args], {
   encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
 });
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -35,8 +36,8 @@ async function launch(pkg) {
       const pid = adb('shell', 'pidof', pkg).trim().split(/\s+/)[0];
       const socket = `webview_devtools_remote_${pid}`;
       if (!adb('shell', 'cat', '/proc/net/unix').includes(socket)) continue;
-      adb('forward', 'tcp:9336', `localabstract:${socket}`);
-      const browser = await chromium.connectOverCDP('http://localhost:9336');
+      adb('forward', `tcp:${benchmarkPort(9336)}`, `localabstract:${socket}`);
+      const browser = await chromium.connectOverCDP(`http://localhost:${benchmarkPort(9336)}`);
       const page = browser.contexts()[0]?.pages()[0];
       if (page) return { browser, page };
       await browser.close();
@@ -113,7 +114,7 @@ try {
       browser = undefined;
     }
   } else if (argv.includes('--memory')) {
-    active = `${base}.sqlite`;
+    active = `${base}.${option('impl', 'sqlite')}`;
     const session = await launch(active);
     browser = session.browser;
     const page = session.page;
@@ -166,9 +167,10 @@ try {
     const startup = await session.page.evaluate(() => ({
       ready: window.__harness.ready, calls: window.__startupTrace,
       profileFlag: localStorage.getItem('harness:profile'),
+      timeline: window.__startupTimeline,
       marks: performance.getEntriesByType('mark').map(({ name, startTime }) => ({ name, startTime })),
     }));
-    if (!startup.calls?.length || startup.profileFlag !== 'true') throw new Error('Startup trace missing after restart: control not persisted');
+    if ((active.endsWith('.sqlite') && !startup.calls?.length) || startup.profileFlag !== 'true') throw new Error('Startup trace missing after restart: control not persisted');
     results.push(startup);
   }
   const summaries = argv.includes('--empty') ? ['classic', 'sqlite'].flatMap((apk) => ['classic', 'sqlite'].flatMap((mode) =>

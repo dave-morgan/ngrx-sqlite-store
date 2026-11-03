@@ -1,0 +1,15 @@
+# ADR0132: Attribute transient selector subscription work before further optimization
+
+Status: Diagnostic complete; no production change or new limit.
+
+The actual `benchEmit` hook starts timing before each `firstValueFrom` subscription and waits for its matching value. A cold observable therefore creates and stops201 watch lifetimes for200 timed actions, including the initial untimed count read. A matching emission unsubscribes synchronously; lease release runs recount and eviction inside publication, before notification's outer eviction pass. This source chain warranted separating these spans before another change.
+
+Diagnostic16bd2 uses unchanged safety-fixed16aw on isolated emulator5556, verified scoped cold boot and60s settling,50000 todos, the existing hook, and targeted setup-only Store closure capture. The breakpoint is removed and Debugger disabled before timing. Original method/descriptor/native references are restored before verifying the persisted counter increment and all four table counts. It captures no CPU profile, heap, PSS or GC data. No app rebuild or readiness/floor/protocol acceptance change.
+
+All201 watch paths are exactly `ui/benchmarkCount`, defaults=false;200 actions have one atomic native UPDATE each, and401 callback emits are retained. Source/session/APK/boot, finite samples and nested spans, restoration, scalar+200 and stable table counts independently verify. [Raw evidence](../benchmarks/android-transient-watch-16bd2-2026-10-30.json), [analysis](../benchmarks/android-transient-watch-16bd2-2026-10-30-analysis.json), [report](../benchmarks/android-transient-watch-16bd2-2026-10-30.md).
+
+Instrumented mean emission6.034ms, native3.331ms, setup.3185ms and stop.205ms. Recount totals.049ms/action; release eviction.0185ms and outer notification eviction.0145ms each. This does not support reviving the rejected incremental-refcount change or another eviction micro-optimization. Publication1.775ms is inclusive of callbacks and heavy method wrappers. Synchronous parent indices distinguish nested calls but do not establish async ancestry. Nested spans are not additive CPU, exact store CPU, SQL CPU, uninstrumented gain, acceptance or a numerical floor. Defaults snapshots are absent on this watcher path; the core refresh snapshot remains a separate already-investigated operation.
+
+Original16bd preflight used an incorrect core source path and failed before any device action or sample. Its scripts and logs remain in `.tmp/16bd-preparation-failure`. Corrected16bd2 uses a new label without merging or discarding samples. The diagnostic Node completed/self-recorded0; its PowerShell launcher remained waiting after the Node process exited. Launcher finalization is recorded separately; no fabricated successful outer exit is claimed. Reboot child status is a genuine exit0.
+
+Next changes require a distinct source-supported opportunity, TDD, all checks, mandatory50k guard, reversed device evidence, full fresh matched acceptance and mean/heap guards. Both goals remain open;16av/16L20 remains the measured reference and16aw safety fixes provisional.

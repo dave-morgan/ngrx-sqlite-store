@@ -1,0 +1,984 @@
+{
+  "diagnosticOnly": true,
+  "records": [
+    {
+      "session": "16j3-reset-cost",
+      "installedApkHash": "ced86e7dfb09ded71bc6185b6cc40438e6384fb6770d4c394adc416432ba94f2",
+      "scenario": "wfReset",
+      "keys": 50,
+      "requestedSamples": 20,
+      "backgroundSeed": 50,
+      "diagnosticOnly": true,
+      "limitations": [
+        "CPU sampling and native wrapper perturb timing.",
+        "Native spans measure JS-to-native response, not native SQL CPU time."
+      ],
+      "samples": [
+        {
+          "emit": 13.299999999988358,
+          "dom": 13.299999999988358
+        },
+        {
+          "emit": 31.900000000023283,
+          "dom": 32.100000000034925
+        },
+        {
+          "emit": 21.70000000001164,
+          "dom": 21.800000000046566
+        },
+        {
+          "emit": 31.79999999998836,
+          "dom": 32
+        },
+        {
+          "emit": 24.100000000034925,
+          "dom": 24.20000000001164
+        },
+        {
+          "emit": 31.5,
+          "dom": 31.5
+        },
+        {
+          "emit": 18.899999999965075,
+          "dom": 18.899999999965075
+        },
+        {
+          "emit": 19.099999999976717,
+          "dom": 19.199999999953434
+        },
+        {
+          "emit": 34.5,
+          "dom": 34.59999999997672
+        },
+        {
+          "emit": 19.099999999976717,
+          "dom": 19.20000000001164
+        },
+        {
+          "emit": 19.899999999965075,
+          "dom": 19.899999999965075
+        },
+        {
+          "emit": 19.400000000023283,
+          "dom": 19.5
+        },
+        {
+          "emit": 40.100000000034925,
+          "dom": 40.20000000001164
+        },
+        {
+          "emit": 14.200000000011642,
+          "dom": 14.400000000023283
+        },
+        {
+          "emit": 31.20000000001164,
+          "dom": 31.20000000001164
+        },
+        {
+          "emit": 24,
+          "dom": 24.20000000001164
+        },
+        {
+          "emit": 27.29999999998836,
+          "dom": 27.399999999965075
+        },
+        {
+          "emit": 22.70000000001164,
+          "dom": 22.800000000046566
+        },
+        {
+          "emit": 17.79999999998836,
+          "dom": 17.79999999998836
+        },
+        {
+          "emit": 20.900000000023283,
+          "dom": 20.900000000023283
+        }
+      ],
+      "nativeCalls": [
+        {
+          "method": "executeSet",
+          "start": 1293.7000000000116,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1297.399999999965
+        },
+        {
+          "method": "query",
+          "start": 1297.899999999965,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1306.2000000000116
+        },
+        {
+          "method": "executeSet",
+          "start": 1306.7999999999884,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1310.5999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 1328,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1332.899999999965
+        },
+        {
+          "method": "query",
+          "start": 1333.5999999999767,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1348.7000000000116
+        },
+        {
+          "method": "executeSet",
+          "start": 1349.2999999999884,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1364.399999999965
+        },
+        {
+          "method": "executeSet",
+          "start": 1382.2999999999884,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1391.0999999999767
+        },
+        {
+          "method": "query",
+          "start": 1398.2000000000116,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1410.7000000000116
+        },
+        {
+          "method": "executeSet",
+          "start": 1414,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1419
+        },
+        {
+          "method": "executeSet",
+          "start": 1436.7000000000116,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1443.7999999999884
+        },
+        {
+          "method": "query",
+          "start": 1444.399999999965,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1466.5999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 1467.5999999999767,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1474.7999999999884
+        },
+        {
+          "method": "executeSet",
+          "start": 1492.5,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1500.7000000000116
+        },
+        {
+          "method": "query",
+          "start": 1501.899999999965,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1515.7000000000116
+        },
+        {
+          "method": "executeSet",
+          "start": 1517.2000000000116,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1524.5999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 1543.7000000000116,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1548.399999999965
+        },
+        {
+          "method": "query",
+          "start": 1548.899999999965,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1571.399999999965
+        },
+        {
+          "method": "executeSet",
+          "start": 1572.5,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1579.5
+        },
+        {
+          "method": "executeSet",
+          "start": 1597,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1600.899999999965
+        },
+        {
+          "method": "query",
+          "start": 1602,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1612.399999999965
+        },
+        {
+          "method": "executeSet",
+          "start": 1613,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1619.7999999999884
+        },
+        {
+          "method": "executeSet",
+          "start": 1637.7999999999884,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1657.5999999999767
+        },
+        {
+          "method": "query",
+          "start": 1658.5999999999767,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1670.2999999999884
+        },
+        {
+          "method": "executeSet",
+          "start": 1671.7999999999884,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1676.5999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 1693.7999999999884,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1698.7000000000116
+        },
+        {
+          "method": "query",
+          "start": 1700.0999999999767,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1714.5
+        },
+        {
+          "method": "executeSet",
+          "start": 1715.399999999965,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1733.2000000000116
+        },
+        {
+          "method": "executeSet",
+          "start": 1749.7999999999884,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1764.7999999999884
+        },
+        {
+          "method": "query",
+          "start": 1766,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1777.0999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 1778,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1783.899999999965
+        },
+        {
+          "method": "executeSet",
+          "start": 1803.5999999999767,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1815.2000000000116
+        },
+        {
+          "method": "query",
+          "start": 1815.7999999999884,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1830.0999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 1830.7000000000116,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1835
+        },
+        {
+          "method": "executeSet",
+          "start": 1851.7000000000116,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1864.399999999965
+        },
+        {
+          "method": "query",
+          "start": 1865.5,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1877.7000000000116
+        },
+        {
+          "method": "executeSet",
+          "start": 1878.5999999999767,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1883.899999999965
+        },
+        {
+          "method": "executeSet",
+          "start": 1900.2999999999884,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1915.2999999999884
+        },
+        {
+          "method": "query",
+          "start": 1916.399999999965,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1940
+        },
+        {
+          "method": "executeSet",
+          "start": 1940.7999999999884,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1955.399999999965
+        },
+        {
+          "method": "executeSet",
+          "start": 1973.899999999965,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 1982
+        },
+        {
+          "method": "query",
+          "start": 1982.5999999999767,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 1990.399999999965
+        },
+        {
+          "method": "executeSet",
+          "start": 1990.899999999965,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 1995.899999999965
+        },
+        {
+          "method": "executeSet",
+          "start": 2013.5,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 2018.5
+        },
+        {
+          "method": "query",
+          "start": 2019.7000000000116,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 2034.5
+        },
+        {
+          "method": "executeSet",
+          "start": 2035.2000000000116,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 2050.2999999999884
+        },
+        {
+          "method": "executeSet",
+          "start": 2067.0999999999767,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 2075.899999999965
+        },
+        {
+          "method": "query",
+          "start": 2077,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 2093
+        },
+        {
+          "method": "executeSet",
+          "start": 2094.2000000000116,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 2099.7999999999884
+        },
+        {
+          "method": "executeSet",
+          "start": 2117.899999999965,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 2124.5999999999767
+        },
+        {
+          "method": "query",
+          "start": 2125.2000000000116,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 2145.2999999999884
+        },
+        {
+          "method": "executeSet",
+          "start": 2146,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 2151.2999999999884
+        },
+        {
+          "method": "executeSet",
+          "start": 2168,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 2174.2999999999884
+        },
+        {
+          "method": "query",
+          "start": 2175.0999999999767,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 2185.0999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 2187.2000000000116,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 2196.5999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 2217.5999999999767,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 2224.0999999999767
+        },
+        {
+          "method": "query",
+          "start": 2225.2999999999884,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 2235.5999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 2236.5,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 2242.2999999999884
+        },
+        {
+          "method": "executeSet",
+          "start": 2259.0999999999767,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ],
+          "parameterBytes": 48,
+          "end": 2263.7999999999884
+        },
+        {
+          "method": "query",
+          "start": 2264.7000000000116,
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq\n      FROM nss_node WHERE path = ?\n      UNION ALL\n      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL\n      FROM nss_node WHERE path >= ? AND path < ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll = ?\n      UNION ALL\n      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL\n      FROM nss_entity WHERE coll >= ? AND coll < ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path = ?\n      UNION ALL\n      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq\n      FROM nss_chunk WHERE path >= ? AND path < ?\n    ) ORDER BY source, parent, sortkey, pos, seq"
+          ],
+          "parameterBytes": 106,
+          "end": 2278.2999999999884
+        },
+        {
+          "method": "executeSet",
+          "start": 2279.0999999999767,
+          "transaction": true,
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FROM json_each(?)) AS u WHERE nss_node.path = u.path"
+          ],
+          "parameterBytes": 1392,
+          "end": 2284.399999999965
+        }
+      ]
+    },
+    {
+      "session": "16j3-append-cost",
+      "installedApkHash": "ced86e7dfb09ded71bc6185b6cc40438e6384fb6770d4c394adc416432ba94f2",
+      "scenario": "wfAppend",
+      "keys": 50,
+      "requestedSamples": 20,
+      "backgroundSeed": 50,
+      "diagnosticOnly": true,
+      "limitations": [
+        "CPU sampling and native wrapper perturb timing.",
+        "Native spans measure JS-to-native response, not native SQL CPU time."
+      ],
+      "samples": [
+        {
+          "emit": 9.100000000034925,
+          "dom": 9.5
+        },
+        {
+          "emit": 11,
+          "dom": 11.5
+        },
+        {
+          "emit": 25.70000000001164,
+          "dom": 26.099999999976717
+        },
+        {
+          "emit": 11.700000000011642,
+          "dom": 12.600000000034925
+        },
+        {
+          "emit": 11.700000000011642,
+          "dom": 12.200000000011642
+        },
+        {
+          "emit": 17.899999999965075,
+          "dom": 18.600000000034925
+        },
+        {
+          "emit": 13.800000000046566,
+          "dom": 14
+        },
+        {
+          "emit": 11.899999999906868,
+          "dom": 12.5
+        },
+        {
+          "emit": 19.79999999993015,
+          "dom": 20.29999999993015
+        },
+        {
+          "emit": 11.199999999953434,
+          "dom": 11.599999999976717
+        },
+        {
+          "emit": 22.599999999976717,
+          "dom": 23.29999999993015
+        },
+        {
+          "emit": 12.800000000046566,
+          "dom": 14.400000000023283
+        },
+        {
+          "emit": 14.599999999976717,
+          "dom": 15
+        },
+        {
+          "emit": 13.899999999906868,
+          "dom": 14.899999999906868
+        },
+        {
+          "emit": 18.399999999906868,
+          "dom": 18.899999999906868
+        },
+        {
+          "emit": 14.699999999953434,
+          "dom": 15.199999999953434
+        },
+        {
+          "emit": 19.699999999953434,
+          "dom": 21
+        },
+        {
+          "emit": 10.79999999993015,
+          "dom": 11.399999999906868
+        },
+        {
+          "emit": 19.400000000023283,
+          "dom": 20.199999999953434
+        },
+        {
+          "emit": 12.800000000046566,
+          "dom": 14
+        }
+      ],
+      "nativeCalls": [
+        {
+          "method": "executeSet",
+          "start": 868.5,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16497,
+          "end": 874.2999999999884
+        },
+        {
+          "method": "executeSet",
+          "start": 897.0999999999767,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16497,
+          "end": 903.8999999999651
+        },
+        {
+          "method": "executeSet",
+          "start": 926.6999999999534,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16497,
+          "end": 948.8999999999651
+        },
+        {
+          "method": "executeSet",
+          "start": 971.5,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16497,
+          "end": 979.6999999999534
+        },
+        {
+          "method": "executeSet",
+          "start": 1004.0999999999767,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16497,
+          "end": 1012.1999999999534
+        },
+        {
+          "method": "executeSet",
+          "start": 1039.5,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16497,
+          "end": 1049.7999999999302
+        },
+        {
+          "method": "executeSet",
+          "start": 1074.5999999999767,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16498,
+          "end": 1081
+        },
+        {
+          "method": "executeSet",
+          "start": 1104.5,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16697,
+          "end": 1111.6999999999534
+        },
+        {
+          "method": "executeSet",
+          "start": 1136.5,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16697,
+          "end": 1148.5
+        },
+        {
+          "method": "executeSet",
+          "start": 1180,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16702,
+          "end": 1187.9000000000233
+        },
+        {
+          "method": "executeSet",
+          "start": 1209.2999999999302,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16797,
+          "end": 1227.7999999999302
+        },
+        {
+          "method": "executeSet",
+          "start": 1249.6999999999534,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16797,
+          "end": 1258.5999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 1284.7999999999302,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16797,
+          "end": 1293.5999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 1316.2999999999302,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16797,
+          "end": 1324.9000000000233
+        },
+        {
+          "method": "executeSet",
+          "start": 1349,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16797,
+          "end": 1362
+        },
+        {
+          "method": "executeSet",
+          "start": 1385.6999999999534,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16797,
+          "end": 1394
+        },
+        {
+          "method": "executeSet",
+          "start": 1423.0999999999767,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16797,
+          "end": 1431
+        },
+        {
+          "method": "executeSet",
+          "start": 1464.5,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16797,
+          "end": 1470.1999999999534
+        },
+        {
+          "method": "executeSet",
+          "start": 1495.0999999999767,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16797,
+          "end": 1508.0999999999767
+        },
+        {
+          "method": "executeSet",
+          "start": 1533,
+          "transaction": true,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) SELECT json_extract(value,'$[0]'),json_extract(value,'$[1]'),json_extract(value,'$[2]'),json_extract(value,'$[3]'),json_extract(value,'$[4]') FROM json_each(?) WHERE 1"
+          ],
+          "parameterBytes": 16797,
+          "end": 1540.1999999999534
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "CPU sampling/native wrapper perturb timings",
+    "Native spans are responses, not SQL CPU time",
+    "Reset includes untimed dirty writes; they are not part of reset commit count"
+  ]
+}

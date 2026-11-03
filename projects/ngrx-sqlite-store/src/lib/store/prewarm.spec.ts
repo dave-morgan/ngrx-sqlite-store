@@ -28,7 +28,13 @@ it.each([false, true])('clears declared session data before DI, preserving expli
     .toEqual([{ value: '1' }]);
   TestBed.configureTestingModule({ providers });
   const core = TestBed.inject(SqliteStoreCore);
+  const query = vi.spyOn(driver, 'query');
   await core.initialize();
+  // Seeding reuses the open-time catalog and knows the prewarm-deleted subtree is empty.
+  const reads = query.mock.calls.map(([sql, params]) => `${sql} ${JSON.stringify(params ?? [])}`);
+  expect(reads.filter((sql) => sql.includes('nss_meta'))).toEqual([]);
+  // Only the router pin's preload reads it; the seed comparison read is skipped.
+  expect(reads.filter((sql) => sql.includes('"router"'))).toHaveLength(1);
   expect(await core.engine.read((tx) => new NodeStore().read(tx, 'router')))
     .toEqual(persist ? { stale: true } : undefined);
   await core.engine.close();
@@ -63,4 +69,22 @@ it('retains the original open error for adoption without retrying or unhandled r
   await expect(core.initialize()).rejects.toBe(failure);
   expect(open).toHaveBeenCalledTimes(1);
   expect(core.status()).toBe('error');
+});
+
+it('fails the engine when a released session deletion fails natively (ADR-0070)', async () => {
+  const driver = new SqlJsDriver();
+  Object.defineProperty(driver, 'pipelined', { value: true, configurable: true });
+  const failure = new Error('session delete failed');
+  const batch = driver.batch.bind(driver);
+  vi.spyOn(driver, 'batch').mockImplementation(async (statements, opts) => {
+    if (statements.some(({ sql }) => sql.startsWith('DELETE'))) throw failure;
+    return batch(statements, opts);
+  });
+  const providers = [provideStore({ router: (state: unknown = null) => state }, { sqlite: { driver } })];
+  await prewarmSqliteStore(providers);
+  TestBed.configureTestingModule({ providers });
+  const core = TestBed.inject(SqliteStoreCore);
+  await expect(TestBed.inject(ApplicationInitStatus).donePromise).rejects.toThrow();
+  await expect(core.initialize()).rejects.toThrow();
+  expect(core.engine.status()).toBe('error');
 });

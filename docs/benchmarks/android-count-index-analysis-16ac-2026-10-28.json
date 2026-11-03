@@ -1,0 +1,1492 @@
+{
+  "verified": true,
+  "rawSha256": "e2b388ca0fa16135c9c22e9acd601780e38a6417ab6d05b76b38743a8a04cbc8",
+  "apkHash": "8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5",
+  "boot": "048283ab-f09b-48b1-9395-004eed8b1aa9",
+  "session": "16ac-count-cover",
+  "observations": 99,
+  "measured": 90,
+  "expected": [
+    {
+      "slot": 0,
+      "payload": [
+        {
+          "id": null,
+          "value": 32487
+        }
+      ]
+    },
+    {
+      "slot": 1,
+      "payload": [
+        {
+          "id": null,
+          "value": 50000
+        }
+      ]
+    }
+  ],
+  "modes": {
+    "old": {
+      "n": 30,
+      "mean": 85.38333333333284,
+      "sd": 10.586363490548136,
+      "median": 80.95000000000437,
+      "min": 78.89999999999418,
+      "max": 120.89999999999418
+    },
+    "cover": {
+      "n": 30,
+      "mean": 44.34333333333246,
+      "sd": 4.984090781629898,
+      "median": 42.349999999998545,
+      "min": 40.30000000000291,
+      "max": 62.5
+    },
+    "auto": {
+      "n": 30,
+      "mean": 55.91000000000058,
+      "sd": 6.055282675140165,
+      "median": 53.150000000001455,
+      "min": 51.09999999999127,
+      "max": 71.60000000000582
+    }
+  },
+  "pairs": {
+    "cover_all": {
+      "delta": {
+        "n": 30,
+        "mean": -41.04000000000039,
+        "sd": 8.297801952407577,
+        "median": -38.950000000004366,
+        "min": -72.60000000000582,
+        "max": -30.20000000001164
+      },
+      "wins": 30,
+      "rows": [
+        {
+          "round": 0,
+          "old": 86.5,
+          "value": 56.29999999998836
+        },
+        {
+          "round": 1,
+          "old": 95.5,
+          "value": 43.40000000000873
+        },
+        {
+          "round": 2,
+          "old": 81,
+          "value": 49
+        },
+        {
+          "round": 3,
+          "old": 84.5,
+          "value": 42.5
+        },
+        {
+          "round": 4,
+          "old": 81,
+          "value": 41.30000000000291
+        },
+        {
+          "round": 5,
+          "old": 80.89999999999418,
+          "value": 40.79999999998836
+        },
+        {
+          "round": 6,
+          "old": 81.69999999999709,
+          "value": 43.09999999999127
+        },
+        {
+          "round": 7,
+          "old": 80.89999999999418,
+          "value": 41.80000000000291
+        },
+        {
+          "round": 8,
+          "old": 79.5,
+          "value": 43.30000000000291
+        },
+        {
+          "round": 9,
+          "old": 79.10000000000582,
+          "value": 41.10000000000582
+        },
+        {
+          "round": 10,
+          "old": 80.19999999999709,
+          "value": 41
+        },
+        {
+          "round": 11,
+          "old": 82.89999999999418,
+          "value": 40.30000000000291
+        },
+        {
+          "round": 12,
+          "old": 78.89999999999418,
+          "value": 44.10000000000582
+        },
+        {
+          "round": 13,
+          "old": 80.90000000000873,
+          "value": 42
+        },
+        {
+          "round": 14,
+          "old": 79.69999999999709,
+          "value": 43.69999999999709
+        },
+        {
+          "round": 15,
+          "old": 80.60000000000582,
+          "value": 42.19999999999709
+        },
+        {
+          "round": 16,
+          "old": 85.5,
+          "value": 41.5
+        },
+        {
+          "round": 17,
+          "old": 79,
+          "value": 40.59999999999127
+        },
+        {
+          "round": 18,
+          "old": 80.10000000000582,
+          "value": 41.69999999999709
+        },
+        {
+          "round": 19,
+          "old": 79.69999999999709,
+          "value": 41.30000000000291
+        },
+        {
+          "round": 20,
+          "old": 87.69999999999709,
+          "value": 43.30000000000291
+        },
+        {
+          "round": 21,
+          "old": 80.39999999999418,
+          "value": 41
+        },
+        {
+          "round": 22,
+          "old": 79.39999999999418,
+          "value": 40.80000000000291
+        },
+        {
+          "round": 23,
+          "old": 89.5,
+          "value": 48.30000000000291
+        },
+        {
+          "round": 24,
+          "old": 117.80000000000291,
+          "value": 62.5
+        },
+        {
+          "round": 25,
+          "old": 102.39999999999418,
+          "value": 47.59999999999127
+        },
+        {
+          "round": 26,
+          "old": 120.89999999999418,
+          "value": 48.29999999998836
+        },
+        {
+          "round": 27,
+          "old": 83.40000000000873,
+          "value": 46.09999999999127
+        },
+        {
+          "round": 28,
+          "old": 80.80000000000291,
+          "value": 41.80000000000291
+        },
+        {
+          "round": 29,
+          "old": 81.10000000000582,
+          "value": 49.60000000000582
+        }
+      ]
+    },
+    "cover_0": {
+      "delta": {
+        "n": 15,
+        "mean": -41.266666666666666,
+        "sd": 10.467205021036118,
+        "median": -38.60000000000582,
+        "min": -72.60000000000582,
+        "max": -30.20000000001164
+      },
+      "wins": 15,
+      "rows": [
+        {
+          "round": 0,
+          "old": 86.5,
+          "value": 56.29999999998836
+        },
+        {
+          "round": 2,
+          "old": 81,
+          "value": 49
+        },
+        {
+          "round": 4,
+          "old": 81,
+          "value": 41.30000000000291
+        },
+        {
+          "round": 6,
+          "old": 81.69999999999709,
+          "value": 43.09999999999127
+        },
+        {
+          "round": 8,
+          "old": 79.5,
+          "value": 43.30000000000291
+        },
+        {
+          "round": 10,
+          "old": 80.19999999999709,
+          "value": 41
+        },
+        {
+          "round": 12,
+          "old": 78.89999999999418,
+          "value": 44.10000000000582
+        },
+        {
+          "round": 14,
+          "old": 79.69999999999709,
+          "value": 43.69999999999709
+        },
+        {
+          "round": 16,
+          "old": 85.5,
+          "value": 41.5
+        },
+        {
+          "round": 18,
+          "old": 80.10000000000582,
+          "value": 41.69999999999709
+        },
+        {
+          "round": 20,
+          "old": 87.69999999999709,
+          "value": 43.30000000000291
+        },
+        {
+          "round": 22,
+          "old": 79.39999999999418,
+          "value": 40.80000000000291
+        },
+        {
+          "round": 24,
+          "old": 117.80000000000291,
+          "value": 62.5
+        },
+        {
+          "round": 26,
+          "old": 120.89999999999418,
+          "value": 48.29999999998836
+        },
+        {
+          "round": 28,
+          "old": 80.80000000000291,
+          "value": 41.80000000000291
+        }
+      ]
+    },
+    "cover_1": {
+      "delta": {
+        "n": 15,
+        "mean": -40.81333333333411,
+        "sd": 5.740441330302363,
+        "median": -39.09999999999127,
+        "min": -54.80000000000291,
+        "max": -31.5
+      },
+      "wins": 15,
+      "rows": [
+        {
+          "round": 1,
+          "old": 95.5,
+          "value": 43.40000000000873
+        },
+        {
+          "round": 3,
+          "old": 84.5,
+          "value": 42.5
+        },
+        {
+          "round": 5,
+          "old": 80.89999999999418,
+          "value": 40.79999999998836
+        },
+        {
+          "round": 7,
+          "old": 80.89999999999418,
+          "value": 41.80000000000291
+        },
+        {
+          "round": 9,
+          "old": 79.10000000000582,
+          "value": 41.10000000000582
+        },
+        {
+          "round": 11,
+          "old": 82.89999999999418,
+          "value": 40.30000000000291
+        },
+        {
+          "round": 13,
+          "old": 80.90000000000873,
+          "value": 42
+        },
+        {
+          "round": 15,
+          "old": 80.60000000000582,
+          "value": 42.19999999999709
+        },
+        {
+          "round": 17,
+          "old": 79,
+          "value": 40.59999999999127
+        },
+        {
+          "round": 19,
+          "old": 79.69999999999709,
+          "value": 41.30000000000291
+        },
+        {
+          "round": 21,
+          "old": 80.39999999999418,
+          "value": 41
+        },
+        {
+          "round": 23,
+          "old": 89.5,
+          "value": 48.30000000000291
+        },
+        {
+          "round": 25,
+          "old": 102.39999999999418,
+          "value": 47.59999999999127
+        },
+        {
+          "round": 27,
+          "old": 83.40000000000873,
+          "value": 46.09999999999127
+        },
+        {
+          "round": 29,
+          "old": 81.10000000000582,
+          "value": 49.60000000000582
+        }
+      ]
+    },
+    "auto_all": {
+      "delta": {
+        "n": 30,
+        "mean": -29.473333333332267,
+        "sd": 8.016273677849682,
+        "median": -28.199999999989814,
+        "min": -52.69999999999709,
+        "max": -17.89999999999418
+      },
+      "wins": 30,
+      "rows": [
+        {
+          "round": 0,
+          "old": 86.5,
+          "value": 62.10000000000582
+        },
+        {
+          "round": 1,
+          "old": 95.5,
+          "value": 51.19999999999709
+        },
+        {
+          "round": 2,
+          "old": 81,
+          "value": 60.69999999999709
+        },
+        {
+          "round": 3,
+          "old": 84.5,
+          "value": 53.5
+        },
+        {
+          "round": 4,
+          "old": 81,
+          "value": 53.69999999999709
+        },
+        {
+          "round": 5,
+          "old": 80.89999999999418,
+          "value": 51.60000000000582
+        },
+        {
+          "round": 6,
+          "old": 81.69999999999709,
+          "value": 52.80000000000291
+        },
+        {
+          "round": 7,
+          "old": 80.89999999999418,
+          "value": 52.5
+        },
+        {
+          "round": 8,
+          "old": 79.5,
+          "value": 53.60000000000582
+        },
+        {
+          "round": 9,
+          "old": 79.10000000000582,
+          "value": 54.10000000000582
+        },
+        {
+          "round": 10,
+          "old": 80.19999999999709,
+          "value": 52.20000000001164
+        },
+        {
+          "round": 11,
+          "old": 82.89999999999418,
+          "value": 52.69999999999709
+        },
+        {
+          "round": 12,
+          "old": 78.89999999999418,
+          "value": 52.5
+        },
+        {
+          "round": 13,
+          "old": 80.90000000000873,
+          "value": 51.19999999999709
+        },
+        {
+          "round": 14,
+          "old": 79.69999999999709,
+          "value": 58.80000000000291
+        },
+        {
+          "round": 15,
+          "old": 80.60000000000582,
+          "value": 51.10000000000582
+        },
+        {
+          "round": 16,
+          "old": 85.5,
+          "value": 51.89999999999418
+        },
+        {
+          "round": 17,
+          "old": 79,
+          "value": 58.09999999999127
+        },
+        {
+          "round": 18,
+          "old": 80.10000000000582,
+          "value": 52.30000000000291
+        },
+        {
+          "round": 19,
+          "old": 79.69999999999709,
+          "value": 51.09999999999127
+        },
+        {
+          "round": 20,
+          "old": 87.69999999999709,
+          "value": 51.19999999999709
+        },
+        {
+          "round": 21,
+          "old": 80.39999999999418,
+          "value": 54.20000000001164
+        },
+        {
+          "round": 22,
+          "old": 79.39999999999418,
+          "value": 52.30000000000291
+        },
+        {
+          "round": 23,
+          "old": 89.5,
+          "value": 71.60000000000582
+        },
+        {
+          "round": 24,
+          "old": 117.80000000000291,
+          "value": 65.59999999999127
+        },
+        {
+          "round": 25,
+          "old": 102.39999999999418,
+          "value": 70.69999999999709
+        },
+        {
+          "round": 26,
+          "old": 120.89999999999418,
+          "value": 68.19999999999709
+        },
+        {
+          "round": 27,
+          "old": 83.40000000000873,
+          "value": 56.40000000000873
+        },
+        {
+          "round": 28,
+          "old": 80.80000000000291,
+          "value": 58.09999999999127
+        },
+        {
+          "round": 29,
+          "old": 81.10000000000582,
+          "value": 51.30000000000291
+        }
+      ]
+    },
+    "auto_0": {
+      "delta": {
+        "n": 15,
+        "mean": -30.31333333333217,
+        "sd": 9.92449111086126,
+        "median": -27.30000000000291,
+        "min": -52.69999999999709,
+        "max": -20.30000000000291
+      },
+      "wins": 15,
+      "rows": [
+        {
+          "round": 0,
+          "old": 86.5,
+          "value": 62.10000000000582
+        },
+        {
+          "round": 2,
+          "old": 81,
+          "value": 60.69999999999709
+        },
+        {
+          "round": 4,
+          "old": 81,
+          "value": 53.69999999999709
+        },
+        {
+          "round": 6,
+          "old": 81.69999999999709,
+          "value": 52.80000000000291
+        },
+        {
+          "round": 8,
+          "old": 79.5,
+          "value": 53.60000000000582
+        },
+        {
+          "round": 10,
+          "old": 80.19999999999709,
+          "value": 52.20000000001164
+        },
+        {
+          "round": 12,
+          "old": 78.89999999999418,
+          "value": 52.5
+        },
+        {
+          "round": 14,
+          "old": 79.69999999999709,
+          "value": 58.80000000000291
+        },
+        {
+          "round": 16,
+          "old": 85.5,
+          "value": 51.89999999999418
+        },
+        {
+          "round": 18,
+          "old": 80.10000000000582,
+          "value": 52.30000000000291
+        },
+        {
+          "round": 20,
+          "old": 87.69999999999709,
+          "value": 51.19999999999709
+        },
+        {
+          "round": 22,
+          "old": 79.39999999999418,
+          "value": 52.30000000000291
+        },
+        {
+          "round": 24,
+          "old": 117.80000000000291,
+          "value": 65.59999999999127
+        },
+        {
+          "round": 26,
+          "old": 120.89999999999418,
+          "value": 68.19999999999709
+        },
+        {
+          "round": 28,
+          "old": 80.80000000000291,
+          "value": 58.09999999999127
+        }
+      ]
+    },
+    "auto_1": {
+      "delta": {
+        "n": 15,
+        "mean": -28.633333333332363,
+        "sd": 5.753591011170396,
+        "median": -29.29999999998836,
+        "min": -44.30000000000291,
+        "max": -17.89999999999418
+      },
+      "wins": 15,
+      "rows": [
+        {
+          "round": 1,
+          "old": 95.5,
+          "value": 51.19999999999709
+        },
+        {
+          "round": 3,
+          "old": 84.5,
+          "value": 53.5
+        },
+        {
+          "round": 5,
+          "old": 80.89999999999418,
+          "value": 51.60000000000582
+        },
+        {
+          "round": 7,
+          "old": 80.89999999999418,
+          "value": 52.5
+        },
+        {
+          "round": 9,
+          "old": 79.10000000000582,
+          "value": 54.10000000000582
+        },
+        {
+          "round": 11,
+          "old": 82.89999999999418,
+          "value": 52.69999999999709
+        },
+        {
+          "round": 13,
+          "old": 80.90000000000873,
+          "value": 51.19999999999709
+        },
+        {
+          "round": 15,
+          "old": 80.60000000000582,
+          "value": 51.10000000000582
+        },
+        {
+          "round": 17,
+          "old": 79,
+          "value": 58.09999999999127
+        },
+        {
+          "round": 19,
+          "old": 79.69999999999709,
+          "value": 51.09999999999127
+        },
+        {
+          "round": 21,
+          "old": 80.39999999999418,
+          "value": 54.20000000001164
+        },
+        {
+          "round": 23,
+          "old": 89.5,
+          "value": 71.60000000000582
+        },
+        {
+          "round": 25,
+          "old": 102.39999999999418,
+          "value": 70.69999999999709
+        },
+        {
+          "round": 27,
+          "old": 83.40000000000873,
+          "value": 56.40000000000873
+        },
+        {
+          "round": 29,
+          "old": 81.10000000000582,
+          "value": 51.30000000000291
+        }
+      ]
+    }
+  },
+  "automaticUsesScratch": false,
+  "plans": {
+    "before": [
+      {
+        "id": 1,
+        "parent": 0,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 2,
+        "parent": 1,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 4,
+        "parent": 2,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-5)"
+      },
+      {
+        "id": 6,
+        "parent": 4,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-4)"
+      },
+      {
+        "id": 7,
+        "parent": 6,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 8,
+        "parent": 7,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 11,
+        "parent": 8,
+        "notused": 0,
+        "detail": "MATERIALIZE promoted"
+      },
+      {
+        "id": 14,
+        "parent": 11,
+        "notused": 54,
+        "detail": "SEARCH nss_entity USING COVERING INDEX nss_entity_promoted (coll=?)"
+      },
+      {
+        "id": 28,
+        "parent": 8,
+        "notused": 48,
+        "detail": "SCAN promoted"
+      },
+      {
+        "id": 34,
+        "parent": 7,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 37,
+        "parent": 34,
+        "notused": 0,
+        "detail": "MATERIALIZE counts"
+      },
+      {
+        "id": 41,
+        "parent": 37,
+        "notused": 56,
+        "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+      },
+      {
+        "id": 79,
+        "parent": 34,
+        "notused": 16,
+        "detail": "SCAN counts"
+      },
+      {
+        "id": 87,
+        "parent": 4,
+        "notused": 49,
+        "detail": "SCAN (subquery-4)"
+      },
+      {
+        "id": 99,
+        "parent": 2,
+        "notused": 16,
+        "detail": "SCAN (subquery-5)"
+      },
+      {
+        "id": 114,
+        "parent": 1,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 116,
+        "parent": 114,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-9)"
+      },
+      {
+        "id": 118,
+        "parent": 116,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-8)"
+      },
+      {
+        "id": 119,
+        "parent": 118,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 120,
+        "parent": 119,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 123,
+        "parent": 120,
+        "notused": 216,
+        "detail": "SCAN promoted"
+      },
+      {
+        "id": 129,
+        "parent": 119,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 132,
+        "parent": 129,
+        "notused": 216,
+        "detail": "SCAN counts"
+      },
+      {
+        "id": 140,
+        "parent": 116,
+        "notused": 226,
+        "detail": "SCAN (subquery-8)"
+      },
+      {
+        "id": 152,
+        "parent": 114,
+        "notused": 16,
+        "detail": "SCAN (subquery-9)"
+      }
+    ],
+    "after": [
+      {
+        "id": 1,
+        "parent": 0,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 2,
+        "parent": 1,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 4,
+        "parent": 2,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-5)"
+      },
+      {
+        "id": 6,
+        "parent": 4,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-4)"
+      },
+      {
+        "id": 7,
+        "parent": 6,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 8,
+        "parent": 7,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 11,
+        "parent": 8,
+        "notused": 0,
+        "detail": "MATERIALIZE promoted"
+      },
+      {
+        "id": 14,
+        "parent": 11,
+        "notused": 54,
+        "detail": "SEARCH nss_entity USING COVERING INDEX nss_entity_promoted (coll=?)"
+      },
+      {
+        "id": 28,
+        "parent": 8,
+        "notused": 48,
+        "detail": "SCAN promoted"
+      },
+      {
+        "id": 34,
+        "parent": 7,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 37,
+        "parent": 34,
+        "notused": 0,
+        "detail": "MATERIALIZE counts"
+      },
+      {
+        "id": 41,
+        "parent": 37,
+        "notused": 56,
+        "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+      },
+      {
+        "id": 79,
+        "parent": 34,
+        "notused": 16,
+        "detail": "SCAN counts"
+      },
+      {
+        "id": 87,
+        "parent": 4,
+        "notused": 49,
+        "detail": "SCAN (subquery-4)"
+      },
+      {
+        "id": 99,
+        "parent": 2,
+        "notused": 16,
+        "detail": "SCAN (subquery-5)"
+      },
+      {
+        "id": 114,
+        "parent": 1,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 116,
+        "parent": 114,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-9)"
+      },
+      {
+        "id": 118,
+        "parent": 116,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-8)"
+      },
+      {
+        "id": 119,
+        "parent": 118,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 120,
+        "parent": 119,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 123,
+        "parent": 120,
+        "notused": 216,
+        "detail": "SCAN promoted"
+      },
+      {
+        "id": 129,
+        "parent": 119,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 132,
+        "parent": 129,
+        "notused": 216,
+        "detail": "SCAN counts"
+      },
+      {
+        "id": 140,
+        "parent": 116,
+        "notused": 226,
+        "detail": "SCAN (subquery-8)"
+      },
+      {
+        "id": 152,
+        "parent": 114,
+        "notused": 16,
+        "detail": "SCAN (subquery-9)"
+      }
+    ],
+    "forced": [
+      {
+        "id": 1,
+        "parent": 0,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 2,
+        "parent": 1,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 4,
+        "parent": 2,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-5)"
+      },
+      {
+        "id": 6,
+        "parent": 4,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-4)"
+      },
+      {
+        "id": 7,
+        "parent": 6,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 8,
+        "parent": 7,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 11,
+        "parent": 8,
+        "notused": 0,
+        "detail": "MATERIALIZE promoted"
+      },
+      {
+        "id": 14,
+        "parent": 11,
+        "notused": 54,
+        "detail": "SEARCH nss_entity USING COVERING INDEX nss_entity_promoted (coll=?)"
+      },
+      {
+        "id": 28,
+        "parent": 8,
+        "notused": 48,
+        "detail": "SCAN promoted"
+      },
+      {
+        "id": 34,
+        "parent": 7,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 37,
+        "parent": 34,
+        "notused": 0,
+        "detail": "MATERIALIZE counts"
+      },
+      {
+        "id": 42,
+        "parent": 37,
+        "notused": 62,
+        "detail": "SEARCH nss_entity USING INDEX nss_diag_countcover_16ac (coll=?)"
+      },
+      {
+        "id": 77,
+        "parent": 34,
+        "notused": 16,
+        "detail": "SCAN counts"
+      },
+      {
+        "id": 85,
+        "parent": 4,
+        "notused": 49,
+        "detail": "SCAN (subquery-4)"
+      },
+      {
+        "id": 97,
+        "parent": 2,
+        "notused": 16,
+        "detail": "SCAN (subquery-5)"
+      },
+      {
+        "id": 112,
+        "parent": 1,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 114,
+        "parent": 112,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-9)"
+      },
+      {
+        "id": 116,
+        "parent": 114,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-8)"
+      },
+      {
+        "id": 117,
+        "parent": 116,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 118,
+        "parent": 117,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 121,
+        "parent": 118,
+        "notused": 216,
+        "detail": "SCAN promoted"
+      },
+      {
+        "id": 127,
+        "parent": 117,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 130,
+        "parent": 127,
+        "notused": 216,
+        "detail": "SCAN counts"
+      },
+      {
+        "id": 138,
+        "parent": 114,
+        "notused": 226,
+        "detail": "SCAN (subquery-8)"
+      },
+      {
+        "id": 150,
+        "parent": 112,
+        "notused": 16,
+        "detail": "SCAN (subquery-9)"
+      }
+    ]
+  },
+  "vm": {
+    "before": {
+      "opens": [
+        {
+          "addr": 6,
+          "opcode": "OpenRead",
+          "p1": 13,
+          "p2": 10,
+          "p3": 0,
+          "p4": "k(2,,)",
+          "p5": 2,
+          "comment": "root=10 iDb=0; nss_entity_promoted"
+        },
+        {
+          "addr": 29,
+          "opcode": "OpenRead",
+          "p1": 14,
+          "p2": 7,
+          "p3": 0,
+          "p4": "k(2,,)",
+          "p5": 2,
+          "comment": "root=7 iDb=0; sqlite_autoindex_nss_entity_1"
+        }
+      ],
+      "columns": [
+        {
+          "addr": 12,
+          "opcode": "Column",
+          "p1": 13,
+          "p2": 1,
+          "p3": 5,
+          "p4": null,
+          "p5": 0,
+          "comment": "r[5]= cursor 13 column 1",
+          "rootpage": 10
+        },
+        {
+          "addr": 35,
+          "opcode": "Column",
+          "p1": 14,
+          "p2": 4,
+          "p3": 15,
+          "p4": null,
+          "p5": 0,
+          "comment": "r[15]= cursor 14 column 4",
+          "rootpage": 7
+        },
+        {
+          "addr": 37,
+          "opcode": "Column",
+          "p1": 14,
+          "p2": 4,
+          "p3": 17,
+          "p4": null,
+          "p5": 0,
+          "comment": "r[17]= cursor 14 column 4",
+          "rootpage": 7
+        },
+        {
+          "addr": 40,
+          "opcode": "Column",
+          "p1": 14,
+          "p2": 4,
+          "p3": 19,
+          "p4": null,
+          "p5": 0,
+          "comment": "r[19]= cursor 14 column 4",
+          "rootpage": 7
+        }
+      ],
+      "functions": [
+        {
+          "addr": 38,
+          "opcode": "Function",
+          "p1": 0,
+          "p2": 17,
+          "p3": 15,
+          "p4": "json_valid(1)",
+          "p5": 0,
+          "comment": "r[15]=func(r[17])"
+        },
+        {
+          "addr": 41,
+          "opcode": "Function",
+          "p1": 2,
+          "p2": 19,
+          "p3": 18,
+          "p4": "json_type(2)",
+          "p5": 0,
+          "comment": "r[18]=func(r[19..20])"
+        },
+        {
+          "addr": 78,
+          "opcode": "Function",
+          "p1": 5,
+          "p2": 28,
+          "p3": 27,
+          "p4": "json_object(-1)",
+          "p5": 0,
+          "comment": "r[27]=func(r[28..31])"
+        },
+        {
+          "addr": 91,
+          "opcode": "Function",
+          "p1": 0,
+          "p2": 36,
+          "p3": 35,
+          "p4": "length(1)",
+          "p5": 0,
+          "comment": "r[35]=func(r[36])"
+        },
+        {
+          "addr": 121,
+          "opcode": "Function",
+          "p1": 5,
+          "p2": 48,
+          "p3": 47,
+          "p4": "json_object(-1)",
+          "p5": 0,
+          "comment": "r[47]=func(r[48..51])"
+        },
+        {
+          "addr": 134,
+          "opcode": "Function",
+          "p1": 0,
+          "p2": 54,
+          "p3": 53,
+          "p4": "length(1)",
+          "p5": 0,
+          "comment": "r[53]=func(r[54])"
+        }
+      ]
+    },
+    "cover": {
+      "opens": [
+        {
+          "addr": 6,
+          "opcode": "OpenRead",
+          "p1": 13,
+          "p2": 10,
+          "p3": 0,
+          "p4": "k(2,,)",
+          "p5": 2,
+          "comment": "root=10 iDb=0; nss_entity_promoted"
+        },
+        {
+          "addr": 29,
+          "opcode": "OpenRead",
+          "p1": 10,
+          "p2": 7,
+          "p3": 0,
+          "p4": "k(2,,)",
+          "p5": 0,
+          "comment": "root=7 iDb=0; nss_entity"
+        },
+        {
+          "addr": 30,
+          "opcode": "OpenRead",
+          "p1": 14,
+          "p2": 3426,
+          "p3": 0,
+          "p4": "k(3,,,)",
+          "p5": 2,
+          "comment": "root=3426 iDb=0; nss_diag_countcover_16ac"
+        }
+      ],
+      "columns": [
+        {
+          "addr": 12,
+          "opcode": "Column",
+          "p1": 13,
+          "p2": 1,
+          "p3": 5,
+          "p4": null,
+          "p5": 0,
+          "comment": "r[5]= cursor 13 column 1",
+          "rootpage": 10
+        },
+        {
+          "addr": 36,
+          "opcode": "Column",
+          "p1": 14,
+          "p2": 0,
+          "p3": 15,
+          "p4": null,
+          "p5": 0,
+          "comment": "r[15]= cursor 14 column 0",
+          "rootpage": 3426
+        },
+        {
+          "addr": 37,
+          "opcode": "Column",
+          "p1": 14,
+          "p2": 2,
+          "p3": 16,
+          "p4": null,
+          "p5": 0,
+          "comment": "r[16]= cursor 14 column 2",
+          "rootpage": 3426
+        },
+        {
+          "addr": 39,
+          "opcode": "Column",
+          "p1": 14,
+          "p2": 1,
+          "p3": 19,
+          "p4": null,
+          "p5": 0,
+          "comment": "r[19]=nss_diag_countcover_16ac expr-column 1",
+          "rootpage": 3426
+        }
+      ],
+      "functions": [
+        {
+          "addr": 76,
+          "opcode": "Function",
+          "p1": 5,
+          "p2": 27,
+          "p3": 26,
+          "p4": "json_object(-1)",
+          "p5": 0,
+          "comment": "r[26]=func(r[27..30])"
+        },
+        {
+          "addr": 89,
+          "opcode": "Function",
+          "p1": 0,
+          "p2": 35,
+          "p3": 34,
+          "p4": "length(1)",
+          "p5": 0,
+          "comment": "r[34]=func(r[35])"
+        },
+        {
+          "addr": 119,
+          "opcode": "Function",
+          "p1": 5,
+          "p2": 47,
+          "p3": 46,
+          "p4": "json_object(-1)",
+          "p5": 0,
+          "comment": "r[46]=func(r[47..50])"
+        },
+        {
+          "addr": 132,
+          "opcode": "Function",
+          "p1": 0,
+          "p2": 53,
+          "p3": 52,
+          "p4": "length(1)",
+          "p5": 0,
+          "comment": "r[52]=func(r[53])"
+        }
+      ]
+    }
+  },
+  "rootPages": [
+    {
+      "name": "nss_entity",
+      "rootpage": 7
+    },
+    {
+      "name": "nss_entity_promoted",
+      "rootpage": 10
+    },
+    {
+      "name": "nss_query_646f6e65",
+      "rootpage": 11
+    },
+    {
+      "name": "nss_diag_countcover_16ac",
+      "rootpage": 3426
+    }
+  ],
+  "pages": {
+    "before": [
+      {
+        "page_count": 3425
+      }
+    ],
+    "withIndex": [
+      {
+        "page_count": 3727
+      }
+    ],
+    "afterDrop": [
+      {
+        "page_count": 3727
+      }
+    ]
+  },
+  "cleanupVerified": true,
+  "limitations": [
+    "Native wall diagnostic, not SQL CPU or application speedup",
+    "Auto always last; old/cover order alternates",
+    "Each response was checked in helper; individual response payloads not separately retained",
+    "Drop restores logical indexes, not database file size"
+  ]
+}

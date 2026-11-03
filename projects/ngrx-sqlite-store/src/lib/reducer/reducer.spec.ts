@@ -54,6 +54,18 @@ describe('transaction reducer authoring', () => {
     }
   });
 
+  it('still awaits a foreign reducer for an unknown action', async () => {
+    const classic = vi.fn((state: Slice = initial) => state);
+    const reducer = fromSyncReducer(classic);
+    classic.mockClear();
+    await engine.transaction(async (sql) => {
+      const work = runHandlers(reducer, new StoreTx('slice', nodes, sql, sql.changes), { type: 'unknown' });
+      expect(work).toBeInstanceOf(Promise);
+      await work;
+      expect(classic).toHaveBeenCalledExactlyOnceWith(expect.anything(), { type: 'unknown' });
+    });
+  });
+
   it('executes imperative writes then returned partials in registration order', async () => {
     const reducer = createReducer(
       initial,

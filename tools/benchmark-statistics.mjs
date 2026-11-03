@@ -41,6 +41,28 @@ export function seedMemoryFloor(results, size, metric) {
   if (matching.length > 1) throw new Error(`Duplicate seed memory controls for ${size}`);
   if (!matching.length) throw new Error(`Missing seed memory controls for ${size}`);
   const diagnostic = matching[0].memoryDiagnostic;
+  // ADR-0087: independent real-row brackets (fresh process each); mean growth.
+  const once = diagnostic?.onceSamples;
+  if (Array.isArray(once) && once.length >= 3 && once.every((row) =>
+      Number.isFinite(row?.beforeOnce) && Number.isFinite(row?.afterOnce) && row.beforeOnce >= 0 && row.afterOnce >= 0)) {
+    const samples = once.map((row) => row.afterOnce - row.beforeOnce);
+    return { samples, mean: samples.reduce((sum, value) => sum + value, 0) / samples.length,
+      justification: `F_seed(${size}) one real-row transfer then android-bench's pre-PSS V8 GCs: mean app-process PSS growth over ${samples.length} fresh-process brackets (ADR-0057/0070/0087)` };
+  }
+  // ADR-0070: the single real-row seed with android-bench's pre-PSS steps matches the store.
+  if (Number.isFinite(diagnostic?.beforeOnce) && Number.isFinite(diagnostic?.afterOnce) &&
+      diagnostic.beforeOnce >= 0 && diagnostic.afterOnce >= 0) {
+    const samples = [diagnostic.afterOnce - diagnostic.beforeOnce];
+    return { samples, mean: samples[0],
+      justification: `F_seed(${size}) one real-row transfer then android-bench's pre-PSS V8 GCs: app-process PSS growth (ADR-0057/0070)` };
+  }
+  // ADR-0069: prefer the real-row seed bracket (ADR-0066 rows, bridge garbage included).
+  if (Number.isFinite(diagnostic?.beforeRows) && Number.isFinite(diagnostic?.afterRows) &&
+      diagnostic.beforeRows >= 0 && diagnostic.afterRows >= 0) {
+    const samples = [diagnostic.afterRows - diagnostic.beforeRows];
+    return { samples, mean: samples[0],
+      justification: `F_seed(${size}) real-row (ADR-0066) app-process PSS growth before shrink_memory (ADR-0057/0069)` };
+  }
   const observations = diagnostic?.samples ?? [diagnostic];
   if (!Array.isArray(observations) || !observations.length || observations.some((row) =>
       !Number.isFinite(row?.beforeSeed) || row.beforeSeed < 0 || !Number.isFinite(row?.afterSeed) || row.afterSeed < 0)) {
@@ -105,7 +127,9 @@ export function verdict(classic, sqlite, bridge, bound, platform, floor, code) {
     const seedDelta = seed?.justification && Array.isArray(seed.samples) && seed.samples.length &&
       seed.samples.every(Number.isFinite) && Number.isFinite(seed.mean)
       ? seed.samples.reduce((sum, value) => sum + value, 0) / seed.samples.length : 0;
-    const allowance = classic.sd + Math.max(0, platform.sqlite.mean - platform.classic.mean, seedDelta);
+    // ADR-0070: the plugin baseline and the seed-transfer increment are additive; the seed
+    // bracket starts with the plugin already loaded.
+    const allowance = classic.sd + Math.max(0, platform.sqlite.mean - platform.classic.mean) + Math.max(0, seedDelta);
     if (excess <= allowance) return { status: 'PLATFORM-BOUND', excess, allowance };
     return { status: 'FAIL', excess, allowance: Math.max(allowance, codeAllowance) };
   }
@@ -121,7 +145,7 @@ export function verdict(classic, sqlite, bridge, bound, platform, floor, code) {
 }
 
 /** ADR-0051: derive floors from raw samples, rejecting undersampled controls. */
-export function latencyFloor(results, size, metric) {
+export function latencyFloor(results, size, metric, render) {
   const matching = results.filter((row) => row.size === size);
   if (matching.length > 1) throw new Error(`Duplicate floor controls for ${size}`);
   const control = matching[0];
@@ -137,6 +161,25 @@ export function latencyFloor(results, size, metric) {
   const percentile = (values, p) => [...values].sort((a, b) => a - b)[Math.min(values.length - 1, Math.floor(values.length * p))];
   if (/^(emit|toggle)P(50|95)$/.test(metric)) {
     const percentileValue = metric.endsWith('50') ? 0.5 : 0.95;
+    if (metric.startsWith('toggle') && render) {
+      // ADR-0069: one raw atomic commit issued 20 ms after a real classic toggle's DOM change,
+      // i.e. during the same WebView repaint the store's next commit meets (no store code).
+      const rows = render.filter((row) => row.kind === 'render-commit' && row.size === size);
+      const single = rows.flatMap((row) => row.samples);
+      if (rows.length < 3 || !valid(single, 90) || rows.some(row => !valid(row.samples, 30)))
+        throw new Error('Toggle render floors require three trials of 30 samples (ADR-0069)');
+      if (rows.some(row => !Number.isInteger(row.trial) || row.trial < 1) ||
+          new Set(rows.map(row => row.trial)).size !== rows.length)
+        throw new Error('Toggle render floors require independent trials (ADR-0069)');
+      // ADR-0084 (user decision, amends ADR-0071): the workload persists the toggle's effect
+      // action too; its commit and its own repaint precede the next toggle's commit
+      // (ADR-0023), and Capacitor routes both round trips through the repainting Android
+      // main thread (ADR-0083 perfetto evidence). The store-free pair series is the floor.
+      const pairs = rows.flatMap((row) => row.pairSamples ?? []);
+      if (rows.every((row) => valid(row.pairSamples, 30)))
+        return { ms: percentile(pairs, percentileValue), justification: `F_commit_render_pair p${percentileValue * 100}: raw effect commit + its repaint, then the next raw commit 20 ms after a classic toggle's DOM change (${pairs.length} samples, ${rows.length} trials, classic APK, no store; ADR-0084); single-commit p${percentileValue * 100} ${percentile(single, percentileValue).toFixed(1)} ms` };
+      return { ms: percentile(single, percentileValue), justification: `F_commit_render p${percentileValue * 100}: raw atomic commit 20 ms after a classic toggle's DOM change (${single.length} samples, ${rows.length} trials, classic APK, no store; ADR-0069); paced p${percentileValue * 100} ${percentile(control.commitPaced ?? control.commit, percentileValue).toFixed(1)} ms` };
+    }
     if (metric.startsWith('toggle')) {
       // ADR-0066: toggles are paced 20 ms apart; their floor is paced the same way.
       if (!valid(control.commitPaced, 30)) throw new Error('Toggle floors require 30 paced F_commit samples (ADR-0066)');

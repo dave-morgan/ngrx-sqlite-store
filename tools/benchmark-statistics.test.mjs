@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { workloadCodeBaseline, codeBaseline, emptyControlPlan, latencyFloor, platformBaseline, summarize, verdict, trialOrder, validateControlProvenance } from './benchmark-statistics.mjs';
+import { seedMemoryFloor, workloadCodeBaseline, codeBaseline, emptyControlPlan, latencyFloor, platformBaseline, summarize, verdict, trialOrder, validateControlProvenance } from './benchmark-statistics.mjs';
 
 test('real empty stores alternate APKs and keep each store paired with its own implementation', () => {
   const plan = emptyControlPlan(true, 5);
@@ -142,4 +142,38 @@ test('ADR-0067 workload code control: code delta allowance only with data parity
   const noParity = { ...workloadCodeBaseline(heavy, 1000, 'heapTodosMb'), metric: 'heapTodosMb', justification: 'test' };
   assert.equal(verdict({ mean: 4.6, sd: 0.001 }, { mean: 5.38, sd: 0.01 }, undefined, undefined, undefined, undefined, noParity).status, 'FAIL');
   assert.throws(() => workloadCodeBaseline(rows.slice(2), 1000, 'heapTodosMb'), /five unique paired/);
+});
+
+test('ADR-0069 toggle render floor and real-row seed memory bracket', () => {
+  const row = { size: 1000, database: 'ngrx-harness', commit: Array.from({ length: 20 }, (_, i) => i + 1),
+    commitPaced: Array.from({ length: 30 }, (_, i) => i + 101), open: [1, 2, 3, 4, 5],
+    seed: { samples: [10, 20, 30, 40, 50], chunkBytes: [200, 300], totalBytes: 500, rows: 1000 },
+    seedRows: { samples: [40, 50, 60, 70, 80], rows: 1012, calls: 2, wireBytes: 480 },
+    seedTrace: [{ bytes: 200 }, { bytes: 300 }], pragmas: { journalMode: [{ journal_mode: 'wal' }], synchronous: [{ synchronous: 1 }] },
+    memoryDiagnostic: { beforeSeed: 100, afterSeed: 103, beforeRows: 100, afterRows: 108 } };
+  const render = [1, 2, 3].map((trial) => ({ kind: 'render-commit', size: 1000, trial, samples: Array.from({ length: 30 }, (_, i) => 200 + i) }));
+  assert.equal(latencyFloor([row], 1000, 'toggleP50', render).ms, 215);
+  // ADR-0084: the store-free pair series is the toggle floor when every trial has 30 samples.
+  const paired = render.map((r) => ({ ...r, pairSamples: Array.from({ length: 30 }, (_, i) => 300 + i) }));
+  assert.equal(latencyFloor([row], 1000, 'toggleP50', paired).ms, 315);
+  assert.equal(latencyFloor([row], 1000, 'emitP50', paired).ms, 11);
+  const partial = paired.map((r, i) => (i ? r : { ...r, pairSamples: r.pairSamples.slice(1) }));
+  assert.equal(latencyFloor([row], 1000, 'toggleP50', partial).ms, 215);
+  assert.throws(() => latencyFloor([row], 1000, 'toggleP50', [render[0], render[0], render[0]]), /independent/);
+  assert.throws(() => latencyFloor([row], 1000, 'toggleP50', render.map(r => ({ ...r, samples: r.samples.slice(1) }))), /30 samples/);
+  assert.equal(latencyFloor([row], 1000, 'toggleP50').ms, 116);
+  assert.equal(latencyFloor([row], 1000, 'emitP50', render).ms, 11);
+  assert.throws(() => latencyFloor([row], 1000, 'toggleP50', render.slice(1)), /three trials/);
+  assert.equal(seedMemoryFloor([row], 1000, 'pssTotalMb').mean, 8);
+  assert.equal(seedMemoryFloor([{ ...row, memoryDiagnostic: { beforeSeed: 100, afterSeed: 103 } }], 1000, 'pssTotalMb').mean, 3);
+});
+
+test('ADR-0087 seed memory floor averages three independent real-row brackets', () => {
+  const rows = [{ size: 1000, memoryDiagnostic: { beforeOnce: 100, afterOnce: 110,
+    onceSamples: [{ beforeOnce: 100, afterOnce: 110 }, { beforeOnce: 100, afterOnce: 104 }, { beforeOnce: 100, afterOnce: 106 }] } }];
+  const seed = seedMemoryFloor(rows, 1000, 'pssTotalMb');
+  assert.deepEqual(seed.samples, [10, 4, 6]);
+  assert.equal(seed.mean, 20 / 3);
+  const two = [{ size: 1000, memoryDiagnostic: { beforeOnce: 100, afterOnce: 110, onceSamples: [{ beforeOnce: 100, afterOnce: 110 }, { beforeOnce: 100, afterOnce: 104 }] } }];
+  assert.equal(seedMemoryFloor(two, 1000, 'pssTotalMb').mean, 10);
 });

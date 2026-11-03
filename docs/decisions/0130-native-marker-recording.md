@@ -1,0 +1,22 @@
+# ADR0130: Gate native open when session-marker recording is uncertain
+
+Status: candidate16aw, host regressions pass; native guards and full acceptance pending.
+
+Read-only review of16au found two concrete gaps. The decision to pipeline read an absent marker before writing it. If getItem succeeded but setItem threw (for example quota exhaustion), a native handle could be opened without any marker for a later document reload. The previous catch comment incorrectly claimed the next open would be gated. Also, raw database options are not native identities: the installed JS SQLiteConnection strips one trailing .db, then Android strips another for names without a slash. test, test.db and test.db.db therefore share a native connection but used different markers.
+
+Candidate16aw requires successful marker recording before allowing the optimistic first open. Missing storage, read failure, write failure and an existing marker all gate open behind successful create acknowledgement. Markers follow both installed normalization stages, preserving slash-containing names and readonly/writable separation. This changes neither plugin options nor database names sent to native code. Fresh normal writable-storage startup retains its pre-ack pipeline; recovery remains gated. No native fork, SQL/schema/public API/cache/FIFO/notification change.
+
+Three regression cases fail against16au (failed setItem and both simple-name aliases), while31 other driver cases pass. The fix passes34 driver cases, including a new slash-path separation case. Native ownership remains a source/model claim, not a physical connection leak measurement or proof of the old disk-full stall. Marker absence is a heuristic: explicit storage clearing or a changed browser session can still remove protection while native state survives. A strict guarantee would require successful-create gating for all opens or an atomic native create-and-open operation; neither is silently claimed here.
+
+Preserved baseline .tmp/16aw-source-baseline; candidate .tmp/16aw-source; logs .tmp/16aw-marker-red.log and16aw-marker-green2.log. Initial newline-specific patch assertion failed before changing source and the first green-named log still contains3 failures; retained, not called green. Durable [host evidence](../benchmarks/android-native-marker-16aw-2026-10-30.json).
+
+16av/16L20 remains the measured isolated-environment performance reference. Its global ownership-safety claim is qualified by this follow-up. Candidate retention requires all checks, mandatory50k guard vs15aa, reversed diagnostics against frozen16au and fresh full acceptance if warranted. No unchanged accepted-candidate rerun to seek favorable variance. Both parity goals and historical heap debt remain open.
+
+
+Read-only review found no blocking issue in the scoped fix. A JS-only live update from16au could retain a raw-name legacy marker while new canonical lookup misses it; no supported live-update contract was found, APK install normally restarts the process. This remains another limitation of marker absence, not a strict ownership guarantee. Do not infer equivalence from native/model tests.
+
+
+16AW_DONE independently verified6guards/4reports/120toggles800emissions/4workloadboots+2tenktraceboots/APK-session-source-traceSHA; guard1459.4667SD96.7817->1375.6SD22.2731/no causalwin/equivalence. Reversedrelaunchmixed+29.9/-217.1/emitP95-.3/-.7/toggleP95+5.4/+15adverseboth/heapNotesadverseboth. All11channels: [native evidence](../benchmarks/android-native-marker-app-16aw-2026-10-30.md). Post440lib40tools1harness30e2e/librarybuildPASS, frozenAPKnotrebuilt. Proceedfirstfull16ay/16L21matchedacceptance;retention/meanheapguardsremainopen.10k[trace evidence](../benchmarks/android-relaunch-boundary-16ax-2026-10-30.md) provesvisiblepagequerystartsAFTERsummary-ready;do not pursueeagerqueryAPIasfixforthatmetricfromtheold50kinference.
+
+
+Full16ay/16L21COMPLETE+VERIFIED:shapes1PASS54PB31FAIL55/86;lists12PASS14PB3CB4FAIL29/33/genuinelistroot0+SHA/4controls6boots. No listmeanoversumSDvs16L20,but3shapeoversumSDvs16av. Marker-safety fixes remainprovisional/notnewperformancebaseline;no regressiondismissal orclosure. [All119metrics/adverse/evidence](../benchmarks/android-native-marker-acceptance-16ay-2026-10-30.md). Post440lib40tools1harness30e2e/buildPASS/noAPKrebuild. Next16azsettingsqueuingexperimentretainsmarkerfixesandmustremeasureagainstfrozen16aw+retainedreferences.

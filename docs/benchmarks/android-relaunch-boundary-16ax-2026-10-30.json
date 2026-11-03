@@ -1,0 +1,890 @@
+{
+  "diagnosticOnly": true,
+  "acceptanceCleared": false,
+  "traces": [
+    {
+      "probe": "P1",
+      "raw": ".tmp/16ax-relaunch-P1.json",
+      "rawSha256": "e332d7d338f1f0424ff94856e4294e81418806433d54b9233a9c66a1ecafec95",
+      "boot": "0ec87087-e686-4901-97d0-32f879631b37",
+      "apkSha256": "e0c50b90dcd0aa095308ed83316aa61ddfffaf6773fb103185c769ac2dcf1db1",
+      "readyMs": 1691.800000000003,
+      "firstNativeStartMs": 1304.199999999997,
+      "counts": {
+        "transaction": 1,
+        "method": "query",
+        "start": 1495.0999999999913,
+        "ms": 16.10000000000582,
+        "bytes": 1189,
+        "values": [
+          "false",
+          "todos",
+          "todos"
+        ],
+        "sql": [
+          "SELECT slot, payload FROM (\n              WITH counts AS MATERIALIZED (\n                SELECT COUNT(CASE WHEN (((COALESCE(json_type(data, '$.done') = ?, 0)))) THEN 1 END) AS c0,COUNT(CASE WHEN (1) TH"
+        ]
+      },
+      "visiblePageQuery": {
+        "transaction": 2,
+        "method": "query",
+        "start": 3333.5999999999913,
+        "ms": 59.80000000000291,
+        "bytes": 982,
+        "values": [
+          "id",
+          "pos",
+          "sortkey",
+          "data",
+          "promoted",
+          "todos",
+          "todos",
+          100,
+          100,
+          0
+        ],
+        "sql": [
+          "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"id\",?, \"pos\",?, \"sortkey\",?, \"data\",?, \"promo"
+        ]
+      },
+      "beforeReadyCalls": [
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 1304.199999999997,
+          "ms": 138.1999999999971,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 1304.5,
+          "ms": 139.6999999999971,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1304.5999999999913,
+          "ms": 146.70000000001164,
+          "bytes": 265,
+          "values": [],
+          "sql": [
+            "SELECT key, value, NULL AS name, NULL AS tbl_name, NULL AS sql FROM nss_meta\n             UNION ALL SELECT NULL, NULL, name, tbl_name, sql FROM sqlite_master WHERE type = 'index'"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1444.300000000003,
+          "ms": 19.39999999999418,
+          "bytes": 109,
+          "values": [],
+          "sql": [
+            "PRAGMA journal_mode=WAL"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1445.699999999997,
+          "ms": 23.69999999999709,
+          "bytes": 108,
+          "values": [],
+          "sql": [
+            "PRAGMA cache_size=-512"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "executeSet",
+          "start": 1466.300000000003,
+          "ms": 24.59999999999127,
+          "bytes": 665,
+          "values": [
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ]
+          ],
+          "sql": [
+            "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1469.199999999997,
+          "ms": 22.10000000000582,
+          "bytes": 3010,
+          "values": [
+            "path",
+            "parent",
+            "kind",
+            "pos",
+            "value",
+            "source",
+            "coll",
+            "id",
+            "data",
+            "sortkey",
+            "seq",
+            "ui",
+            "ui/",
+            "ui0",
+            "ui",
+            "ui/",
+            "ui0",
+            "ui",
+            "ui/",
+            "ui0",
+            "path",
+            "parent",
+            "kind",
+            "pos",
+            "value",
+            "source",
+            "coll",
+            "id",
+            "data",
+            "sortkey",
+            "seq",
+            "router",
+            "router/",
+            "router0",
+            "router",
+            "router/",
+            "router0",
+            "router",
+            "router/",
+            "router0"
+          ],
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"path\",?, \"parent\",?, \"kind\",?, \"pos\",?, \"valu"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1495.0999999999913,
+          "ms": 16.10000000000582,
+          "bytes": 1189,
+          "values": [
+            "false",
+            "todos",
+            "todos"
+          ],
+          "sql": [
+            "SELECT slot, payload FROM (\n              WITH counts AS MATERIALIZED (\n                SELECT COUNT(CASE WHEN (((COALESCE(json_type(data, '$.done') = ?, 0)))) THEN 1 END) AS c0,COUNT(CASE WHEN (1) TH"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1563,
+          "ms": 15.599999999991269,
+          "bytes": 1269,
+          "values": [
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0",
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0",
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "executeSet",
+          "start": 1589,
+          "ms": 84.5,
+          "bytes": 1569,
+          "values": [
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router",
+              null,
+              5,
+              null,
+              null,
+              "router/state",
+              "router",
+              5,
+              1,
+              null,
+              "router/state/root",
+              "router/state",
+              4,
+              1,
+              "{\"params\":{},\"data\":{},\"url\":[],\"outlet\":\"primary\",\"routeConfig\":null,\"queryParams\":{},\"fragment\":null,\"firstChild\":{\"params\":{},\"data\":{},\"url\":[{\"path\":\"todos\",\"parameters\":{}}],\"outlet\":\"primary\",\"routeConfig\":{\"path\":\"todos\",\"title\":\"Todos\"},\"queryParams\":{},\"fragment\":null,\"children\":[]},\"children\":[{\"params\":{},\"data\":{},\"url\":[{\"path\":\"todos\",\"parameters\":{}}],\"outlet\":\"primary\",\"routeConfig\":{\"path\":\"todos\",\"title\":\"Todos\"},\"queryParams\":{},\"fragment\":null,\"children\":[]}]}",
+              "router/state/url",
+              "router/state",
+              3,
+              2,
+              "\"/todos\"",
+              "router/navigationId",
+              "router",
+              2,
+              2,
+              "1"
+            ]
+          ],
+          "sql": [
+            "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1674.3999999999942,
+          "ms": 28.80000000000291,
+          "bytes": 1224,
+          "values": [
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0",
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0",
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        }
+      ],
+      "afterReadyCalls": [
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1703.8999999999942,
+          "ms": 9.19999999999709,
+          "bytes": 1215,
+          "values": [
+            "todos/query",
+            "todos/query/",
+            "todos/query0",
+            "todos/query",
+            "todos/query/",
+            "todos/query0",
+            "todos/query",
+            "todos/query/",
+            "todos/query0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1714.8999999999942,
+          "ms": 723,
+          "bytes": 1224,
+          "values": [
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0",
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0",
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 2441.800000000003,
+          "ms": 888.0999999999913,
+          "bytes": 1161,
+          "values": [
+            "users",
+            "users/",
+            "users0",
+            "users",
+            "users/",
+            "users0",
+            "users",
+            "users/",
+            "users0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 3333.5999999999913,
+          "ms": 59.80000000000291,
+          "bytes": 982,
+          "values": [
+            "id",
+            "pos",
+            "sortkey",
+            "data",
+            "promoted",
+            "todos",
+            "todos",
+            100,
+            100,
+            0
+          ],
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"id\",?, \"pos\",?, \"sortkey\",?, \"data\",?, \"promo"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 3400,
+          "ms": 69.5,
+          "bytes": 211,
+          "values": [
+            [
+              -1,
+              "ui/visited/#mvuaxusapvkq3c0cfb3"
+            ]
+          ],
+          "sql": [
+            "UPDATE nss_node SET pos = ? WHERE path = ?"
+          ]
+        }
+      ],
+      "longTasks": [
+        {
+          "kind": "longtask",
+          "at": 787.8999999999942,
+          "ms": 79
+        },
+        {
+          "kind": "longtask",
+          "at": 1186.0999999999913,
+          "ms": 62
+        },
+        {
+          "kind": "longtask",
+          "at": 1328.199999999997,
+          "ms": 109
+        },
+        {
+          "kind": "longtask",
+          "at": 1511.0999999999913,
+          "ms": 52
+        },
+        {
+          "kind": "longtask",
+          "at": 3400.5,
+          "ms": 68
+        }
+      ]
+    },
+    {
+      "probe": "P2",
+      "raw": ".tmp/16ax-relaunch-P2.json",
+      "rawSha256": "904526cd60a588c48dbc3032ffcffbe6682cc2769f54c773929cf449fea854f5",
+      "boot": "b38a3436-14d4-4ab0-906f-02d9f2a2795f",
+      "apkSha256": "e0c50b90dcd0aa095308ed83316aa61ddfffaf6773fb103185c769ac2dcf1db1",
+      "readyMs": 1500.9000000000087,
+      "firstNativeStartMs": 1179.4000000000087,
+      "counts": {
+        "transaction": 1,
+        "method": "query",
+        "start": 1322.800000000003,
+        "ms": 24.90000000000873,
+        "bytes": 1189,
+        "values": [
+          "false",
+          "todos",
+          "todos"
+        ],
+        "sql": [
+          "SELECT slot, payload FROM (\n              WITH counts AS MATERIALIZED (\n                SELECT COUNT(CASE WHEN (((COALESCE(json_type(data, '$.done') = ?, 0)))) THEN 1 END) AS c0,COUNT(CASE WHEN (1) TH"
+        ]
+      },
+      "visiblePageQuery": {
+        "transaction": 2,
+        "method": "query",
+        "start": 3141.300000000003,
+        "ms": 15.19999999999709,
+        "bytes": 982,
+        "values": [
+          "id",
+          "pos",
+          "sortkey",
+          "data",
+          "promoted",
+          "todos",
+          "todos",
+          100,
+          100,
+          0
+        ],
+        "sql": [
+          "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"id\",?, \"pos\",?, \"sortkey\",?, \"data\",?, \"promo"
+        ]
+      },
+      "beforeReadyCalls": [
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 1179.4000000000087,
+          "ms": 57.19999999999709,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 1179.7000000000116,
+          "ms": 101,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1179.7000000000116,
+          "ms": 108.69999999999709,
+          "bytes": 265,
+          "values": [],
+          "sql": [
+            "SELECT key, value, NULL AS name, NULL AS tbl_name, NULL AS sql FROM nss_meta\n             UNION ALL SELECT NULL, NULL, name, tbl_name, sql FROM sqlite_master WHERE type = 'index'"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1281,
+          "ms": 14.30000000000291,
+          "bytes": 109,
+          "values": [],
+          "sql": [
+            "PRAGMA journal_mode=WAL"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1281.1000000000058,
+          "ms": 21,
+          "bytes": 108,
+          "values": [],
+          "sql": [
+            "PRAGMA cache_size=-512"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "executeSet",
+          "start": 1297.800000000003,
+          "ms": 17.30000000000291,
+          "bytes": 665,
+          "values": [
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ]
+          ],
+          "sql": [
+            "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1301.800000000003,
+          "ms": 16.60000000000582,
+          "bytes": 3010,
+          "values": [
+            "path",
+            "parent",
+            "kind",
+            "pos",
+            "value",
+            "source",
+            "coll",
+            "id",
+            "data",
+            "sortkey",
+            "seq",
+            "ui",
+            "ui/",
+            "ui0",
+            "ui",
+            "ui/",
+            "ui0",
+            "ui",
+            "ui/",
+            "ui0",
+            "path",
+            "parent",
+            "kind",
+            "pos",
+            "value",
+            "source",
+            "coll",
+            "id",
+            "data",
+            "sortkey",
+            "seq",
+            "router",
+            "router/",
+            "router0",
+            "router",
+            "router/",
+            "router0",
+            "router",
+            "router/",
+            "router0"
+          ],
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"path\",?, \"parent\",?, \"kind\",?, \"pos\",?, \"valu"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1322.800000000003,
+          "ms": 24.90000000000873,
+          "bytes": 1189,
+          "values": [
+            "false",
+            "todos",
+            "todos"
+          ],
+          "sql": [
+            "SELECT slot, payload FROM (\n              WITH counts AS MATERIALIZED (\n                SELECT COUNT(CASE WHEN (((COALESCE(json_type(data, '$.done') = ?, 0)))) THEN 1 END) AS c0,COUNT(CASE WHEN (1) TH"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1407.2000000000116,
+          "ms": 11,
+          "bytes": 1269,
+          "values": [
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0",
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0",
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "executeSet",
+          "start": 1426.6000000000058,
+          "ms": 53.5,
+          "bytes": 1569,
+          "values": [
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router",
+              null,
+              5,
+              null,
+              null,
+              "router/state",
+              "router",
+              5,
+              1,
+              null,
+              "router/state/root",
+              "router/state",
+              4,
+              1,
+              "{\"params\":{},\"data\":{},\"url\":[],\"outlet\":\"primary\",\"routeConfig\":null,\"queryParams\":{},\"fragment\":null,\"firstChild\":{\"params\":{},\"data\":{},\"url\":[{\"path\":\"todos\",\"parameters\":{}}],\"outlet\":\"primary\",\"routeConfig\":{\"path\":\"todos\",\"title\":\"Todos\"},\"queryParams\":{},\"fragment\":null,\"children\":[]},\"children\":[{\"params\":{},\"data\":{},\"url\":[{\"path\":\"todos\",\"parameters\":{}}],\"outlet\":\"primary\",\"routeConfig\":{\"path\":\"todos\",\"title\":\"Todos\"},\"queryParams\":{},\"fragment\":null,\"children\":[]}]}",
+              "router/state/url",
+              "router/state",
+              3,
+              2,
+              "\"/todos\"",
+              "router/navigationId",
+              "router",
+              2,
+              2,
+              "1"
+            ]
+          ],
+          "sql": [
+            "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1480.6000000000058,
+          "ms": 30.89999999999418,
+          "bytes": 1224,
+          "values": [
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0",
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0",
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        }
+      ],
+      "afterReadyCalls": [
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1512.4000000000087,
+          "ms": 28.59999999999127,
+          "bytes": 1215,
+          "values": [
+            "todos/query",
+            "todos/query/",
+            "todos/query0",
+            "todos/query",
+            "todos/query/",
+            "todos/query0",
+            "todos/query",
+            "todos/query/",
+            "todos/query0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1541.7000000000116,
+          "ms": 1538.3999999999942,
+          "bytes": 1224,
+          "values": [
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0",
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0",
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 3080.7000000000116,
+          "ms": 58.29999999998836,
+          "bytes": 1161,
+          "values": [
+            "users",
+            "users/",
+            "users0",
+            "users",
+            "users/",
+            "users0",
+            "users",
+            "users/",
+            "users0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 3141.300000000003,
+          "ms": 15.19999999999709,
+          "bytes": 982,
+          "values": [
+            "id",
+            "pos",
+            "sortkey",
+            "data",
+            "promoted",
+            "todos",
+            "todos",
+            100,
+            100,
+            0
+          ],
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"id\",?, \"pos\",?, \"sortkey\",?, \"data\",?, \"promo"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 3163.800000000003,
+          "ms": 87.19999999999709,
+          "bytes": 212,
+          "values": [
+            [
+              -1,
+              "ui/visited/#mvub083l8eokat1b5933"
+            ]
+          ],
+          "sql": [
+            "UPDATE nss_node SET pos = ? WHERE path = ?"
+          ]
+        }
+      ],
+      "longTasks": [
+        {
+          "kind": "longtask",
+          "at": 1070.1000000000058,
+          "ms": 55
+        },
+        {
+          "kind": "longtask",
+          "at": 1347.6000000000058,
+          "ms": 59
+        },
+        {
+          "kind": "longtask",
+          "at": 3163.9000000000087,
+          "ms": 86
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Instrumentation perturbs timing; noCPU/SQLCPU/floor/paint inference.",
+    "Overlapping native wall spans are not additive; queries starting after ready cannot cause that earlier metric.",
+    "Summary matchingtotal is the existing readiness contract, not visible-list/paint completion.",
+    "Existing startup wrapper clips SQL to200characters; retained bound parameter names identify the page query."
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "label": "16aw",
+  "scope": "Marker-write failure and installed native-name aliases",
+  "baselineApk": ".tmp/16au-apks/sqlite.apk",
+  "baselineSha256": "70988b25c4994ce8894532396642317103c001e842627d99a2909afc831d5fc7",
+  "red": {
+    "file": ".tmp/16aw-marker-red.log",
+    "failed": 3,
+    "passed": 31
+  },
+  "green": {
+    "file": ".tmp/16aw-marker-green2.log",
+    "passed": 34
+  },
+  "source": {
+    "capacitor-sqlite-driver.ts": "61b0674f04ddb854038cd942afca7ae984fbd249dfa8d5d8e72fae050dc14350",
+    "capacitor-sqlite-driver.spec.ts": "1b3d7be5d76a638e3c0c490ed26e5751f8c655ada4cb6e9d355c68e555a00dd1"
+  },
+  "limitations": [
+    "Host mock/order tests, not physical native leak measurement.",
+    "Session marker absence remains a heuristic; clearing sessionStorage may remove protection.",
+    "No device benefit or acceptance claim yet.",
+    "Initial CRLF-specific edit assertion failed before mutation; green-named first attempt still3fail31pass retained. Corrected newline-preserving edit produced green2."
+  ],
+  "nativeNormalizationSource": {
+    "javascript": "node_modules/@capacitor-community/sqlite/dist/esm/definitions.js",
+    "android": "node_modules/@capacitor-community/sqlite/android/src/main/java/com/getcapacitor/community/database/sqlite/CapacitorSQLite.java"
+  }
+}

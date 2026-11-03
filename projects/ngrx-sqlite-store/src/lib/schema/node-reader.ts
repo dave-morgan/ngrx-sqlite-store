@@ -146,16 +146,29 @@ export async function readSubtree(
     | (EntityRow & { source: 1 })
     | { path: string; seq: number; data: string; source: 2 }
   >(
+    // ADR-0070: `key = ? OR (key >= ? AND key < ?)` plans as MULTI-INDEX OR, which on these
+    // WITHOUT ROWID tables cost ~185 ms for an empty 10k-collection lookup on Android; an
+    // equality arm plus a disjoint range arm (the path itself is outside [path/, path0))
+    // uses the primary key directly (~9 ms). Parameter order is unchanged.
     `SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (
       SELECT path, parent, kind, pos, value, 0 AS source,
         NULL AS coll, NULL AS id, NULL AS data, NULL AS sortkey, NULL AS seq
-      FROM nss_node WHERE path = ? OR (path >= ? AND path < ?)
+      FROM nss_node WHERE path = ?
+      UNION ALL
+      SELECT path, parent, kind, pos, value, 0, NULL, NULL, NULL, NULL, NULL
+      FROM nss_node WHERE path >= ? AND path < ?
       UNION ALL
       SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL
-      FROM nss_entity WHERE coll = ? OR (coll >= ? AND coll < ?)
+      FROM nss_entity WHERE coll = ?
+      UNION ALL
+      SELECT NULL, coll, NULL, pos, NULL, 1, coll, id, data, sortkey, NULL
+      FROM nss_entity WHERE coll >= ? AND coll < ?
       UNION ALL
       SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq
-      FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?)
+      FROM nss_chunk WHERE path = ?
+      UNION ALL
+      SELECT path, path, NULL, NULL, NULL, 2, NULL, NULL, data, NULL, seq
+      FROM nss_chunk WHERE path >= ? AND path < ?
     ) ORDER BY source, parent, sortkey, pos, seq`,
     [path, lower, upper, path, lower, upper, path, lower, upper],
   );
@@ -185,13 +198,15 @@ export async function readSubtreeCte(
   );
   const entities = rows.some((row) => row.kind === NodeKind.Entity)
     ? await exec.query<EntityRow>(
-        'SELECT coll,id,pos,data,sortkey FROM nss_entity WHERE coll = ? OR (coll >= ? AND coll < ?) ORDER BY coll,sortkey,pos',
+        'SELECT coll,id,pos,data,sortkey FROM nss_entity WHERE coll = ? UNION ALL ' +
+          'SELECT coll,id,pos,data,sortkey FROM nss_entity WHERE coll >= ? AND coll < ? ORDER BY coll,sortkey,pos',
         [path, ...subtreeRange(path)],
       )
     : [];
   const chunks = rows.some((row) => row.kind === NodeKind.Chunked)
     ? await exec.query<{ path: string; seq: number; data: string }>(
-        'SELECT path,seq,data FROM nss_chunk WHERE path = ? OR (path >= ? AND path < ?) ORDER BY path,seq',
+        'SELECT path,seq,data FROM nss_chunk WHERE path = ? UNION ALL ' +
+          'SELECT path,seq,data FROM nss_chunk WHERE path >= ? AND path < ? ORDER BY path,seq',
         [path, ...subtreeRange(path)],
       )
     : [];

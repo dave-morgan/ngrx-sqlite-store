@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { benchmarkSerial } from './android-benchmark-target.mjs';
 // Phase 15f seed ladder: morph the F_seed control into the store's bulk entity insert one
 // feature at a time, on a scratch database, using the store's real persisted rows.
 // --size 50000 [--samples 6] [--steps a,b] [--serial emulator-5554] [--output FILE]
@@ -11,7 +12,7 @@ import { execAdb } from './android-adb.mjs';
 const argv = process.argv.slice(2);
 const option = (name, fallback) => argv.includes(`--${name}`) ? argv[argv.indexOf(`--${name}`) + 1] : fallback;
 const adbFile = process.env.BENCH_ADB ?? join(process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT, 'platform-tools', 'adb.exe');
-const adb = (...args) => execAdb(adbFile, ['-s', option('serial', 'emulator-5554'), ...args], {
+const adb = (...args) => execAdb(adbFile, ['-s', benchmarkSerial(option('serial')), ...args], {
   encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
 });
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

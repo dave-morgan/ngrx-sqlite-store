@@ -1,0 +1,387 @@
+{
+  "session": "16bd2-transient-watch",
+  "verified": {
+    "watchLifetimes": 201,
+    "timedActions": 200,
+    "watchEmits": 401,
+    "nativeAtomicUpdates": 200,
+    "restoration": {
+      "methodsRestored": true,
+      "temporaryStoreRemoved": true,
+      "methodCount": 23,
+      "stats": {
+        "entries": 10,
+        "references": 11,
+        "scalarReferences": 0
+      }
+    },
+    "tableCounts": [
+      {
+        "name": "nss_node",
+        "total": 24
+      },
+      {
+        "name": "nss_chunk",
+        "total": 0
+      },
+      {
+        "name": "nss_entity",
+        "total": 50012
+      },
+      {
+        "name": "nss_meta",
+        "total": 6
+      }
+    ],
+    "boot": "01f4fed4-c59c-42ce-af49-09d79c4682ca",
+    "installedHash": "e0c50b90dcd0aa095308ed83316aa61ddfffaf6773fb103185c769ac2dcf1db1",
+    "rawSha256": "9a9bfde3a1e0527c0229f035c15c3847bbd7bb62295274a6c2b43fab7cc21a48",
+    "manifestSha256": "0b958cb1ac62eec572da5b20cc143ee8084445f83680e5d575d8fa17520f901e"
+  },
+  "emission": {
+    "n": 200,
+    "mean": 6.033999999999942,
+    "sd": 0.7580350159634477,
+    "p50": 5.80000000000291,
+    "p95": 7.69999999999709,
+    "max": 9.19999999999709
+  },
+  "native": {
+    "n": 200,
+    "mean": 3.3309999999999853,
+    "sd": 0.496357587100419,
+    "p50": 3.1999999999970896,
+    "p95": 4.5,
+    "max": 5.900000000008731
+  },
+  "emissionMinusNative": {
+    "n": 200,
+    "mean": 2.7029999999999563,
+    "sd": 0.3738849418582253,
+    "p50": 2.6000000000058208,
+    "p95": 3.499999999985448,
+    "max": 4.2000000000116415
+  },
+  "byLabel": {
+    "watch.setup": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.3185000000004948,
+        "sd": 0.13638458039246523,
+        "p50": 0.3000000000029104,
+        "p95": 0.6000000000058208,
+        "max": 1.2999999999883585
+      }
+    },
+    "cache.registerQueries": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.011999999999898137,
+        "sd": 0.03257769992871349,
+        "p50": 0,
+        "p95": 0.10000000000582077,
+        "max": 0.10000000000582077
+      }
+    },
+    "core.selectionReady": {
+      "calls": 6400,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.4504999999996653,
+        "sd": 0.19439314151296583,
+        "p50": 0.40000000000873115,
+        "p95": 0.7999999999883585,
+        "max": 1.2000000000116415
+      }
+    },
+    "cache.ready": {
+      "calls": 4400,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.28749999999883585,
+        "sd": 0.15463931124758704,
+        "p50": 0.29999999998835847,
+        "p95": 0.5999999999767169,
+        "max": 0.8000000000174623
+      }
+    },
+    "cache.retain": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.050499999999592544,
+        "sd": 0.06179679782202496,
+        "p50": 0,
+        "p95": 0.10000000000582077,
+        "max": 0.39999999999417923
+      }
+    },
+    "cache.recount": {
+      "calls": 400,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.04900000000016007,
+        "sd": 0.06418409452453136,
+        "p50": 0,
+        "p95": 0.19999999999708962,
+        "max": 0.20000000001164153
+      }
+    },
+    "watch.emit": {
+      "calls": 400,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.2544999999995343,
+        "sd": 0.10741246289889728,
+        "p50": 0.20000000001164153,
+        "p95": 0.4999999999854481,
+        "max": 0.8000000000029104
+      }
+    },
+    "watch.stop": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.205,
+        "sd": 0.08312368939527258,
+        "p50": 0.19999999999708962,
+        "p95": 0.39999999999417923,
+        "max": 0.5
+      }
+    },
+    "cache.release": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.08600000000071305,
+        "sd": 0.06500096636395886,
+        "p50": 0.10000000000582077,
+        "p95": 0.20000000001164153,
+        "max": 0.40000000000873115
+      }
+    },
+    "cache.evict": {
+      "calls": 400,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.032999999999738065,
+        "sd": 0.05315191086072418,
+        "p50": 0,
+        "p95": 0.10000000000582077,
+        "max": 0.20000000001164153
+      }
+    },
+    "cache.whenEvicted": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.06849999999940337,
+        "sd": 0.061454317714774435,
+        "p50": 0.09999999999126885,
+        "p95": 0.19999999999708962,
+        "max": 0.39999999999417923
+      }
+    },
+    "cleanup.register": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.01599999999998545,
+        "sd": 0.03675260220503801,
+        "p50": 0,
+        "p95": 0.10000000000582077,
+        "max": 0.10000000000582077
+      }
+    },
+    "store.dispatch": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.08599999999983993,
+        "sd": 0.08626242536700963,
+        "p50": 0.09999999999126885,
+        "p95": 0.29999999998835847,
+        "max": 0.6000000000058208
+      }
+    },
+    "core.enqueue": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.03150000000045111,
+        "sd": 0.06386032182492223,
+        "p50": 0,
+        "p95": 0.10000000000582077,
+        "max": 0.5
+      }
+    },
+    "previousWork": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.09649999999979628,
+        "sd": 0.08469721418356488,
+        "p50": 0.09999999999126885,
+        "p95": 0.20000000001164153,
+        "max": 0.5
+      }
+    },
+    "currentPipeline": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 6.093499999999477,
+        "sd": 0.7667773388913969,
+        "p50": 5.899999999994179,
+        "p95": 7.899999999994179,
+        "max": 9.19999999999709
+      }
+    },
+    "engine.transaction": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 3.481000000000058,
+        "sd": 0.5343845377358557,
+        "p50": 3.3000000000029104,
+        "p95": 4.7000000000116415,
+        "max": 6.19999999999709
+      }
+    },
+    "native.executeSet": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 3.3309999999999853,
+        "sd": 0.496357587100419,
+        "p50": 3.1999999999970896,
+        "p95": 4.5,
+        "max": 5.900000000008731
+      }
+    },
+    "selection.refresh": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 2.495000000000218,
+        "sd": 0.36170311821771733,
+        "p50": 2.400000000008731,
+        "p95": 3.1999999999970896,
+        "max": 4.399999999994179
+      }
+    },
+    "core.selectionFeatures": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.017000000000116415,
+        "sd": 0.042662635907019526,
+        "p50": 0,
+        "p95": 0.10000000000582077,
+        "max": 0.3000000000029104
+      }
+    },
+    "cache.refresh": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.09849999999962165,
+        "sd": 0.0668588102089855,
+        "p50": 0.10000000000582077,
+        "p95": 0.20000000001164153,
+        "max": 0.3000000000029104
+      }
+    },
+    "engine.read": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.07049999999959254,
+        "sd": 0.06081316638739974,
+        "p50": 0.09999999999126885,
+        "p95": 0.19999999999708962,
+        "max": 0.20000000001164153
+      }
+    },
+    "cache.refreshEntry": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.032999999999738065,
+        "sd": 0.049225151882430165,
+        "p50": 0,
+        "p95": 0.10000000000582077,
+        "max": 0.19999999999708962
+      }
+    },
+    "cache.notify": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 1.8309999999998399,
+        "sd": 0.29062227466687335,
+        "p50": 1.7000000000116415,
+        "p95": 2.3999999999941792,
+        "max": 3.3000000000029104
+      }
+    },
+    "cache.publish": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 1.774999999999709,
+        "sd": 0.2894718809292027,
+        "p50": 1.6999999999970896,
+        "p95": 2.3000000000029104,
+        "max": 3.1999999999970896
+      }
+    },
+    "selection.publishView": {
+      "calls": 200,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.1305000000003929,
+        "sd": 0.07448145700194511,
+        "p50": 0.10000000000582077,
+        "p95": 0.20000000001164153,
+        "max": 0.5
+      }
+    },
+    "cache.queryValues": {
+      "calls": 1400,
+      "perActionInclusiveWall": {
+        "n": 200,
+        "mean": 0.08400000000008731,
+        "sd": 0.08935278170209401,
+        "p50": 0.09999999999126885,
+        "p95": 0.20000000001164153,
+        "max": 0.39999999999417923
+      }
+    }
+  },
+  "evictionParents": {
+    "cache.release": {
+      "n": 200,
+      "mean": 0.018499999999767168,
+      "sd": 0.04019737734855596,
+      "p50": 0,
+      "p95": 0.10000000000582077,
+      "max": 0.20000000001164153
+    },
+    "cache.notify": {
+      "n": 200,
+      "mean": 0.014499999999970896,
+      "sd": 0.03669444661052103,
+      "p50": 0,
+      "p95": 0.10000000000582077,
+      "max": 0.19999999999708962
+    }
+  },
+  "limitations": [
+    "Watch emit/stop nested inside publication; instrumentation adds wall overhead and promise microtasks. Not an uninstrumented benchmark. Nested async method spans include scheduling/native waits and instrumentation; not additive CPU/acceptance/floors.",
+    "No GC, heap/PSS or CPU capture. Promise observers add microtasks; diagnostic only. Original hook exports samples only on success; errors preserve collected wall/native rows.",
+    "Synchronous parent indices do not establish async ancestry. Nested spans must not be summed as independent CPU. No raw uninstrumented gain, floor or acceptance claim. Initial untimed count read retained as its own watch group."
+  ]
+}

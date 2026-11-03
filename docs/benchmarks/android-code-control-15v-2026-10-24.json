@@ -1,0 +1,319 @@
+{
+  "workload": {
+    "togglesBeforeNotes": 30,
+    "toggleGapMs": 20
+  },
+  "date": "2026-10-24",
+  "session": "15v-audit-1792842484",
+  "device": "sdk_gphone64_x86_64",
+  "sdkLevel": "35",
+  "webview": "com.google.android.webview, 154.0.8037.106",
+  "apkHashes": {
+    "classic": "a09c5f0f3252e7a085cf0b93c28d12a16a2b4cd5858f1dac0fd1c26bd3d69e79",
+    "sqlite": "bdb5b0b95bd13ca5c9c989d6339883bf4733c22dae915f093738b8c6521acd2a"
+  },
+  "size": 1000,
+  "trials": 5,
+  "results": [
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 1,
+      "point": "todos",
+      "heapMb": 4.620147705078125,
+      "codeMb": 1.9110565185546875,
+      "dataMb": 2.2488059997558594
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 1,
+      "point": "notes",
+      "heapMb": 5.165607452392578,
+      "codeMb": 2.354400634765625,
+      "dataMb": 2.266857147216797
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 1,
+      "point": "relaunch",
+      "heapMb": 4.565608978271484,
+      "codeMb": 1.870941162109375,
+      "dataMb": 2.2428741455078125
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 1,
+      "point": "todos",
+      "heapMb": 5.355106353759766,
+      "codeMb": 2.726715087890625,
+      "dataMb": 2.1161880493164062
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 1,
+      "point": "notes",
+      "heapMb": 6.096122741699219,
+      "codeMb": 3.3513145446777344,
+      "dataMb": 2.141510009765625
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 1,
+      "point": "relaunch",
+      "heapMb": 4.898597717285156,
+      "codeMb": 2.3964614868164062,
+      "dataMb": 2.0372276306152344
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 2,
+      "point": "todos",
+      "heapMb": 5.348297119140625,
+      "codeMb": 2.714893341064453,
+      "dataMb": 2.1197547912597656
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 2,
+      "point": "notes",
+      "heapMb": 6.097827911376953,
+      "codeMb": 3.34344482421875,
+      "dataMb": 2.1467437744140625
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 2,
+      "point": "relaunch",
+      "heapMb": 4.8990631103515625,
+      "codeMb": 2.3969459533691406,
+      "dataMb": 2.0372047424316406
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 2,
+      "point": "todos",
+      "heapMb": 4.619876861572266,
+      "codeMb": 1.910888671875,
+      "dataMb": 2.248737335205078
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 2,
+      "point": "notes",
+      "heapMb": 5.162445068359375,
+      "codeMb": 2.3515472412109375,
+      "dataMb": 2.2667579650878906
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 2,
+      "point": "relaunch",
+      "heapMb": 4.566436767578125,
+      "codeMb": 1.8760910034179688,
+      "dataMb": 2.2391204833984375
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 3,
+      "point": "todos",
+      "heapMb": 4.619052886962891,
+      "codeMb": 1.9098625183105469,
+      "dataMb": 2.248737335205078
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 3,
+      "point": "notes",
+      "heapMb": 5.1650390625,
+      "codeMb": 2.353851318359375,
+      "dataMb": 2.2667579650878906
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 3,
+      "point": "relaunch",
+      "heapMb": 4.568580627441406,
+      "codeMb": 1.8780097961425781,
+      "dataMb": 2.2392044067382812
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 3,
+      "point": "todos",
+      "heapMb": 5.3258056640625,
+      "codeMb": 2.702472686767578,
+      "dataMb": 2.108856201171875
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 3,
+      "point": "notes",
+      "heapMb": 6.0988006591796875,
+      "codeMb": 3.345661163330078,
+      "dataMb": 2.1452789306640625
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 3,
+      "point": "relaunch",
+      "heapMb": 4.9600067138671875,
+      "codeMb": 2.3966293334960938,
+      "dataMb": 2.0988502502441406
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 4,
+      "point": "todos",
+      "heapMb": 5.369594573974609,
+      "codeMb": 2.745464324951172,
+      "dataMb": 2.109477996826172
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 4,
+      "point": "notes",
+      "heapMb": 6.097320556640625,
+      "codeMb": 3.3529434204101562,
+      "dataMb": 2.1408004760742188
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 4,
+      "point": "relaunch",
+      "heapMb": 4.960132598876953,
+      "codeMb": 2.3965530395507812,
+      "dataMb": 2.0987205505371094
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 4,
+      "point": "todos",
+      "heapMb": 4.6184234619140625,
+      "codeMb": 1.9094085693359375,
+      "dataMb": 2.248737335205078
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 4,
+      "point": "notes",
+      "heapMb": 5.163990020751953,
+      "codeMb": 2.3528900146484375,
+      "dataMb": 2.2667579650878906
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 4,
+      "point": "relaunch",
+      "heapMb": 4.567878723144531,
+      "codeMb": 1.8774299621582031,
+      "dataMb": 2.2391510009765625
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 5,
+      "point": "todos",
+      "heapMb": 4.625553131103516,
+      "codeMb": 1.9156723022460938,
+      "dataMb": 2.248737335205078
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 5,
+      "point": "notes",
+      "heapMb": 5.159534454345703,
+      "codeMb": 2.347942352294922,
+      "dataMb": 2.2667579650878906
+    },
+    {
+      "kind": "workload-code",
+      "impl": "classic",
+      "size": 1000,
+      "trial": 5,
+      "point": "relaunch",
+      "heapMb": 4.56683349609375,
+      "codeMb": 1.8765220642089844,
+      "dataMb": 2.2391204833984375
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 5,
+      "point": "todos",
+      "heapMb": 5.322639465332031,
+      "codeMb": 2.7007484436035156,
+      "dataMb": 2.108875274658203
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 5,
+      "point": "notes",
+      "heapMb": 6.0935211181640625,
+      "codeMb": 3.350139617919922,
+      "dataMb": 2.140228271484375
+    },
+    {
+      "kind": "workload-code",
+      "impl": "sqlite",
+      "size": 1000,
+      "trial": 5,
+      "point": "relaunch",
+      "heapMb": 4.898612976074219,
+      "codeMb": 2.396648406982422,
+      "dataMb": 2.037322998046875
+    }
+  ]
+}

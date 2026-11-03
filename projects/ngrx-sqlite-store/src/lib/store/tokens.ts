@@ -35,6 +35,7 @@ export interface SelectionEngine {
 }
 export interface CommittedCache {
   peek(fullPath: string): unknown | undefined;
+  ready?(fullPath: string): boolean;
 }
 export const SELECTION_ENGINE = new InjectionToken<SelectionEngine>('NSS selection engine');
 export const COMMITTED_CACHE = new InjectionToken<CommittedCache>('NSS committed cache', {

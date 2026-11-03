@@ -15,11 +15,12 @@ test('ADR-0057 uses mean pre-shrink seed app PSS growth only for post-seed devic
   const platform = { classic: { n: 5, mean: 20, sd: 90 }, sqlite: { n: 5, mean: 23, sd: 90 },
     justification: 'paired empty controls', seed };
   const classic = { mean: 100, sd: 2 };
-  assert.equal(verdict(classic, { mean: 112, sd: 100 }, undefined, undefined, platform).status, 'PLATFORM-BOUND');
-  assert.equal(verdict(classic, { mean: 112.001, sd: 100 }, undefined, undefined, platform).status, 'FAIL');
+  // ADR-0070: plugin baseline (23 - 20) plus seed increment (10) plus classic SD (2).
+  assert.equal(verdict(classic, { mean: 115, sd: 100 }, undefined, undefined, platform).status, 'PLATFORM-BOUND');
+  assert.equal(verdict(classic, { mean: 115.001, sd: 100 }, undefined, undefined, platform).status, 'FAIL');
   assert.equal(verdict(classic, { mean: 101, sd: 100 }, undefined, undefined, platform).status, 'PASS');
   const largerEmpty = { ...platform, sqlite: { ...platform.sqlite, mean: 35 } };
-  assert.equal(verdict(classic, { mean: 117, sd: 100 }, undefined, undefined, largerEmpty).allowance, 17);
+  assert.equal(verdict(classic, { mean: 117, sd: 100 }, undefined, undefined, largerEmpty).allowance, 27);
   for (const metric of ['heapTodosMb', 'heapNotesMb', 'heapRelaunchMb', 'pssRelaunchTotalMb', 'firstReadyMs']) {
     const seed = seedMemoryFloor(rows, 1000, metric);
     assert.equal(seed, undefined);

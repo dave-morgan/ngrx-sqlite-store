@@ -1,5 +1,5 @@
 import type { SqlValue } from '../driver/sql-driver';
-import type { SqlReader } from './query-selector';
+import type { EntityCountPlan, SqlReader } from './query-selector';
 
 /** Only infer unambiguous, explicitly aliased projections. SQLite renames duplicate
  * columns in subqueries, which differs from the driver's last-column-wins rows. */
@@ -60,9 +60,13 @@ interface Request {
   statement: string;
   params: SqlValue[];
   columns: readonly string[];
+  entityCount?: EntityCountPlan;
   resolve: (rows: unknown[]) => void;
   reject: (error: unknown) => void;
 }
+
+/** Row shape of the subtree reader (node-reader readSubtree) for batched transports. */
+export const SUBTREE_COLUMNS = ['path', 'parent', 'kind', 'pos', 'value', 'source', 'coll', 'id', 'data', 'sortkey', 'seq'];
 
 /** Coalesce concurrent, known-shape read transports without changing readers. */
 export function queryBatch(sql: SqlReader): SqlReader {
@@ -84,7 +88,43 @@ export function queryBatch(sql: SqlReader): SqlReader {
           start++;
         }
         const params: SqlValue[] = [];
-        const statements = batch.map((request, index) => {
+        const groups = new Map<string, number[]>();
+        batch.forEach((request, index) => {
+          if (!request.entityCount || request.columns.join(',') !== 'id,value') return;
+          const group = groups.get(request.entityCount.path) ?? [];
+          group.push(index);
+          groups.set(request.entityCount.path, group);
+        });
+        const grouped = new Set<number>();
+        const statements: string[] = [];
+        batch.forEach((request, index) => {
+          if (grouped.has(index)) return;
+          const group = request.entityCount && groups.get(request.entityCount.path);
+          if (group && group.length > 1 && group.includes(index) &&
+            group.some((slot) => batch[slot].entityCount!.predicate === '1')) {
+            // The plan comes only from the entity reader's compiled predicates.
+            // Scope the CTEs inside this subquery, away from arbitrary readers.
+            const counts = group.map((slot, field) => {
+              grouped.add(slot);
+              const plan = batch[slot].entityCount!;
+              params.push(...plan.params);
+              return `COUNT(CASE WHEN (${plan.predicate}) THEN 1 END) AS c${field}`;
+            });
+            params.push(request.entityCount!.path, request.entityCount!.path);
+            statements.push(`SELECT slot, payload FROM (
+              WITH counts AS MATERIALIZED (
+                SELECT ${counts.join(',')} FROM nss_entity
+                WHERE coll = ? AND data != '' AND json_valid(data)
+              ), promoted AS MATERIALIZED (
+                SELECT id FROM nss_entity WHERE coll = ? AND data = ''
+              ) ${group.map((slot, field) => `SELECT ${slot} AS slot,
+                CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload
+                FROM (SELECT json_group_array(json_object('id',id,'value',value)) AS payload
+                  FROM (SELECT id,NULL AS value FROM promoted UNION ALL SELECT NULL,c${field} FROM counts))`
+              ).join(' UNION ALL ')}
+            )`);
+            return;
+          }
           const pairs = request.columns
             .map((column) => {
               return `?, "${column.replace(/"/g, '""')}"`;
@@ -92,8 +132,8 @@ export function queryBatch(sql: SqlReader): SqlReader {
             .join(',');
           // Parameters in the object expression precede the subquery's parameters.
           params.push(...request.columns, ...request.params);
-          return `SELECT ${index} AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload
-            FROM (SELECT json_group_array(json_object(${pairs})) AS payload FROM (${request.statement.replace(/;\s*$/, '')}))`;
+          statements.push(`SELECT ${index} AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload
+            FROM (SELECT json_group_array(json_object(${pairs})) AS payload FROM (${request.statement.replace(/;\s*$/, '')}))`);
         });
         let rows: { slot: number; payload: string | null }[];
         try {
@@ -122,13 +162,14 @@ export function queryBatch(sql: SqlReader): SqlReader {
     }
   }
   return {
-    query: <R>(statement: string, params: SqlValue[] = [], columns?: readonly string[]) => {
+    query: <R>(statement: string, params: SqlValue[] = [], columns?: readonly string[], entityCount?: EntityCountPlan) => {
       if (!columns || params.length + columns.length > 999) return sql.query<R>(statement, params);
       return new Promise<R[]>((resolve, reject) => {
         pending.push({
           statement,
           params,
           columns,
+          entityCount,
           resolve: (rows) => resolve(rows as R[]),
           reject,
         });

@@ -1,0 +1,4193 @@
+{
+  "session": "16ac-count-cover",
+  "pkg": "dev.ngrxsqlite.harness.sqlite",
+  "installedApkHash": "8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5",
+  "boot": "048283ab-f09b-48b1-9395-004eed8b1aa9",
+  "diagnosticOnly": true,
+  "protocol": "Retained16r Boolean-only production count SQL; narrowpartial(coll,json_type)index,forced-old/forced-type/auto reads,plans+VDBE+pagecounts,verified cleanup. Changed SQL/index versus16q;not acceptance/floor/CPU/heap capture.",
+  "seedSummary": " 32487 open · 50000 total ",
+  "sourceCaptureSha256": "afb36bb0ac6af465b41879aeddd41a481217588032d83826effb1c08f7b9ad80",
+  "sql": "SELECT slot, payload FROM (\n              WITH counts AS MATERIALIZED (\n                SELECT COUNT(CASE WHEN (((COALESCE(json_type(data, '$.done') = ?, 0)))) THEN 1 END) AS c0,COUNT(CASE WHEN (1) THEN 1 END) AS c1 FROM nss_entity\n                WHERE coll = ? AND data != '' AND json_valid(data)\n              ), promoted AS MATERIALIZED (\n                SELECT id FROM nss_entity WHERE coll = ? AND data = ''\n              ) SELECT 0 AS slot,\n                CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n                FROM (SELECT json_group_array(json_object('id',id,'value',value)) AS payload\n                  FROM (SELECT id,NULL AS value FROM promoted UNION ALL SELECT NULL,c0 FROM counts)) UNION ALL SELECT 1 AS slot,\n                CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n                FROM (SELECT json_group_array(json_object('id',id,'value',value)) AS payload\n                  FROM (SELECT id,NULL AS value FROM promoted UNION ALL SELECT NULL,c1 FROM counts))\n            )",
+  "values": [
+    "false",
+    "todos",
+    "todos"
+  ],
+  "observations": [
+    {
+      "round": -3,
+      "mode": "cover",
+      "warmup": true,
+      "ms": 41.19999999999709
+    },
+    {
+      "round": -3,
+      "mode": "old",
+      "warmup": true,
+      "ms": 78
+    },
+    {
+      "round": -3,
+      "mode": "auto",
+      "warmup": true,
+      "ms": 55.09999999999127
+    },
+    {
+      "round": -2,
+      "mode": "old",
+      "warmup": true,
+      "ms": 82.69999999999709
+    },
+    {
+      "round": -2,
+      "mode": "cover",
+      "warmup": true,
+      "ms": 41.40000000000873
+    },
+    {
+      "round": -2,
+      "mode": "auto",
+      "warmup": true,
+      "ms": 51.20000000001164
+    },
+    {
+      "round": -1,
+      "mode": "cover",
+      "warmup": true,
+      "ms": 43.20000000001164
+    },
+    {
+      "round": -1,
+      "mode": "old",
+      "warmup": true,
+      "ms": 88.5
+    },
+    {
+      "round": -1,
+      "mode": "auto",
+      "warmup": true,
+      "ms": 57.5
+    },
+    {
+      "round": 0,
+      "mode": "old",
+      "warmup": false,
+      "ms": 86.5
+    },
+    {
+      "round": 0,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 56.29999999998836
+    },
+    {
+      "round": 0,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 62.10000000000582
+    },
+    {
+      "round": 1,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 43.40000000000873
+    },
+    {
+      "round": 1,
+      "mode": "old",
+      "warmup": false,
+      "ms": 95.5
+    },
+    {
+      "round": 1,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 51.19999999999709
+    },
+    {
+      "round": 2,
+      "mode": "old",
+      "warmup": false,
+      "ms": 81
+    },
+    {
+      "round": 2,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 49
+    },
+    {
+      "round": 2,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 60.69999999999709
+    },
+    {
+      "round": 3,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 42.5
+    },
+    {
+      "round": 3,
+      "mode": "old",
+      "warmup": false,
+      "ms": 84.5
+    },
+    {
+      "round": 3,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 53.5
+    },
+    {
+      "round": 4,
+      "mode": "old",
+      "warmup": false,
+      "ms": 81
+    },
+    {
+      "round": 4,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 41.30000000000291
+    },
+    {
+      "round": 4,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 53.69999999999709
+    },
+    {
+      "round": 5,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 40.79999999998836
+    },
+    {
+      "round": 5,
+      "mode": "old",
+      "warmup": false,
+      "ms": 80.89999999999418
+    },
+    {
+      "round": 5,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 51.60000000000582
+    },
+    {
+      "round": 6,
+      "mode": "old",
+      "warmup": false,
+      "ms": 81.69999999999709
+    },
+    {
+      "round": 6,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 43.09999999999127
+    },
+    {
+      "round": 6,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 52.80000000000291
+    },
+    {
+      "round": 7,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 41.80000000000291
+    },
+    {
+      "round": 7,
+      "mode": "old",
+      "warmup": false,
+      "ms": 80.89999999999418
+    },
+    {
+      "round": 7,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 52.5
+    },
+    {
+      "round": 8,
+      "mode": "old",
+      "warmup": false,
+      "ms": 79.5
+    },
+    {
+      "round": 8,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 43.30000000000291
+    },
+    {
+      "round": 8,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 53.60000000000582
+    },
+    {
+      "round": 9,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 41.10000000000582
+    },
+    {
+      "round": 9,
+      "mode": "old",
+      "warmup": false,
+      "ms": 79.10000000000582
+    },
+    {
+      "round": 9,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 54.10000000000582
+    },
+    {
+      "round": 10,
+      "mode": "old",
+      "warmup": false,
+      "ms": 80.19999999999709
+    },
+    {
+      "round": 10,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 41
+    },
+    {
+      "round": 10,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 52.20000000001164
+    },
+    {
+      "round": 11,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 40.30000000000291
+    },
+    {
+      "round": 11,
+      "mode": "old",
+      "warmup": false,
+      "ms": 82.89999999999418
+    },
+    {
+      "round": 11,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 52.69999999999709
+    },
+    {
+      "round": 12,
+      "mode": "old",
+      "warmup": false,
+      "ms": 78.89999999999418
+    },
+    {
+      "round": 12,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 44.10000000000582
+    },
+    {
+      "round": 12,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 52.5
+    },
+    {
+      "round": 13,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 42
+    },
+    {
+      "round": 13,
+      "mode": "old",
+      "warmup": false,
+      "ms": 80.90000000000873
+    },
+    {
+      "round": 13,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 51.19999999999709
+    },
+    {
+      "round": 14,
+      "mode": "old",
+      "warmup": false,
+      "ms": 79.69999999999709
+    },
+    {
+      "round": 14,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 43.69999999999709
+    },
+    {
+      "round": 14,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 58.80000000000291
+    },
+    {
+      "round": 15,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 42.19999999999709
+    },
+    {
+      "round": 15,
+      "mode": "old",
+      "warmup": false,
+      "ms": 80.60000000000582
+    },
+    {
+      "round": 15,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 51.10000000000582
+    },
+    {
+      "round": 16,
+      "mode": "old",
+      "warmup": false,
+      "ms": 85.5
+    },
+    {
+      "round": 16,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 41.5
+    },
+    {
+      "round": 16,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 51.89999999999418
+    },
+    {
+      "round": 17,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 40.59999999999127
+    },
+    {
+      "round": 17,
+      "mode": "old",
+      "warmup": false,
+      "ms": 79
+    },
+    {
+      "round": 17,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 58.09999999999127
+    },
+    {
+      "round": 18,
+      "mode": "old",
+      "warmup": false,
+      "ms": 80.10000000000582
+    },
+    {
+      "round": 18,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 41.69999999999709
+    },
+    {
+      "round": 18,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 52.30000000000291
+    },
+    {
+      "round": 19,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 41.30000000000291
+    },
+    {
+      "round": 19,
+      "mode": "old",
+      "warmup": false,
+      "ms": 79.69999999999709
+    },
+    {
+      "round": 19,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 51.09999999999127
+    },
+    {
+      "round": 20,
+      "mode": "old",
+      "warmup": false,
+      "ms": 87.69999999999709
+    },
+    {
+      "round": 20,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 43.30000000000291
+    },
+    {
+      "round": 20,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 51.19999999999709
+    },
+    {
+      "round": 21,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 41
+    },
+    {
+      "round": 21,
+      "mode": "old",
+      "warmup": false,
+      "ms": 80.39999999999418
+    },
+    {
+      "round": 21,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 54.20000000001164
+    },
+    {
+      "round": 22,
+      "mode": "old",
+      "warmup": false,
+      "ms": 79.39999999999418
+    },
+    {
+      "round": 22,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 40.80000000000291
+    },
+    {
+      "round": 22,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 52.30000000000291
+    },
+    {
+      "round": 23,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 48.30000000000291
+    },
+    {
+      "round": 23,
+      "mode": "old",
+      "warmup": false,
+      "ms": 89.5
+    },
+    {
+      "round": 23,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 71.60000000000582
+    },
+    {
+      "round": 24,
+      "mode": "old",
+      "warmup": false,
+      "ms": 117.80000000000291
+    },
+    {
+      "round": 24,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 62.5
+    },
+    {
+      "round": 24,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 65.59999999999127
+    },
+    {
+      "round": 25,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 47.59999999999127
+    },
+    {
+      "round": 25,
+      "mode": "old",
+      "warmup": false,
+      "ms": 102.39999999999418
+    },
+    {
+      "round": 25,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 70.69999999999709
+    },
+    {
+      "round": 26,
+      "mode": "old",
+      "warmup": false,
+      "ms": 120.89999999999418
+    },
+    {
+      "round": 26,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 48.29999999998836
+    },
+    {
+      "round": 26,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 68.19999999999709
+    },
+    {
+      "round": 27,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 46.09999999999127
+    },
+    {
+      "round": 27,
+      "mode": "old",
+      "warmup": false,
+      "ms": 83.40000000000873
+    },
+    {
+      "round": 27,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 56.40000000000873
+    },
+    {
+      "round": 28,
+      "mode": "old",
+      "warmup": false,
+      "ms": 80.80000000000291
+    },
+    {
+      "round": 28,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 41.80000000000291
+    },
+    {
+      "round": 28,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 58.09999999999127
+    },
+    {
+      "round": 29,
+      "mode": "cover",
+      "warmup": false,
+      "ms": 49.60000000000582
+    },
+    {
+      "round": 29,
+      "mode": "old",
+      "warmup": false,
+      "ms": 81.10000000000582
+    },
+    {
+      "round": 29,
+      "mode": "auto",
+      "warmup": false,
+      "ms": 51.30000000000291
+    }
+  ],
+  "cleanupErrors": [],
+  "originalIndexes": [
+    {
+      "name": "nss_entity_order",
+      "sql": "CREATE INDEX nss_entity_order ON nss_entity(coll, pos)"
+    },
+    {
+      "name": "nss_entity_sortkey",
+      "sql": "CREATE INDEX nss_entity_sortkey ON nss_entity(coll, sortkey, pos)"
+    },
+    {
+      "name": "nss_entity_promoted",
+      "sql": "CREATE INDEX nss_entity_promoted ON nss_entity(coll) WHERE data = ''"
+    },
+    {
+      "name": "nss_query_646f6e65",
+      "sql": "CREATE INDEX nss_query_646f6e65 ON nss_entity(coll,json_extract(data,'$.done')) WHERE data != '' AND json_valid(data)"
+    },
+    {
+      "name": "nss_query_757365724964",
+      "sql": "CREATE INDEX nss_query_757365724964 ON nss_entity(coll,json_extract(data,'$.userId')) WHERE data != '' AND json_valid(data)"
+    }
+  ],
+  "sourceRows": 50000,
+  "expected": [
+    {
+      "slot": 0,
+      "payload": [
+        {
+          "id": null,
+          "value": 32487
+        }
+      ]
+    },
+    {
+      "slot": 1,
+      "payload": [
+        {
+          "id": null,
+          "value": 50000
+        }
+      ]
+    }
+  ],
+  "beforePlan": [
+    {
+      "id": 1,
+      "parent": 0,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 2,
+      "parent": 1,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 4,
+      "parent": 2,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-5)"
+    },
+    {
+      "id": 6,
+      "parent": 4,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-4)"
+    },
+    {
+      "id": 7,
+      "parent": 6,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 8,
+      "parent": 7,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 11,
+      "parent": 8,
+      "notused": 0,
+      "detail": "MATERIALIZE promoted"
+    },
+    {
+      "id": 14,
+      "parent": 11,
+      "notused": 54,
+      "detail": "SEARCH nss_entity USING COVERING INDEX nss_entity_promoted (coll=?)"
+    },
+    {
+      "id": 28,
+      "parent": 8,
+      "notused": 48,
+      "detail": "SCAN promoted"
+    },
+    {
+      "id": 34,
+      "parent": 7,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 37,
+      "parent": 34,
+      "notused": 0,
+      "detail": "MATERIALIZE counts"
+    },
+    {
+      "id": 41,
+      "parent": 37,
+      "notused": 56,
+      "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+    },
+    {
+      "id": 79,
+      "parent": 34,
+      "notused": 16,
+      "detail": "SCAN counts"
+    },
+    {
+      "id": 87,
+      "parent": 4,
+      "notused": 49,
+      "detail": "SCAN (subquery-4)"
+    },
+    {
+      "id": 99,
+      "parent": 2,
+      "notused": 16,
+      "detail": "SCAN (subquery-5)"
+    },
+    {
+      "id": 114,
+      "parent": 1,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 116,
+      "parent": 114,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-9)"
+    },
+    {
+      "id": 118,
+      "parent": 116,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-8)"
+    },
+    {
+      "id": 119,
+      "parent": 118,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 120,
+      "parent": 119,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 123,
+      "parent": 120,
+      "notused": 216,
+      "detail": "SCAN promoted"
+    },
+    {
+      "id": 129,
+      "parent": 119,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 132,
+      "parent": 129,
+      "notused": 216,
+      "detail": "SCAN counts"
+    },
+    {
+      "id": 140,
+      "parent": 116,
+      "notused": 226,
+      "detail": "SCAN (subquery-8)"
+    },
+    {
+      "id": 152,
+      "parent": 114,
+      "notused": 16,
+      "detail": "SCAN (subquery-9)"
+    }
+  ],
+  "beforeVm": [
+    {
+      "addr": 0,
+      "opcode": "Init",
+      "p1": 0,
+      "p2": 143,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "Start at 143"
+    },
+    {
+      "addr": 1,
+      "opcode": "InitCoroutine",
+      "p1": 1,
+      "p2": 85,
+      "p3": 2,
+      "p4": null,
+      "p5": 0,
+      "comment": "(subquery-5)"
+    },
+    {
+      "addr": 2,
+      "opcode": "InitCoroutine",
+      "p1": 2,
+      "p2": 73,
+      "p3": 3,
+      "p4": null,
+      "p5": 0,
+      "comment": "(subquery-4)"
+    },
+    {
+      "addr": 3,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 18,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 4,
+      "opcode": "Once",
+      "p1": 0,
+      "p2": 17,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "materialize promoted"
+    },
+    {
+      "addr": 5,
+      "opcode": "OpenEphemeral",
+      "p1": 11,
+      "p2": 1,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "nColumn=1"
+    },
+    {
+      "addr": 6,
+      "opcode": "OpenRead",
+      "p1": 13,
+      "p2": 10,
+      "p3": 0,
+      "p4": "k(2,,)",
+      "p5": 2,
+      "comment": "root=10 iDb=0; nss_entity_promoted"
+    },
+    {
+      "addr": 7,
+      "opcode": "Variable",
+      "p1": 3,
+      "p2": 4,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[4]=parameter(3)"
+    },
+    {
+      "addr": 8,
+      "opcode": "IsNull",
+      "p1": 4,
+      "p2": 17,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "if r[4]==NULL goto 17"
+    },
+    {
+      "addr": 9,
+      "opcode": "Affinity",
+      "p1": 4,
+      "p2": 1,
+      "p3": 0,
+      "p4": "B",
+      "p5": 0,
+      "comment": "affinity(r[4])"
+    },
+    {
+      "addr": 10,
+      "opcode": "SeekGE",
+      "p1": 13,
+      "p2": 17,
+      "p3": 4,
+      "p4": "1",
+      "p5": 0,
+      "comment": "key=r[4]"
+    },
+    {
+      "addr": 11,
+      "opcode": "IdxGT",
+      "p1": 13,
+      "p2": 17,
+      "p3": 4,
+      "p4": "1",
+      "p5": 0,
+      "comment": "key=r[4]"
+    },
+    {
+      "addr": 12,
+      "opcode": "Column",
+      "p1": 13,
+      "p2": 1,
+      "p3": 5,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[5]= cursor 13 column 1"
+    },
+    {
+      "addr": 13,
+      "opcode": "MakeRecord",
+      "p1": 5,
+      "p2": 1,
+      "p3": 6,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[6]=mkrec(r[5])"
+    },
+    {
+      "addr": 14,
+      "opcode": "NewRowid",
+      "p1": 11,
+      "p2": 7,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[7]=rowid"
+    },
+    {
+      "addr": 15,
+      "opcode": "Insert",
+      "p1": 11,
+      "p2": 6,
+      "p3": 7,
+      "p4": null,
+      "p5": 8,
+      "comment": "intkey=r[7] data=r[6]"
+    },
+    {
+      "addr": 16,
+      "opcode": "Next",
+      "p1": 13,
+      "p2": 11,
+      "p3": 1,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 17,
+      "opcode": "Return",
+      "p1": 3,
+      "p2": 4,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end promoted"
+    },
+    {
+      "addr": 18,
+      "opcode": "Once",
+      "p1": 0,
+      "p2": 20,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 19,
+      "opcode": "Gosub",
+      "p1": 3,
+      "p2": 4,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "materialize promoted"
+    },
+    {
+      "addr": 20,
+      "opcode": "Rewind",
+      "p1": 11,
+      "p2": 25,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 21,
+      "opcode": "Column",
+      "p1": 11,
+      "p2": 0,
+      "p3": 8,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[8]= cursor 11 column 0"
+    },
+    {
+      "addr": 22,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 9,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[9]=NULL"
+    },
+    {
+      "addr": 23,
+      "opcode": "Yield",
+      "p1": 2,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 24,
+      "opcode": "Next",
+      "p1": 11,
+      "p2": 21,
+      "p3": 0,
+      "p4": null,
+      "p5": 1,
+      "comment": null
+    },
+    {
+      "addr": 25,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 65,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 26,
+      "opcode": "Once",
+      "p1": 0,
+      "p2": 64,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "materialize counts"
+    },
+    {
+      "addr": 27,
+      "opcode": "OpenEphemeral",
+      "p1": 9,
+      "p2": 2,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "nColumn=2"
+    },
+    {
+      "addr": 28,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 11,
+      "p3": 13,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[11..13]=NULL"
+    },
+    {
+      "addr": 29,
+      "opcode": "OpenRead",
+      "p1": 14,
+      "p2": 7,
+      "p3": 0,
+      "p4": "k(2,,)",
+      "p5": 2,
+      "comment": "root=7 iDb=0; sqlite_autoindex_nss_entity_1"
+    },
+    {
+      "addr": 30,
+      "opcode": "Variable",
+      "p1": 2,
+      "p2": 14,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[14]=parameter(2)"
+    },
+    {
+      "addr": 31,
+      "opcode": "IsNull",
+      "p1": 14,
+      "p2": 57,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "if r[14]==NULL goto 57"
+    },
+    {
+      "addr": 32,
+      "opcode": "Affinity",
+      "p1": 14,
+      "p2": 1,
+      "p3": 0,
+      "p4": "B",
+      "p5": 0,
+      "comment": "affinity(r[14])"
+    },
+    {
+      "addr": 33,
+      "opcode": "SeekGE",
+      "p1": 14,
+      "p2": 57,
+      "p3": 14,
+      "p4": "1",
+      "p5": 0,
+      "comment": "key=r[14]"
+    },
+    {
+      "addr": 34,
+      "opcode": "IdxGT",
+      "p1": 14,
+      "p2": 57,
+      "p3": 14,
+      "p4": "1",
+      "p5": 0,
+      "comment": "key=r[14]"
+    },
+    {
+      "addr": 35,
+      "opcode": "Column",
+      "p1": 14,
+      "p2": 4,
+      "p3": 15,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[15]= cursor 14 column 4"
+    },
+    {
+      "addr": 36,
+      "opcode": "Eq",
+      "p1": 16,
+      "p2": 56,
+      "p3": 15,
+      "p4": "BINARY-8",
+      "p5": 82,
+      "comment": "if r[15]==r[16] goto 56"
+    },
+    {
+      "addr": 37,
+      "opcode": "Column",
+      "p1": 14,
+      "p2": 4,
+      "p3": 17,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[17]= cursor 14 column 4"
+    },
+    {
+      "addr": 38,
+      "opcode": "Function",
+      "p1": 0,
+      "p2": 17,
+      "p3": 15,
+      "p4": "json_valid(1)",
+      "p5": 0,
+      "comment": "r[15]=func(r[17])"
+    },
+    {
+      "addr": 39,
+      "opcode": "IfNot",
+      "p1": 15,
+      "p2": 56,
+      "p3": 1,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 40,
+      "opcode": "Column",
+      "p1": 14,
+      "p2": 4,
+      "p3": 19,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[19]= cursor 14 column 4"
+    },
+    {
+      "addr": 41,
+      "opcode": "Function",
+      "p1": 2,
+      "p2": 19,
+      "p3": 18,
+      "p4": "json_type(2)",
+      "p5": 0,
+      "comment": "r[18]=func(r[19..20])"
+    },
+    {
+      "addr": 42,
+      "opcode": "Integer",
+      "p1": 1,
+      "p2": 17,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[17]=1"
+    },
+    {
+      "addr": 43,
+      "opcode": "Eq",
+      "p1": 21,
+      "p2": 45,
+      "p3": 18,
+      "p4": null,
+      "p5": 64,
+      "comment": "if r[18]==r[21] goto 45"
+    },
+    {
+      "addr": 44,
+      "opcode": "ZeroOrNull",
+      "p1": 18,
+      "p2": 17,
+      "p3": 21,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[17] = 0 OR NULL"
+    },
+    {
+      "addr": 45,
+      "opcode": "NotNull",
+      "p1": 17,
+      "p2": 47,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "if r[17]!=NULL goto 47"
+    },
+    {
+      "addr": 46,
+      "opcode": "Integer",
+      "p1": 0,
+      "p2": 17,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[17]=0"
+    },
+    {
+      "addr": 47,
+      "opcode": "IfNot",
+      "p1": 17,
+      "p2": 50,
+      "p3": 1,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 48,
+      "opcode": "Integer",
+      "p1": 1,
+      "p2": 15,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[15]=1"
+    },
+    {
+      "addr": 49,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 51,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 50,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 15,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[15]=NULL"
+    },
+    {
+      "addr": 51,
+      "opcode": "AggStep",
+      "p1": 0,
+      "p2": 15,
+      "p3": 12,
+      "p4": "count(1)",
+      "p5": 1,
+      "comment": "accum=r[12] step(r[15])"
+    },
+    {
+      "addr": 52,
+      "opcode": "Integer",
+      "p1": 1,
+      "p2": 15,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[15]=1"
+    },
+    {
+      "addr": 53,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 55,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 54,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 15,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[15]=NULL"
+    },
+    {
+      "addr": 55,
+      "opcode": "AggStep",
+      "p1": 0,
+      "p2": 15,
+      "p3": 13,
+      "p4": "count(1)",
+      "p5": 1,
+      "comment": "accum=r[13] step(r[15])"
+    },
+    {
+      "addr": 56,
+      "opcode": "Next",
+      "p1": 14,
+      "p2": 34,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 57,
+      "opcode": "AggFinal",
+      "p1": 12,
+      "p2": 1,
+      "p3": 0,
+      "p4": "count(1)",
+      "p5": 0,
+      "comment": "accum=r[12] N=1"
+    },
+    {
+      "addr": 58,
+      "opcode": "AggFinal",
+      "p1": 13,
+      "p2": 1,
+      "p3": 0,
+      "p4": "count(1)",
+      "p5": 0,
+      "comment": "accum=r[13] N=1"
+    },
+    {
+      "addr": 59,
+      "opcode": "SCopy",
+      "p1": 12,
+      "p2": 22,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[22]=r[12]"
+    },
+    {
+      "addr": 60,
+      "opcode": "SCopy",
+      "p1": 13,
+      "p2": 23,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[23]=r[13]"
+    },
+    {
+      "addr": 61,
+      "opcode": "MakeRecord",
+      "p1": 22,
+      "p2": 2,
+      "p3": 15,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[15]=mkrec(r[22..23])"
+    },
+    {
+      "addr": 62,
+      "opcode": "NewRowid",
+      "p1": 9,
+      "p2": 17,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[17]=rowid"
+    },
+    {
+      "addr": 63,
+      "opcode": "Insert",
+      "p1": 9,
+      "p2": 15,
+      "p3": 17,
+      "p4": null,
+      "p5": 8,
+      "comment": "intkey=r[17] data=r[15]"
+    },
+    {
+      "addr": 64,
+      "opcode": "Return",
+      "p1": 10,
+      "p2": 26,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end counts"
+    },
+    {
+      "addr": 65,
+      "opcode": "Once",
+      "p1": 0,
+      "p2": 67,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 66,
+      "opcode": "Gosub",
+      "p1": 10,
+      "p2": 26,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "materialize counts"
+    },
+    {
+      "addr": 67,
+      "opcode": "Rewind",
+      "p1": 9,
+      "p2": 72,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 68,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 8,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[8]=NULL"
+    },
+    {
+      "addr": 69,
+      "opcode": "Column",
+      "p1": 9,
+      "p2": 0,
+      "p3": 9,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[9]= cursor 9 column 0"
+    },
+    {
+      "addr": 70,
+      "opcode": "Yield",
+      "p1": 2,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 71,
+      "opcode": "Next",
+      "p1": 9,
+      "p2": 68,
+      "p3": 0,
+      "p4": null,
+      "p5": 1,
+      "comment": null
+    },
+    {
+      "addr": 72,
+      "opcode": "EndCoroutine",
+      "p1": 2,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end (subquery-4)"
+    },
+    {
+      "addr": 73,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 24,
+      "p3": 26,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[24..26]=NULL"
+    },
+    {
+      "addr": 74,
+      "opcode": "InitCoroutine",
+      "p1": 2,
+      "p2": 0,
+      "p3": 3,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 75,
+      "opcode": "Yield",
+      "p1": 2,
+      "p2": 81,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "next row of (subquery-4)"
+    },
+    {
+      "addr": 76,
+      "opcode": "Copy",
+      "p1": 8,
+      "p2": 29,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[29]=r[8]"
+    },
+    {
+      "addr": 77,
+      "opcode": "Copy",
+      "p1": 9,
+      "p2": 31,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[31]=r[9]"
+    },
+    {
+      "addr": 78,
+      "opcode": "Function",
+      "p1": 5,
+      "p2": 28,
+      "p3": 27,
+      "p4": "json_object(-1)",
+      "p5": 0,
+      "comment": "r[27]=func(r[28..31])"
+    },
+    {
+      "addr": 79,
+      "opcode": "AggStep",
+      "p1": 0,
+      "p2": 27,
+      "p3": 26,
+      "p4": "json_group_array(1)",
+      "p5": 1,
+      "comment": "accum=r[26] step(r[27])"
+    },
+    {
+      "addr": 80,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 75,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 81,
+      "opcode": "AggFinal",
+      "p1": 26,
+      "p2": 1,
+      "p3": 0,
+      "p4": "json_group_array(1)",
+      "p5": 0,
+      "comment": "accum=r[26] N=1"
+    },
+    {
+      "addr": 82,
+      "opcode": "Copy",
+      "p1": 26,
+      "p2": 32,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[32]=r[26]"
+    },
+    {
+      "addr": 83,
+      "opcode": "Yield",
+      "p1": 1,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 84,
+      "opcode": "EndCoroutine",
+      "p1": 1,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end (subquery-5)"
+    },
+    {
+      "addr": 85,
+      "opcode": "InitCoroutine",
+      "p1": 1,
+      "p2": 0,
+      "p3": 2,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 86,
+      "opcode": "Yield",
+      "p1": 1,
+      "p2": 99,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "next row of (subquery-5)"
+    },
+    {
+      "addr": 87,
+      "opcode": "Integer",
+      "p1": 0,
+      "p2": 33,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[33]=0"
+    },
+    {
+      "addr": 88,
+      "opcode": "ClrSubtype",
+      "p1": 33,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[33].subtype = 0"
+    },
+    {
+      "addr": 89,
+      "opcode": "Copy",
+      "p1": 32,
+      "p2": 36,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[36]=r[32]"
+    },
+    {
+      "addr": 90,
+      "opcode": "Cast",
+      "p1": 36,
+      "p2": 65,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "affinity(r[36])"
+    },
+    {
+      "addr": 91,
+      "opcode": "Function",
+      "p1": 0,
+      "p2": 36,
+      "p3": 35,
+      "p4": "length(1)",
+      "p5": 0,
+      "comment": "r[35]=func(r[36])"
+    },
+    {
+      "addr": 92,
+      "opcode": "Gt",
+      "p1": 37,
+      "p2": 95,
+      "p3": 35,
+      "p4": null,
+      "p5": 80,
+      "comment": "if r[35]>r[37] goto 95"
+    },
+    {
+      "addr": 93,
+      "opcode": "Copy",
+      "p1": 32,
+      "p2": 34,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[34]=r[32]"
+    },
+    {
+      "addr": 94,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 96,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 95,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 34,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[34]=NULL"
+    },
+    {
+      "addr": 96,
+      "opcode": "ClrSubtype",
+      "p1": 34,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[34].subtype = 0"
+    },
+    {
+      "addr": 97,
+      "opcode": "ResultRow",
+      "p1": 33,
+      "p2": 2,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "output=r[33..34]"
+    },
+    {
+      "addr": 98,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 86,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 99,
+      "opcode": "InitCoroutine",
+      "p1": 38,
+      "p2": 128,
+      "p3": 100,
+      "p4": null,
+      "p5": 0,
+      "comment": "(subquery-9)"
+    },
+    {
+      "addr": 100,
+      "opcode": "InitCoroutine",
+      "p1": 39,
+      "p2": 116,
+      "p3": 101,
+      "p4": null,
+      "p5": 0,
+      "comment": "(subquery-8)"
+    },
+    {
+      "addr": 101,
+      "opcode": "Gosub",
+      "p1": 3,
+      "p2": 4,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 102,
+      "opcode": "OpenDup",
+      "p1": 5,
+      "p2": 11,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "promoted"
+    },
+    {
+      "addr": 103,
+      "opcode": "Rewind",
+      "p1": 5,
+      "p2": 108,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 104,
+      "opcode": "Column",
+      "p1": 5,
+      "p2": 0,
+      "p3": 40,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[40]= cursor 5 column 0"
+    },
+    {
+      "addr": 105,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 41,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[41]=NULL"
+    },
+    {
+      "addr": 106,
+      "opcode": "Yield",
+      "p1": 39,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 107,
+      "opcode": "Next",
+      "p1": 5,
+      "p2": 104,
+      "p3": 0,
+      "p4": null,
+      "p5": 1,
+      "comment": null
+    },
+    {
+      "addr": 108,
+      "opcode": "Gosub",
+      "p1": 10,
+      "p2": 26,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 109,
+      "opcode": "OpenDup",
+      "p1": 3,
+      "p2": 9,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "counts"
+    },
+    {
+      "addr": 110,
+      "opcode": "Rewind",
+      "p1": 3,
+      "p2": 115,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 111,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 40,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[40]=NULL"
+    },
+    {
+      "addr": 112,
+      "opcode": "Column",
+      "p1": 3,
+      "p2": 1,
+      "p3": 41,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[41]= cursor 3 column 1"
+    },
+    {
+      "addr": 113,
+      "opcode": "Yield",
+      "p1": 39,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 114,
+      "opcode": "Next",
+      "p1": 3,
+      "p2": 111,
+      "p3": 0,
+      "p4": null,
+      "p5": 1,
+      "comment": null
+    },
+    {
+      "addr": 115,
+      "opcode": "EndCoroutine",
+      "p1": 39,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end (subquery-8)"
+    },
+    {
+      "addr": 116,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 44,
+      "p3": 46,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[44..46]=NULL"
+    },
+    {
+      "addr": 117,
+      "opcode": "InitCoroutine",
+      "p1": 39,
+      "p2": 0,
+      "p3": 101,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 118,
+      "opcode": "Yield",
+      "p1": 39,
+      "p2": 124,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "next row of (subquery-8)"
+    },
+    {
+      "addr": 119,
+      "opcode": "Copy",
+      "p1": 40,
+      "p2": 49,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[49]=r[40]"
+    },
+    {
+      "addr": 120,
+      "opcode": "Copy",
+      "p1": 41,
+      "p2": 51,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[51]=r[41]"
+    },
+    {
+      "addr": 121,
+      "opcode": "Function",
+      "p1": 5,
+      "p2": 48,
+      "p3": 47,
+      "p4": "json_object(-1)",
+      "p5": 0,
+      "comment": "r[47]=func(r[48..51])"
+    },
+    {
+      "addr": 122,
+      "opcode": "AggStep",
+      "p1": 0,
+      "p2": 47,
+      "p3": 46,
+      "p4": "json_group_array(1)",
+      "p5": 1,
+      "comment": "accum=r[46] step(r[47])"
+    },
+    {
+      "addr": 123,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 118,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 124,
+      "opcode": "AggFinal",
+      "p1": 46,
+      "p2": 1,
+      "p3": 0,
+      "p4": "json_group_array(1)",
+      "p5": 0,
+      "comment": "accum=r[46] N=1"
+    },
+    {
+      "addr": 125,
+      "opcode": "Copy",
+      "p1": 46,
+      "p2": 52,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[52]=r[46]"
+    },
+    {
+      "addr": 126,
+      "opcode": "Yield",
+      "p1": 38,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 127,
+      "opcode": "EndCoroutine",
+      "p1": 38,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end (subquery-9)"
+    },
+    {
+      "addr": 128,
+      "opcode": "InitCoroutine",
+      "p1": 38,
+      "p2": 0,
+      "p3": 100,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 129,
+      "opcode": "Yield",
+      "p1": 38,
+      "p2": 142,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "next row of (subquery-9)"
+    },
+    {
+      "addr": 130,
+      "opcode": "Integer",
+      "p1": 1,
+      "p2": 33,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[33]=1"
+    },
+    {
+      "addr": 131,
+      "opcode": "ClrSubtype",
+      "p1": 33,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[33].subtype = 0"
+    },
+    {
+      "addr": 132,
+      "opcode": "Copy",
+      "p1": 52,
+      "p2": 54,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[54]=r[52]"
+    },
+    {
+      "addr": 133,
+      "opcode": "Cast",
+      "p1": 54,
+      "p2": 65,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "affinity(r[54])"
+    },
+    {
+      "addr": 134,
+      "opcode": "Function",
+      "p1": 0,
+      "p2": 54,
+      "p3": 53,
+      "p4": "length(1)",
+      "p5": 0,
+      "comment": "r[53]=func(r[54])"
+    },
+    {
+      "addr": 135,
+      "opcode": "Gt",
+      "p1": 37,
+      "p2": 138,
+      "p3": 53,
+      "p4": null,
+      "p5": 80,
+      "comment": "if r[53]>r[37] goto 138"
+    },
+    {
+      "addr": 136,
+      "opcode": "Copy",
+      "p1": 52,
+      "p2": 34,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[34]=r[52]"
+    },
+    {
+      "addr": 137,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 139,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 138,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 34,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[34]=NULL"
+    },
+    {
+      "addr": 139,
+      "opcode": "ClrSubtype",
+      "p1": 34,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[34].subtype = 0"
+    },
+    {
+      "addr": 140,
+      "opcode": "ResultRow",
+      "p1": 33,
+      "p2": 2,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "output=r[33..34]"
+    },
+    {
+      "addr": 141,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 129,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 142,
+      "opcode": "Halt",
+      "p1": 0,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 143,
+      "opcode": "Transaction",
+      "p1": 0,
+      "p2": 0,
+      "p3": 10,
+      "p4": "0",
+      "p5": 1,
+      "comment": "usesStmtJournal=0"
+    },
+    {
+      "addr": 144,
+      "opcode": "String8",
+      "p1": 0,
+      "p2": 16,
+      "p3": 0,
+      "p4": "",
+      "p5": 0,
+      "comment": "r[16]=''"
+    },
+    {
+      "addr": 145,
+      "opcode": "String8",
+      "p1": 0,
+      "p2": 20,
+      "p3": 0,
+      "p4": "$.done",
+      "p5": 0,
+      "comment": "r[20]='$.done'"
+    },
+    {
+      "addr": 146,
+      "opcode": "Variable",
+      "p1": 1,
+      "p2": 21,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[21]=parameter(1)"
+    },
+    {
+      "addr": 147,
+      "opcode": "String8",
+      "p1": 0,
+      "p2": 28,
+      "p3": 0,
+      "p4": "id",
+      "p5": 0,
+      "comment": "r[28]='id'"
+    },
+    {
+      "addr": 148,
+      "opcode": "String8",
+      "p1": 0,
+      "p2": 30,
+      "p3": 0,
+      "p4": "value",
+      "p5": 0,
+      "comment": "r[30]='value'"
+    },
+    {
+      "addr": 149,
+      "opcode": "Integer",
+      "p1": 1048576,
+      "p2": 37,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[37]=1048576"
+    },
+    {
+      "addr": 150,
+      "opcode": "String8",
+      "p1": 0,
+      "p2": 48,
+      "p3": 0,
+      "p4": "id",
+      "p5": 0,
+      "comment": "r[48]='id'"
+    },
+    {
+      "addr": 151,
+      "opcode": "String8",
+      "p1": 0,
+      "p2": 50,
+      "p3": 0,
+      "p4": "value",
+      "p5": 0,
+      "comment": "r[50]='value'"
+    },
+    {
+      "addr": 152,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 1,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    }
+  ],
+  "beforePages": [
+    {
+      "page_count": 3425
+    }
+  ],
+  "afterPlan": [
+    {
+      "id": 1,
+      "parent": 0,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 2,
+      "parent": 1,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 4,
+      "parent": 2,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-5)"
+    },
+    {
+      "id": 6,
+      "parent": 4,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-4)"
+    },
+    {
+      "id": 7,
+      "parent": 6,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 8,
+      "parent": 7,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 11,
+      "parent": 8,
+      "notused": 0,
+      "detail": "MATERIALIZE promoted"
+    },
+    {
+      "id": 14,
+      "parent": 11,
+      "notused": 54,
+      "detail": "SEARCH nss_entity USING COVERING INDEX nss_entity_promoted (coll=?)"
+    },
+    {
+      "id": 28,
+      "parent": 8,
+      "notused": 48,
+      "detail": "SCAN promoted"
+    },
+    {
+      "id": 34,
+      "parent": 7,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 37,
+      "parent": 34,
+      "notused": 0,
+      "detail": "MATERIALIZE counts"
+    },
+    {
+      "id": 41,
+      "parent": 37,
+      "notused": 56,
+      "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+    },
+    {
+      "id": 79,
+      "parent": 34,
+      "notused": 16,
+      "detail": "SCAN counts"
+    },
+    {
+      "id": 87,
+      "parent": 4,
+      "notused": 49,
+      "detail": "SCAN (subquery-4)"
+    },
+    {
+      "id": 99,
+      "parent": 2,
+      "notused": 16,
+      "detail": "SCAN (subquery-5)"
+    },
+    {
+      "id": 114,
+      "parent": 1,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 116,
+      "parent": 114,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-9)"
+    },
+    {
+      "id": 118,
+      "parent": 116,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-8)"
+    },
+    {
+      "id": 119,
+      "parent": 118,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 120,
+      "parent": 119,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 123,
+      "parent": 120,
+      "notused": 216,
+      "detail": "SCAN promoted"
+    },
+    {
+      "id": 129,
+      "parent": 119,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 132,
+      "parent": 129,
+      "notused": 216,
+      "detail": "SCAN counts"
+    },
+    {
+      "id": 140,
+      "parent": 116,
+      "notused": 226,
+      "detail": "SCAN (subquery-8)"
+    },
+    {
+      "id": 152,
+      "parent": 114,
+      "notused": 16,
+      "detail": "SCAN (subquery-9)"
+    }
+  ],
+  "withIndexPages": [
+    {
+      "page_count": 3727
+    }
+  ],
+  "rootPages": [
+    {
+      "name": "nss_entity",
+      "rootpage": 7
+    },
+    {
+      "name": "nss_entity_promoted",
+      "rootpage": 10
+    },
+    {
+      "name": "nss_query_646f6e65",
+      "rootpage": 11
+    },
+    {
+      "name": "nss_diag_countcover_16ac",
+      "rootpage": 3426
+    }
+  ],
+  "coverVm": [
+    {
+      "addr": 0,
+      "opcode": "Init",
+      "p1": 0,
+      "p2": 141,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "Start at 141"
+    },
+    {
+      "addr": 1,
+      "opcode": "InitCoroutine",
+      "p1": 1,
+      "p2": 83,
+      "p3": 2,
+      "p4": null,
+      "p5": 0,
+      "comment": "(subquery-5)"
+    },
+    {
+      "addr": 2,
+      "opcode": "InitCoroutine",
+      "p1": 2,
+      "p2": 71,
+      "p3": 3,
+      "p4": null,
+      "p5": 0,
+      "comment": "(subquery-4)"
+    },
+    {
+      "addr": 3,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 18,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 4,
+      "opcode": "Once",
+      "p1": 0,
+      "p2": 17,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "materialize promoted"
+    },
+    {
+      "addr": 5,
+      "opcode": "OpenEphemeral",
+      "p1": 11,
+      "p2": 1,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "nColumn=1"
+    },
+    {
+      "addr": 6,
+      "opcode": "OpenRead",
+      "p1": 13,
+      "p2": 10,
+      "p3": 0,
+      "p4": "k(2,,)",
+      "p5": 2,
+      "comment": "root=10 iDb=0; nss_entity_promoted"
+    },
+    {
+      "addr": 7,
+      "opcode": "Variable",
+      "p1": 3,
+      "p2": 4,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[4]=parameter(3)"
+    },
+    {
+      "addr": 8,
+      "opcode": "IsNull",
+      "p1": 4,
+      "p2": 17,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "if r[4]==NULL goto 17"
+    },
+    {
+      "addr": 9,
+      "opcode": "Affinity",
+      "p1": 4,
+      "p2": 1,
+      "p3": 0,
+      "p4": "B",
+      "p5": 0,
+      "comment": "affinity(r[4])"
+    },
+    {
+      "addr": 10,
+      "opcode": "SeekGE",
+      "p1": 13,
+      "p2": 17,
+      "p3": 4,
+      "p4": "1",
+      "p5": 0,
+      "comment": "key=r[4]"
+    },
+    {
+      "addr": 11,
+      "opcode": "IdxGT",
+      "p1": 13,
+      "p2": 17,
+      "p3": 4,
+      "p4": "1",
+      "p5": 0,
+      "comment": "key=r[4]"
+    },
+    {
+      "addr": 12,
+      "opcode": "Column",
+      "p1": 13,
+      "p2": 1,
+      "p3": 5,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[5]= cursor 13 column 1"
+    },
+    {
+      "addr": 13,
+      "opcode": "MakeRecord",
+      "p1": 5,
+      "p2": 1,
+      "p3": 6,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[6]=mkrec(r[5])"
+    },
+    {
+      "addr": 14,
+      "opcode": "NewRowid",
+      "p1": 11,
+      "p2": 7,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[7]=rowid"
+    },
+    {
+      "addr": 15,
+      "opcode": "Insert",
+      "p1": 11,
+      "p2": 6,
+      "p3": 7,
+      "p4": null,
+      "p5": 8,
+      "comment": "intkey=r[7] data=r[6]"
+    },
+    {
+      "addr": 16,
+      "opcode": "Next",
+      "p1": 13,
+      "p2": 11,
+      "p3": 1,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 17,
+      "opcode": "Return",
+      "p1": 3,
+      "p2": 4,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end promoted"
+    },
+    {
+      "addr": 18,
+      "opcode": "Once",
+      "p1": 0,
+      "p2": 20,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 19,
+      "opcode": "Gosub",
+      "p1": 3,
+      "p2": 4,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "materialize promoted"
+    },
+    {
+      "addr": 20,
+      "opcode": "Rewind",
+      "p1": 11,
+      "p2": 25,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 21,
+      "opcode": "Column",
+      "p1": 11,
+      "p2": 0,
+      "p3": 8,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[8]= cursor 11 column 0"
+    },
+    {
+      "addr": 22,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 9,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[9]=NULL"
+    },
+    {
+      "addr": 23,
+      "opcode": "Yield",
+      "p1": 2,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 24,
+      "opcode": "Next",
+      "p1": 11,
+      "p2": 21,
+      "p3": 0,
+      "p4": null,
+      "p5": 1,
+      "comment": null
+    },
+    {
+      "addr": 25,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 63,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 26,
+      "opcode": "Once",
+      "p1": 0,
+      "p2": 62,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "materialize counts"
+    },
+    {
+      "addr": 27,
+      "opcode": "OpenEphemeral",
+      "p1": 9,
+      "p2": 2,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "nColumn=2"
+    },
+    {
+      "addr": 28,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 11,
+      "p3": 13,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[11..13]=NULL"
+    },
+    {
+      "addr": 29,
+      "opcode": "OpenRead",
+      "p1": 10,
+      "p2": 7,
+      "p3": 0,
+      "p4": "k(2,,)",
+      "p5": 0,
+      "comment": "root=7 iDb=0; nss_entity"
+    },
+    {
+      "addr": 30,
+      "opcode": "OpenRead",
+      "p1": 14,
+      "p2": 3426,
+      "p3": 0,
+      "p4": "k(3,,,)",
+      "p5": 2,
+      "comment": "root=3426 iDb=0; nss_diag_countcover_16ac"
+    },
+    {
+      "addr": 31,
+      "opcode": "Variable",
+      "p1": 2,
+      "p2": 14,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[14]=parameter(2)"
+    },
+    {
+      "addr": 32,
+      "opcode": "IsNull",
+      "p1": 14,
+      "p2": 55,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "if r[14]==NULL goto 55"
+    },
+    {
+      "addr": 33,
+      "opcode": "Affinity",
+      "p1": 14,
+      "p2": 1,
+      "p3": 0,
+      "p4": "B",
+      "p5": 0,
+      "comment": "affinity(r[14])"
+    },
+    {
+      "addr": 34,
+      "opcode": "SeekGE",
+      "p1": 14,
+      "p2": 55,
+      "p3": 14,
+      "p4": "1",
+      "p5": 0,
+      "comment": "key=r[14]"
+    },
+    {
+      "addr": 35,
+      "opcode": "IdxGT",
+      "p1": 14,
+      "p2": 55,
+      "p3": 14,
+      "p4": "1",
+      "p5": 0,
+      "comment": "key=r[14]"
+    },
+    {
+      "addr": 36,
+      "opcode": "Column",
+      "p1": 14,
+      "p2": 0,
+      "p3": 15,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[15]= cursor 14 column 0"
+    },
+    {
+      "addr": 37,
+      "opcode": "Column",
+      "p1": 14,
+      "p2": 2,
+      "p3": 16,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[16]= cursor 14 column 2"
+    },
+    {
+      "addr": 38,
+      "opcode": "NotFound",
+      "p1": 10,
+      "p2": 54,
+      "p3": 15,
+      "p4": "2",
+      "p5": 0,
+      "comment": "key=r[15..16]"
+    },
+    {
+      "addr": 39,
+      "opcode": "Column",
+      "p1": 14,
+      "p2": 1,
+      "p3": 19,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[19]=nss_diag_countcover_16ac expr-column 1"
+    },
+    {
+      "addr": 40,
+      "opcode": "Integer",
+      "p1": 1,
+      "p2": 18,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[18]=1"
+    },
+    {
+      "addr": 41,
+      "opcode": "Eq",
+      "p1": 20,
+      "p2": 43,
+      "p3": 19,
+      "p4": null,
+      "p5": 64,
+      "comment": "if r[19]==r[20] goto 43"
+    },
+    {
+      "addr": 42,
+      "opcode": "ZeroOrNull",
+      "p1": 19,
+      "p2": 18,
+      "p3": 20,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[18] = 0 OR NULL"
+    },
+    {
+      "addr": 43,
+      "opcode": "NotNull",
+      "p1": 18,
+      "p2": 45,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "if r[18]!=NULL goto 45"
+    },
+    {
+      "addr": 44,
+      "opcode": "Integer",
+      "p1": 0,
+      "p2": 18,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[18]=0"
+    },
+    {
+      "addr": 45,
+      "opcode": "IfNot",
+      "p1": 18,
+      "p2": 48,
+      "p3": 1,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 46,
+      "opcode": "Integer",
+      "p1": 1,
+      "p2": 17,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[17]=1"
+    },
+    {
+      "addr": 47,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 49,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 48,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 17,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[17]=NULL"
+    },
+    {
+      "addr": 49,
+      "opcode": "AggStep",
+      "p1": 0,
+      "p2": 17,
+      "p3": 12,
+      "p4": "count(1)",
+      "p5": 1,
+      "comment": "accum=r[12] step(r[17])"
+    },
+    {
+      "addr": 50,
+      "opcode": "Integer",
+      "p1": 1,
+      "p2": 17,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[17]=1"
+    },
+    {
+      "addr": 51,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 53,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 52,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 17,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[17]=NULL"
+    },
+    {
+      "addr": 53,
+      "opcode": "AggStep",
+      "p1": 0,
+      "p2": 17,
+      "p3": 13,
+      "p4": "count(1)",
+      "p5": 1,
+      "comment": "accum=r[13] step(r[17])"
+    },
+    {
+      "addr": 54,
+      "opcode": "Next",
+      "p1": 14,
+      "p2": 35,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 55,
+      "opcode": "AggFinal",
+      "p1": 12,
+      "p2": 1,
+      "p3": 0,
+      "p4": "count(1)",
+      "p5": 0,
+      "comment": "accum=r[12] N=1"
+    },
+    {
+      "addr": 56,
+      "opcode": "AggFinal",
+      "p1": 13,
+      "p2": 1,
+      "p3": 0,
+      "p4": "count(1)",
+      "p5": 0,
+      "comment": "accum=r[13] N=1"
+    },
+    {
+      "addr": 57,
+      "opcode": "SCopy",
+      "p1": 12,
+      "p2": 21,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[21]=r[12]"
+    },
+    {
+      "addr": 58,
+      "opcode": "SCopy",
+      "p1": 13,
+      "p2": 22,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[22]=r[13]"
+    },
+    {
+      "addr": 59,
+      "opcode": "MakeRecord",
+      "p1": 21,
+      "p2": 2,
+      "p3": 17,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[17]=mkrec(r[21..22])"
+    },
+    {
+      "addr": 60,
+      "opcode": "NewRowid",
+      "p1": 9,
+      "p2": 18,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[18]=rowid"
+    },
+    {
+      "addr": 61,
+      "opcode": "Insert",
+      "p1": 9,
+      "p2": 17,
+      "p3": 18,
+      "p4": null,
+      "p5": 8,
+      "comment": "intkey=r[18] data=r[17]"
+    },
+    {
+      "addr": 62,
+      "opcode": "Return",
+      "p1": 10,
+      "p2": 26,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end counts"
+    },
+    {
+      "addr": 63,
+      "opcode": "Once",
+      "p1": 0,
+      "p2": 65,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 64,
+      "opcode": "Gosub",
+      "p1": 10,
+      "p2": 26,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "materialize counts"
+    },
+    {
+      "addr": 65,
+      "opcode": "Rewind",
+      "p1": 9,
+      "p2": 70,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 66,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 8,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[8]=NULL"
+    },
+    {
+      "addr": 67,
+      "opcode": "Column",
+      "p1": 9,
+      "p2": 0,
+      "p3": 9,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[9]= cursor 9 column 0"
+    },
+    {
+      "addr": 68,
+      "opcode": "Yield",
+      "p1": 2,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 69,
+      "opcode": "Next",
+      "p1": 9,
+      "p2": 66,
+      "p3": 0,
+      "p4": null,
+      "p5": 1,
+      "comment": null
+    },
+    {
+      "addr": 70,
+      "opcode": "EndCoroutine",
+      "p1": 2,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end (subquery-4)"
+    },
+    {
+      "addr": 71,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 23,
+      "p3": 25,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[23..25]=NULL"
+    },
+    {
+      "addr": 72,
+      "opcode": "InitCoroutine",
+      "p1": 2,
+      "p2": 0,
+      "p3": 3,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 73,
+      "opcode": "Yield",
+      "p1": 2,
+      "p2": 79,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "next row of (subquery-4)"
+    },
+    {
+      "addr": 74,
+      "opcode": "Copy",
+      "p1": 8,
+      "p2": 28,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[28]=r[8]"
+    },
+    {
+      "addr": 75,
+      "opcode": "Copy",
+      "p1": 9,
+      "p2": 30,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[30]=r[9]"
+    },
+    {
+      "addr": 76,
+      "opcode": "Function",
+      "p1": 5,
+      "p2": 27,
+      "p3": 26,
+      "p4": "json_object(-1)",
+      "p5": 0,
+      "comment": "r[26]=func(r[27..30])"
+    },
+    {
+      "addr": 77,
+      "opcode": "AggStep",
+      "p1": 0,
+      "p2": 26,
+      "p3": 25,
+      "p4": "json_group_array(1)",
+      "p5": 1,
+      "comment": "accum=r[25] step(r[26])"
+    },
+    {
+      "addr": 78,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 73,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 79,
+      "opcode": "AggFinal",
+      "p1": 25,
+      "p2": 1,
+      "p3": 0,
+      "p4": "json_group_array(1)",
+      "p5": 0,
+      "comment": "accum=r[25] N=1"
+    },
+    {
+      "addr": 80,
+      "opcode": "Copy",
+      "p1": 25,
+      "p2": 31,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[31]=r[25]"
+    },
+    {
+      "addr": 81,
+      "opcode": "Yield",
+      "p1": 1,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 82,
+      "opcode": "EndCoroutine",
+      "p1": 1,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end (subquery-5)"
+    },
+    {
+      "addr": 83,
+      "opcode": "InitCoroutine",
+      "p1": 1,
+      "p2": 0,
+      "p3": 2,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 84,
+      "opcode": "Yield",
+      "p1": 1,
+      "p2": 97,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "next row of (subquery-5)"
+    },
+    {
+      "addr": 85,
+      "opcode": "Integer",
+      "p1": 0,
+      "p2": 32,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[32]=0"
+    },
+    {
+      "addr": 86,
+      "opcode": "ClrSubtype",
+      "p1": 32,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[32].subtype = 0"
+    },
+    {
+      "addr": 87,
+      "opcode": "Copy",
+      "p1": 31,
+      "p2": 35,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[35]=r[31]"
+    },
+    {
+      "addr": 88,
+      "opcode": "Cast",
+      "p1": 35,
+      "p2": 65,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "affinity(r[35])"
+    },
+    {
+      "addr": 89,
+      "opcode": "Function",
+      "p1": 0,
+      "p2": 35,
+      "p3": 34,
+      "p4": "length(1)",
+      "p5": 0,
+      "comment": "r[34]=func(r[35])"
+    },
+    {
+      "addr": 90,
+      "opcode": "Gt",
+      "p1": 36,
+      "p2": 93,
+      "p3": 34,
+      "p4": null,
+      "p5": 80,
+      "comment": "if r[34]>r[36] goto 93"
+    },
+    {
+      "addr": 91,
+      "opcode": "Copy",
+      "p1": 31,
+      "p2": 33,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[33]=r[31]"
+    },
+    {
+      "addr": 92,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 94,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 93,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 33,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[33]=NULL"
+    },
+    {
+      "addr": 94,
+      "opcode": "ClrSubtype",
+      "p1": 33,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[33].subtype = 0"
+    },
+    {
+      "addr": 95,
+      "opcode": "ResultRow",
+      "p1": 32,
+      "p2": 2,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "output=r[32..33]"
+    },
+    {
+      "addr": 96,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 84,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 97,
+      "opcode": "InitCoroutine",
+      "p1": 37,
+      "p2": 126,
+      "p3": 98,
+      "p4": null,
+      "p5": 0,
+      "comment": "(subquery-9)"
+    },
+    {
+      "addr": 98,
+      "opcode": "InitCoroutine",
+      "p1": 38,
+      "p2": 114,
+      "p3": 99,
+      "p4": null,
+      "p5": 0,
+      "comment": "(subquery-8)"
+    },
+    {
+      "addr": 99,
+      "opcode": "Gosub",
+      "p1": 3,
+      "p2": 4,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 100,
+      "opcode": "OpenDup",
+      "p1": 5,
+      "p2": 11,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "promoted"
+    },
+    {
+      "addr": 101,
+      "opcode": "Rewind",
+      "p1": 5,
+      "p2": 106,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 102,
+      "opcode": "Column",
+      "p1": 5,
+      "p2": 0,
+      "p3": 39,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[39]= cursor 5 column 0"
+    },
+    {
+      "addr": 103,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 40,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[40]=NULL"
+    },
+    {
+      "addr": 104,
+      "opcode": "Yield",
+      "p1": 38,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 105,
+      "opcode": "Next",
+      "p1": 5,
+      "p2": 102,
+      "p3": 0,
+      "p4": null,
+      "p5": 1,
+      "comment": null
+    },
+    {
+      "addr": 106,
+      "opcode": "Gosub",
+      "p1": 10,
+      "p2": 26,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 107,
+      "opcode": "OpenDup",
+      "p1": 3,
+      "p2": 9,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "counts"
+    },
+    {
+      "addr": 108,
+      "opcode": "Rewind",
+      "p1": 3,
+      "p2": 113,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 109,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 39,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[39]=NULL"
+    },
+    {
+      "addr": 110,
+      "opcode": "Column",
+      "p1": 3,
+      "p2": 1,
+      "p3": 40,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[40]= cursor 3 column 1"
+    },
+    {
+      "addr": 111,
+      "opcode": "Yield",
+      "p1": 38,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 112,
+      "opcode": "Next",
+      "p1": 3,
+      "p2": 109,
+      "p3": 0,
+      "p4": null,
+      "p5": 1,
+      "comment": null
+    },
+    {
+      "addr": 113,
+      "opcode": "EndCoroutine",
+      "p1": 38,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end (subquery-8)"
+    },
+    {
+      "addr": 114,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 43,
+      "p3": 45,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[43..45]=NULL"
+    },
+    {
+      "addr": 115,
+      "opcode": "InitCoroutine",
+      "p1": 38,
+      "p2": 0,
+      "p3": 99,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 116,
+      "opcode": "Yield",
+      "p1": 38,
+      "p2": 122,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "next row of (subquery-8)"
+    },
+    {
+      "addr": 117,
+      "opcode": "Copy",
+      "p1": 39,
+      "p2": 48,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[48]=r[39]"
+    },
+    {
+      "addr": 118,
+      "opcode": "Copy",
+      "p1": 40,
+      "p2": 50,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[50]=r[40]"
+    },
+    {
+      "addr": 119,
+      "opcode": "Function",
+      "p1": 5,
+      "p2": 47,
+      "p3": 46,
+      "p4": "json_object(-1)",
+      "p5": 0,
+      "comment": "r[46]=func(r[47..50])"
+    },
+    {
+      "addr": 120,
+      "opcode": "AggStep",
+      "p1": 0,
+      "p2": 46,
+      "p3": 45,
+      "p4": "json_group_array(1)",
+      "p5": 1,
+      "comment": "accum=r[45] step(r[46])"
+    },
+    {
+      "addr": 121,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 116,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 122,
+      "opcode": "AggFinal",
+      "p1": 45,
+      "p2": 1,
+      "p3": 0,
+      "p4": "json_group_array(1)",
+      "p5": 0,
+      "comment": "accum=r[45] N=1"
+    },
+    {
+      "addr": 123,
+      "opcode": "Copy",
+      "p1": 45,
+      "p2": 51,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[51]=r[45]"
+    },
+    {
+      "addr": 124,
+      "opcode": "Yield",
+      "p1": 37,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 125,
+      "opcode": "EndCoroutine",
+      "p1": 37,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "end (subquery-9)"
+    },
+    {
+      "addr": 126,
+      "opcode": "InitCoroutine",
+      "p1": 37,
+      "p2": 0,
+      "p3": 98,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 127,
+      "opcode": "Yield",
+      "p1": 37,
+      "p2": 140,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "next row of (subquery-9)"
+    },
+    {
+      "addr": 128,
+      "opcode": "Integer",
+      "p1": 1,
+      "p2": 32,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[32]=1"
+    },
+    {
+      "addr": 129,
+      "opcode": "ClrSubtype",
+      "p1": 32,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[32].subtype = 0"
+    },
+    {
+      "addr": 130,
+      "opcode": "Copy",
+      "p1": 51,
+      "p2": 53,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[53]=r[51]"
+    },
+    {
+      "addr": 131,
+      "opcode": "Cast",
+      "p1": 53,
+      "p2": 65,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "affinity(r[53])"
+    },
+    {
+      "addr": 132,
+      "opcode": "Function",
+      "p1": 0,
+      "p2": 53,
+      "p3": 52,
+      "p4": "length(1)",
+      "p5": 0,
+      "comment": "r[52]=func(r[53])"
+    },
+    {
+      "addr": 133,
+      "opcode": "Gt",
+      "p1": 36,
+      "p2": 136,
+      "p3": 52,
+      "p4": null,
+      "p5": 80,
+      "comment": "if r[52]>r[36] goto 136"
+    },
+    {
+      "addr": 134,
+      "opcode": "Copy",
+      "p1": 51,
+      "p2": 33,
+      "p3": 0,
+      "p4": null,
+      "p5": 2,
+      "comment": "r[33]=r[51]"
+    },
+    {
+      "addr": 135,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 137,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 136,
+      "opcode": "Null",
+      "p1": 0,
+      "p2": 33,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[33]=NULL"
+    },
+    {
+      "addr": 137,
+      "opcode": "ClrSubtype",
+      "p1": 33,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[33].subtype = 0"
+    },
+    {
+      "addr": 138,
+      "opcode": "ResultRow",
+      "p1": 32,
+      "p2": 2,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "output=r[32..33]"
+    },
+    {
+      "addr": 139,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 127,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 140,
+      "opcode": "Halt",
+      "p1": 0,
+      "p2": 0,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    },
+    {
+      "addr": 141,
+      "opcode": "Transaction",
+      "p1": 0,
+      "p2": 0,
+      "p3": 11,
+      "p4": "0",
+      "p5": 1,
+      "comment": "usesStmtJournal=0"
+    },
+    {
+      "addr": 142,
+      "opcode": "Variable",
+      "p1": 1,
+      "p2": 20,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[20]=parameter(1)"
+    },
+    {
+      "addr": 143,
+      "opcode": "String8",
+      "p1": 0,
+      "p2": 27,
+      "p3": 0,
+      "p4": "id",
+      "p5": 0,
+      "comment": "r[27]='id'"
+    },
+    {
+      "addr": 144,
+      "opcode": "String8",
+      "p1": 0,
+      "p2": 29,
+      "p3": 0,
+      "p4": "value",
+      "p5": 0,
+      "comment": "r[29]='value'"
+    },
+    {
+      "addr": 145,
+      "opcode": "Integer",
+      "p1": 1048576,
+      "p2": 36,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": "r[36]=1048576"
+    },
+    {
+      "addr": 146,
+      "opcode": "String8",
+      "p1": 0,
+      "p2": 47,
+      "p3": 0,
+      "p4": "id",
+      "p5": 0,
+      "comment": "r[47]='id'"
+    },
+    {
+      "addr": 147,
+      "opcode": "String8",
+      "p1": 0,
+      "p2": 49,
+      "p3": 0,
+      "p4": "value",
+      "p5": 0,
+      "comment": "r[49]='value'"
+    },
+    {
+      "addr": 148,
+      "opcode": "Goto",
+      "p1": 0,
+      "p2": 1,
+      "p3": 0,
+      "p4": null,
+      "p5": 0,
+      "comment": null
+    }
+  ],
+  "forcedPlan": [
+    {
+      "id": 1,
+      "parent": 0,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 2,
+      "parent": 1,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 4,
+      "parent": 2,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-5)"
+    },
+    {
+      "id": 6,
+      "parent": 4,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-4)"
+    },
+    {
+      "id": 7,
+      "parent": 6,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 8,
+      "parent": 7,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 11,
+      "parent": 8,
+      "notused": 0,
+      "detail": "MATERIALIZE promoted"
+    },
+    {
+      "id": 14,
+      "parent": 11,
+      "notused": 54,
+      "detail": "SEARCH nss_entity USING COVERING INDEX nss_entity_promoted (coll=?)"
+    },
+    {
+      "id": 28,
+      "parent": 8,
+      "notused": 48,
+      "detail": "SCAN promoted"
+    },
+    {
+      "id": 34,
+      "parent": 7,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 37,
+      "parent": 34,
+      "notused": 0,
+      "detail": "MATERIALIZE counts"
+    },
+    {
+      "id": 42,
+      "parent": 37,
+      "notused": 62,
+      "detail": "SEARCH nss_entity USING INDEX nss_diag_countcover_16ac (coll=?)"
+    },
+    {
+      "id": 77,
+      "parent": 34,
+      "notused": 16,
+      "detail": "SCAN counts"
+    },
+    {
+      "id": 85,
+      "parent": 4,
+      "notused": 49,
+      "detail": "SCAN (subquery-4)"
+    },
+    {
+      "id": 97,
+      "parent": 2,
+      "notused": 16,
+      "detail": "SCAN (subquery-5)"
+    },
+    {
+      "id": 112,
+      "parent": 1,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 114,
+      "parent": 112,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-9)"
+    },
+    {
+      "id": 116,
+      "parent": 114,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-8)"
+    },
+    {
+      "id": 117,
+      "parent": 116,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 118,
+      "parent": 117,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 121,
+      "parent": 118,
+      "notused": 216,
+      "detail": "SCAN promoted"
+    },
+    {
+      "id": 127,
+      "parent": 117,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 130,
+      "parent": 127,
+      "notused": 216,
+      "detail": "SCAN counts"
+    },
+    {
+      "id": 138,
+      "parent": 114,
+      "notused": 226,
+      "detail": "SCAN (subquery-8)"
+    },
+    {
+      "id": 150,
+      "parent": 112,
+      "notused": 16,
+      "detail": "SCAN (subquery-9)"
+    }
+  ],
+  "cleanupAbsent": true,
+  "finalIndexes": [
+    {
+      "name": "nss_entity_order",
+      "sql": "CREATE INDEX nss_entity_order ON nss_entity(coll, pos)"
+    },
+    {
+      "name": "nss_entity_sortkey",
+      "sql": "CREATE INDEX nss_entity_sortkey ON nss_entity(coll, sortkey, pos)"
+    },
+    {
+      "name": "nss_entity_promoted",
+      "sql": "CREATE INDEX nss_entity_promoted ON nss_entity(coll) WHERE data = ''"
+    },
+    {
+      "name": "nss_query_646f6e65",
+      "sql": "CREATE INDEX nss_query_646f6e65 ON nss_entity(coll,json_extract(data,'$.done')) WHERE data != '' AND json_valid(data)"
+    },
+    {
+      "name": "nss_query_757365724964",
+      "sql": "CREATE INDEX nss_query_757365724964 ON nss_entity(coll,json_extract(data,'$.userId')) WHERE data != '' AND json_valid(data)"
+    }
+  ],
+  "afterPages": [
+    {
+      "page_count": 3727
+    }
+  ],
+  "finalRows": 50000
+}

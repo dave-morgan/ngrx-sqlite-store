@@ -360,7 +360,7 @@ describe('Phase 10', () => {
     await engine.open();
     expect(await engine.read((sql) => nodes.read(sql, 'items'))).toEqual(initial);
     expect(await driver.query("SELECT value FROM nss_meta WHERE key='schema_version'")).toEqual([
-      { value: '3' },
+      { value: '4' },
     ]);
     const adapter = createEntityAdapter<Item>({ sortKey: (e) => e.rank });
     await engine.transaction(async (sql) => {

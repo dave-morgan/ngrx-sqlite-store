@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { benchmarkSerial } from './android-benchmark-target.mjs';
 // Diagnostic only: stops harness apps. Never run alongside android-bench.mjs.
 // Usage: node tools/android-trace.mjs [--serial emulator-5554] [--port 9335] [--seed 50000 | --toggle] [--cpu-profile]
 import { execFileSync } from 'node:child_process';
@@ -16,7 +17,7 @@ const option = (name, fallback) => {
 const sdk = process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT;
 if (!sdk) throw new Error('ANDROID_HOME or ANDROID_SDK_ROOT is required');
 const adbFile = join(sdk, 'platform-tools', process.platform === 'win32' ? 'adb.exe' : 'adb');
-const serial = option('serial', 'emulator-5554');
+const serial = benchmarkSerial(option('serial'));
 const adb = (...values) => execFileSync(adbFile, ['-s', serial, ...values], {
   cwd: root, encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
 });
@@ -165,7 +166,9 @@ try {
           const row = {
             plugin: values[0], method: values[1], encodedOptionBytes,
             statementCount: statements.length,
-            sqlPrefixes: statements.map((statement) => String(statement.statement ?? '').slice(0, 160)),
+            sqlPrefixes: statements.length ? statements.map((statement) => String(statement.statement ?? '').slice(0, 160))
+              : options?.statement ? [String(options.statement).slice(0, 160)] : [],
+            values: options?.values ? JSON.stringify(options.values).slice(0, 120) : undefined,
             start: performance.now(), ms: undefined,
           };
           calls.push(row);

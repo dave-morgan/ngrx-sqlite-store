@@ -1,3 +1,4 @@
+import { benchmarkSerial } from './android-benchmark-target.mjs';
 import { chromium } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -111,7 +112,7 @@ async function main() {
       'adb.exe',
     );
     const adb = (...a) =>
-      execFileSync(adbPath, ['-s', 'emulator-5554', ...a], { encoding: 'utf8' });
+      execFileSync(adbPath, ['-s', benchmarkSerial(), ...a], { encoding: 'utf8' });
     const socket = adb('shell', 'cat', '/proc/net/unix').match(/webview_devtools_remote_\d+/)?.[0];
     if (!socket) throw new Error('No debugging WebView; launch the debug APK first');
     adb('forward', 'tcp:9333', `localabstract:${socket}`);

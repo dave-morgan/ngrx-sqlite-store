@@ -9,7 +9,7 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0001](0001-preserve-public-ngrx-contract.md) | Preserve public NgRx contract | Brief (D1) | 2026-10-20 | Accepted |
 | [0002](0002-async-backed-selectors.md) | Async-backed selectors that emit like normal ones | Brief (D2) | 2026-10-20 | Accepted |
 | [0003](0003-async-transactional-reducers.md) | Async transactional reducers, serial queue, post-commit notify | Brief (D3) | 2026-10-20 | Accepted |
-| [0004](0004-json-shaped-state-fixed-schema.md) | JSON-shaped state â†’ fixed path-keyed schema | Brief (D4) | 2026-10-20 | Accepted |
+| [0004](0004-json-shaped-state-fixed-schema.md) | JSON-shaped state Ã¢â€ â€™ fixed path-keyed schema | Brief (D4) | 2026-10-20 | Accepted |
 | [0005](0005-entity-as-first-party-primitive.md) | Entity folded into store; may diverge from `@ngrx/entity` | Brief (D5) | 2026-10-20 | Accepted |
 | [0006](0006-arrays-as-tables.md) | Arrays as tables with hidden ids + fractional pos | Brief (D6) | 2026-10-20 | Accepted |
 | [0007](0007-hybrid-nested-storage.md) | Hybrid inline-JSON / adjacency-list storage | Brief (D7) | 2026-10-20 | Accepted |
@@ -24,7 +24,7 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0016](0016-schema-engine-encoding.md) | Schema engine ordering, encoding, hints and opt-in migration | Phase 3 brief / Agent | 2026-10-20 | Accepted |
 | [0017](0017-store-composition.md) | Store composition: reuse NgRx subjects, 1 tx/action, scanned ordering, seeding, removeReducer keeps data, meta-reducers on bridge only | Agent | 2026-10-20 | Accepted |
 | [0018](0018-selector-engine.md) | Selector engine: reuse NgRx memoize + metadata, PathCache w/ staleness, view state, feature-level dynamic tracking | Agent | 2026-10-20 | Accepted |
-| [0019](0019-entity-adapter.md) | Entity adapter: dual-form ops (classic pure / tx SQL), `adapter.at(tx, path)`, write-time sort order via binary search (Q1); unique-ID collision overwrite policy (Â§7) | Agent / User (Â§7) | 2026-10-20 | Accepted |
+| [0019](0019-entity-adapter.md) | Entity adapter: dual-form ops (classic pure / tx SQL), `adapter.at(tx, path)`, write-time sort order via binary search (Q1); unique-ID collision overwrite policy (Ã‚Â§7) | Agent / User (Ã‚Â§7) | 2026-10-20 | Accepted |
 | [0020](0020-router-json-snapshots.md) | Persist default router-store snapshots as JSON in the classic bridge | Agent | 2026-10-20 | Accepted |
 | [0021](0021-selector-reference-replacements.md) | Preserve reference-only reducer replacements with transient commit hints | Agent | 2026-10-20 | Accepted |
 | [0022](0022-devtools-compat.md) | Display-only devtools with guarded scanned actions and committed-view reducer; resolves Q4 | Agent / Phase 7 brief | 2026-10-20 | Accepted |
@@ -66,7 +66,7 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0058](0058-startup-preload-batching.md) | Batch independent router and eager feature preloads after registration commits | Agent / Phase 15d | 2026-10-22 | Accepted |
 | [0059](0059-canonical-entity-bulk-json.md) | Skip redundant parsing of validated canonical EntityTx bulk JSON; preserve wire bytes and row caps | Agent | 2026-10-22 | Accepted |
 | [0060](0060-phase15d-residual-overhead.md) | Evidence for eleven remaining Phase 15d FAILs; retain thresholds and labels | Agent / Phase 15d | 2026-10-22 | Accepted |
-| [0061](0061-persistence-is-the-product.md) | Persistence is the product: no in-memory feature mode (resolves Q7); optimisation priority large lists â†’ flat objects â†’ hybrid | User | 2026-10-22 | Accepted |
+| [0061](0061-persistence-is-the-product.md) | Persistence is the product: no in-memory feature mode (resolves Q7); optimisation priority large lists Ã¢â€ â€™ flat objects Ã¢â€ â€™ hybrid | User | 2026-10-22 | Accepted |
 | [0062](0062-code-bound-heap.md) | CODE-BOUND heap verdict against an empty-store control, plus mandatory startup code diet (amends ADR-0038) | Agent | 2026-10-23 | Accepted |
 | [0063](0063-explicit-startup-prewarm.md) | Explicit prewarm adoption and startup metadata batching | Agent | 2026-10-23 | Accepted |
 | [0064](0064-bulk-memory-and-render-experiments.md) | Bulk memory reclamation; measured render and code-split experiments | Agent | 2026-10-23 | Accepted |
@@ -75,6 +75,58 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | [0066](0066-phase15f-located-costs.md) | Phase 15f decomposition: real-row F_seed, pipelined bulk batches, idle WAL maintenance, optimistic native open, NgRx production runtime-check semantics | Agent / Phase 15f | 2026-10-23 | Accepted |
 | [0067](0067-workload-code-control.md) | CODE-BOUND uses same-session, same-workload V8 code-space controls with data parity (amends ADR-0062) | Agent / Phase 15f | 2026-10-23 | Accepted |
 | [0068](0068-phase15f-measured-outcomes.md) | Measured Phase 15f outcomes: 13 PASS / 12 PB / 2 CB / 6 FAIL; Phase 16 remains gated | Agent | 2026-10-24 | Accepted |
+| [0069](0069-render-bridge-and-real-row-memory-floors.md) | Toggle floor measured under the real WebView repaint (Capacitor main-thread bridge); seed memory floor brackets real-row bridge payloads | Agent / Phase 15g | 2026-10-24 | Accepted |
+| [0070](0070-phase15h-read-plans-and-write-through.md) | UNION ALL subtree predicates (MULTI-INDEX OR was 20x slower), router write-through fix, startup release-on-send, 512 KiB steady page cache, bench-matched additive memory floor | Agent / Phase 15h | 2026-10-24 | Accepted |
+| [0071](0071-workload-control-audit.md) | Match notes control toggle history; keep repaint pairs diagnostic; validate independent render trials | Agent | 2026-10-24 | Accepted |
+| [0072](0072-known-absent-transaction-reads.md) | Reuse fresh cached absence; device trace confirms four pre-ready router reads removed; general latency gain unproven | Agent | 2026-10-24 | Accepted |
+| [0073](0073-pipelined-android-open.md) | Experiment: pipeline native Android create/open sends with settled failure recovery | Agent | 2026-10-24 | Experiment |
+| [0074](0074-loaded-static-signal-views.md) | Experiment: avoid rebuilding fallback views when all static signal sources are ready | Agent | 2026-10-24 | Experiment |
+| [0075](0075-binary-json-row-iteration.md) | Rejected application integration: native JSONB iterator scratch win did not establish repeatable application benefit | Agent | 2026-10-24 | Rejected |
+| [0076](0076-known-write-locations.md) | Preserve known write locations; trace proves two root-position reads removed, general timing benefit unproven | Agent | 2026-10-24 | Accepted |
+| [0077](0077-promoted-row-index.md) | Partial promoted-row index removes collection scans; full15o12PASS/10PB/3CB/8FAIL, parity incomplete | Agent | 2026-10-24 | Accepted |
+| [0078](0078-signal-value-dependency.md) | Watched-value signal avoids redundant equality work; full15q11PASS/10PB/3CB/9FAIL, no parity improvement | Agent | 2026-10-24 | Accepted |
+| [0079](0079-static-selector-scopes.md) | Reuse unchanged static scopes; full15s11PASS/11PB/3CB/8FAIL, parity incomplete | Agent | 2026-10-24 | Accepted |
+| [0080](0080-direct-internal-deletes.md) | Android internal deletes avoid plugin metadata rewriting; full15u11PASS/11PB/3CB/8FAIL, parity incomplete | Agent | 2026-10-24 | Accepted |
+| [0081](0081-shared-entity-count-scans.md) | Share concurrent entity-count scans; full 15v 11 PASS / 13 PB / 3 CB / 6 FAIL, parity incomplete | Agent | 2026-10-24 | Accepted |
+| [0082](0082-startup-warm-rejected.md) | Startup working-set warm rejected: delayed first render (ready 490 -> 619-688 ms); owner() allocation removal retained | Agent | 2026-10-24 | Rejected |
+| [0083](0083-remaining-gap-evidence.md) | Evidence record for the 6 FAIL + 3 CB after 15v; toggle gap within the no-store two-commit repaint control; no floor change | Agent | 2026-10-24 | Accepted |
+| [0084](0084-user-decisions-toggle-floor-and-code-heap.md) | User decisions: store-free pair-repaint control is the toggle floor (supersedes ADR-0071 diagnostic status); CODE-BOUND code heap accepted as evidenced limit; 15v re-reported 11 PASS / 15 PB / 3 CB / 4 FAIL | User | 2026-10-24 | Accepted |
+| [0085](0085-phase15w-measured-outcome.md) | Full 15w 12 PASS / 15 PB / 3 CB / 3 FAIL (1k toggleP50, 10k firstReady, 50k emitP50); parity incomplete | Agent | 2026-10-25 | Accepted |
+| [0086](0086-phase15x-measured-outcome.md) | Full 15x 11 PASS / 13 PB / 3 CB / 6 FAIL; sqlite means equal/better than 15w, flips driven by low-sample controls; retain owner index, shared defaults view, partial prefetch | Agent | 2026-10-25 | Accepted |
+| [0087](0087-control-precision.md) | Control precision: F_commit 100 samples, F_open 10 trials, seed-memory 3 fresh-process brackets; same estimators and floor definitions | User | 2026-10-25 | Accepted |
+| [0088](0088-phase15y-measured-outcome.md) | Full 15y (precise controls) 13 PASS / 13 PB / 3 CB / 4 FAIL; remaining FAILs all 50k (firstReady, relaunch, emitP50/P95) and real store cost; retain incremental publish | Agent | 2026-10-25 | Accepted |
+| [0089](0089-phase15z-measured-outcome.md) | Full 15z 12 PASS / 11 PB / 3 CB / 7 FAIL; sqlite means improved vs 15y (50k firstReady -143 ms, relaunch -112..-119 ms) but classic/control references moved; retain JS replacement recount, INDEXED BY promoted, pipelined reload open | Agent | 2026-10-25 | Accepted |
+| [0090](0090-phase15aa-parity-reached.md) | Full 15aa 16 PASS / 14 PB / 3 CB / 0 FAIL: every large-list metric qualifies; retain boot catalog, prewarm-cleared read skip, streamed SAVEPOINT replacement with full batches; Phase 16 ungated | Agent | 2026-10-26 | Accepted |
+| [0091](0091-phase16-list-profile-guard.md) | Phase 16 start: shapes workloads lazy/route-scoped (/shapes/*), 15aa is the list reference, every change needs lib tests + on-device 50k list probe, full list acceptance 0 FAIL before Phase 16 closes | User | 2026-10-26 | Accepted |
+| [0092](0092-phase16c-list-check.md) | Phase 16 flat-write fixes retained (one row per key, putMany refresh, identical-key skip); shapes 1/7/78; full list check 16L1 12/12/3/6: no regression (sqlite means equal/better than 15aa) but tighter session references expose emit (~0.4 ms) and relaunch (~40 ms) gaps | Agent | 2026-10-26 | Accepted |
+| [0093](0093-phase16-shapes-floors.md) | Shapes: store-free commit+render control is the latency floor (per K/workflow, x commits); heap CODE-BOUND via code-space split (ADR-0067 method); PSS PLATFORM-BOUND via empty-plugin baseline (ADR-0070 method) | User | 2026-10-27 | Accepted |
+| [0094](0094-phase16e-outcome.md) | 16e shapes 1/47/0/38 under ADR-0093 floors; list 16L2 13/14/3/3 (no regression; FAIL 10k relaunch +64 ms, 50k emit p50 +0.33/p95 +0.97); fix 3 path/publish fast paths retained | Agent | 2026-10-27 | Accepted |
+| [0095](0095-phase16h-outcome.md) | Fixes 4-7 retained (pipelined catalog read, coalesced node updates, root-compare partial filter, json_each inserts >=16 rows); shapes 16h 3/57/0/26; list 16L3 13/14/3/3 with means better than 16L2 (FAIL 10k relaunch +25 ms, 50k emit p50 +0.27/p95 +0.68) | Agent | 2026-10-27 | Accepted |
+| [0096](0096-changed-key-reducer-scan.md) | Experiment: allocate partial-handler tuples only for changed keys; device16j pending | Agent | 2026-10-27 | Experiment |
+| [0097](0097-shapes-startup-barrier.md) | Correct shapes startup barrier; journal partials and reject incomplete paired trials | Agent | 2026-10-27 | Accepted |
+| [0098](0098-shapes-dataset-normalization.md) | Correct todos-specific readiness wait and normalize identical background data for shapes | Agent | 2026-10-27 | Accepted |
+| [0099](0099-append-ordering-fast-path.md) | Experiment: consume unchanged array prefixes and skip LIS for exact appends | Agent | 2026-10-27 | Experiment |
+| [0100](0100-lazy-action-transaction-handles.md) | Rejected lazy transaction handles: allocation-only gain, no repeatable application benefit | Agent | 2026-10-27 | Rejected |
+| [0101](0101-single-cache-refresh-publication.md) | Experiment: defer intermediate cache publication to selection refresh final notification | Agent | 2026-10-28 | Experiment |
+| [0102](0102-boolean-shared-count-predicates.md) | Experiment: single JSON type lookup for Boolean predicates in shared count scans; selective SQL unchanged | Agent | 2026-10-28 | Experiment |
+| [0103](0103-incremental-selector-lease-accounting.md) | Rejected incremental selector lease counts: no repeated latency gain and full list guard uncleared | Agent | 2026-10-28 | Rejected |
+| [0104](0104-skip-idle-reducer-awaits.md) | Rejected16u idle awaits: no general benefit; full regression guard uncleared; reverted with all evidence preserved | Agent | 2026-10-28 | Rejected |
+| [0106](0106-compact-child-position-index.md) | Rejected16v compact positions: small aggregate saving, repeated replacement tail regressions; targeted revert | Agent | 2026-10-28 | Rejected |
+| [0105](0105-burst-backlog-async-lower-bound.md) | Evidenced Phase16 maxBacklog lower bound1 versus classic0; observed2-3 not proved optimal, no new floor | Agent | 2026-10-28 | Evidence |
+
+| [0107](0107-copy-on-change-child-positions.md) | Rejected16w position reuse: synthetic work removed, full regression guard uncleared; reverted | Agent | 2026-10-28 | Rejected |
+
+| [0108](0108-scalar-transaction-cache-invalidation.md) | Rejected16x scalar invalidation: repeated residual gain but full regression guard uncleared; reverted | Agent | 2026-10-28 | Rejected |
+
+| [0109](0109-fifty-thousand-emission-attribution.md) | Diagnostic16y: attribute remaining50k list emission on retained16r before next fix; no floor change | Agent | 2026-10-28 | Evidence |
+
+| [0110](0110-no-return-sdk-facade-diagnostic.md) | Rejected SDK bypass hypothesis: 2400identicalcalls,30/60wins,medianunchanged;driverunchanged | Agent | 2026-10-28 | Rejected |
+
+| [0111](0111-static-readiness-pass-reuse.md) | Rejected16aa static readiness reuse: synthetic3->1checks but no repeated workload benefit; reverted | Agent | 2026-10-28 | Rejected |
+
+| [0112](0112-gate-catalog-prefetch-on-create.md) | Rejected16ab gated catalog: one discarded read removed but no repeated startup/relaunch benefit; reverted | Agent | 2026-10-28 | Rejected |
+
+| [0113](0113-narrow-boolean-count-index-diagnostic.md) | Diagnostic16ac: changed Boolean-only shared count SQL with narrow partial type index; no production index/hint | Agent | 2026-10-28 | Evidence |
 
 ## Provisional choices (still open questions; listed so they're visible)
 
@@ -88,3 +140,60 @@ Rule for every decision: add an ADR (context, decision, consequences) and a row 
 | Q10 | Per-feature version; `onVersionMismatch: 'error'` default | Agent |
 | Q11 | Action-level meta-reducers; state meta-reducers only on bridge reducers; `tx.resetAll()` | Agent |
 | Q13 | Rollback, error action, skip ScannedActions, queue continues | Agent |
+
+
+| [0114](0114-conditional-count-filter.md) | Rejected16ae: fewer conditional aggregate instructions but slower native reads in both orders; production unchanged | Agent | 2026-10-28 | Rejected |
+
+| [0115](0115-stable-published-root-index.md) | Rejected16af: private Map allocation removed but full list/shape guards unmet; reverted | Agent | 2026-10-28 | Rejected |
+
+| [0116](0116-skip-empty-insert-flushes.md) | Rejected16ag: 100?0 empty drains but no repeatable device benefit; reverted | Agent | 2026-10-28 | Rejected |
+
+| [0117](0117-flat-phase-wall-attribution.md) | Diagnostic16ah: targeted debugger setup then method wall spans on unchanged16r; no CPU/heap/floor change | Agent | 2026-10-28 | Evidence |
+
+| [0118](0118-lazy-static-signal-projections.md) | Rejected16ai lazy static signals: residual gain did not clear full list/DOM/heap guards | Agent | 2026-10-28 | Rejected |
+
+| [0119](0119-validation-diff-wall-attribution.md) | Diagnostic16aj locates flat validation/diff wall cost on unchanged16r | Agent | 2026-10-29 | Evidence |
+
+| [0120](0120-reuse-primitive-kind.md) | Rejected16ak primitive kind reuse: no repeatable residual benefit; reverted | Agent | 2026-10-29 | Rejected |
+
+| [0121](0121-update-parser-diagnostic.md) | Rejected16al UPDATE parser bypass: 2400 calls, no native-wall benefit | Agent | 2026-10-29 | Rejected |
+
+| [0122](0122-wide-frozen-object-copy.md) | Rejected16an2 wide pointer copy: reversed means lower but full list/mean guards unmet; reverted | Agent | 2026-10-29 | Rejected |
+
+| [0123](0123-emission-pipeline-boundary.md) | Diagnostic16ao attributes predecessor pipeline/native/refresh on unchanged16r | Agent | 2026-10-29 | Evidence |
+
+| [0124](0124-stable-registered-feature-set.md) | Candidate16ap existing registry-set reuse: tiny repeated residual benefit; full matched acceptance pending | Agent | 2026-10-29 | In progress |
+
+| [0125](0125-bounded-shapes-setup.md) | Bound stalled shapes setup/settle evaluations; incomplete16ap and native/storage investigation preserved | Agent | 2026-10-29 | Failure handling |
+
+| [0126](0126-native-reopen-handle-investigation.md) | Gated-open candidate: ownership model and isolated diagnostics verified; full16aq4 acceptance pending | Agent | 2026-10-29 | Investigation |
+
+| [0127](0127-reserved-benchmark-device-data.md) | User reserved emulator; isolated16GiB data preserves original apps; native setup validation | Agent | 2026-10-29 | In progress |
+
+| [0128](0128-isolated-benchmark-emulator.md) | Separate5556 AVD; scoped targeting/setup verified; first matched16aq4 acceptance active | Agent | 2026-10-29 | In progress |
+
+| [0128](0128-isolated-benchmark-emulator.md) addendum | 16aq6/16L19: first complete matched acceptance on emulator-5556. Shapes 2/54/0/30 (16r 1/48/0/37); lists 13/15/3/2 with list mean guard FAIL (relaunch +245-254 ms, firstReady +88/+148 ms); 16aq2 gated-open candidate not retained | Agent | 2026-10-29 | Accepted |
+| [0129](0129-fresh-process-pipelined-open.md) | Fresh-process pipelined native open (sessionStorage marker; ADR-0126 gate on reload). Retained; 16av/16L20 (shapes 3/54/0/29, lists 12/16/3/2) is the isolated-environment baseline | Agent | 2026-10-29 | Accepted |
+| [0130](0130-native-marker-recording.md) | Candidate16aw: gate failed marker writes; native aliases share markers; host regressions pass | Agent | 2026-10-30 | In progress |
+
+| [0131](0131-queued-android-open-settings.md) | Rejected16az earlier settings send: native order confirmed, target app gain mixed; restored16aw | Agent | 2026-10-30 | Rejected |
+
+| [0132](0132-transient-selector-wall.md) | Unchanged16aw transient watch wall attribution:201 lifetimes/200 writes; eviction/recount small, no production optimization or new limit | Agent | 2026-10-30 | Diagnostic complete |
+
+| [0133](0133-batched-static-selector-scopes.md) | Rejected16be batched scopes: full16bf/16L22 failed; exact SelectionEngine baseline restored, correctness tests kept | Agent | 2026-10-30 | Rejected |
+
+| [0134](0134-single-statement-native-route.md) | Rejected16bg public single-statement run vs executeSet:2400calls/60pairs, both-order run wall adverse; driver unchanged | Agent | 2026-10-30 | Rejected |
+
+| [0135](0135-workflow-reset-wall.md) | Workflow reset read/write wall attribution | Diagnostic complete; full-root read located, no floor/gain claim |
+
+| [0136](0136-complete-object-shell-reads.md) | Complete object shell reads with canonical cached-child metadata | Rejected: full16bj/16L23 lists32/33,shapes56/86,mean/heap guards failed |
+
+| [0137](0137-known-write-parent-positions.md) | Authoritative reload for structurally changed known pointer parents; preserve canonical metadata and key order | Rejected16bk SQL reload: diagnostic startup/heap adverse; exact baseline restored, correctness bug remains open |
+
+| [0138](0138-canonical-known-pointer-values.md) | Canonicalize selected complete known pointer values before sharing, without structural SQL reload |Rejected16bl2 prewalk after diagnostic startup/heap adversity;16bl incomplete; integrated correctness repair next |
+
+| [0139](0139-canonical-known-reconciliation.md) | Canonical known pointer ordering/metadata isolation inside existing sharing traversal | Full16bn/16L24 FAILED: lists29/33,shapes53/86; unaccepted for retention, scope isolation next |
+
+| [0140](0140-known-pointer-sharing-isolation.md) | Isolate canonical complete-known-pointer reconciliation; restore ordinary sharing exact baseline |Full16bp/16L25 FAILED:lists32/33,shapes53/86;16bo unaccepted for retention, singleton scope source work next |
+
+| [0141](0141-single-primitive-selector-scope.md) | Avoid duplicate synthetic wrapper copies for one loaded primitive selector source |16bq REJECTED:guard all3pairs and both PSS channels adverse; source restored, full16br/16L26 held |

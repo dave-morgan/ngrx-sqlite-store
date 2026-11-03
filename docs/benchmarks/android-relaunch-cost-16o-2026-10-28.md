@@ -1,0 +1,21 @@
+# 16o diagnostic: persisted50k relaunch critical path
+
+No new implementation. Uses frozen16nAPKaece947ff0ed477d198527b639c8db7e1d2214592b36648a5e05de52fa8df7f0. 16L7remainingrelaunch gap~116.379ms prompted attribution ratherthanunchangedacceptance rerun.
+
+`.tmp/16o-relaunch-profile.mjs` copies acceptance runOne workload protocol:defaultseed/reset/50kseed,30toggles,notes/GCusagechecks,200emissions,benchBridge,thenforce-stop/relaunch. Enables existing startup-call wrapper onlybefore relaunch,collectsSQLcalls/timeline/marks/resourcesafterready. NoCPUprofiler,newheapcapture,newfloor orverdictcounts. InstalledAPKh/session/boot/ready50000 verified;originalbenchmarkheapusage/GCstepsretained tokeep workloadcomparable. No takeHeapSnapshot. Partialerrortrace savedifavailable;overwriteguard.
+
+ACTIVE `.tmp/16o-relaunch-run.ps1` PID43724;logs `.tmp/16o-relaunch.stdout.log`/`.tmp/16o-relaunch.stderr.log`;raw `.tmp/16o-relaunch-50000.json`. VerifiedcoldbootbeforeexplicitcachedAPKinstall. On16O_RELAUNCH_DONE validateAPKh/30toggles/200emissions/ready50000/nativecalltimingsandtrace,identifycriticalpath beforefix. Instrumented walltimesnotSQLCPU/acceptance. Nootherbuild/test/deviceworkalongside.
+
+Firstattempt failed BEFOREtimedwork:ReferenceError runOneundefined(actualcopiedhelpername measure). InstalledAPKh/setupmetadata only;originalsource/JSON/logsremainunchanged,no timedsamplesdiscarded. Correctedseparatelabel16o2 usesmeasure(),PID26020 `.tmp/16o2-relaunch-run.ps1`,logs `.tmp/16o2-relaunch.stdout.log`/`.stderr.log`,raw `.tmp/16o2-relaunch-50000.json`. No overwrittenevidence orfakecompletion.
+
+Secondattempt16o2invalid:copiedcaller didnotsetPKG,soactualworktargetedlegacyunqualifiedpackage whilehashcheckcoveredinstalled.sqlite. BenchEmitmissingfailedbeforecorrectrelaunch;ready6854msisNOTcandidateevidence. Originalscript/JSON/error/logs preserved;legacy30togglearrayswere notexported,onlylogs/partial{}available,NOfullrawrecoveryoracceptancesampleclaim. Correctedseparatelabel16o3explicitlybindsPKG=.sqlite,hashesactualtarget/assertshooks,andcheckpointscompletearrays;PID15848/raw `.tmp/16o3-relaunch-50000.json`/logs `.tmp/16o3-relaunch.*.log`. No overwrittenfaileddata.
+
+Third16o3actual.sqlitehashverified;30toggles/200emissionarrayscheckpointedandpreserved. Relaunchready50000/1757msbut__startupTraceabsent;requiredtracegatefailed,nocriticalSQLclaim. Profilingflagpersistenceisahypothesisbecauseexistingprofilerwaits6saftersettingflag. Fourthseparate16o4/PID28424adds6sflagpersistenceidlebeforeforce-stop,recordsprofileFlag/fullrelaunchcheckpointbeforeassertion. This changesuntimedpreparationandmayallowmaintenance/cachechanges:diagnosticONLY,notanacceptancelatencycomparison. Allpreviousfilesintact/no merging/deletion.
+
+## Corrected16o4 complete/verified
+
+Actualpackage.sqlite/APKh/session/boot/30finite toggles/200finiteemissions/ready50000/profileFlagtrue/16finite nativecalls verified. Relaunchsummary1554.7ms. Extra6spre-stopidle is diagnosticsetup correction,notacceptanceprotocol,so timingisnotanacceptance replacement. Fullraw+verification durable companionJSON.
+
+CountCTEcall at1363.2ms took69.2ms andfinishedbeforefirstsummary1554.7ms. Firstnativeconnection starts1258.0ms;open/catalog overlap,so durationsmustnotbesummed. InitialJSresources requested~388-399msfinished~1140-1157ms;thissingletrace cannotattributeassetlatencytolibrarycode. Later todos/query andtodos/userIdread responses614.7/731.4msfinishedAFTERfirstsummary,andcannotexplainitsreadythreshold. Native response walltimeisnotSQLCPU. The countSQListruncated200charsbyexistingAPKwrapper;nextcapturefullSQLonwarmreloadforquery-planinvestigation,notstartup-latencycomparison.
+
+Allpriorattempts remainintact.16o4successdoesnotreplace16o3partial1757msobservationorclaimitsmissingtraceprovenfixeduniversally;flagtrue+tracepresentvalidatesonlythiscorrectedsetup.

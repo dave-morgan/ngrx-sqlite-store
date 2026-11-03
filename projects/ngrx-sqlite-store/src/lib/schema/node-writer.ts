@@ -104,10 +104,11 @@ class SubtreeWriter {
               .filter(([key]) => kind !== NodeKind.Entity || (key !== 'ids' && key !== 'entities'))
               .map(([key, child]) => [escapeSegment(key), child] as const);
       const positions = initial(entries.length);
+      const childPos = new Map(entries.map(([key], i) => [key, positions[i]]));
       const meta: NodeMeta = {
         path,
         kind,
-        childPos: new Map(entries.map(([key], i) => [key, positions[i]])),
+        childPos,
       };
       if (kind === NodeKind.Arr) meta.elementIds = entries.map(([key]) => key);
       if (kind === NodeKind.Entity) {
@@ -159,6 +160,18 @@ class SubtreeWriter {
     const kind = this.policy.decideKind(path, next, depth(path));
     const meta = getNodeMeta(prev);
     const prevKind = meta?.kind ?? this.policy.decideKind(path, prev, depth(path));
+    // Row-free leaf kinds (null, scalars, inline JSON) own no descendant rows: a type
+    // change rewrites the one row instead of a subtree delete and re-insert.
+    if (
+      kind !== prevKind &&
+      kind <= NodeKind.Json &&
+      prevKind <= NodeKind.Json &&
+      (typeof prev !== 'object' || prev === null || meta?.path === path)
+    ) {
+      if (next && typeof next === 'object') setNodeMeta(next, { path, kind });
+      await this.rows.updateKindValue(path, kind, valueText(next, kind), changePath);
+      return;
+    }
     if (
       kind !== prevKind ||
       (typeof prev === 'object' && prev !== null && (!meta || meta.path !== path))
@@ -400,10 +413,11 @@ export async function writeSubtree(
   value: unknown,
   changes: ChangeSet,
   policy = new StoragePolicy(),
+  knownLocation?: Location,
 ): Promise<void> {
   policy.decideKind(path, value, depth(path));
   const writer = new SubtreeWriter(new RowWriter(exec, changes, policy.rowCap), policy);
-  await writer.replace(path, value, await location(exec, path));
+  await writer.replace(path, value, knownLocation ?? (await location(exec, path)));
   await writer.rows.flush();
   committedWrites(changes).values.set(path, value);
 }
@@ -424,7 +438,7 @@ export async function diffWrite(
       typeof prev === 'object' &&
       (!getNodeMeta(prev) || getNodeMeta(prev)!.path !== path))
   ) {
-    await writeSubtree(exec, path, next, changes, policy);
+    await writeSubtree(exec, path, next, changes, policy, knownLocation);
     return;
   }
   policy.decideKind(path, next, depth(path));

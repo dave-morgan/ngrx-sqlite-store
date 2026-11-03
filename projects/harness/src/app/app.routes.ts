@@ -15,5 +15,6 @@ export const routes: Routes = [
     title: 'Diagnostics',
     loadComponent: () => import('./pages/diagnostics.page').then((m) => m.DiagnosticsPage),
   },
+  { path: 'shapes', loadChildren: () => import('./shapes.routes').then((m) => m.shapesRoutes) },
   { path: '**', redirectTo: 'todos' },
 ];

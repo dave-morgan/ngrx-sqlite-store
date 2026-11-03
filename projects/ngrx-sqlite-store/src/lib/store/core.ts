@@ -26,7 +26,7 @@ import { NodeStore } from '../schema/node-store';
 import { StoragePolicy } from '../schema/policy';
 import { ensureQueryIndexes } from '../schema/query-indexes';
 import { serializedSize } from '../schema/size';
-import { escapeSegment, splitPath } from '../storage/path';
+import { escapeSegment, firstSegment } from '../storage/path';
 import { StorageEngine } from '../storage/storage-engine';
 import {
   COMMITTED_CACHE,
@@ -39,7 +39,7 @@ import type { RegisteredFeature } from './tokens';
 import { Injector } from '@angular/core';
 import { NSS_CAPTURE, NSS_EMIT, NssScannedActionsSubject } from './scanned-actions-subject';
 import { State } from './state';
-import { PREWARM_READY } from './prewarm';
+import { PREWARM_CLEARED, PREWARM_READY } from './prewarm';
 
 export const nssReducerError = createAction(
   '[ngrx-sqlite-store] Reducer Error',
@@ -59,6 +59,8 @@ export class SqliteStoreCore {
   private readonly injector = inject(Injector);
   readonly engine = inject(StorageEngine);
   private readonly prewarm = inject(PREWARM_READY, { optional: true });
+  /** Consumed by the first seed of each key: later seeds may follow writes. */
+  private readonly cleared = new Set(inject(PREWARM_CLEARED, { optional: true }) ?? []);
   private readonly actions = inject(ActionsSubject);
   private readonly scanned = inject(NssScannedActionsSubject);
   private readonly dispatcher = inject(ReducerManagerDispatcher);
@@ -189,7 +191,7 @@ export class SqliteStoreCore {
   selectionReady(path: string): boolean {
     if (path === '')
       return [...this.features.values()].every((feature) => feature.persist || feature.seeded);
-    const feature = this.features.get(splitPath(path)[0]);
+    const feature = this.features.get(firstSegment(path));
     return !feature || feature.persist || feature.seeded;
   }
   /** Internal registry/default snapshot for the read side, including pre-bootstrap roots. */
@@ -218,7 +220,17 @@ export class SqliteStoreCore {
       const versions = new Map<string, string>();
       const catalog: { name: string; tbl_name: string; sql: string }[] = [];
       const parameterLimit = 999;
-      for (let offset = 0; offset < features.length; offset += parameterLimit) {
+      // The open-time catalog is still exact: no statement has touched metadata or schema.
+      const known = this.engine.bootCatalog();
+      if (known) {
+        for (const feature of features) {
+          const key = `feature:${feature.key}:version`;
+          const value = known.meta.get(key);
+          if (value !== undefined) versions.set(key, value);
+        }
+        catalog.push(...known.indexes.filter((index) => index.name.startsWith('nss_query_')));
+      }
+      for (let offset = 0; !known && offset < features.length; offset += parameterLimit) {
         const keys = features.slice(offset, offset + parameterLimit)
           .map((feature) => `feature:${feature.key}:version`);
         const rows = await tx.query<{ key: string | null; value: string; name: string; tbl_name: string; sql: string }>(
@@ -240,8 +252,10 @@ export class SqliteStoreCore {
         if (feature.persist && previousVersion === String(version)) continue;
         if (feature.persist && previousVersion !== undefined && options?.onVersionMismatch !== 'reseed')
           throw new Error(`Feature version mismatch: ${feature.key}`);
+        const cleared = this.cleared.delete(feature.key);
         if (!feature.persist && previousVersion === String(version)) {
-          const stored = await feature.nodes.read(tx, escapeSegment(feature.key));
+          // A session subtree the prewarm just deleted reads back as undefined.
+          const stored = cleared ? undefined : await feature.nodes.read(tx, escapeSegment(feature.key));
           if (JSON.stringify(stored) === JSON.stringify(feature.seed)) continue;
         }
         // Some foreign reducers (notably routerReducer) have no state until their first action.
@@ -378,7 +392,7 @@ export class SqliteStoreCore {
       const work = this.work,
         emission = this.emission;
       await Promise.all([work, emission, ...this.maintenance]);
-      await this.engine.read(async () => undefined);
+      await this.engine.drained();
       await this.engine.maintained();
       if (work === this.work && emission === this.emission && this.maintenance.size === 0) return;
     } while (true);

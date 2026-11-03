@@ -1,0 +1,3 @@
+# Phase15r count index diagnostic
+
+24 completed records,48 samples per query mode at50k. All returned count50000; allscratchindexesremoved. Existing partial index forced37.090ms mean; scratch expression-covering count36.102ms; unforced query with that covering index present34.773ms. SQLite EXPLAIN for all variants has no JSON Function opcode, so adding predicate-expression keys does not eliminate extra JSON validation CPU in this probe. No isolated baseline without the scratch indexes is present in this run; these timings do not establish an application improvement. No production index or query hint added. Source/logs/raw `.tmp/15r-count-index.{mjs,json,jsonl}` retained. Continue selector allocation investigation.

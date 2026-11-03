@@ -1,0 +1,1318 @@
+{
+  "session": "16t-accept-1793137659",
+  "observations": 10,
+  "pairedTrials": 5,
+  "workloads": 4,
+  "verdicts": 86,
+  "counts": {
+    "PASS": 1,
+    "PLATFORM-BOUND": 50,
+    "CODE-BOUND": 0,
+    "FAIL": 35
+  },
+  "apkHashes": {
+    "classic": "58ad9c2ab62cb9e1ec71004f80bbad22a67edb82b12496698e2ebba5e0526311",
+    "sqlite": "33441a3e6a24fe8a88f8f4fb263658801f68b3ac78d0b8d8f6f7e5a1797b3e30"
+  },
+  "platformSha256": "94d8f568faef9cc48d0b0355463520abf9c6ef1ec45edab13f31ebfe655bfaf9",
+  "rawSha256": "833cd918a1a32d84e08e0a9f445a121fc7eedd189f0787ce793ad179188d8ee1",
+  "journalSha256": "d34754d490adde3fb7c207cf49c5e48afa938dfee260b8f2b43bc342b19504ae",
+  "provenanceVerified": true,
+  "summary": [
+    {
+      "group": "flat",
+      "metric": "50.setKey.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.4,
+        "sd": 0.07071067814335016
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.320000000006985,
+        "sd": 1.2517987058592608
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "50.setKey.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.4599999999860303,
+        "sd": 1.0310189134984955
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 19.360000000009315,
+        "sd": 3.4478979103473875
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.setKey.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 3.6,
+        "sd": 1.6248076809339986
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.959999999997672,
+        "sd": 1.0597169433472458
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.setKey.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 8.740000000002329,
+        "sd": 1.6056151468946365
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 20.340000000002327,
+        "sd": 3.3148152286891643
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.setKeys.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.4399999999906868,
+        "sd": 0.08944271909218221
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.319999999983702,
+        "sd": 0.8497058314524547
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "50.setKeys.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.8199999999837018,
+        "sd": 0.8288546313936904
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 19.060000000020956,
+        "sd": 1.604057355571701
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.setKeys.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 2.5000000000116414,
+        "sd": 1.440486029086773
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 9.039999999990687,
+        "sd": 0.9071934744070594
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.setKeys.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 9.359999999997672,
+        "sd": 1.619567843557918
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 19.479999999993016,
+        "sd": 1.6006248779445098
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.replace.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.32000000004190954,
+        "sd": 0.04472135953958329
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 7.880000000016298,
+        "sd": 1.3590437814739376
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "50.replace.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.6400000000139698,
+        "sd": 1.180254209880395
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 17.720000000006983,
+        "sd": 4.236980056599209
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.replace.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 1.0600000000209548,
+        "sd": 0.1516575088764253
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.500000000023283,
+        "sd": 1.1683321445343655
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.replace.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 9.859999999997672,
+        "sd": 2.8121166405295686
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 18.120000000018628,
+        "sd": 4.218056424487987
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.burst.lagP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.3000000000349246,
+        "sd": 2.6031257322757084e-11
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 6.239999999990687,
+        "sd": 0.32863353452577104
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.burst.lagP95",
+      "classic": {
+        "n": 5,
+        "mean": 0.620000000006985,
+        "sd": 0.16431676726111433
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 15.180000000004657,
+        "sd": 2.788727308264775
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.burst.endLag",
+      "classic": {
+        "n": 5,
+        "mean": 0.29999999997671695,
+        "sd": 6.376329780383693e-11
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 6.679999999993015,
+        "sd": 1.15195486023088
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "50.burst.maxBacklog",
+      "classic": {
+        "n": 5,
+        "mean": 0,
+        "sd": 0
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 2,
+        "sd": 0
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "50.heapMb",
+      "classic": {
+        "n": 5,
+        "mean": 3.659716033935547,
+        "sd": 0.08742491333138845
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 5.041268920898437,
+        "sd": 0.0056316551570492505
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "50.pssTotalMb",
+      "classic": {
+        "n": 5,
+        "mean": 224.8587890625,
+        "sd": 2.3440347727386865
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 237.55625,
+        "sd": 1.5672350434140159
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "500.setKey.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.38000000002793966,
+        "sd": 0.13038404807369558
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.220000000006985,
+        "sd": 1.035374328440041
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "500.setKey.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.0599999999743885,
+        "sd": 0.5458937625740282
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 21.460000000020955,
+        "sd": 3.2392900456706775
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.setKey.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 5.700000000023283,
+        "sd": 0.19999999999708962
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.639999999979045,
+        "sd": 0.9208691546876051
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.setKey.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 9.02000000004191,
+        "sd": 2.8190423905730344
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 22.100000000023282,
+        "sd": 3.2163644072045816
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.setKeys.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.4599999999976717,
+        "sd": 0.08944271910519783
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 9.6,
+        "sd": 0.987420882922786
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "500.setKeys.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 2.900000000023283,
+        "sd": 4.146685423334577
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 20.04000000001397,
+        "sd": 4.876781725696474
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.setKeys.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 2.920000000006985,
+        "sd": 2.3123581037859573
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 10.3,
+        "sd": 0.8455767262826301
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.setKeys.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 9.859999999997672,
+        "sd": 3.473182978171809
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 20.479999999993016,
+        "sd": 4.787170354189649
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.replace.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.34000000001396985,
+        "sd": 0.0547722557058823
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8,
+        "sd": 0.6204836823145524
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "500.replace.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.4199999999720603,
+        "sd": 0.9093954035487403
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 16.54000000001397,
+        "sd": 5.631429658626792
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.replace.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 1.4,
+        "sd": 0.3999999999869033
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.560000000009314,
+        "sd": 0.7536577472681015
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.replace.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 9.979999999981374,
+        "sd": 2.758079041659637
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 17.139999999990685,
+        "sd": 5.781262837806347
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.burst.lagP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.40000000002328306,
+        "sd": 0
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 6.340000000037253,
+        "sd": 0.2509980079655565
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.burst.lagP95",
+      "classic": {
+        "n": 5,
+        "mean": 0.7600000000093132,
+        "sd": 0.11401754246294643
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 15.379999999993014,
+        "sd": 1.948589233253916
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.burst.endLag",
+      "classic": {
+        "n": 5,
+        "mean": 0.3600000000209548,
+        "sd": 0.08944271907265876
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 7.339999999990686,
+        "sd": 2.125558750099449
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "500.burst.maxBacklog",
+      "classic": {
+        "n": 5,
+        "mean": 0,
+        "sd": 0
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 2,
+        "sd": 0
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "500.heapMb",
+      "classic": {
+        "n": 5,
+        "mean": 4.1027061462402346,
+        "sd": 0.07149558521523189
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 5.5362388610839846,
+        "sd": 0.004684897410575562
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "500.pssTotalMb",
+      "classic": {
+        "n": 5,
+        "mean": 228.733203125,
+        "sd": 1.631680094995206
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 238.5771484375,
+        "sd": 1.4446645573059465
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.setKey.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 1.5399999999906868,
+        "sd": 0.3361547262790859
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 9.640000000002328,
+        "sd": 0.939680796844257
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.setKey.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 3.499999999976717,
+        "sd": 2.4869660230519632
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 21.940000000025613,
+        "sd": 3.0867458593120323
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.setKey.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 3.9799999999813735,
+        "sd": 1.535252422225417
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 10.420000000006985,
+        "sd": 0.9121403400427448
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.setKey.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 9.4,
+        "sd": 2.20794021658328
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 22.720000000018626,
+        "sd": 2.9659737018395367
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.setKeys.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 1.5799999999813736,
+        "sd": 0.08366600263392755
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 10.580000000004656,
+        "sd": 1.6192590898334898
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.setKeys.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 5.879999999993015,
+        "sd": 3.3803845935166366
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 19.919999999995344,
+        "sd": 3.346938899952865
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.setKeys.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 3.119999999983702,
+        "sd": 0.21679483389537973
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 11.140000000002328,
+        "sd": 1.6801785619280216
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.setKeys.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 10.379999999981374,
+        "sd": 2.2960836221729184
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 20.580000000004656,
+        "sd": 3.142769479298309
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.replace.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.38000000001629813,
+        "sd": 0.044721359533075475
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 12.800000000011641,
+        "sd": 0.367423461426982
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.replace.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.1199999999837018,
+        "sd": 0.4438468203948536
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 25.920000000006986,
+        "sd": 3.6745067696056046
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.replace.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 1.5800000000046566,
+        "sd": 0.24899799195089148
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 13.320000000018627,
+        "sd": 0.41472882709771236
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.replace.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 8.699999999988359,
+        "sd": 3.3264094756883673
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 26.519999999995342,
+        "sd": 3.3729808774897845
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.burst.lagP50",
+      "classic": {
+        "n": 5,
+        "mean": 1.300000000023283,
+        "sd": 0.1224744871106431
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.460000000020955,
+        "sd": 0.937016542017439
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.burst.lagP95",
+      "classic": {
+        "n": 5,
+        "mean": 2.140000000025611,
+        "sd": 0.4774934554480225
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 17.500000000011642,
+        "sd": 2.745906043578131
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.burst.endLag",
+      "classic": {
+        "n": 5,
+        "mean": 1.2200000000419096,
+        "sd": 0.20493901531691977
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.639999999967404,
+        "sd": 2.8049955436607545
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.burst.maxBacklog",
+      "classic": {
+        "n": 5,
+        "mean": 0,
+        "sd": 0
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 2,
+        "sd": 0
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.heapMb",
+      "classic": {
+        "n": 5,
+        "mean": 8.098539733886719,
+        "sd": 0.0012939040384367562
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 9.919517517089844,
+        "sd": 0.006046632703150198
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "flat",
+      "metric": "5000.pssTotalMb",
+      "classic": {
+        "n": 5,
+        "mean": 234.971875,
+        "sd": 2.2710830084589677
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 246.7658203125,
+        "sd": 1.2808739459205714
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d1.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.3600000000209548,
+        "sd": 0.11401754249102475
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 7.540000000002328,
+        "sd": 0.5594640292293271
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d1.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.4200000000186264,
+        "sd": 1.5319921671183543
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 17.640000000025612,
+        "sd": 2.389142105437829
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d1.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 3.740000000002328,
+        "sd": 2.1102132593516005
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.120000000018626,
+        "sd": 0.4658325879430887
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d1.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 8.960000000020955,
+        "sd": 2.35116992157007
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 18.380000000004657,
+        "sd": 2.6252618917203248
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d4.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.39999999998835845,
+        "sd": 5.206251464551417e-11
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 7.560000000020954,
+        "sd": 0.7162401831952967
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d4.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.0399999999790452,
+        "sd": 0.45055521303603446
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 17.140000000002328,
+        "sd": 2.9142752100730522
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d4.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 2.519999999983702,
+        "sd": 1.6724233913857958
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.379999999981374,
+        "sd": 0.8871302046967041
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d4.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 8.059999999997672,
+        "sd": 0.9555103348538795
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 17.75999999998603,
+        "sd": 2.626404386236155
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d10.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.4200000000186265,
+        "sd": 0.04472135953958329
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 7.620000000018626,
+        "sd": 0.43243496616598887
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d10.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.2200000000069848,
+        "sd": 0.23874672772553504
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 17.599999999941794,
+        "sd": 2.0457272545645235
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d10.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 1.4800000000395812,
+        "sd": 0.35637059361708584
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 8.180000000016298,
+        "sd": 0.3271085446486968
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "edit_d10.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 8.200000000023284,
+        "sd": 1.3638181696840745
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 19.239999999955764,
+        "sd": 2.565735761899564
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "loadCycle.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 2.9000000000116417,
+        "sd": 5.423098745195219
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 15.760000000044238,
+        "sd": 3.5146834850469064
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "loadCycle.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 34.37999999999302,
+        "sd": 1.2517987058648405
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 51.400000000011644,
+        "sd": 2.050609665426227
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "loadCycle.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 3.6399999999906867,
+        "sd": 5.591332578196135
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 16.10000000001164,
+        "sd": 3.5693136595147865
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "loadCycle.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 34.87999999999302,
+        "sd": 1.261744823645478
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 51.84000000000233,
+        "sd": 2.0983326714382966
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "step.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.379999999969732,
+        "sd": 0.04472135950704422
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 7.31999999997206,
+        "sd": 0.5718391382118923
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "step.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.1999999999883584,
+        "sd": 0.6964194138809371
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 15.939999999955763,
+        "sd": 1.1304866208663673
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "step.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 2.499999999976717,
+        "sd": 1.8152134860741893
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 7.879999999993015,
+        "sd": 0.7190271204710398
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "step.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 8.420000000018627,
+        "sd": 2.67245205758296
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 16.31999999996042,
+        "sd": 1.1256109452277598
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "reset.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.2200000000069849,
+        "sd": 0.04472135950704422
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 26.080000000004656,
+        "sd": 2.6366645596592706
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "reset.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 0.9200000000302679,
+        "sd": 0.4764451700148725
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 59.679999999981376,
+        "sd": 35.4800930100323
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "reset.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.279999999969732,
+        "sd": 0.04472135949402859
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 26.1,
+        "sd": 2.622022120459788
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "reset.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.8800000000162982,
+        "sd": 0.6418722614349764
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 59.69999999997672,
+        "sd": 35.502253449607615
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "append100.emitP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.32000000001862644,
+        "sd": 0.04472135955259892
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 13.059999999962747,
+        "sd": 0.6841052550261292
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "append100.emitP95",
+      "classic": {
+        "n": 5,
+        "mean": 1.9599999999976716,
+        "sd": 2.8797569341750586
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 39.539999999990684,
+        "sd": 21.560565855270337
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "append100.domP50",
+      "classic": {
+        "n": 5,
+        "mean": 0.9200000000069849,
+        "sd": 0.16431676721506305
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 13.379999999993014,
+        "sd": 0.7120393247266328
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "append100.domP95",
+      "classic": {
+        "n": 5,
+        "mean": 5.860000000020955,
+        "sd": 1.1886967654032268
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 39.85999999999767,
+        "sd": 21.488671434073805
+      },
+      "status": "PLATFORM-BOUND"
+    },
+    {
+      "group": "workflow",
+      "metric": "heapMb",
+      "classic": {
+        "n": 5,
+        "mean": 3.93563232421875,
+        "sd": 0.0013240093781993318
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 5.491313171386719,
+        "sd": 0.003580343250950605
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "pssTotalMb",
+      "classic": {
+        "n": 5,
+        "mean": 227.71328125,
+        "sd": 1.7075036274772304
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 240.9994140625,
+        "sd": 1.7023899837131116
+      },
+      "status": "FAIL"
+    },
+    {
+      "group": "workflow",
+      "metric": "relaunchReadyMs",
+      "classic": {
+        "n": 5,
+        "mean": 1175.5800000000163,
+        "sd": 312.23189619259455
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 670.459999999986,
+        "sd": 286.230873596863
+      },
+      "status": "PASS"
+    },
+    {
+      "group": "workflow",
+      "metric": "relaunchHeapMb",
+      "classic": {
+        "n": 5,
+        "mean": 3.276964569091797,
+        "sd": 0.04203204665450514
+      },
+      "sqlite": {
+        "n": 5,
+        "mean": 4.379624938964843,
+        "sd": 0.19392241046929692
+      },
+      "status": "FAIL"
+    }
+  ],
+  "limitations": [
+    "Per-action timing arrays are not retained by shapes hook summaries.",
+    "Device/SDK/WebView are recorded in the paired control; shapes manifest verifies session/APK/control file and runner lineage, not a second device-metadata capture.",
+    "Compare with corrected16j3; historical pre-normalization shapes reports have setup confounds."
+  ]
+}

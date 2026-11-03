@@ -1,0 +1,832 @@
+{
+  "session": "15v-count-fusion",
+  "apkHash": "6831fc61c3bdbe89ccecfb59cb89b9d5dff39357709d11ccb22ecf9d43f282aa",
+  "statements": {
+    "separate": "SELECT 0 AS slot,COUNT(*) AS n FROM nss_entity WHERE coll=? AND data!='' AND json_valid(data) UNION ALL SELECT 1,COUNT(*) FROM nss_entity WHERE coll=? AND data!='' AND json_valid(data) AND json_extract(data,'$.done')=?",
+    "fused": "SELECT COUNT(*) AS total,COUNT(CASE WHEN json_extract(data,'$.done')=? THEN 1 END) AS open FROM nss_entity WHERE coll=? AND data!='' AND json_valid(data)"
+  },
+  "plans": {
+    "separate": [
+      {
+        "id": 1,
+        "parent": 0,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 2,
+        "parent": 1,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 5,
+        "parent": 2,
+        "notused": 56,
+        "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+      },
+      {
+        "id": 22,
+        "parent": 1,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 25,
+        "parent": 22,
+        "notused": 56,
+        "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+      }
+    ],
+    "fused": [
+      {
+        "id": 3,
+        "parent": 0,
+        "notused": 56,
+        "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+      }
+    ]
+  },
+  "rows": [
+    {
+      "pair": 0,
+      "mode": "separate",
+      "ms": 115.29999999981374,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 0,
+      "mode": "fused",
+      "ms": 51.89999999990687,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "mode": "fused",
+      "ms": 51.199999999953434,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "mode": "separate",
+      "ms": 88,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "mode": "separate",
+      "ms": 87.30000000004657,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "mode": "fused",
+      "ms": 51.4000000001397,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 3,
+      "mode": "fused",
+      "ms": 52.10000000009313,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 3,
+      "mode": "separate",
+      "ms": 88.5,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 4,
+      "mode": "separate",
+      "ms": 88.19999999995343,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 4,
+      "mode": "fused",
+      "ms": 52.300000000046566,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 5,
+      "mode": "fused",
+      "ms": 51,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 5,
+      "mode": "separate",
+      "ms": 90,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 6,
+      "mode": "separate",
+      "ms": 89.5,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 6,
+      "mode": "fused",
+      "ms": 51.700000000186265,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 7,
+      "mode": "fused",
+      "ms": 52,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 7,
+      "mode": "separate",
+      "ms": 93.0999999998603,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 8,
+      "mode": "separate",
+      "ms": 94.39999999990687,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 8,
+      "mode": "fused",
+      "ms": 51.10000000009313,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 9,
+      "mode": "fused",
+      "ms": 51.5999999998603,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 9,
+      "mode": "separate",
+      "ms": 88.30000000004657,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 10,
+      "mode": "separate",
+      "ms": 86.5,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 10,
+      "mode": "fused",
+      "ms": 51.300000000046566,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 11,
+      "mode": "fused",
+      "ms": 51.10000000009313,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 11,
+      "mode": "separate",
+      "ms": 100.69999999995343,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 12,
+      "mode": "separate",
+      "ms": 88.9000000001397,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 12,
+      "mode": "fused",
+      "ms": 51.199999999953434,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 13,
+      "mode": "fused",
+      "ms": 52.5,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 13,
+      "mode": "separate",
+      "ms": 95.19999999995343,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 14,
+      "mode": "separate",
+      "ms": 91.79999999981374,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 14,
+      "mode": "fused",
+      "ms": 52.699999999953434,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 15,
+      "mode": "fused",
+      "ms": 52.60000000009313,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 15,
+      "mode": "separate",
+      "ms": 94.30000000004657,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 16,
+      "mode": "separate",
+      "ms": 86.5,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 16,
+      "mode": "fused",
+      "ms": 51.699999999953434,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 17,
+      "mode": "fused",
+      "ms": 50.39999999990687,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 17,
+      "mode": "separate",
+      "ms": 88.69999999995343,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 18,
+      "mode": "separate",
+      "ms": 90.30000000004657,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 18,
+      "mode": "fused",
+      "ms": 52,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 19,
+      "mode": "fused",
+      "ms": 50.799999999813735,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 19,
+      "mode": "separate",
+      "ms": 89.10000000009313,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 20,
+      "mode": "separate",
+      "ms": 87.80000000004657,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 20,
+      "mode": "fused",
+      "ms": 51.5999999998603,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 21,
+      "mode": "fused",
+      "ms": 51.700000000186265,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 21,
+      "mode": "separate",
+      "ms": 100.60000000009313,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 22,
+      "mode": "separate",
+      "ms": 90.5,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 22,
+      "mode": "fused",
+      "ms": 50.39999999990687,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 23,
+      "mode": "fused",
+      "ms": 51,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 23,
+      "mode": "separate",
+      "ms": 91.9000000001397,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 24,
+      "mode": "separate",
+      "ms": 88.9000000001397,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 24,
+      "mode": "fused",
+      "ms": 58.10000000009313,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 25,
+      "mode": "fused",
+      "ms": 66.0999999998603,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 25,
+      "mode": "separate",
+      "ms": 97.9000000001397,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 26,
+      "mode": "separate",
+      "ms": 104.79999999981374,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 26,
+      "mode": "fused",
+      "ms": 63.800000000046566,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 27,
+      "mode": "fused",
+      "ms": 64,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 27,
+      "mode": "separate",
+      "ms": 107,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 28,
+      "mode": "separate",
+      "ms": 93.29999999981374,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    },
+    {
+      "pair": 28,
+      "mode": "fused",
+      "ms": 51.800000000046566,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 29,
+      "mode": "fused",
+      "ms": 50.89999999990687,
+      "values": [
+        {
+          "total": 50000,
+          "open": 32487
+        }
+      ]
+    },
+    {
+      "pair": 29,
+      "mode": "separate",
+      "ms": 88.5,
+      "values": [
+        {
+          "slot": 0,
+          "n": 50000
+        },
+        {
+          "slot": 1,
+          "n": 32487
+        }
+      ]
+    }
+  ]
+}

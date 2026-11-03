@@ -4,8 +4,14 @@ import type { SqlValue, Row } from '../driver/sql-driver';
 import { NSS_DEPS, NSS_QUERIES, queryIdentity } from './metadata';
 import type { QuerySource } from './metadata';
 
+/** Internal plan for equivalent concurrent entity-count transports (ADR-0081). */
+export interface EntityCountPlan {
+  path: string;
+  predicate: string;
+  params: SqlValue[];
+}
 export interface SqlReader {
-  query<R = Row>(sql: string, params?: SqlValue[], columns?: readonly string[]): Promise<R[]>;
+  query<R = Row>(sql: string, params?: SqlValue[], columns?: readonly string[], entityCount?: EntityCountPlan): Promise<R[]>;
 }
 export interface QueryOptions<T> {
   path: string;

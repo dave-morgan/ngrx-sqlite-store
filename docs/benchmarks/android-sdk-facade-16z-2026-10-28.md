@@ -1,0 +1,15 @@
+# Phase16z SDK facade diagnostic
+
+[ADR0110](../decisions/0110-no-return-sdk-facade-diagnostic.md).
+
+Diagnostic16z ACTIVE .tmp/16z-run.ps1 PID39624 logs .tmp/16z-run.stdout.log/.stderr.log,helper .tmp/16z-sdk-probe.mjs. Unchangedretained16r/freshcoldboot+60settle/50kseed;actualSDKmodulepublicfacade vs SAMEpublicnativeplugin,60alternatingpairs*20calls/mode,2400timedcommits+40warmups. Existingcellvalueunchanged;no applicationdispatch/statechange/SQLrewrite/nativefork. Onlymetadata+nativewallcalls,noCPUprofiler/heapcapture/newfloor. New .tmp/16z-verify.cjs checksallraw/responses/hash-boot-session/seed/currentcell/tablecounts/pairorder;allerrors/checkpoints preserved. No production change before demonstrated repeatable benefit.
+
+
+Initial16z setup failed BEFORE timedgroups:actualtotalentities50012 includes50000todos+12users. SDKrowReorders=1 proofpassed,currentcell0unchanged;groups[]/no timed samples. Wrongtotalentityassertion rejected validsetup. Alloriginalsource/raw/logs retained and archived .tmp/16z-setup-failure;no overwritten/dropped/mergedsamples.
+
+Corrected16z2 usesexplicitfilteredtodoscount alongsideunchangedtotalnodes/entities/chunks,checks50000todos whilepreserving50012totalentities. SyntaxchecksPASS,protocolotherwiseidentical,newlabel/newfreshboot. ACTIVE .tmp/16z2-run.ps1 PID43916 logs .tmp/16z2-run.stdout.log/.stderr.log,raw .tmp/16z2-sdk-50000.json/session16z2-sdk-facade;helper .tmp/16z2-sdk-probe.mjs,verifier .tmp/16z2-verify.cjs. Stillno productionchange/acceptance/floor/CPU/heapcapture. On16Z2_DONEverifyall120groups/2400calls/60pairs/identicalresults/cellcounts/hashbootseed,beforeanydriverdecision.
+
+
+16Z2_DONE COMPLETE independentlyverifiedactualretained16rhash-boot-session/50000todos+50012totalentities/120groups2400finitecalls+40warmups/60alternatingorders/identicalresponses/unchangedcell+alltablecounts. Facademean3.25875/P503.1/P954.2ms,rawmean3.26975/P503.1/P954.1. Pairedraw-minusfacademean+.011ms,median0,rawmeanwins30/60;no repeatable benefit. SDKrowreordercalledonceoutside timing confirmed,butredundancydoesnotestablishobservablegain. Allraw/responses/pairedstatsdurableandroid-sdk-facade-16z2-2026-10-28.json and-analysis*. Rejectedbypasshypothesis;driverUNCHANGED. No productionchange/listguard/acceptancererun/newfloor. Original16zsetupfailurefullypreserved/nosamplesmerged.
+
+Nextsourceinvestigationfrom16ywatchcallback:loadedstaticsource readiness is checked inreadyStatic,againinupdate'sloadingloop,againbeforeselectorprojectionwithin SAMEsynchronousevaluation. retain/recountdoesnotinvalidatealoadedstaticsource,staticrequiredpathsareunchanged;noawait/userselectorbetweenchecks. Candidate16aa mayreuseonlythecurrentreadyStatictruth,never acrossgenerations;dynamic/unready paths keepfullchecks. RequireREDnumberofreadycalls andallcoldload/query/error/signal/multisubscriber tests plusmeasuredguards before retention.

@@ -1,0 +1,968 @@
+{
+  "verified": true,
+  "apkHash": "8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5",
+  "boot": "19fd74df-f80c-4489-b404-0123e64d914f",
+  "session": "16ae-count-filter",
+  "rawSha256": "151dfda1ac09af4453f361cb4a9cb803cce42b5adb8210a05451b2a7b40291b1",
+  "helperSha256": "e2b663c39a2549bfcd957a301d0aaa9c23ee312a1993b0499a2f56c2a4cc9b97",
+  "observations": 124,
+  "modes": {
+    "baseline": {
+      "n": 60,
+      "mean": 53.62166666666696,
+      "sd": 3.955262174628901,
+      "median": 52.40000000000873,
+      "min": 50.39999999999418,
+      "max": 72.80000000000291
+    },
+    "candidate": {
+      "n": 60,
+      "mean": 58.904999999998594,
+      "sd": 4.384697001687981,
+      "median": 57.400000000001455,
+      "min": 55.69999999999709,
+      "max": 74.30000000000291
+    }
+  },
+  "pairs": {
+    "0": {
+      "stats": {
+        "n": 30,
+        "mean": 4.94333333333246,
+        "sd": 2.370753311580389,
+        "median": 5,
+        "min": -1,
+        "max": 10.30000000000291
+      },
+      "wins": 1,
+      "rows": [
+        {
+          "round": 0,
+          "delta": 4.69999999999709
+        },
+        {
+          "round": 2,
+          "delta": 2.499999999985448
+        },
+        {
+          "round": 4,
+          "delta": 4.300000000017462
+        },
+        {
+          "round": 6,
+          "delta": 5
+        },
+        {
+          "round": 8,
+          "delta": 7.399999999994179
+        },
+        {
+          "round": 10,
+          "delta": 1
+        },
+        {
+          "round": 12,
+          "delta": 4.80000000000291
+        },
+        {
+          "round": 14,
+          "delta": 10.30000000000291
+        },
+        {
+          "round": 16,
+          "delta": 4.69999999999709
+        },
+        {
+          "round": 18,
+          "delta": 5.900000000008731
+        },
+        {
+          "round": 20,
+          "delta": 4.19999999999709
+        },
+        {
+          "round": 22,
+          "delta": -1
+        },
+        {
+          "round": 24,
+          "delta": 8.30000000000291
+        },
+        {
+          "round": 26,
+          "delta": 5.30000000000291
+        },
+        {
+          "round": 28,
+          "delta": 6.600000000005821
+        },
+        {
+          "round": 30,
+          "delta": 3.8999999999941792
+        },
+        {
+          "round": 32,
+          "delta": 4.2999999999883585
+        },
+        {
+          "round": 34,
+          "delta": 5
+        },
+        {
+          "round": 36,
+          "delta": 5.19999999999709
+        },
+        {
+          "round": 38,
+          "delta": 5.100000000005821
+        },
+        {
+          "round": 40,
+          "delta": 5.300000000017462
+        },
+        {
+          "round": 42,
+          "delta": 0.8999999999941792
+        },
+        {
+          "round": 44,
+          "delta": 5
+        },
+        {
+          "round": 46,
+          "delta": 5.599999999991269
+        },
+        {
+          "round": 48,
+          "delta": 5.199999999982538
+        },
+        {
+          "round": 50,
+          "delta": 2.6999999999970896
+        },
+        {
+          "round": 52,
+          "delta": 6.399999999994179
+        },
+        {
+          "round": 54,
+          "delta": 10.299999999988358
+        },
+        {
+          "round": 56,
+          "delta": 4.100000000005821
+        },
+        {
+          "round": 58,
+          "delta": 5.30000000000291
+        }
+      ]
+    },
+    "1": {
+      "stats": {
+        "n": 30,
+        "mean": 5.623333333330811,
+        "sd": 4.540976906389619,
+        "median": 5.200000000004366,
+        "min": -5.30000000000291,
+        "max": 21.09999999999127
+      },
+      "wins": 2,
+      "rows": [
+        {
+          "round": 1,
+          "delta": 5.2999999999883585
+        },
+        {
+          "round": 3,
+          "delta": 5.2999999999883585
+        },
+        {
+          "round": 5,
+          "delta": 5.7999999999883585
+        },
+        {
+          "round": 7,
+          "delta": 3.400000000008731
+        },
+        {
+          "round": 9,
+          "delta": 11.599999999991269
+        },
+        {
+          "round": 11,
+          "delta": 9.900000000008731
+        },
+        {
+          "round": 13,
+          "delta": 4.100000000005821
+        },
+        {
+          "round": 15,
+          "delta": 21.09999999999127
+        },
+        {
+          "round": 17,
+          "delta": 3.900000000008731
+        },
+        {
+          "round": 19,
+          "delta": -5.30000000000291
+        },
+        {
+          "round": 21,
+          "delta": 4.599999999991269
+        },
+        {
+          "round": 23,
+          "delta": 5.199999999982538
+        },
+        {
+          "round": 25,
+          "delta": 2.599999999991269
+        },
+        {
+          "round": 27,
+          "delta": 5.099999999991269
+        },
+        {
+          "round": 29,
+          "delta": 8
+        },
+        {
+          "round": 31,
+          "delta": 6.19999999999709
+        },
+        {
+          "round": 33,
+          "delta": 3.6000000000058208
+        },
+        {
+          "round": 35,
+          "delta": 7.5
+        },
+        {
+          "round": 37,
+          "delta": 3.7999999999883585
+        },
+        {
+          "round": 39,
+          "delta": 6.7000000000116415
+        },
+        {
+          "round": 41,
+          "delta": 1.7999999999883585
+        },
+        {
+          "round": 43,
+          "delta": 6
+        },
+        {
+          "round": 45,
+          "delta": 5.2000000000116415
+        },
+        {
+          "round": 47,
+          "delta": 13.89999999999418
+        },
+        {
+          "round": 49,
+          "delta": 4.69999999999709
+        },
+        {
+          "round": 51,
+          "delta": 5.399999999994179
+        },
+        {
+          "round": 53,
+          "delta": 5.19999999999709
+        },
+        {
+          "round": 55,
+          "delta": 7.400000000008731
+        },
+        {
+          "round": 57,
+          "delta": -0.8000000000029104
+        },
+        {
+          "round": 59,
+          "delta": 1.5
+        }
+      ]
+    },
+    "all": {
+      "stats": {
+        "n": 60,
+        "mean": 5.283333333331636,
+        "sd": 3.6077208480580043,
+        "median": 5.149999999994179,
+        "min": -5.30000000000291,
+        "max": 21.09999999999127
+      },
+      "wins": 3,
+      "rows": [
+        {
+          "round": 0,
+          "delta": 4.69999999999709
+        },
+        {
+          "round": 1,
+          "delta": 5.2999999999883585
+        },
+        {
+          "round": 2,
+          "delta": 2.499999999985448
+        },
+        {
+          "round": 3,
+          "delta": 5.2999999999883585
+        },
+        {
+          "round": 4,
+          "delta": 4.300000000017462
+        },
+        {
+          "round": 5,
+          "delta": 5.7999999999883585
+        },
+        {
+          "round": 6,
+          "delta": 5
+        },
+        {
+          "round": 7,
+          "delta": 3.400000000008731
+        },
+        {
+          "round": 8,
+          "delta": 7.399999999994179
+        },
+        {
+          "round": 9,
+          "delta": 11.599999999991269
+        },
+        {
+          "round": 10,
+          "delta": 1
+        },
+        {
+          "round": 11,
+          "delta": 9.900000000008731
+        },
+        {
+          "round": 12,
+          "delta": 4.80000000000291
+        },
+        {
+          "round": 13,
+          "delta": 4.100000000005821
+        },
+        {
+          "round": 14,
+          "delta": 10.30000000000291
+        },
+        {
+          "round": 15,
+          "delta": 21.09999999999127
+        },
+        {
+          "round": 16,
+          "delta": 4.69999999999709
+        },
+        {
+          "round": 17,
+          "delta": 3.900000000008731
+        },
+        {
+          "round": 18,
+          "delta": 5.900000000008731
+        },
+        {
+          "round": 19,
+          "delta": -5.30000000000291
+        },
+        {
+          "round": 20,
+          "delta": 4.19999999999709
+        },
+        {
+          "round": 21,
+          "delta": 4.599999999991269
+        },
+        {
+          "round": 22,
+          "delta": -1
+        },
+        {
+          "round": 23,
+          "delta": 5.199999999982538
+        },
+        {
+          "round": 24,
+          "delta": 8.30000000000291
+        },
+        {
+          "round": 25,
+          "delta": 2.599999999991269
+        },
+        {
+          "round": 26,
+          "delta": 5.30000000000291
+        },
+        {
+          "round": 27,
+          "delta": 5.099999999991269
+        },
+        {
+          "round": 28,
+          "delta": 6.600000000005821
+        },
+        {
+          "round": 29,
+          "delta": 8
+        },
+        {
+          "round": 30,
+          "delta": 3.8999999999941792
+        },
+        {
+          "round": 31,
+          "delta": 6.19999999999709
+        },
+        {
+          "round": 32,
+          "delta": 4.2999999999883585
+        },
+        {
+          "round": 33,
+          "delta": 3.6000000000058208
+        },
+        {
+          "round": 34,
+          "delta": 5
+        },
+        {
+          "round": 35,
+          "delta": 7.5
+        },
+        {
+          "round": 36,
+          "delta": 5.19999999999709
+        },
+        {
+          "round": 37,
+          "delta": 3.7999999999883585
+        },
+        {
+          "round": 38,
+          "delta": 5.100000000005821
+        },
+        {
+          "round": 39,
+          "delta": 6.7000000000116415
+        },
+        {
+          "round": 40,
+          "delta": 5.300000000017462
+        },
+        {
+          "round": 41,
+          "delta": 1.7999999999883585
+        },
+        {
+          "round": 42,
+          "delta": 0.8999999999941792
+        },
+        {
+          "round": 43,
+          "delta": 6
+        },
+        {
+          "round": 44,
+          "delta": 5
+        },
+        {
+          "round": 45,
+          "delta": 5.2000000000116415
+        },
+        {
+          "round": 46,
+          "delta": 5.599999999991269
+        },
+        {
+          "round": 47,
+          "delta": 13.89999999999418
+        },
+        {
+          "round": 48,
+          "delta": 5.199999999982538
+        },
+        {
+          "round": 49,
+          "delta": 4.69999999999709
+        },
+        {
+          "round": 50,
+          "delta": 2.6999999999970896
+        },
+        {
+          "round": 51,
+          "delta": 5.399999999994179
+        },
+        {
+          "round": 52,
+          "delta": 6.399999999994179
+        },
+        {
+          "round": 53,
+          "delta": 5.19999999999709
+        },
+        {
+          "round": 54,
+          "delta": 10.299999999988358
+        },
+        {
+          "round": 55,
+          "delta": 7.400000000008731
+        },
+        {
+          "round": 56,
+          "delta": 4.100000000005821
+        },
+        {
+          "round": 57,
+          "delta": -0.8000000000029104
+        },
+        {
+          "round": 58,
+          "delta": 5.30000000000291
+        },
+        {
+          "round": 59,
+          "delta": 1.5
+        }
+      ]
+    }
+  },
+  "expected": [
+    {
+      "slot": 0,
+      "payload": [
+        {
+          "id": null,
+          "value": 32487
+        }
+      ]
+    },
+    {
+      "slot": 1,
+      "payload": [
+        {
+          "id": null,
+          "value": 50000
+        }
+      ]
+    }
+  ],
+  "vm": {
+    "baselineInstructions": 153,
+    "candidateInstructions": 147,
+    "baselineAggSteps": [
+      {
+        "addr": 51,
+        "opcode": "AggStep",
+        "p1": 0,
+        "p2": 15,
+        "p3": 12,
+        "p4": "count(1)",
+        "p5": 1,
+        "comment": "accum=r[12] step(r[15])"
+      },
+      {
+        "addr": 55,
+        "opcode": "AggStep",
+        "p1": 0,
+        "p2": 15,
+        "p3": 13,
+        "p4": "count(1)",
+        "p5": 1,
+        "comment": "accum=r[13] step(r[15])"
+      },
+      {
+        "addr": 79,
+        "opcode": "AggStep",
+        "p1": 0,
+        "p2": 27,
+        "p3": 26,
+        "p4": "json_group_array(1)",
+        "p5": 1,
+        "comment": "accum=r[26] step(r[27])"
+      },
+      {
+        "addr": 122,
+        "opcode": "AggStep",
+        "p1": 0,
+        "p2": 47,
+        "p3": 46,
+        "p4": "json_group_array(1)",
+        "p5": 1,
+        "comment": "accum=r[46] step(r[47])"
+      }
+    ],
+    "candidateAggSteps": [
+      {
+        "addr": 48,
+        "opcode": "AggStep",
+        "p1": 0,
+        "p2": 0,
+        "p3": 12,
+        "p4": "count(0)",
+        "p5": 0,
+        "comment": "accum=r[12] step(r[0])"
+      },
+      {
+        "addr": 49,
+        "opcode": "AggStep",
+        "p1": 0,
+        "p2": 0,
+        "p3": 13,
+        "p4": "count(0)",
+        "p5": 0,
+        "comment": "accum=r[13] step(r[0])"
+      },
+      {
+        "addr": 73,
+        "opcode": "AggStep",
+        "p1": 0,
+        "p2": 26,
+        "p3": 25,
+        "p4": "json_group_array(1)",
+        "p5": 1,
+        "comment": "accum=r[25] step(r[26])"
+      },
+      {
+        "addr": 116,
+        "opcode": "AggStep",
+        "p1": 0,
+        "p2": 46,
+        "p3": 45,
+        "p4": "json_group_array(1)",
+        "p5": 1,
+        "comment": "accum=r[45] step(r[46])"
+      }
+    ]
+  },
+  "plans": {
+    "baseline": [
+      {
+        "id": 1,
+        "parent": 0,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 2,
+        "parent": 1,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 4,
+        "parent": 2,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-5)"
+      },
+      {
+        "id": 6,
+        "parent": 4,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-4)"
+      },
+      {
+        "id": 7,
+        "parent": 6,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 8,
+        "parent": 7,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 11,
+        "parent": 8,
+        "notused": 0,
+        "detail": "MATERIALIZE promoted"
+      },
+      {
+        "id": 14,
+        "parent": 11,
+        "notused": 54,
+        "detail": "SEARCH nss_entity USING COVERING INDEX nss_entity_promoted (coll=?)"
+      },
+      {
+        "id": 28,
+        "parent": 8,
+        "notused": 48,
+        "detail": "SCAN promoted"
+      },
+      {
+        "id": 34,
+        "parent": 7,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 37,
+        "parent": 34,
+        "notused": 0,
+        "detail": "MATERIALIZE counts"
+      },
+      {
+        "id": 41,
+        "parent": 37,
+        "notused": 56,
+        "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+      },
+      {
+        "id": 79,
+        "parent": 34,
+        "notused": 16,
+        "detail": "SCAN counts"
+      },
+      {
+        "id": 87,
+        "parent": 4,
+        "notused": 49,
+        "detail": "SCAN (subquery-4)"
+      },
+      {
+        "id": 99,
+        "parent": 2,
+        "notused": 16,
+        "detail": "SCAN (subquery-5)"
+      },
+      {
+        "id": 114,
+        "parent": 1,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 116,
+        "parent": 114,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-9)"
+      },
+      {
+        "id": 118,
+        "parent": 116,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-8)"
+      },
+      {
+        "id": 119,
+        "parent": 118,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 120,
+        "parent": 119,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 123,
+        "parent": 120,
+        "notused": 216,
+        "detail": "SCAN promoted"
+      },
+      {
+        "id": 129,
+        "parent": 119,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 132,
+        "parent": 129,
+        "notused": 216,
+        "detail": "SCAN counts"
+      },
+      {
+        "id": 140,
+        "parent": 116,
+        "notused": 226,
+        "detail": "SCAN (subquery-8)"
+      },
+      {
+        "id": 152,
+        "parent": 114,
+        "notused": 16,
+        "detail": "SCAN (subquery-9)"
+      }
+    ],
+    "candidate": [
+      {
+        "id": 1,
+        "parent": 0,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 2,
+        "parent": 1,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 4,
+        "parent": 2,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-5)"
+      },
+      {
+        "id": 6,
+        "parent": 4,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-4)"
+      },
+      {
+        "id": 7,
+        "parent": 6,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 8,
+        "parent": 7,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 11,
+        "parent": 8,
+        "notused": 0,
+        "detail": "MATERIALIZE promoted"
+      },
+      {
+        "id": 14,
+        "parent": 11,
+        "notused": 54,
+        "detail": "SEARCH nss_entity USING COVERING INDEX nss_entity_promoted (coll=?)"
+      },
+      {
+        "id": 28,
+        "parent": 8,
+        "notused": 48,
+        "detail": "SCAN promoted"
+      },
+      {
+        "id": 34,
+        "parent": 7,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 37,
+        "parent": 34,
+        "notused": 0,
+        "detail": "MATERIALIZE counts"
+      },
+      {
+        "id": 41,
+        "parent": 37,
+        "notused": 56,
+        "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+      },
+      {
+        "id": 73,
+        "parent": 34,
+        "notused": 16,
+        "detail": "SCAN counts"
+      },
+      {
+        "id": 81,
+        "parent": 4,
+        "notused": 49,
+        "detail": "SCAN (subquery-4)"
+      },
+      {
+        "id": 93,
+        "parent": 2,
+        "notused": 16,
+        "detail": "SCAN (subquery-5)"
+      },
+      {
+        "id": 108,
+        "parent": 1,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 110,
+        "parent": 108,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-9)"
+      },
+      {
+        "id": 112,
+        "parent": 110,
+        "notused": 0,
+        "detail": "CO-ROUTINE (subquery-8)"
+      },
+      {
+        "id": 113,
+        "parent": 112,
+        "notused": 0,
+        "detail": "COMPOUND QUERY"
+      },
+      {
+        "id": 114,
+        "parent": 113,
+        "notused": 0,
+        "detail": "LEFT-MOST SUBQUERY"
+      },
+      {
+        "id": 117,
+        "parent": 114,
+        "notused": 216,
+        "detail": "SCAN promoted"
+      },
+      {
+        "id": 123,
+        "parent": 113,
+        "notused": 0,
+        "detail": "UNION ALL"
+      },
+      {
+        "id": 126,
+        "parent": 123,
+        "notused": 216,
+        "detail": "SCAN counts"
+      },
+      {
+        "id": 134,
+        "parent": 110,
+        "notused": 226,
+        "detail": "SCAN (subquery-8)"
+      },
+      {
+        "id": 146,
+        "parent": 108,
+        "notused": 16,
+        "detail": "SCAN (subquery-9)"
+      }
+    ]
+  },
+  "invariantsVerified": true,
+  "limitations": [
+    "Native wall only; not SQL CPU/application speedup/floor",
+    "Read-only normalized fixture; no workload acceptance",
+    "Individual response copies not retained; helper compared every response"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-27",
+  "session": "16k-accept-1793101903",
+  "apkHashes": {
+    "classic": "58ad9c2ab62cb9e1ec71004f80bbad22a67edb82b12496698e2ebba5e0526311",
+    "sqlite": "bbbfcf23a798e8d78a24dfaa2dd19ac8e8c3bf382090539724713fe0f8af4d95"
+  },
+  "keys": [
+    50,
+    500,
+    5000
+  ],
+  "trials": 5,
+  "startupBarrier": "__harness hook followed by settle() (route independent)",
+  "backgroundSeed": 50,
+  "backgroundNormalization": "benchSeed(50) before flat/workflow setup navigation",
+  "platformFile": "docs/benchmarks/android-empty-16k-2026-10-27.json",
+  "platformSha256": "ddf87e59bae18da60475c9031a101891cd34e0937f355785c73c4c05b6a1736d"
+}

@@ -1,0 +1,4330 @@
+{
+  "session": "16L10-audit-1793145954",
+  "counts": {
+    "PASS": 13,
+    "BRIDGE-BOUND": 0,
+    "PLATFORM-BOUND": 10,
+    "CODE-BOUND": 3,
+    "FAIL": 7
+  },
+  "verifiedSession": {
+    "session": "16L10-audit-1793145954",
+    "apkHashes": {
+      "classic": "58ad9c2ab62cb9e1ec71004f80bbad22a67edb82b12496698e2ebba5e0526311",
+      "sqlite": "9c04d40dacd93cb2db8c0a141006a62a0ac312b4457cdc27e397e3295dfc83cc"
+    },
+    "bootIds": [
+      "e6790cb8-6b63-4030-837f-c2fe5c02917e",
+      "d270be35-0981-474e-9f68-9ba1d573cb43",
+      "842ea0ef-e63a-42e6-b432-2ca8064b3479",
+      "dc4f6e83-3d7a-459b-9c7a-053b1125ae0e",
+      "73a49a31-b330-4152-93e5-15cbbd45838d",
+      "2e3c741e-29f2-4bf0-80bd-a86e54cec8c0"
+    ],
+    "observations": 30,
+    "summaryGroups": 66,
+    "verdicts": 33,
+    "counts": {
+      "PASS": 13,
+      "BRIDGE-BOUND": 0,
+      "PLATFORM-BOUND": 10,
+      "CODE-BOUND": 3,
+      "FAIL": 7
+    },
+    "pipelineExit": 0,
+    "verifiedOn": "2026-10-28",
+    "controlsVerified": 4
+  },
+  "comparisons": {
+    "16L8": {
+      "role": "retained16r",
+      "source": "docs\\benchmarks\\android-parity-16L8-2026-10-28.json",
+      "beforeCounts": {
+        "PASS": 14,
+        "BRIDGE-BOUND": 0,
+        "PLATFORM-BOUND": 14,
+        "CODE-BOUND": 3,
+        "FAIL": 2
+      },
+      "afterCounts": {
+        "PASS": 13,
+        "BRIDGE-BOUND": 0,
+        "PLATFORM-BOUND": 10,
+        "CODE-BOUND": 3,
+        "FAIL": 7
+      },
+      "metrics": [
+        {
+          "size": 1000,
+          "metric": "firstReadyMs",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 508.18000000000177,
+            "sd": 359.15341011885704
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 752.5399999999994,
+            "sd": 668.9966464788897
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 403.86000000001223,
+            "sd": 22.9311578425405
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 508.0199999999924,
+            "sd": 32.22059900126633
+          },
+          "sqliteMeanDelta": 104.15999999998019,
+          "sumSD": 55.15175684380683,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 1000,
+          "metric": "relaunchReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1256.7800000000104,
+            "sd": 30.20127480752968
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1425.4400000000082,
+            "sd": 57.20256113147914
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1437.9400000000082,
+            "sd": 228.887424294125
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1727.720000000007,
+            "sd": 143.04704470907404
+          },
+          "sqliteMeanDelta": 289.77999999999884,
+          "sumSD": 371.93446900319907,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "heapTodosMb",
+          "beforeStatus": "CODE-BOUND",
+          "afterStatus": "CODE-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 4.641114044189453,
+            "sd": 0.002438860400333952
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 4.639840698242187,
+            "sd": 0.0036084229438785803
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.469517517089844,
+            "sd": 0.02341080215401834
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.486522674560547,
+            "sd": 0.01802164348655515
+          },
+          "sqliteMeanDelta": 0.017005157470703303,
+          "sumSD": 0.041432445640573495,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "heapNotesMb",
+          "beforeStatus": "CODE-BOUND",
+          "afterStatus": "CODE-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 5.193437194824218,
+            "sd": 0.0017845457970618976
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 5.192622375488281,
+            "sd": 0.0019312343356959777
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.197451782226563,
+            "sd": 0.005671571895016497
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.209805297851562,
+            "sd": 0.009903711354673026
+          },
+          "sqliteMeanDelta": 0.012353515624999645,
+          "sumSD": 0.015575283249689523,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "heapRelaunchMb",
+          "beforeStatus": "CODE-BOUND",
+          "afterStatus": "CODE-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.5921882629394535,
+            "sd": 0.0020576351166800835
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.590680694580078,
+            "sd": 0.00016275395936872372
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 5.012205505371094,
+            "sd": 0.03366684110948526
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 5.000587463378906,
+            "sd": 0.03361038050462711
+          },
+          "sqliteMeanDelta": -0.011618041992187855,
+          "sumSD": 0.06727722161411237,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "pssTotalMb",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 222.947265625,
+            "sd": 1.9600249214923502
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 223.074609375,
+            "sd": 1.7564296589792996
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 235.341015625,
+            "sd": 1.4978607181433898
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 235.559375,
+            "sd": 1.4722149174986863
+          },
+          "sqliteMeanDelta": 0.21835937499997726,
+          "sumSD": 2.9700756356420763,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "pssRelaunchTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 220.890234375,
+            "sd": 1.9328792723930608
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 219.4484375,
+            "sd": 3.388338884598337
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.3591796875,
+            "sd": 1.8302153545050284
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.43984375,
+            "sd": 1.1764016982553023
+          },
+          "sqliteMeanDelta": 0.08066406250000568,
+          "sumSD": 3.0066170527603306,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "toggleP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 2.5000000000029106,
+            "sd": 0.39999999999508873
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 3.1000000000087313,
+            "sd": 0.9513148795211811
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 11.359999999994761,
+            "sd": 0.8532291603080105
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 13.820000000004075,
+            "sd": 0.887130204642901
+          },
+          "sqliteMeanDelta": 2.4600000000093143,
+          "sumSD": 1.7403593649509115,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 1000,
+          "metric": "toggleP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 8.839999999999417,
+            "sd": 2.0354360712107717
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 9.740000000002329,
+            "sd": 1.1171392035042116
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 50.580000000001746,
+            "sd": 5.546800879778243
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 55.480000000007564,
+            "sd": 7.035410435789573
+          },
+          "sqliteMeanDelta": 4.900000000005818,
+          "sumSD": 12.582211315567816,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "emitP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.03999999999359716,
+            "sd": 0.05477225574174916
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.09999999999708961,
+            "sd": 7.970412225481882e-12
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.360000000000582,
+            "sd": 0.3049590136348618
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.7199999999953435,
+            "sd": 0.044721359546091105
+          },
+          "sqliteMeanDelta": 0.3599999999947614,
+          "sumSD": 0.3496803731809529,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 1000,
+          "metric": "emitP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.280000000007567,
+            "sd": 0.0836660026469722
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.47999999999883586,
+            "sd": 0.2949576240749539
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.219999999998254,
+            "sd": 0.6496152707601199
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.499999999997089,
+            "sd": 0.5147815070404456
+          },
+          "sqliteMeanDelta": 0.27999999999883585,
+          "sumSD": 1.1643967778005655,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "firstReadyMs",
+          "beforeStatus": "PASS",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 719.579999999996,
+            "sd": 517.8243640463411
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 379.6999999999942,
+            "sd": 78.53581985311256
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 559.9000000000058,
+            "sd": 56.0106686266158
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 641.4000000000029,
+            "sd": 25.836118129471846
+          },
+          "sqliteMeanDelta": 81.49999999999716,
+          "sumSD": 81.84678675608764,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "relaunchReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1236.3600000000006,
+            "sd": 53.91579545921765
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1418.499999999997,
+            "sd": 37.495799764765614
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1427.9199999999953,
+            "sd": 60.220112919192424
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1628.4599999999919,
+            "sd": 33.660332737506266
+          },
+          "sqliteMeanDelta": 200.53999999999655,
+          "sumSD": 93.8804456566987,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 10000,
+          "metric": "heapTodosMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 7.054057312011719,
+            "sd": 0.004290605571680961
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 7.054653930664062,
+            "sd": 0.0036205962760381596
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.515003967285156,
+            "sd": 0.02598068731250212
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.497946929931641,
+            "sd": 0.0010883973748157716
+          },
+          "sqliteMeanDelta": -0.01705703735351527,
+          "sumSD": 0.02706908468731789,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "heapNotesMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 7.6016181945800785,
+            "sd": 0.002205054399478444
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 7.605316925048828,
+            "sd": 0.003263084325988654
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.253105926513672,
+            "sd": 0.01071156069708018
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.250938415527344,
+            "sd": 0.0075778560315715405
+          },
+          "sqliteMeanDelta": -0.0021675109863279474,
+          "sumSD": 0.01828941672865172,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "heapRelaunchMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 7.011312103271484,
+            "sd": 0.0005501013022602811
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 7.010242462158203,
+            "sd": 0.0004276035720669666
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 5.011360931396484,
+            "sd": 0.03451285443642758
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.98829345703125,
+            "sd": 0.028060697536045127
+          },
+          "sqliteMeanDelta": -0.023067474365234375,
+          "sumSD": 0.0625735519724727,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "pssTotalMb",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 229.8900390625,
+            "sd": 1.5496721659334585
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 230.003515625,
+            "sd": 1.3088470851445022
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 243.7421875,
+            "sd": 1.6860612457934767
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 243.7896484375,
+            "sd": 1.222732804799304
+          },
+          "sqliteMeanDelta": 0.047460937500005684,
+          "sumSD": 2.908794050592781,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "pssRelaunchTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 226.8564453125,
+            "sd": 4.613142122888875
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 225.2189453125,
+            "sd": 3.384384910449226
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.4240234375,
+            "sd": 2.6931838677577393
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.3005859375,
+            "sd": 1.213790073538604
+          },
+          "sqliteMeanDelta": -0.12343750000002274,
+          "sumSD": 3.9069739412963433,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "toggleP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 6.299999999997089,
+            "sd": 0.5477225575091513
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 6.780000000004657,
+            "sd": 0.6099180272729445
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 13.219999999998254,
+            "sd": 0.17888543819615985
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 14.400000000005821,
+            "sd": 2.0211382931434017
+          },
+          "sqliteMeanDelta": 1.180000000007567,
+          "sumSD": 2.2000237313395616,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "toggleP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 12.960000000003493,
+            "sd": 1.8283872675147226
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 15.359999999997672,
+            "sd": 1.569394787809708
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 49.56000000000349,
+            "sd": 8.908030085270685
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 54.45999999999185,
+            "sd": 4.300930131956013
+          },
+          "sqliteMeanDelta": 4.89999999998836,
+          "sumSD": 13.208960217226698,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "emitP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.059999999988940546,
+            "sd": 0.05477225574042075
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.09999999999708961,
+            "sd": 7.970412225481882e-12
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.3199999999953436,
+            "sd": 0.216794833878599
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.679999999993015,
+            "sd": 0.0447213595428372
+          },
+          "sqliteMeanDelta": 0.3599999999976715,
+          "sumSD": 0.26151619342143617,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 10000,
+          "metric": "emitP95",
+          "beforeStatus": "FAIL",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.3000000000029104,
+            "sd": 1.0289757937229989e-11
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.3799999999959255,
+            "sd": 0.08366600265479898
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.159999999994762,
+            "sd": 0.4159326868588045
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.460000000006403,
+            "sd": 0.2701851217138855
+          },
+          "sqliteMeanDelta": 0.3000000000116412,
+          "sumSD": 0.68611780857269,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "firstReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 554.7799999999959,
+            "sd": 345.07082171634994
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 418.8599999999977,
+            "sd": 61.54890738266785
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 1199.5399999999966,
+            "sd": 27.640151953271026
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 1399.4000000000058,
+            "sd": 42.78323269693531
+          },
+          "sqliteMeanDelta": 199.86000000000922,
+          "sumSD": 70.42338465020633,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 50000,
+          "metric": "relaunchReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1347.499999999997,
+            "sd": 69.29967532391913
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1471.9399999999907,
+            "sd": 85.5798632856985
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1448.1599999999976,
+            "sd": 56.29238847304303
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1700.4399999999964,
+            "sd": 75.70711987652899
+          },
+          "sqliteMeanDelta": 252.27999999999884,
+          "sumSD": 131.999508349572,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 50000,
+          "metric": "heapTodosMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 18.49563674926758,
+            "sd": 0.004526378546446422
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 18.49583206176758,
+            "sd": 0.00433134441954873
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.545838165283203,
+            "sd": 0.019958125411391466
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.53446044921875,
+            "sd": 0.01944705084466325
+          },
+          "sqliteMeanDelta": -0.011377716064452592,
+          "sumSD": 0.03940517625605472,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "heapNotesMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 19.05897674560547,
+            "sd": 0.001434936292219123
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 19.057637023925782,
+            "sd": 0.004106709324948703
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.261267852783203,
+            "sd": 0.007148907251407623
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.261599731445313,
+            "sd": 0.005917849921144546
+          },
+          "sqliteMeanDelta": 0.000331878662109375,
+          "sumSD": 0.013066757172552169,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "heapRelaunchMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 18.46145553588867,
+            "sd": 0.0005823469917691007
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 18.46151657104492,
+            "sd": 0.00043698185546962414
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 5.012335205078125,
+            "sd": 0.03343747582616473
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 5.000336456298828,
+            "sd": 0.033499565162716426
+          },
+          "sqliteMeanDelta": -0.011998748779297408,
+          "sumSD": 0.06693704098888115,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "pssTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 242.61328125,
+            "sd": 1.612102382636429
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 243.070703125,
+            "sd": 1.3135107961965344
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 241.6611328125,
+            "sd": 0.9295451592222119
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 241.705859375,
+            "sd": 1.626292580260424
+          },
+          "sqliteMeanDelta": 0.04472656249998863,
+          "sumSD": 2.555837739482636,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "pssRelaunchTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 239.0037109375,
+            "sd": 2.964238997992442
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 237.9857421875,
+            "sd": 2.0521431722162276
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.03203125,
+            "sd": 1.8580882516685717
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.89921875,
+            "sd": 1.4862475018684818
+          },
+          "sqliteMeanDelta": 0.8671875,
+          "sumSD": 3.3443357535370533,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "toggleP50",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 27.7,
+            "sd": 0.5700877125514835
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 29.90000000000582,
+            "sd": 0.6363961030672068
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 14.079999999993015,
+            "sd": 2.6185874054597162
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 15.039999999996507,
+            "sd": 3.153252289301741
+          },
+          "sqliteMeanDelta": 0.9600000000034914,
+          "sumSD": 5.771839694761457,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "toggleP95",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 43.97999999999884,
+            "sd": 3.012806001057525
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 53.699999999994176,
+            "sd": 11.872657663735561
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 41.779999999998836,
+            "sd": 6.81226834468263
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 51.00000000000582,
+            "sd": 12.840950120614778
+          },
+          "sqliteMeanDelta": 9.220000000006983,
+          "sumSD": 19.653218465297407,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "emitP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.09999999998544809,
+            "sd": 7.970412225481882e-12
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.1,
+            "sd": 1.3015628661378542e-11
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.4000000000058206,
+            "sd": 0.28284271248079285
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.699999999994179,
+            "sd": 1.59408244521961e-11
+          },
+          "sqliteMeanDelta": 0.29999999998835847,
+          "sumSD": 0.28284271249673365,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 50000,
+          "metric": "emitP95",
+          "beforeStatus": "FAIL",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.34000000000232833,
+            "sd": 0.05477225574971956
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.4599999999976717,
+            "sd": 0.05477225575370478
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.559999999991851,
+            "sd": 0.901665126317865
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.2,
+            "sd": 0.24494897428069412
+          },
+          "sqliteMeanDelta": -0.3599999999918504,
+          "sumSD": 1.146614100598559,
+          "increaseBeyondSumSD": false
+        }
+      ]
+    },
+    "16L9": {
+      "role": "rejected16t comparison only",
+      "source": "docs\\benchmarks\\android-parity-16L9-2026-10-28.json",
+      "beforeCounts": {
+        "PASS": 12,
+        "BRIDGE-BOUND": 0,
+        "PLATFORM-BOUND": 17,
+        "CODE-BOUND": 3,
+        "FAIL": 1
+      },
+      "afterCounts": {
+        "PASS": 13,
+        "BRIDGE-BOUND": 0,
+        "PLATFORM-BOUND": 10,
+        "CODE-BOUND": 3,
+        "FAIL": 7
+      },
+      "metrics": [
+        {
+          "size": 1000,
+          "metric": "firstReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 416.26000000000056,
+            "sd": 68.03152210555977
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 752.5399999999994,
+            "sd": 668.9966464788897
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 513.6600000000035,
+            "sd": 50.32119831640556
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 508.0199999999924,
+            "sd": 32.22059900126633
+          },
+          "sqliteMeanDelta": -5.640000000011071,
+          "sumSD": 82.5417973176719,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "relaunchReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1444.5200000000011,
+            "sd": 71.83945294892077
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1425.4400000000082,
+            "sd": 57.20256113147914
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1647.6,
+            "sd": 56.24664434434915
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1727.720000000007,
+            "sd": 143.04704470907404
+          },
+          "sqliteMeanDelta": 80.12000000000717,
+          "sumSD": 199.29368905342318,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "heapTodosMb",
+          "beforeStatus": "CODE-BOUND",
+          "afterStatus": "CODE-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 4.642322540283203,
+            "sd": 0.0005431960135420551
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 4.639840698242187,
+            "sd": 0.0036084229438785803
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.485553741455078,
+            "sd": 0.024205583245810954
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.486522674560547,
+            "sd": 0.01802164348655515
+          },
+          "sqliteMeanDelta": 0.00096893310546875,
+          "sumSD": 0.042227226732366105,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "heapNotesMb",
+          "beforeStatus": "CODE-BOUND",
+          "afterStatus": "CODE-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 5.193724060058594,
+            "sd": 0.0017110450276188638
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 5.192622375488281,
+            "sd": 0.0019312343356959777
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.213270568847657,
+            "sd": 0.010085154044034117
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.209805297851562,
+            "sd": 0.009903711354673026
+          },
+          "sqliteMeanDelta": -0.003465270996094283,
+          "sumSD": 0.019988865398707145,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "heapRelaunchMb",
+          "beforeStatus": "CODE-BOUND",
+          "afterStatus": "CODE-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.591316223144531,
+            "sd": 0.0003702320427699385
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.590680694580078,
+            "sd": 0.00016275395936872372
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 5.003901672363281,
+            "sd": 0.03371374253241899
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 5.000587463378906,
+            "sd": 0.03361038050462711
+          },
+          "sqliteMeanDelta": -0.0033142089843751776,
+          "sumSD": 0.0673241230370461,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "pssTotalMb",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 222.905078125,
+            "sd": 1.8451853709152235
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 223.074609375,
+            "sd": 1.7564296589792996
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 235.21796875,
+            "sd": 1.647696291354229
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 235.559375,
+            "sd": 1.4722149174986863
+          },
+          "sqliteMeanDelta": 0.34140624999997726,
+          "sumSD": 3.1199112088529155,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "pssRelaunchTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 218.95,
+            "sd": 3.102120713896219
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 219.4484375,
+            "sd": 3.388338884598337
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 221.7630859375,
+            "sd": 1.660064565483001
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.43984375,
+            "sd": 1.1764016982553023
+          },
+          "sqliteMeanDelta": 0.6767578125,
+          "sumSD": 2.8364662637383034,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "toggleP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 2.7600000000034925,
+            "sd": 0.27928480087652513
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 3.1000000000087313,
+            "sd": 0.9513148795211811
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 13.980000000004656,
+            "sd": 1.473770674160654
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 13.820000000004075,
+            "sd": 0.887130204642901
+          },
+          "sqliteMeanDelta": -0.160000000000581,
+          "sumSD": 2.3609008788035553,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "toggleP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 9.019999999998253,
+            "sd": 0.8927485648220291
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 9.740000000002329,
+            "sd": 1.1171392035042116
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 51.28000000000175,
+            "sd": 10.141104476337286
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 55.480000000007564,
+            "sd": 7.035410435789573
+          },
+          "sqliteMeanDelta": 4.200000000005815,
+          "sumSD": 17.17651491212686,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "emitP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.09999999999126885,
+            "sd": 1.0289757937229989e-11
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.09999999999708961,
+            "sd": 7.970412225481882e-12
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.699999999994179,
+            "sd": 1.2175005782706865e-11
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.7199999999953435,
+            "sd": 0.044721359546091105
+          },
+          "sqliteMeanDelta": 0.02000000000116442,
+          "sumSD": 0.04472135955826611,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "emitP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.3799999999988358,
+            "sd": 0.0836660026513204
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.47999999999883586,
+            "sd": 0.2949576240749539
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.340000000005238,
+            "sd": 0.5224940191029099
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.499999999997089,
+            "sd": 0.5147815070404456
+          },
+          "sqliteMeanDelta": 0.1599999999918511,
+          "sumSD": 1.0372755261433555,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "firstReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 383.9600000000006,
+            "sd": 81.3391848987887
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 379.6999999999942,
+            "sd": 78.53581985311256
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 637.679999999993,
+            "sd": 51.42054064282414
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 641.4000000000029,
+            "sd": 25.836118129471846
+          },
+          "sqliteMeanDelta": 3.720000000009918,
+          "sumSD": 77.25665877229599,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "relaunchReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1448.8199999999983,
+            "sd": 114.42719082455831
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1418.499999999997,
+            "sd": 37.495799764765614
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1611.9000000000058,
+            "sd": 72.10818261473415
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1628.4599999999919,
+            "sd": 33.660332737506266
+          },
+          "sqliteMeanDelta": 16.559999999986076,
+          "sumSD": 105.76851535224041,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "heapTodosMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 7.05059814453125,
+            "sd": 0.0014264825670310347
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 7.054653930664062,
+            "sd": 0.0036205962760381596
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.5335243225097654,
+            "sd": 0.021764284031361637
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.497946929931641,
+            "sd": 0.0010883973748157716
+          },
+          "sqliteMeanDelta": -0.035577392578124645,
+          "sumSD": 0.022852681406177407,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "heapNotesMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 7.599376678466797,
+            "sd": 0.005340058437864913
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 7.605316925048828,
+            "sd": 0.003263084325988654
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.259226989746094,
+            "sd": 0.008745838628203554
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.250938415527344,
+            "sd": 0.0075778560315715405
+          },
+          "sqliteMeanDelta": -0.008288574218750178,
+          "sumSD": 0.016323694659775095,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "heapRelaunchMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 7.010877227783203,
+            "sd": 0.0006959423540210083
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 7.010242462158203,
+            "sd": 0.0004276035720669666
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.9914703369140625,
+            "sd": 0.028189978766635048
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.98829345703125,
+            "sd": 0.028060697536045127
+          },
+          "sqliteMeanDelta": -0.0031768798828126776,
+          "sumSD": 0.05625067630268017,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "pssTotalMb",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 229.6490234375,
+            "sd": 1.485959237598543
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 230.003515625,
+            "sd": 1.3088470851445022
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 243.4216796875,
+            "sd": 1.246220865014293
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 243.7896484375,
+            "sd": 1.222732804799304
+          },
+          "sqliteMeanDelta": 0.36796875000001705,
+          "sumSD": 2.468953669813597,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "pssRelaunchTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 223.73828125,
+            "sd": 1.8398949358839902
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 225.2189453125,
+            "sd": 3.384384910449226
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 221.919921875,
+            "sd": 1.3071601872482779
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.3005859375,
+            "sd": 1.213790073538604
+          },
+          "sqliteMeanDelta": 0.38066406249998863,
+          "sumSD": 2.520950260786882,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "toggleP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 6.819999999998254,
+            "sd": 0.5674504383599053
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 6.780000000004657,
+            "sd": 0.6099180272729445
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 14.620000000006986,
+            "sd": 2.5587106127946604
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 14.400000000005821,
+            "sd": 2.0211382931434017
+          },
+          "sqliteMeanDelta": -0.22000000000116415,
+          "sumSD": 4.5798489059380625,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "toggleP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 13.819999999995343,
+            "sd": 1.3311649033783393
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 15.359999999997672,
+            "sd": 1.569394787809708
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 44.220000000001164,
+            "sd": 3.370756591623872
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 54.45999999999185,
+            "sd": 4.300930131956013
+          },
+          "sqliteMeanDelta": 10.239999999990687,
+          "sumSD": 7.671686723579885,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 10000,
+          "metric": "emitP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.09999999999126885,
+            "sd": 1.0289757937229989e-11
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.09999999999708961,
+            "sd": 7.970412225481882e-12
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.6999999999970896,
+            "sd": 0.0707106781124809
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.679999999993015,
+            "sd": 0.0447213595428372
+          },
+          "sqliteMeanDelta": -0.020000000004074536,
+          "sumSD": 0.11543203765531809,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "emitP95",
+          "beforeStatus": "FAIL",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.3800000000017462,
+            "sd": 0.04472135954934501
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.3799999999959255,
+            "sd": 0.08366600265479898
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.820000000004074,
+            "sd": 0.40865633482578967
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.460000000006403,
+            "sd": 0.2701851217138855
+          },
+          "sqliteMeanDelta": -0.3599999999976715,
+          "sumSD": 0.6788414565396752,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "firstReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 408.9199999999895,
+            "sd": 26.477292157617793
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 418.8599999999977,
+            "sd": 61.54890738266785
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 1388.620000000007,
+            "sd": 34.392615486467484
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 1399.4000000000058,
+            "sd": 42.78323269693531
+          },
+          "sqliteMeanDelta": 10.779999999998836,
+          "sumSD": 77.17584818340279,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "relaunchReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1535.7599999999977,
+            "sd": 112.35305069290098
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1471.9399999999907,
+            "sd": 85.5798632856985
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1699.840000000008,
+            "sd": 55.711650487127955
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1700.4399999999964,
+            "sd": 75.70711987652899
+          },
+          "sqliteMeanDelta": 0.599999999988313,
+          "sumSD": 131.41877036365696,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "heapTodosMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 18.493700408935545,
+            "sd": 0.0006390420663995661
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 18.49583206176758,
+            "sd": 0.00433134441954873
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.5526985168457035,
+            "sd": 0.0194542730622923
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.53446044921875,
+            "sd": 0.01944705084466325
+          },
+          "sqliteMeanDelta": -0.018238067626953125,
+          "sumSD": 0.038901323906955554,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "heapNotesMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 19.058594512939454,
+            "sd": 0.0017423948693240478
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 19.057637023925782,
+            "sd": 0.004106709324948703
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.263536834716797,
+            "sd": 0.007343451064732986
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.261599731445313,
+            "sd": 0.005917849921144546
+          },
+          "sqliteMeanDelta": -0.0019371032714845526,
+          "sumSD": 0.013261300985877533,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "heapRelaunchMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 18.461026763916017,
+            "sd": 0.0004869278389970629
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 18.46151657104492,
+            "sd": 0.00043698185546962414
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 5.000560760498047,
+            "sd": 0.03669856410609386
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 5.000336456298828,
+            "sd": 0.033499565162716426
+          },
+          "sqliteMeanDelta": -0.00022430419921892764,
+          "sumSD": 0.07019812926881028,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "pssTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 242.5859375,
+            "sd": 1.185477290868757
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 243.070703125,
+            "sd": 1.3135107961965344
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 241.4412109375,
+            "sd": 1.8471069035430665
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 241.705859375,
+            "sd": 1.626292580260424
+          },
+          "sqliteMeanDelta": 0.2646484375,
+          "sumSD": 3.4733994838034903,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "pssRelaunchTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 237.4017578125,
+            "sd": 1.7453607100041306
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 237.9857421875,
+            "sd": 2.0521431722162276
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.9607421875,
+            "sd": 2.0887107444558057
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.89921875,
+            "sd": 1.4862475018684818
+          },
+          "sqliteMeanDelta": -0.0615234375,
+          "sumSD": 3.5749582463242877,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "toggleP50",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 30.039999999996507,
+            "sd": 0.9964938534747034
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 29.90000000000582,
+            "sd": 0.6363961030672068
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 15.220000000001164,
+            "sd": 1.0825894882025981
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 15.039999999996507,
+            "sd": 3.153252289301741
+          },
+          "sqliteMeanDelta": -0.18000000000465732,
+          "sumSD": 4.235841777504339,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "toggleP95",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 58.97999999999884,
+            "sd": 11.053370526676412
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 53.699999999994176,
+            "sd": 11.872657663735561
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 53.54000000000815,
+            "sd": 8.942762436743617
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 51.00000000000582,
+            "sd": 12.840950120614778
+          },
+          "sqliteMeanDelta": -2.5400000000023297,
+          "sumSD": 21.783712557358395,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "emitP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.09999999998835847,
+            "sd": 1.5940824450959234e-11
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.1,
+            "sd": 1.3015628661378542e-11
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.7399999999906868,
+            "sd": 0.11401754250761649
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.699999999994179,
+            "sd": 1.59408244521961e-11
+          },
+          "sqliteMeanDelta": -0.03999999999650772,
+          "sumSD": 0.11401754252355731,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "emitP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.42000000000116416,
+            "sd": 0.08366600264784184
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.4599999999976717,
+            "sd": 0.05477225575370478
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.520000000001164,
+            "sd": 0.7429670248384664
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.2,
+            "sd": 0.24494897428069412
+          },
+          "sqliteMeanDelta": -0.3200000000011638,
+          "sumSD": 0.9879159991191606,
+          "increaseBeyondSumSD": false
+        }
+      ]
+    },
+    "15aa": {
+      "role": "list reference",
+      "source": "docs\\benchmarks\\android-parity-15aa-2026-10-25.json",
+      "beforeCounts": {
+        "PASS": 16,
+        "BRIDGE-BOUND": 0,
+        "PLATFORM-BOUND": 14,
+        "CODE-BOUND": 3,
+        "FAIL": 0
+      },
+      "afterCounts": {
+        "PASS": 13,
+        "BRIDGE-BOUND": 0,
+        "PLATFORM-BOUND": 10,
+        "CODE-BOUND": 3,
+        "FAIL": 7
+      },
+      "metrics": [
+        {
+          "size": 1000,
+          "metric": "firstReadyMs",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 472.6000000000058,
+            "sd": 129.0295702542711
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 752.5399999999994,
+            "sd": 668.9966464788897
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 466.8599999999977,
+            "sd": 59.78936360256706
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 508.0199999999924,
+            "sd": 32.22059900126633
+          },
+          "sqliteMeanDelta": 41.15999999999474,
+          "sumSD": 92.00996260383339,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "relaunchReadyMs",
+          "beforeStatus": "PASS",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1445.6,
+            "sd": 228.92671316383615
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1425.4400000000082,
+            "sd": 57.20256113147914
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1609.5400000000022,
+            "sd": 151.47003994190288
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1727.720000000007,
+            "sd": 143.04704470907404
+          },
+          "sqliteMeanDelta": 118.18000000000484,
+          "sumSD": 294.5170846509769,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "heapTodosMb",
+          "beforeStatus": "CODE-BOUND",
+          "afterStatus": "CODE-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 4.62728271484375,
+            "sd": 0.0009645928018397798
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 4.639840698242187,
+            "sd": 0.0036084229438785803
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.41852035522461,
+            "sd": 0.022078969939286788
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.486522674560547,
+            "sd": 0.01802164348655515
+          },
+          "sqliteMeanDelta": 0.06800231933593714,
+          "sumSD": 0.04010061342584194,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 1000,
+          "metric": "heapNotesMb",
+          "beforeStatus": "CODE-BOUND",
+          "afterStatus": "CODE-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 5.164990997314453,
+            "sd": 0.0020291170454981326
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 5.192622375488281,
+            "sd": 0.0019312343356959777
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.1319831848144535,
+            "sd": 0.013250900082557604
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.209805297851562,
+            "sd": 0.009903711354673026
+          },
+          "sqliteMeanDelta": 0.07782211303710884,
+          "sumSD": 0.023154611437230632,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 1000,
+          "metric": "heapRelaunchMb",
+          "beforeStatus": "CODE-BOUND",
+          "afterStatus": "CODE-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.57232437133789,
+            "sd": 0.0004447812688801111
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.590680694580078,
+            "sd": 0.00016275395936872372
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.959883117675782,
+            "sd": 0.03270254626818711
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 5.000587463378906,
+            "sd": 0.03361038050462711
+          },
+          "sqliteMeanDelta": 0.040704345703124645,
+          "sumSD": 0.06631292677281422,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "pssTotalMb",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 223.9318359375,
+            "sd": 2.0825100174716744
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 223.074609375,
+            "sd": 1.7564296589792996
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 236.3328125,
+            "sd": 1.7982954166340581
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 235.559375,
+            "sd": 1.4722149174986863
+          },
+          "sqliteMeanDelta": -0.7734375,
+          "sumSD": 3.2705103341327444,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "pssRelaunchTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 223.50546875,
+            "sd": 3.9462099531363224
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 219.4484375,
+            "sd": 3.388338884598337
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.9501953125,
+            "sd": 2.0701989484632297
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.43984375,
+            "sd": 1.1764016982553023
+          },
+          "sqliteMeanDelta": -0.5103515625000057,
+          "sumSD": 3.246600646718532,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "toggleP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 3.9399999999965076,
+            "sd": 1.4825653442562257
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 3.1000000000087313,
+            "sd": 0.9513148795211811
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 14.640000000002328,
+            "sd": 1.700882124067426
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 13.820000000004075,
+            "sd": 0.887130204642901
+          },
+          "sqliteMeanDelta": -0.8199999999982523,
+          "sumSD": 2.588012328710327,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "toggleP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 10.29999999999709,
+            "sd": 3.3637776383052516
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 9.740000000002329,
+            "sd": 1.1171392035042116
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 53.70000000000582,
+            "sd": 9.052347761761661
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 55.480000000007564,
+            "sd": 7.035410435789573
+          },
+          "sqliteMeanDelta": 1.780000000001742,
+          "sumSD": 16.087758197551235,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "emitP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.07999999999883585,
+            "sd": 0.04472135954934501
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.09999999999708961,
+            "sd": 7.970412225481882e-12
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.6400000000052386,
+            "sd": 0.08944271910682479
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.7199999999953435,
+            "sd": 0.044721359546091105
+          },
+          "sqliteMeanDelta": 0.07999999999010488,
+          "sumSD": 0.1341640786529159,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 1000,
+          "metric": "emitP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.41999999999825377,
+            "sd": 0.2167948338806127
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.47999999999883586,
+            "sd": 0.2949576240749539
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.420000000004075,
+            "sd": 0.21679483388833182
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 1000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.499999999997089,
+            "sd": 0.5147815070404456
+          },
+          "sqliteMeanDelta": 0.07999999999301455,
+          "sumSD": 0.7315763409287774,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "firstReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 396.75999999999766,
+            "sd": 131.54578290466245
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 379.6999999999942,
+            "sd": 78.53581985311256
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 657.4399999999994,
+            "sd": 207.91094968760095
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 641.4000000000029,
+            "sd": 25.836118129471846
+          },
+          "sqliteMeanDelta": -16.03999999999644,
+          "sumSD": 233.7470678170728,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "relaunchReadyMs",
+          "beforeStatus": "PASS",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1499.3399999999965,
+            "sd": 226.04106485326798
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1418.499999999997,
+            "sd": 37.495799764765614
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1713.7399999999993,
+            "sd": 440.48235265445066
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1628.4599999999919,
+            "sd": 33.660332737506266
+          },
+          "sqliteMeanDelta": -85.28000000000748,
+          "sumSD": 474.14268539195695,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "heapTodosMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 7.040081787109375,
+            "sd": 0.004493053854194106
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 7.054653930664062,
+            "sd": 0.0036205962760381596
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.441011810302735,
+            "sd": 0.01130715284562446
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.497946929931641,
+            "sd": 0.0010883973748157716
+          },
+          "sqliteMeanDelta": 0.05693511962890607,
+          "sumSD": 0.012395550220440232,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 10000,
+          "metric": "heapNotesMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 7.576895141601563,
+            "sd": 0.0030491168993028025
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 7.605316925048828,
+            "sd": 0.003263084325988654
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.1776123046875,
+            "sd": 0.008973141458469
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.250938415527344,
+            "sd": 0.0075778560315715405
+          },
+          "sqliteMeanDelta": 0.07332611083984375,
+          "sumSD": 0.01655099749004054,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 10000,
+          "metric": "heapRelaunchMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 6.992427825927734,
+            "sd": 0.0011513404752093257
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 7.010242462158203,
+            "sd": 0.0004276035720669666
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.961634826660156,
+            "sd": 0.033928514663625245
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.98829345703125,
+            "sd": 0.028060697536045127
+          },
+          "sqliteMeanDelta": 0.026658630371093395,
+          "sumSD": 0.06198921219967037,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "pssTotalMb",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 230.9033203125,
+            "sd": 1.8973806445714279
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 230.003515625,
+            "sd": 1.3088470851445022
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 244.48515625,
+            "sd": 1.7461689021858502
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 243.7896484375,
+            "sd": 1.222732804799304
+          },
+          "sqliteMeanDelta": -0.695507812499983,
+          "sumSD": 2.968901706985154,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "pssRelaunchTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 225.429296875,
+            "sd": 1.8192214774196762
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 225.2189453125,
+            "sd": 3.384384910449226
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 223.5443359375,
+            "sd": 1.7317631756223626
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.3005859375,
+            "sd": 1.213790073538604
+          },
+          "sqliteMeanDelta": -1.2437500000000057,
+          "sumSD": 2.945553249160967,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "toggleP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 7.880000000004657,
+            "sd": 2.0498780451607606
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 6.780000000004657,
+            "sd": 0.6099180272729445
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 18.44000000000233,
+            "sd": 9.889034331026968
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 14.400000000005821,
+            "sd": 2.0211382931434017
+          },
+          "sqliteMeanDelta": -4.039999999996507,
+          "sumSD": 11.91017262417037,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "toggleP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 17.04000000000233,
+            "sd": 4.782572529513738
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 15.359999999997672,
+            "sd": 1.569394787809708
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 56.5,
+            "sd": 13.508145690662875
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 54.45999999999185,
+            "sd": 4.300930131956013
+          },
+          "sqliteMeanDelta": -2.040000000008149,
+          "sumSD": 17.809075822618887,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "emitP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.07999999999883585,
+            "sd": 0.04472135954934501
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.09999999999708961,
+            "sd": 7.970412225481882e-12
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 4.359999999994761,
+            "sd": 1.3649175799256754
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.679999999993015,
+            "sd": 0.0447213595428372
+          },
+          "sqliteMeanDelta": -0.6800000000017459,
+          "sumSD": 1.4096389394685127,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 10000,
+          "metric": "emitP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.619999999992433,
+            "sd": 0.5495452665523073
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.3799999999959255,
+            "sd": 0.08366600265479898
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 6.859999999991851,
+            "sd": 1.1717508267550838
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 10000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.460000000006403,
+            "sd": 0.2701851217138855
+          },
+          "sqliteMeanDelta": -1.3999999999854484,
+          "sumSD": 1.4419359484689693,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "firstReadyMs",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 440.1000000000029,
+            "sd": 129.02437754161178
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 418.8599999999977,
+            "sd": 61.54890738266785
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 1440.3400000000024,
+            "sd": 260.0075248910977
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "firstReadyMs",
+            "n": 5,
+            "mean": 1399.4000000000058,
+            "sd": 42.78323269693531
+          },
+          "sqliteMeanDelta": -40.939999999996644,
+          "sumSD": 302.79075758803305,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "relaunchReadyMs",
+          "beforeStatus": "PASS",
+          "afterStatus": "PLATFORM-BOUND",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1504.6800000000046,
+            "sd": 336.91514065118434
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1471.9399999999907,
+            "sd": 85.5798632856985
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1744.4600000000034,
+            "sd": 356.77868910572545
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "relaunchReadyMs",
+            "n": 5,
+            "mean": 1700.4399999999964,
+            "sd": 75.70711987652899
+          },
+          "sqliteMeanDelta": -44.02000000000703,
+          "sumSD": 432.4858089822544,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "heapTodosMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 18.478905487060548,
+            "sd": 0.000947921184436893
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 18.49583206176758,
+            "sd": 0.00433134441954873
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.4670158386230465,
+            "sd": 0.006841099122966546
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapTodosMb",
+            "n": 5,
+            "mean": 5.53446044921875,
+            "sd": 0.01944705084466325
+          },
+          "sqliteMeanDelta": 0.06744461059570384,
+          "sumSD": 0.026288149967629796,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 50000,
+          "metric": "heapNotesMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 19.031365203857423,
+            "sd": 0.0011141051780058464
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 19.057637023925782,
+            "sd": 0.004106709324948703
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.184846496582031,
+            "sd": 0.006323069630849571
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapNotesMb",
+            "n": 5,
+            "mean": 6.261599731445313,
+            "sd": 0.005917849921144546
+          },
+          "sqliteMeanDelta": 0.07675323486328178,
+          "sumSD": 0.012240919551994116,
+          "increaseBeyondSumSD": true
+        },
+        {
+          "size": 50000,
+          "metric": "heapRelaunchMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 18.442552185058595,
+            "sd": 0.0004644509457006892
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 18.46151657104492,
+            "sd": 0.00043698185546962414
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 4.960964965820312,
+            "sd": 0.033358503710921736
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "heapRelaunchMb",
+            "n": 5,
+            "mean": 5.000336456298828,
+            "sd": 0.033499565162716426
+          },
+          "sqliteMeanDelta": 0.039371490478515625,
+          "sumSD": 0.06685806887363815,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "pssTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 243.62109375,
+            "sd": 1.7599761532121645
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 243.070703125,
+            "sd": 1.3135107961965344
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 242.4185546875,
+            "sd": 2.1720687011405433
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssTotalMb",
+            "n": 5,
+            "mean": 241.705859375,
+            "sd": 1.626292580260424
+          },
+          "sqliteMeanDelta": -0.712695312500017,
+          "sumSD": 3.7983612814009673,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "pssRelaunchTotalMb",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 237.8916015625,
+            "sd": 2.015547994872613
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 237.9857421875,
+            "sd": 2.0521431722162276
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 223.4548828125,
+            "sd": 1.8458668340508946
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "pssRelaunchTotalMb",
+            "n": 5,
+            "mean": 222.89921875,
+            "sd": 1.4862475018684818
+          },
+          "sqliteMeanDelta": -0.5556640625,
+          "sumSD": 3.3321143359193766,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "toggleP50",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 31.780000000004655,
+            "sd": 2.9422780290076793
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 29.90000000000582,
+            "sd": 0.6363961030672068
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 20.039999999996507,
+            "sd": 7.579775722274507
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP50",
+            "n": 5,
+            "mean": 15.039999999996507,
+            "sd": 3.153252289301741
+          },
+          "sqliteMeanDelta": -5.0,
+          "sumSD": 10.733028011576248,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "toggleP95",
+          "beforeStatus": "PASS",
+          "afterStatus": "PASS",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 64.72000000000116,
+            "sd": 18.96277933215688
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 53.699999999994176,
+            "sd": 11.872657663735561
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 57.55999999999767,
+            "sd": 14.726608570884247
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "toggleP95",
+            "n": 5,
+            "mean": 51.00000000000582,
+            "sd": 12.840950120614778
+          },
+          "sqliteMeanDelta": -6.559999999991852,
+          "sumSD": 27.567558691499023,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "emitP50",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.0999999999825377,
+            "sd": 1.3015628661378542e-11
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 0.1,
+            "sd": 1.3015628661378542e-11
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 4.420000000001164,
+            "sd": 1.3718600511631065
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP50",
+            "n": 5,
+            "mean": 3.699999999994179,
+            "sd": 1.59408244521961e-11
+          },
+          "sqliteMeanDelta": -0.7200000000069853,
+          "sumSD": 1.3718600511790473,
+          "increaseBeyondSumSD": false
+        },
+        {
+          "size": 50000,
+          "metric": "emitP95",
+          "beforeStatus": "PLATFORM-BOUND",
+          "afterStatus": "FAIL",
+          "beforeClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.46000000000931324,
+            "sd": 0.27018512171307757
+          },
+          "afterClassic": {
+            "impl": "classic",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 0.4599999999976717,
+            "sd": 0.05477225575370478
+          },
+          "beforeSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 6.6,
+            "sd": 1.557241150248154
+          },
+          "afterSqlite": {
+            "impl": "sqlite",
+            "size": 50000,
+            "metric": "emitP95",
+            "n": 5,
+            "mean": 5.2,
+            "sd": 0.24494897428069412
+          },
+          "sqliteMeanDelta": -1.3999999999999995,
+          "sumSD": 1.802190124528848,
+          "increaseBeyondSumSD": false
+        }
+      ]
+    }
+  },
+  "remainingFailures": [
+    {
+      "size": 1000,
+      "metric": "relaunchReadyMs",
+      "classic": {
+        "impl": "classic",
+        "size": 1000,
+        "metric": "relaunchReadyMs",
+        "n": 5,
+        "mean": 1425.4400000000082,
+        "sd": 57.20256113147914
+      },
+      "sqlite": {
+        "impl": "sqlite",
+        "size": 1000,
+        "metric": "relaunchReadyMs",
+        "n": 5,
+        "mean": 1727.720000000007,
+        "sd": 143.04704470907404
+      },
+      "status": "FAIL",
+      "excess": 302.27999999999884,
+      "allowance": 291.1896058405497,
+      "explanation": "F_open mean; fresh process first plugin call through one populated-row read; 57.203 + 90.940 + 143.047 = 291.190 ms; excess=302.280 ms"
+    },
+    {
+      "size": 1000,
+      "metric": "emitP50",
+      "classic": {
+        "impl": "classic",
+        "size": 1000,
+        "metric": "emitP50",
+        "n": 5,
+        "mean": 0.09999999999708961,
+        "sd": 7.970412225481882e-12
+      },
+      "sqlite": {
+        "impl": "sqlite",
+        "size": 1000,
+        "metric": "emitP50",
+        "n": 5,
+        "mean": 3.7199999999953435,
+        "sd": 0.044721359546091105
+      },
+      "status": "FAIL",
+      "excess": 3.619999999998254,
+      "allowance": 3.5447213595540616,
+      "explanation": "F_commit p50; 32-byte atomic scratch insert back-to-back like the emission loop, same DB WAL/NORMAL; 0.000 + 3.500 + 0.045 = 3.545 ms; excess=3.620 ms"
+    },
+    {
+      "size": 10000,
+      "metric": "relaunchReadyMs",
+      "classic": {
+        "impl": "classic",
+        "size": 10000,
+        "metric": "relaunchReadyMs",
+        "n": 5,
+        "mean": 1418.499999999997,
+        "sd": 37.495799764765614
+      },
+      "sqlite": {
+        "impl": "sqlite",
+        "size": 10000,
+        "metric": "relaunchReadyMs",
+        "n": 5,
+        "mean": 1628.4599999999919,
+        "sd": 33.660332737506266
+      },
+      "status": "FAIL",
+      "excess": 209.9599999999948,
+      "allowance": 163.55613250226025,
+      "explanation": "F_open mean; fresh process first plugin call through one populated-row read; 37.496 + 92.400 + 33.660 = 163.556 ms; excess=209.960 ms"
+    },
+    {
+      "size": 10000,
+      "metric": "emitP50",
+      "classic": {
+        "impl": "classic",
+        "size": 10000,
+        "metric": "emitP50",
+        "n": 5,
+        "mean": 0.09999999999708961,
+        "sd": 7.970412225481882e-12
+      },
+      "sqlite": {
+        "impl": "sqlite",
+        "size": 10000,
+        "metric": "emitP50",
+        "n": 5,
+        "mean": 3.679999999993015,
+        "sd": 0.0447213595428372
+      },
+      "status": "FAIL",
+      "excess": 3.5799999999959256,
+      "allowance": 3.3447213595391663,
+      "explanation": "F_commit p50; 32-byte atomic scratch insert back-to-back like the emission loop, same DB WAL/NORMAL; 0.000 + 3.300 + 0.045 = 3.345 ms; excess=3.580 ms"
+    },
+    {
+      "size": 10000,
+      "metric": "emitP95",
+      "classic": {
+        "impl": "classic",
+        "size": 10000,
+        "metric": "emitP95",
+        "n": 5,
+        "mean": 0.3799999999959255,
+        "sd": 0.08366600265479898
+      },
+      "sqlite": {
+        "impl": "sqlite",
+        "size": 10000,
+        "metric": "emitP95",
+        "n": 5,
+        "mean": 5.460000000006403,
+        "sd": 0.2701851217138855
+      },
+      "status": "FAIL",
+      "excess": 5.080000000010477,
+      "allowance": 4.853851124368685,
+      "explanation": "F_commit p95; 32-byte atomic scratch insert back-to-back like the emission loop, same DB WAL/NORMAL; 0.084 + 4.500 + 0.270 = 4.854 ms; excess=5.080 ms"
+    },
+    {
+      "size": 50000,
+      "metric": "emitP50",
+      "classic": {
+        "impl": "classic",
+        "size": 50000,
+        "metric": "emitP50",
+        "n": 5,
+        "mean": 0.1,
+        "sd": 1.3015628661378542e-11
+      },
+      "sqlite": {
+        "impl": "sqlite",
+        "size": 50000,
+        "metric": "emitP50",
+        "n": 5,
+        "mean": 3.699999999994179,
+        "sd": 1.59408244521961e-11
+      },
+      "status": "FAIL",
+      "excess": 3.599999999994179,
+      "allowance": 3.300000000075523,
+      "explanation": "F_commit p50; 32-byte atomic scratch insert back-to-back like the emission loop, same DB WAL/NORMAL; 0.000 + 3.300 + 0.000 = 3.300 ms; excess=3.600 ms"
+    },
+    {
+      "size": 50000,
+      "metric": "emitP95",
+      "classic": {
+        "impl": "classic",
+        "size": 50000,
+        "metric": "emitP95",
+        "n": 5,
+        "mean": 0.4599999999976717,
+        "sd": 0.05477225575370478
+      },
+      "sqlite": {
+        "impl": "sqlite",
+        "size": 50000,
+        "metric": "emitP95",
+        "n": 5,
+        "mean": 5.2,
+        "sd": 0.24494897428069412
+      },
+      "status": "FAIL",
+      "excess": 4.740000000002328,
+      "allowance": 4.399721230069324,
+      "explanation": "F_commit p95; 32-byte atomic scratch insert back-to-back like the emission loop, same DB WAL/NORMAL; 0.055 + 4.100 + 0.245 = 4.400 ms; excess=4.740 ms"
+    }
+  ],
+  "decision": "Rejected16u; original async runHandlers/core unconditional await restored. Retained16r is baseline. Controls also moved; differences do not establish source causation."
+}

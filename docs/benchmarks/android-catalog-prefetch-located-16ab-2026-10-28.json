@@ -1,0 +1,319 @@
+{
+  "A": {
+    "file": ".tmp\\lp18-A-1.json",
+    "sha256": "abc1f0cf48371c8ad76bca20a08a034722336f65d7342e876cb01be50de7994a",
+    "earlyCalls": [
+      {
+        "transaction": 0,
+        "method": "createConnection",
+        "start": 149.29999999998836,
+        "ms": 38,
+        "bytes": 97,
+        "sql": [
+          ""
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "open",
+        "start": 149.39999999996508,
+        "ms": 51.100000000034925,
+        "bytes": 44,
+        "sql": [
+          ""
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "checkConnectionsConsistency",
+        "start": 200.69999999995343,
+        "ms": 6.100000000034925,
+        "bytes": 29,
+        "sql": [
+          ""
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "createConnection",
+        "start": 200.79999999998836,
+        "ms": 7.5,
+        "bytes": 97,
+        "sql": [
+          ""
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "open",
+        "start": 200.79999999998836,
+        "ms": 11.099999999976717,
+        "bytes": 44,
+        "sql": [
+          ""
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "query",
+        "start": 212.09999999997672,
+        "ms": 4.900000000023283,
+        "bytes": 109,
+        "values": [],
+        "sql": [
+          "PRAGMA journal_mode=WAL"
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "query",
+        "start": 212.29999999998836,
+        "ms": 5.899999999965075,
+        "bytes": 108,
+        "values": [],
+        "sql": [
+          "PRAGMA cache_size=-512"
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "query",
+        "start": 212.5,
+        "ms": 7,
+        "bytes": 265,
+        "values": [],
+        "sql": [
+          "SELECT key, value, NULL AS name, NULL AS tbl_name, NULL AS sql FROM nss_meta\n             UNION ALL SELECT NULL, NULL, name, tbl_name, sql FROM sqlite_master WHERE type = 'index'"
+        ]
+      },
+      {
+        "transaction": 1,
+        "method": "executeSet",
+        "start": 220.29999999998836,
+        "ms": 14.399999999965075,
+        "bytes": 665,
+        "values": [
+          [
+            "router"
+          ],
+          [
+            "router/",
+            "router0"
+          ],
+          [
+            "router"
+          ],
+          [
+            "router/",
+            "router0"
+          ],
+          [
+            "router"
+          ],
+          [
+            "router/",
+            "router0"
+          ]
+        ],
+        "sql": [
+          "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+          "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+          "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+          "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+          "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+          "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?"
+        ]
+      },
+      {
+        "transaction": 1,
+        "method": "query",
+        "start": 221.79999999998836,
+        "ms": 14,
+        "bytes": 3010,
+        "values": [
+          "path",
+          "parent",
+          "kind",
+          "pos",
+          "value",
+          "source",
+          "coll",
+          "id",
+          "data",
+          "sortkey",
+          "seq",
+          "ui",
+          "ui/",
+          "ui0",
+          "ui",
+          "ui/",
+          "ui0",
+          "ui",
+          "ui/",
+          "ui0",
+          "path",
+          "parent",
+          "kind",
+          "pos",
+          "value",
+          "source",
+          "coll",
+          "id",
+          "data",
+          "sortkey",
+          "seq",
+          "router",
+          "router/",
+          "router0",
+          "router",
+          "router/",
+          "router0",
+          "router",
+          "router/",
+          "router0"
+        ],
+        "sql": [
+          "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"path\",?, \"parent\",?, \"kind\",?, \"pos\",?, \"valu"
+        ]
+      }
+    ]
+  },
+  "B": {
+    "file": ".tmp\\lp18-B-1.json",
+    "sha256": "1aed7a86caaa9f3a584447ac4fa6f4ce1e2f893a27f76e3efc405777a49332d1",
+    "earlyCalls": [
+      {
+        "transaction": 0,
+        "method": "createConnection",
+        "start": 181.09999999997672,
+        "ms": 51.40000000002328,
+        "bytes": 97,
+        "sql": [
+          ""
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "open",
+        "start": 181.30000000004657,
+        "ms": 51.5,
+        "bytes": 44,
+        "sql": [
+          ""
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "query",
+        "start": 181.59999999997672,
+        "ms": 54.800000000046566,
+        "bytes": 265,
+        "values": [],
+        "sql": [
+          "SELECT key, value, NULL AS name, NULL AS tbl_name, NULL AS sql FROM nss_meta\n             UNION ALL SELECT NULL, NULL, name, tbl_name, sql FROM sqlite_master WHERE type = 'index'"
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "checkConnectionsConsistency",
+        "start": 233,
+        "ms": 5.5,
+        "bytes": 29,
+        "sql": [
+          ""
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "createConnection",
+        "start": 233.09999999997672,
+        "ms": 5.5,
+        "bytes": 97,
+        "sql": [
+          ""
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "open",
+        "start": 233.09999999997672,
+        "ms": 5.700000000069849,
+        "bytes": 44,
+        "sql": [
+          ""
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "query",
+        "start": 233.19999999995343,
+        "ms": 6.300000000046566,
+        "bytes": 265,
+        "values": [],
+        "sql": [
+          "SELECT key, value, NULL AS name, NULL AS tbl_name, NULL AS sql FROM nss_meta\n             UNION ALL SELECT NULL, NULL, name, tbl_name, sql FROM sqlite_master WHERE type = 'index'"
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "query",
+        "start": 238.90000000002328,
+        "ms": 3.5,
+        "bytes": 109,
+        "values": [],
+        "sql": [
+          "PRAGMA journal_mode=WAL"
+        ]
+      },
+      {
+        "transaction": 0,
+        "method": "query",
+        "start": 239,
+        "ms": 7.800000000046566,
+        "bytes": 108,
+        "values": [],
+        "sql": [
+          "PRAGMA cache_size=-512"
+        ]
+      },
+      {
+        "transaction": 1,
+        "method": "executeSet",
+        "start": 243.09999999997672,
+        "ms": 16.70000000006985,
+        "bytes": 665,
+        "values": [
+          [
+            "router"
+          ],
+          [
+            "router/",
+            "router0"
+          ],
+          [
+            "router"
+          ],
+          [
+            "router/",
+            "router0"
+          ],
+          [
+            "router"
+          ],
+          [
+            "router/",
+            "router0"
+          ]
+        ],
+        "sql": [
+          "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+          "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+          "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+          "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+          "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+          "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?"
+        ]
+      }
+    ]
+  }
+}

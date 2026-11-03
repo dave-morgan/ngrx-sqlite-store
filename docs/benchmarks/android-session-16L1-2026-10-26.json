@@ -1,0 +1,28 @@
+{
+  "session": "16L1-audit-1792974657",
+  "apkHashes": {
+    "classic": "53154e7a64e882c94820c4db54144d8fe8f3931abe1f1f88affaf646fea0f0f4",
+    "sqlite": "e5db4b15e0ebd9314bad1498615d23d467185b2d4ea018a66029119a74916ac5"
+  },
+  "bootIds": [
+    "cb6ba800-24e3-45a1-8260-a90ffd479fd9",
+    "ad68904e-08f5-421d-9e3e-8c157c2cc59a",
+    "1238870d-8269-4975-a85a-446b7352e271",
+    "312d7a82-e6ef-4f4f-8b08-5338bb240da0",
+    "a9185f82-9b70-40e0-a59b-a5f592ad3c29",
+    "42d5a144-03f3-4647-9654-0207d8384169"
+  ],
+  "observations": 30,
+  "summaryGroups": 66,
+  "verdicts": 33,
+  "counts": {
+    "PASS": 12,
+    "BRIDGE-BOUND": 0,
+    "PLATFORM-BOUND": 12,
+    "CODE-BOUND": 3,
+    "FAIL": 6
+  },
+  "pipelineExit": 0,
+  "verifiedOn": "2026-10-25",
+  "controlsVerified": 4
+}

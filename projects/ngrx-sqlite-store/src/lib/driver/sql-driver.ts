@@ -4,7 +4,8 @@ export type SqlValue = string | number | null | Uint8Array;
 export type Row = Record<string, SqlValue>;
 
 export interface SqlDriver {
-  open(): Promise<void>;
+  /** `firstQuery`: an optional parameterless read the driver may pipeline with open. */
+  open(firstQuery?: string): Promise<void>;
   close(): Promise<void>;
   exec(sql: string): Promise<void>;
   run(sql: string, params?: SqlValue[]): Promise<{ changes: number; lastId?: number }>;
@@ -18,6 +19,8 @@ export interface SqlDriver {
    * issue the next `batch` before the previous one resolves (Phase 15f, ADR-0066).
    */
   readonly pipelined?: boolean;
+  /** Internal RowWriter deletes may bypass native sync-metadata rewriting. */
+  readonly directDeletes?: boolean;
   begin(): Promise<void>;
   commit(): Promise<void>;
   rollback(): Promise<void>;

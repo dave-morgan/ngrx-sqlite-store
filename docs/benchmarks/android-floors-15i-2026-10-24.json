@@ -1,0 +1,1066 @@
+{
+  "date": "2026-10-24",
+  "session": "15i-audit-1792807443",
+  "device": "sdk_gphone64_x86_64",
+  "sdkLevel": "35",
+  "webview": "com.google.android.webview, 154.0.8037.106",
+  "apkHashes": {
+    "classic": "a09c5f0f3252e7a085cf0b93c28d12a16a2b4cd5858f1dac0fd1c26bd3d69e79",
+    "sqlite": "319ab19d06e00a2194a932dd05dd822f633feba9dce672f117079391ba351aca"
+  },
+  "results": [
+    {
+      "size": 1000,
+      "database": "ngrx-harness",
+      "commit": [
+        6.399999999965075,
+        4.5,
+        3.099999999976717,
+        3.099999999976717,
+        4.2000000000116415,
+        3.099999999976717,
+        4.7000000000116415,
+        3.7000000000116415,
+        3.599999999976717,
+        4.2000000000116415,
+        4.7000000000116415,
+        3.8999999999650754,
+        3.2999999999883585,
+        6.099999999976717,
+        9.200000000011642,
+        9.100000000034925,
+        5.699999999953434,
+        3,
+        3.300000000046566,
+        4.2999999999883585
+      ],
+      "commitPaced": [
+        3.7999999999883585,
+        4.399999999965075,
+        3.800000000046566,
+        4.2999999999883585,
+        3.5,
+        4.2999999999883585,
+        3.599999999976717,
+        3.5,
+        4.199999999953434,
+        3.699999999953434,
+        4.199999999953434,
+        3.900000000023283,
+        3.6000000000349246,
+        3.800000000046566,
+        3.400000000023283,
+        3.7999999999883585,
+        4.399999999965075,
+        3.7000000000116415,
+        3.7000000000116415,
+        3.2999999999883585,
+        3.599999999976717,
+        3.599999999976717,
+        4.099999999976717,
+        3.8999999999650754,
+        4.899999999965075,
+        3.599999999976717,
+        4.5,
+        3.7999999999883585,
+        4.300000000046566,
+        3.7999999999883585
+      ],
+      "seed": {
+        "samples": [
+          34.40000000002328,
+          34.5,
+          32,
+          39.20000000001164,
+          31.5
+        ],
+        "chunkBytes": [
+          179988,
+          199,
+          201,
+          1799,
+          3655
+        ],
+        "totalBytes": 185842,
+        "rows": 1000
+      },
+      "seedRows": {
+        "samples": [
+          24,
+          22.900000000023283,
+          24.29999999998836,
+          22.599999999976717,
+          30.70000000001164
+        ],
+        "rows": 1012,
+        "calls": 1,
+        "wireBytes": 169806
+      },
+      "open": [
+        71.09999999997672,
+        77.29999999998836,
+        69.79999999998836,
+        78.40000000002328,
+        87.89999999996508
+      ],
+      "pragmas": {
+        "journalMode": [
+          {
+            "journal_mode": "wal"
+          }
+        ],
+        "synchronous": [
+          {
+            "synchronous": 1
+          }
+        ]
+      },
+      "seedTrace": [
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 438.70000000001164,
+          "ms": 36.59999999997672,
+          "bytes": 179988,
+          "sql": [
+            "DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "DELETE FROM nss_entity WHERE coll = ?",
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 478.4000000000233,
+          "ms": 3.599999999976717,
+          "bytes": 199,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 485.5,
+          "ms": 4.2999999999883585,
+          "bytes": 201,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 493.5,
+          "ms": 3.6000000000349246,
+          "bytes": 1799,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 500.1000000000349,
+          "ms": 2.7999999999883585,
+          "bytes": 3655,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        }
+      ],
+      "memoryDiagnostic": {
+        "beforeSeed": 122.5126953125,
+        "afterSeed": 125.0830078125,
+        "afterShrink": 123.5244140625,
+        "cache": {
+          "cache_size": [
+            {
+              "cache_size": -2000
+            }
+          ],
+          "page_size": [
+            {
+              "page_size": 4096
+            }
+          ],
+          "page_count": [
+            {
+              "page_count": 124
+            }
+          ],
+          "freelist_count": [
+            {
+              "freelist_count": 0
+            }
+          ]
+        },
+        "beforeRows": 127.734375,
+        "afterRows": 122.9892578125,
+        "beforeOnce": 118.5673828125,
+        "afterOnce": 135.11328125
+      }
+    },
+    {
+      "size": 10000,
+      "database": "ngrx-harness",
+      "commit": [
+        6.2999999999883585,
+        3.2000000000116415,
+        4,
+        3.5,
+        3,
+        2.7000000000116415,
+        3,
+        3.7000000000116415,
+        3.2999999999883585,
+        2.7999999999883585,
+        3,
+        2.800000000046566,
+        3.2999999999883585,
+        4.900000000023283,
+        3.599999999976717,
+        2.7999999999883585,
+        3,
+        4.7999999999883585,
+        3.300000000046566,
+        2.900000000023283
+      ],
+      "commitPaced": [
+        4.2999999999883585,
+        3.599999999976717,
+        4.5,
+        3.7000000000116415,
+        3.2999999999883585,
+        3.300000000046566,
+        4.099999999976717,
+        3.5,
+        3.400000000023283,
+        3.8999999999650754,
+        3.5,
+        3.6000000000349246,
+        3.7999999999883585,
+        3.6000000000349246,
+        3.7999999999883585,
+        3.7000000000116415,
+        3.199999999953434,
+        4.400000000023283,
+        3.7000000000116415,
+        4.399999999965075,
+        4.199999999953434,
+        5,
+        4.099999999976717,
+        5,
+        4.099999999976717,
+        3.7000000000116415,
+        4,
+        4.2000000000116415,
+        3.3999999999650754,
+        3.599999999976717
+      ],
+      "seed": {
+        "samples": [
+          131.59999999997672,
+          140.90000000002328,
+          135.60000000003492,
+          132,
+          126.79999999998836
+        ],
+        "chunkBytes": [
+          478,
+          262198,
+          262130,
+          262236,
+          262178,
+          262234,
+          262096,
+          260480,
+          199,
+          201,
+          1799,
+          3635
+        ],
+        "totalBytes": 1839864,
+        "rows": 10000
+      },
+      "seedRows": {
+        "samples": [
+          173.39999999996508,
+          170.79999999998836,
+          177.90000000002328,
+          170.10000000003492,
+          168.90000000002328
+        ],
+        "rows": 10012,
+        "calls": 7,
+        "wireBytes": 1714753
+      },
+      "open": [
+        86.90000000002328,
+        77.09999999997672,
+        85.59999999997672,
+        92.29999999998836,
+        78.10000000003492
+      ],
+      "pragmas": {
+        "journalMode": [
+          {
+            "journal_mode": "wal"
+          }
+        ],
+        "synchronous": [
+          {
+            "synchronous": 1
+          }
+        ]
+      },
+      "seedTrace": [
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 471.79999999998836,
+          "ms": 27,
+          "bytes": 478,
+          "sql": [
+            "DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "DELETE FROM nss_entity WHERE coll = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 474,
+          "ms": 41.29999999998836,
+          "bytes": 262198,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 479.8999999999651,
+          "ms": 53.5,
+          "bytes": 262130,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 500.5999999999767,
+          "ms": 48.20000000001164,
+          "bytes": 262236,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 517.5,
+          "ms": 51.79999999998836,
+          "bytes": 262178,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 535.1999999999534,
+          "ms": 50.40000000002328,
+          "bytes": 262234,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 551,
+          "ms": 48.399999999965075,
+          "bytes": 262096,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 569.5,
+          "ms": 44.399999999965075,
+          "bytes": 260480,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 616.6999999999534,
+          "ms": 2.7000000000116415,
+          "bytes": 199,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 621.7999999999884,
+          "ms": 2.5,
+          "bytes": 201,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 627.3999999999651,
+          "ms": 4.400000000023283,
+          "bytes": 1799,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 634.5,
+          "ms": 3.3999999999650754,
+          "bytes": 3635,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        }
+      ],
+      "memoryDiagnostic": {
+        "beforeSeed": 126.0283203125,
+        "afterSeed": 132.2314453125,
+        "afterShrink": 125.9306640625,
+        "cache": {
+          "cache_size": [
+            {
+              "cache_size": -2000
+            }
+          ],
+          "page_size": [
+            {
+              "page_size": 4096
+            }
+          ],
+          "page_count": [
+            {
+              "page_count": 1120
+            }
+          ],
+          "freelist_count": [
+            {
+              "freelist_count": 0
+            }
+          ]
+        },
+        "beforeRows": 126.8134765625,
+        "afterRows": 128.6806640625,
+        "beforeOnce": 119.248046875,
+        "afterOnce": 134.109375
+      }
+    },
+    {
+      "size": 50000,
+      "database": "ngrx-harness",
+      "commit": [
+        6.400000000023283,
+        3.599999999976717,
+        3.099999999976717,
+        2.8999999999650754,
+        3,
+        2.900000000023283,
+        2.5,
+        4.300000000046566,
+        2.7999999999883585,
+        2.8999999999650754,
+        2.800000000046566,
+        2.599999999976717,
+        4,
+        3.400000000023283,
+        3.2000000000116415,
+        3.2000000000116415,
+        3.099999999976717,
+        4.2000000000116415,
+        3.6000000000349246,
+        2.900000000023283
+      ],
+      "commitPaced": [
+        3.800000000046566,
+        4.099999999976717,
+        3.8999999999650754,
+        3.7000000000116415,
+        3.400000000023283,
+        3.8999999999650754,
+        3.599999999976717,
+        3.699999999953434,
+        3.7000000000116415,
+        3.400000000023283,
+        4,
+        3.6000000000349246,
+        3.5,
+        4.099999999976717,
+        4.300000000046566,
+        4,
+        5.099999999976717,
+        3.5,
+        3.7000000000116415,
+        4.199999999953434,
+        3.6000000000349246,
+        3.6000000000349246,
+        3.5,
+        3.599999999976717,
+        3.5,
+        3.5,
+        3.7000000000116415,
+        4.2000000000116415,
+        3.7000000000116415,
+        4.599999999976717
+      ],
+      "seed": {
+        "samples": [
+          601.0999999999767,
+          564.0999999999767,
+          555,
+          559.8999999999651,
+          835.5999999999767
+        ],
+        "chunkBytes": [
+          478,
+          262198,
+          262130,
+          262236,
+          262178,
+          262234,
+          262096,
+          262146,
+          262105,
+          262110,
+          262232,
+          262110,
+          262138,
+          262226,
+          262153,
+          262134,
+          262118,
+          262153,
+          262156,
+          262069,
+          262154,
+          262227,
+          262088,
+          262214,
+          262118,
+          262104,
+          262184,
+          262137,
+          262112,
+          262102,
+          262234,
+          262063,
+          262107,
+          262124,
+          262181,
+          262221,
+          169531,
+          199,
+          201,
+          1799,
+          3650
+        ],
+        "totalBytes": 9351150,
+        "rows": 50000
+      },
+      "seedRows": {
+        "samples": [
+          819.5,
+          798.3000000000466,
+          826.6000000000349,
+          793.5,
+          803.3000000000466
+        ],
+        "rows": 50012,
+        "calls": 34,
+        "wireBytes": 8700713
+      },
+      "open": [
+        94.40000000002328,
+        70.89999999996508,
+        84.79999999998836,
+        77.20000000001164,
+        65.79999999998836
+      ],
+      "pragmas": {
+        "journalMode": [
+          {
+            "journal_mode": "wal"
+          }
+        ],
+        "synchronous": [
+          {
+            "synchronous": 1
+          }
+        ]
+      },
+      "seedTrace": [
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 690.8999999999651,
+          "ms": 40,
+          "bytes": 478,
+          "sql": [
+            "DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "DELETE FROM nss_entity WHERE coll = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 693.7999999999884,
+          "ms": 52.70000000001164,
+          "bytes": 262198,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 701.2999999999884,
+          "ms": 60.5,
+          "bytes": 262130,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 732.8999999999651,
+          "ms": 45.70000000001164,
+          "bytes": 262236,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 748.5,
+          "ms": 43.399999999965075,
+          "bytes": 262178,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 763.8999999999651,
+          "ms": 64.10000000003492,
+          "bytes": 262234,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 780.3999999999651,
+          "ms": 52.800000000046566,
+          "bytes": 262096,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 794.2999999999884,
+          "ms": 56,
+          "bytes": 262146,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 830.5999999999767,
+          "ms": 35.29999999998836,
+          "bytes": 262105,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 835.7999999999884,
+          "ms": 45.29999999998836,
+          "bytes": 262110,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 852.3999999999651,
+          "ms": 56,
+          "bytes": 262232,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 868.2000000000116,
+          "ms": 47.59999999997672,
+          "bytes": 262110,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 883.3999999999651,
+          "ms": 57.5,
+          "bytes": 262138,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 910.7999999999884,
+          "ms": 46.20000000001164,
+          "bytes": 262226,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 918.0999999999767,
+          "ms": 66.20000000001164,
+          "bytes": 262153,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 943,
+          "ms": 47.09999999997672,
+          "bytes": 262134,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 959.2999999999884,
+          "ms": 49.09999999997672,
+          "bytes": 262118,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 986.2000000000116,
+          "ms": 46.59999999997672,
+          "bytes": 262153,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 992.5,
+          "ms": 57.399999999965075,
+          "bytes": 262156,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1010.5,
+          "ms": 54.79999999998836,
+          "bytes": 262069,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1035,
+          "ms": 60.79999999998836,
+          "bytes": 262154,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1051.899999999965,
+          "ms": 69.60000000003492,
+          "bytes": 262227,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1067.7000000000116,
+          "ms": 62.79999999998836,
+          "bytes": 262088,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1098,
+          "ms": 48.09999999997672,
+          "bytes": 262214,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1125.2999999999884,
+          "ms": 38.70000000001164,
+          "bytes": 262118,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1132.7000000000116,
+          "ms": 57.899999999965075,
+          "bytes": 262104,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1148.399999999965,
+          "ms": 48.90000000002328,
+          "bytes": 262184,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1166.2000000000116,
+          "ms": 48.199999999953434,
+          "bytes": 262137,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1192.399999999965,
+          "ms": 54,
+          "bytes": 262112,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1199.899999999965,
+          "ms": 64.90000000002328,
+          "bytes": 262102,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1216.399999999965,
+          "ms": 66,
+          "bytes": 262234,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1248.2999999999884,
+          "ms": 50.70000000001164,
+          "bytes": 262063,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1269.2999999999884,
+          "ms": 44.90000000002328,
+          "bytes": 262107,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1284.7000000000116,
+          "ms": 66.09999999997672,
+          "bytes": 262124,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1300.7999999999884,
+          "ms": 54.29999999998836,
+          "bytes": 262181,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1315.7000000000116,
+          "ms": 50.899999999965075,
+          "bytes": 262221,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1351.0999999999767,
+          "ms": 24.900000000023283,
+          "bytes": 169531,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1379.399999999965,
+          "ms": 3,
+          "bytes": 199,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1385.2999999999884,
+          "ms": 2.7999999999883585,
+          "bytes": 201,
+          "sql": [
+            "UPDATE nss_node SET value = ? WHERE path = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1390.7999999999884,
+          "ms": 4.7999999999883585,
+          "bytes": 1799,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1398.899999999965,
+          "ms": 3.1000000000349246,
+          "bytes": 3650,
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        }
+      ],
+      "memoryDiagnostic": {
+        "beforeSeed": 125.6865234375,
+        "afterSeed": 132.1748046875,
+        "afterShrink": 125.7294921875,
+        "cache": {
+          "cache_size": [
+            {
+              "cache_size": -2000
+            }
+          ],
+          "page_size": [
+            {
+              "page_size": 4096
+            }
+          ],
+          "page_count": [
+            {
+              "page_count": 5670
+            }
+          ],
+          "freelist_count": [
+            {
+              "freelist_count": 0
+            }
+          ]
+        },
+        "beforeRows": 126.5849609375,
+        "afterRows": 130.9482421875,
+        "beforeOnce": 119.3662109375,
+        "afterOnce": 130.1904296875
+      }
+    }
+  ]
+}

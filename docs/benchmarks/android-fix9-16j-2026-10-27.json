@@ -1,0 +1,673 @@
+{
+  "list": [
+    {
+      "side": "A",
+      "round": 1,
+      "file": ".tmp/lp8-A-1.json",
+      "readyMs": 1345.8999999994412,
+      "calls": 68,
+      "generationStartMs": 377.09999999962747,
+      "generationMs": 56.09999999962747,
+      "preTransactionGapMs": 25.200000000186265,
+      "transactionWallMs": 819,
+      "postCommitReadyMs": 68.5
+    },
+    {
+      "side": "A",
+      "round": 2,
+      "file": ".tmp/lp8-A-2.json",
+      "readyMs": 1266.1000000005588,
+      "calls": 68,
+      "generationStartMs": 317,
+      "generationMs": 59,
+      "preTransactionGapMs": 27.299999999813735,
+      "transactionWallMs": 798.9000000003725,
+      "postCommitReadyMs": 63.90000000037253
+    },
+    {
+      "side": "A",
+      "round": 3,
+      "file": ".tmp/lp8-A-3.json",
+      "readyMs": 1853.2999999998137,
+      "calls": 68,
+      "generationStartMs": 648,
+      "generationMs": 108.79999999981374,
+      "preTransactionGapMs": 34.700000000186265,
+      "transactionWallMs": 979.5,
+      "postCommitReadyMs": 82.29999999981374
+    },
+    {
+      "side": "B",
+      "round": 1,
+      "file": ".tmp/lp8-B-1.json",
+      "readyMs": 1295,
+      "calls": 69,
+      "generationStartMs": 334.30000000074506,
+      "generationMs": 57.299999999813735,
+      "preTransactionGapMs": 29.899999999441206,
+      "transactionWallMs": 802.1000000005588,
+      "postCommitReadyMs": 71.3999999994412
+    },
+    {
+      "side": "B",
+      "round": 2,
+      "file": ".tmp/lp8-B-2.json",
+      "readyMs": 1295.3999999994412,
+      "calls": 69,
+      "generationStartMs": 335.8999999994412,
+      "generationMs": 67.30000000074506,
+      "preTransactionGapMs": 30.09999999962747,
+      "transactionWallMs": 795.7999999998137,
+      "postCommitReadyMs": 66.29999999981374
+    },
+    {
+      "side": "B",
+      "round": 3,
+      "file": ".tmp/lp8-B-3.json",
+      "readyMs": 1428.7000000001863,
+      "calls": 75,
+      "generationStartMs": 452,
+      "generationMs": 85.40000000037253,
+      "preTransactionGapMs": 21,
+      "transactionWallMs": 810.5999999996275,
+      "postCommitReadyMs": 59.700000000186265
+    }
+  ],
+  "profiles": [
+    {
+      "scenario": "flatReplace",
+      "side": "A",
+      "round": 1,
+      "file": ".tmp/p16j-flatReplace-A1.cpuprofile",
+      "emitP50Ms": 17.9,
+      "sampledNonIdleMs": 431.49800000000005,
+      "profileDurationMs": 1866.11,
+      "samples": 1144,
+      "topFrames": [
+        [
+          "nr:https://localhost/main-7QWKLYVG.js:0:3342",
+          82.80199999999998
+        ],
+        [
+          "V:https://localhost/chunk-DZ8HTENP.js:0:533",
+          48.239000000000004
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DZ8HTENP.js:0:2891",
+          37.748999999999995
+        ],
+        [
+          "(garbage collector)::-1:-1",
+          33.117
+        ],
+        [
+          "f:https://localhost/chunk-DmLvXUtC.js:0:901",
+          22.097999999999995
+        ],
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          21.118
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DZ8HTENP.js:0:4511",
+          19.624
+        ],
+        [
+          "setTimeout::-1:-1",
+          14.733
+        ]
+      ]
+    },
+    {
+      "scenario": "flatReplace",
+      "side": "B",
+      "round": 1,
+      "file": ".tmp/p16j-flatReplace-B1.cpuprofile",
+      "emitP50Ms": 16.9,
+      "sampledNonIdleMs": 347.247,
+      "profileDurationMs": 1881.032,
+      "samples": 1097,
+      "topFrames": [
+        [
+          "(anonymous):https://localhost/chunk-DRwu0TjU.js:0:4511",
+          55.868
+        ],
+        [
+          "(garbage collector)::-1:-1",
+          34.421
+        ],
+        [
+          "removeEventListener::-1:-1",
+          25.630000000000003
+        ],
+        [
+          "setTimeout::-1:-1",
+          22.968000000000004
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DRwu0TjU.js:0:2891",
+          21.478
+        ],
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          19.941
+        ],
+        [
+          "f:https://localhost/chunk-DmLvXUtC.js:0:901",
+          19.9
+        ],
+        [
+          "nr:https://localhost/main-OJVBBWBV.js:0:3342",
+          18.328
+        ]
+      ]
+    },
+    {
+      "scenario": "flatReplace",
+      "side": "A",
+      "round": 2,
+      "file": ".tmp/p16j-flatReplace-A2.cpuprofile",
+      "emitP50Ms": 16.9,
+      "sampledNonIdleMs": 426.4089999999996,
+      "profileDurationMs": 1863.49,
+      "samples": 1131,
+      "topFrames": [
+        [
+          "nr:https://localhost/main-7QWKLYVG.js:0:3342",
+          73.57300000000002
+        ],
+        [
+          "V:https://localhost/chunk-DZ8HTENP.js:0:533",
+          45.26200000000001
+        ],
+        [
+          "(garbage collector)::-1:-1",
+          42.855
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DZ8HTENP.js:0:4511",
+          27.634
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DZ8HTENP.js:0:2891",
+          27.609
+        ],
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          22.639000000000003
+        ],
+        [
+          "setProperty:https://localhost/main-7QWKLYVG.js:58:30188",
+          19.468
+        ],
+        [
+          "f:https://localhost/chunk-DmLvXUtC.js:0:901",
+          17.628999999999998
+        ]
+      ]
+    },
+    {
+      "scenario": "flatReplace",
+      "side": "B",
+      "round": 2,
+      "file": ".tmp/p16j-flatReplace-B2.cpuprofile",
+      "emitP50Ms": 17.3,
+      "sampledNonIdleMs": 408.35599999999994,
+      "profileDurationMs": 1830.303,
+      "samples": 1145,
+      "topFrames": [
+        [
+          "(anonymous):https://localhost/chunk-DRwu0TjU.js:0:4511",
+          91.638
+        ],
+        [
+          "nr:https://localhost/main-OJVBBWBV.js:0:3342",
+          37.892
+        ],
+        [
+          "(garbage collector)::-1:-1",
+          36.790000000000006
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DRwu0TjU.js:0:2891",
+          31.410999999999998
+        ],
+        [
+          "f:https://localhost/chunk-DmLvXUtC.js:0:901",
+          21.749
+        ],
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          19.233000000000004
+        ],
+        [
+          "now::-1:-1",
+          12.555
+        ],
+        [
+          "setProperty:https://localhost/main-OJVBBWBV.js:58:30188",
+          12.459999999999999
+        ]
+      ]
+    },
+    {
+      "scenario": "flatReplace",
+      "side": "A",
+      "round": 3,
+      "file": ".tmp/p16j-flatReplace-A3.cpuprofile",
+      "emitP50Ms": 19.5,
+      "sampledNonIdleMs": 476.80299999999977,
+      "profileDurationMs": 2011.952,
+      "samples": 1218,
+      "topFrames": [
+        [
+          "nr:https://localhost/main-7QWKLYVG.js:0:3342",
+          89.49799999999998
+        ],
+        [
+          "(garbage collector)::-1:-1",
+          61.702
+        ],
+        [
+          "V:https://localhost/chunk-DZ8HTENP.js:0:533",
+          54.980000000000004
+        ],
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          40.605
+        ],
+        [
+          "f:https://localhost/chunk-DmLvXUtC.js:0:901",
+          32.054
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DZ8HTENP.js:0:4511",
+          23.616999999999994
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DZ8HTENP.js:0:2891",
+          19.434
+        ],
+        [
+          "invalidate:https://localhost/main-7QWKLYVG.js:33:3360",
+          16.089
+        ]
+      ]
+    },
+    {
+      "scenario": "flatReplace",
+      "side": "B",
+      "round": 3,
+      "file": ".tmp/p16j-flatReplace-B3.cpuprofile",
+      "emitP50Ms": 17.6,
+      "sampledNonIdleMs": 392.231,
+      "profileDurationMs": 1819.399,
+      "samples": 1090,
+      "topFrames": [
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          52.15700000000001
+        ],
+        [
+          "(garbage collector)::-1:-1",
+          45.06699999999999
+        ],
+        [
+          "V:https://localhost/chunk-DRwu0TjU.js:0:533",
+          44.17600000000001
+        ],
+        [
+          "nr:https://localhost/main-OJVBBWBV.js:0:3342",
+          42.14600000000001
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DRwu0TjU.js:0:4511",
+          22.504
+        ],
+        [
+          "removeEventListener::-1:-1",
+          20.573000000000004
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DRwu0TjU.js:0:2891",
+          18.64
+        ],
+        [
+          "now::-1:-1",
+          17.955
+        ]
+      ]
+    },
+    {
+      "scenario": "flatSetKeys",
+      "side": "A",
+      "round": 1,
+      "file": ".tmp/p16j-flatSetKeys-A1.cpuprofile",
+      "emitP50Ms": 13.5,
+      "sampledNonIdleMs": 211.56199999999998,
+      "profileDurationMs": 1545.001,
+      "samples": 900,
+      "topFrames": [
+        [
+          "(anonymous):https://localhost/chunk-DZ8HTENP.js:0:2891",
+          32.818
+        ],
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          24.331999999999997
+        ],
+        [
+          "f:https://localhost/chunk-DmLvXUtC.js:0:901",
+          16.039
+        ],
+        [
+          "requestAnimationFrame::-1:-1",
+          13.384
+        ],
+        [
+          "(garbage collector)::-1:-1",
+          12.940000000000001
+        ],
+        [
+          "load:https://localhost/main-7QWKLYVG.js:33:2662",
+          12.933
+        ],
+        [
+          "setProperty:https://localhost/main-7QWKLYVG.js:58:30188",
+          7.273
+        ],
+        [
+          "now::-1:-1",
+          6.5360000000000005
+        ]
+      ]
+    },
+    {
+      "scenario": "flatSetKeys",
+      "side": "B",
+      "round": 1,
+      "file": ".tmp/p16j-flatSetKeys-B1.cpuprofile",
+      "emitP50Ms": 13.9,
+      "sampledNonIdleMs": 201.99999999999991,
+      "profileDurationMs": 1599.383,
+      "samples": 866,
+      "topFrames": [
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          36.658
+        ],
+        [
+          "requestAnimationFrame::-1:-1",
+          24.348
+        ],
+        [
+          "now::-1:-1",
+          19.811999999999998
+        ],
+        [
+          "win.androidBridge.onmessage::928:55",
+          17.056
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DRwu0TjU.js:0:2891",
+          16.822999999999997
+        ],
+        [
+          "(garbage collector)::-1:-1",
+          12.438
+        ],
+        [
+          "removeEventListener::-1:-1",
+          10.283999999999999
+        ],
+        [
+          "l$1:https://localhost/chunk-DRwu0TjU.js:0:4162",
+          6.742
+        ]
+      ]
+    },
+    {
+      "scenario": "flatSetKeys",
+      "side": "A",
+      "round": 2,
+      "file": ".tmp/p16j-flatSetKeys-A2.cpuprofile",
+      "emitP50Ms": 15.8,
+      "sampledNonIdleMs": 210.70499999999998,
+      "profileDurationMs": 1626.705,
+      "samples": 944,
+      "topFrames": [
+        [
+          "(anonymous):https://localhost/chunk-DZ8HTENP.js:0:2891",
+          38.512
+        ],
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          36.217999999999996
+        ],
+        [
+          "removeEventListener::-1:-1",
+          20.573
+        ],
+        [
+          "now::-1:-1",
+          16.096
+        ],
+        [
+          "f:https://localhost/chunk-DmLvXUtC.js:0:901",
+          11.451
+        ],
+        [
+          "(garbage collector)::-1:-1",
+          10.912
+        ],
+        [
+          "requestAnimationFrame::-1:-1",
+          10.57
+        ],
+        [
+          "S:https://localhost/main-7QWKLYVG.js:49:31001",
+          5.719
+        ]
+      ]
+    },
+    {
+      "scenario": "flatSetKeys",
+      "side": "B",
+      "round": 2,
+      "file": ".tmp/p16j-flatSetKeys-B2.cpuprofile",
+      "emitP50Ms": 13.1,
+      "sampledNonIdleMs": 187.63799999999998,
+      "profileDurationMs": 1562.527,
+      "samples": 886,
+      "topFrames": [
+        [
+          "(garbage collector)::-1:-1",
+          20.69
+        ],
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          20.43
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DRwu0TjU.js:0:2891",
+          16.749000000000002
+        ],
+        [
+          "now::-1:-1",
+          15.097999999999999
+        ],
+        [
+          "setTimeout::-1:-1",
+          14.987
+        ],
+        [
+          "f:https://localhost/chunk-DmLvXUtC.js:0:901",
+          11.508000000000001
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DMkbI0ct.js:6:7151",
+          10.135
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DRwu0TjU.js:0:2977",
+          9.142
+        ]
+      ]
+    },
+    {
+      "scenario": "flatSetKeys",
+      "side": "A",
+      "round": 3,
+      "file": ".tmp/p16j-flatSetKeys-A3.cpuprofile",
+      "emitP50Ms": 16.2,
+      "sampledNonIdleMs": 257.783,
+      "profileDurationMs": 1597.927,
+      "samples": 953,
+      "topFrames": [
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          39.273999999999994
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DZ8HTENP.js:0:2891",
+          28.977999999999994
+        ],
+        [
+          "now::-1:-1",
+          24.849999999999998
+        ],
+        [
+          "o:https://localhost/main-7QWKLYVG.js:34:2421",
+          19.298
+        ],
+        [
+          "(garbage collector)::-1:-1",
+          17.868
+        ],
+        [
+          "f:https://localhost/chunk-DmLvXUtC.js:0:901",
+          17.59
+        ],
+        [
+          "diffWrite:https://localhost/main-7QWKLYVG.js:33:15145",
+          9.459
+        ],
+        [
+          "setProperty:https://localhost/main-7QWKLYVG.js:58:30188",
+          7.668
+        ]
+      ]
+    },
+    {
+      "scenario": "flatSetKeys",
+      "side": "B",
+      "round": 3,
+      "file": ".tmp/p16j-flatSetKeys-B3.cpuprofile",
+      "emitP50Ms": 12.9,
+      "sampledNonIdleMs": 230.991,
+      "profileDurationMs": 1568.133,
+      "samples": 888,
+      "topFrames": [
+        [
+          "f:https://localhost/chunk-DmLvXUtC.js:0:901",
+          21.927
+        ],
+        [
+          "(anonymous):https://localhost/chunk-DRwu0TjU.js:0:2891",
+          20.762
+        ],
+        [
+          "l:https://localhost/chunk-DmLvXUtC.js:0:989",
+          19.666
+        ],
+        [
+          "(garbage collector)::-1:-1",
+          17.081
+        ],
+        [
+          "l$1:https://localhost/chunk-DRwu0TjU.js:0:4162",
+          14.011000000000001
+        ],
+        [
+          "now::-1:-1",
+          12.863
+        ],
+        [
+          "o:https://localhost/main-OJVBBWBV.js:34:2421",
+          11.068000000000001
+        ],
+        [
+          "setTimeout::-1:-1",
+          9.611
+        ]
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "scenario": "flatReplace",
+      "round": 1,
+      "emitA": 17.9,
+      "emitB": 16.9,
+      "emitDelta": -1,
+      "sampledNonIdleA": 431.49800000000005,
+      "sampledNonIdleB": 347.247
+    },
+    {
+      "scenario": "flatReplace",
+      "round": 2,
+      "emitA": 16.9,
+      "emitB": 17.3,
+      "emitDelta": 0.40000000000000213,
+      "sampledNonIdleA": 426.4089999999996,
+      "sampledNonIdleB": 408.35599999999994
+    },
+    {
+      "scenario": "flatReplace",
+      "round": 3,
+      "emitA": 19.5,
+      "emitB": 17.6,
+      "emitDelta": -1.8999999999999986,
+      "sampledNonIdleA": 476.80299999999977,
+      "sampledNonIdleB": 392.231
+    },
+    {
+      "scenario": "flatSetKeys",
+      "round": 1,
+      "emitA": 13.5,
+      "emitB": 13.9,
+      "emitDelta": 0.40000000000000036,
+      "sampledNonIdleA": 211.56199999999998,
+      "sampledNonIdleB": 201.99999999999991
+    },
+    {
+      "scenario": "flatSetKeys",
+      "round": 2,
+      "emitA": 15.8,
+      "emitB": 13.1,
+      "emitDelta": -2.700000000000001,
+      "sampledNonIdleA": 210.70499999999998,
+      "sampledNonIdleB": 187.63799999999998
+    },
+    {
+      "scenario": "flatSetKeys",
+      "round": 3,
+      "emitA": 16.2,
+      "emitB": 12.9,
+      "emitDelta": -3.299999999999999,
+      "sampledNonIdleA": 257.783,
+      "sampledNonIdleB": 230.991
+    }
+  ],
+  "apkHashes": {
+    "listBaseline": "6deb3638ed9d1f63cce4e7b14c4009e99f4fffd44de16f68941273c5ff3ffeff",
+    "baseline": "ee06beff64a080a323b5ade340cb796c71284ec869e4ebda9422002a8c96c57c",
+    "candidate": "ced86e7dfb09ded71bc6185b6cc40438e6384fb6770d4c394adc416432ba94f2"
+  },
+  "limits": [
+    "Existing diagnostics do not record installed APK hashes; install-script/archive lineage only.",
+    "Profiles perturb timing. Non-idle sampled time includes GC and is not SQL CPU time.",
+    "Runner requests40 actions per profile but raw scenario samples are not retained; logs provide p50 only.",
+    "Write response spans can overlap and must not be interpreted as native CPU time."
+  ]
+}

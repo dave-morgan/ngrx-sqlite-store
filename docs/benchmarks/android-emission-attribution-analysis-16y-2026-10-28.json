@@ -1,0 +1,868 @@
+{
+  "diagnosticOnly": true,
+  "installedApkHash": "8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5",
+  "session": "16y-emission-cpu",
+  "boot": "e5cca439-2915-49a3-aac2-13521530f503",
+  "seedSummary": " 32487 open · 50000 total ",
+  "toggleObservations": 30,
+  "emissionObservations": 2000,
+  "emission": {
+    "n": 2000,
+    "p50": 3.5,
+    "p95": 4.7999999999883585,
+    "mean": 3.723049999999974
+  },
+  "profileNodes": 349,
+  "profileSamples": 5422,
+  "wallMs": 7708.411,
+  "weightedSampleMs": 7707.03,
+  "self": [
+    {
+      "functionName": "(idle)",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 4689,
+      "weightedMs": 6554.392000000029
+    },
+    {
+      "functionName": "(program)",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 115,
+      "weightedMs": 339.75
+    },
+    {
+      "functionName": "now",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 166,
+      "weightedMs": 225.30300000000014
+    },
+    {
+      "functionName": "removeEventListener",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 150,
+      "weightedMs": 206.459
+    },
+    {
+      "functionName": "(garbage collector)",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 32,
+      "weightedMs": 45.038
+    },
+    {
+      "functionName": "win.androidBridge.onmessage",
+      "url": "",
+      "lineNumber": 928,
+      "columnNumber": 55,
+      "samples": 23,
+      "weightedMs": 29.517999999999997
+    },
+    {
+      "functionName": "v",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 30993,
+      "samples": 16,
+      "weightedMs": 19.961999999999996
+    },
+    {
+      "functionName": "evict",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 27648,
+      "samples": 11,
+      "weightedMs": 16.811
+    },
+    {
+      "functionName": "se$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 14396,
+      "samples": 9,
+      "weightedMs": 14.555
+    },
+    {
+      "functionName": "W$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 12809,
+      "samples": 12,
+      "weightedMs": 14.292
+    },
+    {
+      "functionName": "l",
+      "url": "https://localhost/chunk-DmLvXUtC.js",
+      "lineNumber": 0,
+      "columnNumber": 989,
+      "samples": 9,
+      "weightedMs": 11.415999999999999
+    },
+    {
+      "functionName": "postToNative",
+      "url": "",
+      "lineNumber": 843,
+      "columnNumber": 31,
+      "samples": 11,
+      "weightedMs": 11.367
+    },
+    {
+      "functionName": "benchEmit",
+      "url": "https://localhost/chunk-DrLqp8_5.js",
+      "lineNumber": 0,
+      "columnNumber": 5940,
+      "samples": 6,
+      "weightedMs": 9.123
+    },
+    {
+      "functionName": "next",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 3056,
+      "samples": 6,
+      "weightedMs": 6.9879999999999995
+    },
+    {
+      "functionName": "publishView",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 33032,
+      "samples": 5,
+      "weightedMs": 6.626
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 35,
+      "columnNumber": 2417,
+      "samples": 5,
+      "weightedMs": 6.421
+    },
+    {
+      "functionName": "j$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 1751,
+      "samples": 4,
+      "weightedMs": 6.3069999999999995
+    },
+    {
+      "functionName": "F$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 3806,
+      "samples": 4,
+      "weightedMs": 6.156
+    },
+    {
+      "functionName": "u",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 6,
+      "columnNumber": 6461,
+      "samples": 5,
+      "weightedMs": 5.955
+    },
+    {
+      "functionName": "executeSet",
+      "url": "https://localhost/chunk-DIhppnLk.js",
+      "lineNumber": 0,
+      "columnNumber": 9738,
+      "samples": 3,
+      "weightedMs": 5.739
+    },
+    {
+      "functionName": "recount",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 27488,
+      "samples": 6,
+      "weightedMs": 5.641
+    },
+    {
+      "functionName": "Be$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 12562,
+      "samples": 4,
+      "weightedMs": 4.963
+    },
+    {
+      "functionName": "selectionFeatures",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 4078,
+      "samples": 4,
+      "weightedMs": 4.739
+    },
+    {
+      "functionName": "get",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 3,
+      "columnNumber": 6737,
+      "samples": 4,
+      "weightedMs": 4.711
+    },
+    {
+      "functionName": "refreshEntry",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 25208,
+      "samples": 5,
+      "weightedMs": 4.683
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 24918,
+      "samples": 4,
+      "weightedMs": 4.295999999999999
+    },
+    {
+      "functionName": "je$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 9068,
+      "samples": 2,
+      "weightedMs": 3.729
+    },
+    {
+      "functionName": "write",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 20,
+      "columnNumber": 231,
+      "samples": 3,
+      "weightedMs": 3.683
+    },
+    {
+      "functionName": "diff",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 10899,
+      "samples": 2,
+      "weightedMs": 3.653
+    },
+    {
+      "functionName": "m",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 30755,
+      "samples": 3,
+      "weightedMs": 3.636
+    },
+    {
+      "functionName": "q$2",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 3735,
+      "samples": 2,
+      "weightedMs": 3.455
+    },
+    {
+      "functionName": "publish",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 27965,
+      "samples": 3,
+      "weightedMs": 3.3440000000000003
+    },
+    {
+      "functionName": "C$2",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 1389,
+      "samples": 2,
+      "weightedMs": 2.9699999999999998
+    },
+    {
+      "functionName": "f",
+      "url": "https://localhost/chunk-DmLvXUtC.js",
+      "lineNumber": 0,
+      "columnNumber": 901,
+      "samples": 2,
+      "weightedMs": 2.969
+    },
+    {
+      "functionName": "owner",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 21890,
+      "samples": 2,
+      "weightedMs": 2.962
+    },
+    {
+      "functionName": "refresh",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 32593,
+      "samples": 2,
+      "weightedMs": 2.942
+    },
+    {
+      "functionName": "x",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 58,
+      "columnNumber": 6976,
+      "samples": 3,
+      "weightedMs": 2.8920000000000003
+    },
+    {
+      "functionName": "Q$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 1489,
+      "samples": 2,
+      "weightedMs": 2.867
+    },
+    {
+      "functionName": "defaultsView",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 30008,
+      "samples": 3,
+      "weightedMs": 2.7529999999999997
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 27682,
+      "samples": 2,
+      "weightedMs": 2.56
+    },
+    {
+      "functionName": "register",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 17749,
+      "samples": 3,
+      "weightedMs": 2.4299999999999997
+    },
+    {
+      "functionName": "te$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 12755,
+      "samples": 2,
+      "weightedMs": 2.386
+    },
+    {
+      "functionName": "Ge",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 26870,
+      "samples": 2,
+      "weightedMs": 2.184
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 5394,
+      "samples": 2,
+      "weightedMs": 2.1719999999999997
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 6,
+      "columnNumber": 7196,
+      "samples": 1,
+      "weightedMs": 2.1
+    },
+    {
+      "functionName": "ut",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 69,
+      "samples": 1,
+      "weightedMs": 2.094
+    },
+    {
+      "functionName": "ready",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 22191,
+      "samples": 1,
+      "weightedMs": 2.081
+    },
+    {
+      "functionName": "get",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 2435,
+      "samples": 2,
+      "weightedMs": 2.069
+    },
+    {
+      "functionName": "read",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 35,
+      "columnNumber": 4392,
+      "samples": 1,
+      "weightedMs": 2.055
+    },
+    {
+      "functionName": "_e",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 30838,
+      "samples": 1,
+      "weightedMs": 2.053
+    },
+    {
+      "functionName": "jn",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 3,
+      "columnNumber": 8766,
+      "samples": 1,
+      "weightedMs": 2.006
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 17530,
+      "samples": 1,
+      "weightedMs": 2.003
+    },
+    {
+      "functionName": "get",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 58,
+      "columnNumber": 7647,
+      "samples": 1,
+      "weightedMs": 1.967
+    },
+    {
+      "functionName": "Y$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 4594,
+      "samples": 2,
+      "weightedMs": 1.9620000000000002
+    },
+    {
+      "functionName": "Ln",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 13561,
+      "samples": 1,
+      "weightedMs": 1.955
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 19138,
+      "samples": 1,
+      "weightedMs": 1.954
+    },
+    {
+      "functionName": "qe$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 19,
+      "columnNumber": 2110,
+      "samples": 1,
+      "weightedMs": 1.937
+    },
+    {
+      "functionName": "selectionReady",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 3922,
+      "samples": 3,
+      "weightedMs": 1.936
+    },
+    {
+      "functionName": "d",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 30645,
+      "samples": 1,
+      "weightedMs": 1.924
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 7160,
+      "samples": 2,
+      "weightedMs": 1.9140000000000001
+    },
+    {
+      "functionName": "qi",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 27859,
+      "samples": 1,
+      "weightedMs": 1.905
+    },
+    {
+      "functionName": "Lc",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 1381,
+      "samples": 2,
+      "weightedMs": 1.867
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 30680,
+      "samples": 1,
+      "weightedMs": 1.799
+    },
+    {
+      "functionName": "write",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 35,
+      "columnNumber": 3062,
+      "samples": 1,
+      "weightedMs": 1.781
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 2194,
+      "samples": 1,
+      "weightedMs": 1.762
+    },
+    {
+      "functionName": "V$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 19,
+      "columnNumber": 1146,
+      "samples": 2,
+      "weightedMs": 1.727
+    },
+    {
+      "functionName": "kr$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 15017,
+      "samples": 2,
+      "weightedMs": 1.724
+    },
+    {
+      "functionName": "cap.toNative",
+      "url": "",
+      "lineNumber": 894,
+      "columnNumber": 27,
+      "samples": 2,
+      "weightedMs": 1.687
+    },
+    {
+      "functionName": "r",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 30255,
+      "samples": 1,
+      "weightedMs": 1.643
+    },
+    {
+      "functionName": "innerSerialize",
+      "url": "",
+      "lineNumber": 213,
+      "columnNumber": 23,
+      "samples": 3,
+      "weightedMs": 1.616
+    },
+    {
+      "functionName": "Jh",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 30530,
+      "samples": 1,
+      "weightedMs": 1.508
+    },
+    {
+      "functionName": "add",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 34,
+      "columnNumber": 125,
+      "samples": 1,
+      "weightedMs": 1.499
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 58,
+      "columnNumber": 7012,
+      "samples": 1,
+      "weightedMs": 1.496
+    },
+    {
+      "functionName": "next",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 2471,
+      "samples": 1,
+      "weightedMs": 1.481
+    },
+    {
+      "functionName": "refresh",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 24821,
+      "samples": 1,
+      "weightedMs": 1.417
+    },
+    {
+      "functionName": "get isEmpty",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 34,
+      "columnNumber": 1080,
+      "samples": 1,
+      "weightedMs": 1.359
+    },
+    {
+      "functionName": "m",
+      "url": "https://localhost/chunk-DmLvXUtC.js",
+      "lineNumber": 0,
+      "columnNumber": 1106,
+      "samples": 1,
+      "weightedMs": 1.138
+    },
+    {
+      "functionName": "_subscribe",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 21469,
+      "samples": 1,
+      "weightedMs": 1.071
+    },
+    {
+      "functionName": "X$2",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 1683,
+      "samples": 1,
+      "weightedMs": 1.055
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 32265,
+      "samples": 1,
+      "weightedMs": 1.042
+    },
+    {
+      "functionName": "K",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 58,
+      "columnNumber": 6607,
+      "samples": 1,
+      "weightedMs": 1.015
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 29415,
+      "samples": 1,
+      "weightedMs": 1.009
+    },
+    {
+      "functionName": "remove",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 1130,
+      "samples": 1,
+      "weightedMs": 0.975
+    },
+    {
+      "functionName": "batch",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 35,
+      "columnNumber": 11247,
+      "samples": 1,
+      "weightedMs": 0.968
+    },
+    {
+      "functionName": "watch",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 30500,
+      "samples": 1,
+      "weightedMs": 0.941
+    },
+    {
+      "functionName": "invalidate",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 3360,
+      "samples": 1,
+      "weightedMs": 0.916
+    },
+    {
+      "functionName": "sh",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 4974,
+      "samples": 1,
+      "weightedMs": 0.913
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 7132,
+      "samples": 1,
+      "weightedMs": 0.903
+    },
+    {
+      "functionName": "gt$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 19,
+      "columnNumber": 4027,
+      "samples": 1,
+      "weightedMs": 0.898
+    },
+    {
+      "functionName": "flush",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 20,
+      "columnNumber": 1146,
+      "samples": 1,
+      "weightedMs": 0.89
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 25734,
+      "samples": 1,
+      "weightedMs": 0.857
+    },
+    {
+      "functionName": "withDefaults",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 21661,
+      "samples": 1,
+      "weightedMs": 0.846
+    },
+    {
+      "functionName": "En$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 19,
+      "columnNumber": 3061,
+      "samples": 1,
+      "weightedMs": 0.814
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 31429,
+      "samples": 1,
+      "weightedMs": 0.811
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 58,
+      "columnNumber": 127716,
+      "samples": 1,
+      "weightedMs": 0.785
+    },
+    {
+      "functionName": "rr$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 3334,
+      "samples": 1,
+      "weightedMs": 0.749
+    },
+    {
+      "functionName": "I",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 58,
+      "columnNumber": 6455,
+      "samples": 1,
+      "weightedMs": 0.737
+    },
+    {
+      "functionName": "assertReady",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 35,
+      "columnNumber": 6311,
+      "samples": 1,
+      "weightedMs": 0.723
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 31065,
+      "samples": 1,
+      "weightedMs": 0.711
+    },
+    {
+      "functionName": "",
+      "url": "",
+      "lineNumber": 1003,
+      "columnNumber": 35,
+      "samples": 1,
+      "weightedMs": 0.702
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 30099,
+      "samples": 1,
+      "weightedMs": 0.681
+    },
+    {
+      "functionName": "Zt",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 19091,
+      "samples": 1,
+      "weightedMs": 0.587
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 1303,
+      "samples": 1,
+      "weightedMs": 0.51
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 21233,
+      "samples": 1,
+      "weightedMs": 0.373
+    },
+    {
+      "functionName": "setTimeout",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 1,
+      "weightedMs": 0.331
+    }
+  ],
+  "rawSha256": "cdc39d1fc5c42b42ed69f0657175bed613c20b75d5ab241498b0b9a2d1fa909e",
+  "profileSha256": "0951142d884f4d08d12b1bf318e0f440e608a9d6e0001f116626ce1104d12eee",
+  "limitations": [
+    "V8 sampling perturbs timings and includes garbage collection; diagnostic only, not acceptance, a floor, or native SQL CPU.",
+    "Normalized seed,30toggles,notes,diagnostics with20emission warmup; does not duplicate the acceptance GC/memory protocol.",
+    "No native wrapper or raw replay, no heap snapshot/capture, no production code change."
+  ]
+}

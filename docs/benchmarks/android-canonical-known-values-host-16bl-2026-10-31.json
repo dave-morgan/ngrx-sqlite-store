@@ -1,0 +1,211 @@
+{
+  "candidate": "16bl",
+  "date": "2026-10-31",
+  "scope": "Canonical selected complete known pointer values before share; original position-only widening; no extra structural SQL.",
+  "adr": "0138-canonical-known-pointer-values.md",
+  "baselineRed": {
+    "log": ".tmp/16bl-baseline-red.log",
+    "sha256": "20e3db7a82fb817c2e833deba2fdae3fe2f92589b226ebd1ebd6a9349e21c366",
+    "failed": 6,
+    "passed": 2
+  },
+  "sqlReloadReadFreeRed": {
+    "log": ".tmp/16bl-readfree-red.log",
+    "sha256": "f9389d00c64215b6cf47f1a770f825dee9725207ae917cd3f45fc8d79d9975d6",
+    "failed": 3,
+    "passed": 9
+  },
+  "focusedGreen": {
+    "log": ".tmp/16bl-canonical-green.log",
+    "sha256": "4a55b0383df7e43623bd42859d6cf98405ee7000ba233fe3cca3344a2a323295",
+    "passed": 12
+  },
+  "preflight": {
+    "verifiedAtUtc": "2026-10-30T18:42:07.390018+00:00",
+    "validation": {
+      "started": "2026-10-30T18:39:47.397Z",
+      "pid": 42900,
+      "sourceHashes": {
+        "projects/ngrx-sqlite-store/src/lib/schema/node-reader.ts": "ba24dd4a3e4aab391d436723fd6ef8481cc984ff77e50f42db5d467c5a5ad40a",
+        "projects/ngrx-sqlite-store/src/lib/schema/node-store.ts": "96ec9c446c820266723eb9bbbcde6232807d037c0a21c906d1d7272f266bab84",
+        "projects/ngrx-sqlite-store/src/lib/reducer/store-tx.ts": "d9419bcc91febfb70fdd710605b95b2d2cd4e66d246c9ac6e0c293115b2d7e1b",
+        "projects/ngrx-sqlite-store/src/lib/selectors/path-cache.ts": "0b7479ca47d1baf529df79ceaaf624ff34214a9e1ceeb33102ebb5cdbc129986",
+        "projects/ngrx-sqlite-store/src/lib/reducer/canonical-cache-metadata.spec.ts": "bcaeba2730b13199fb45e3d0540fbc634dc1b30925f9deeb7a6e8bfcb9108b2f",
+        "projects/ngrx-sqlite-store/src/lib/store/core.ts": "25ee7708a6cba2378f1325209e4aacd811b129b23d312762375ee96e379be7b4",
+        "projects/ngrx-sqlite-store/src/lib/selectors/selection-engine.ts": "38bea5d24d183a0fc8b2dfb616e265c510cb3a4bf18d0bcfca400d4254503a96",
+        "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.ts": "61b0674f04ddb854038cd942afca7ae984fbd249dfa8d5d8e72fae050dc14350",
+        "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.spec.ts": "54f7f2290b35811e4c3d66cf3d4c50f2fcaa994d50c93f0d0a1b9cdde98c541b"
+      },
+      "checks": [
+        {
+          "name": "library",
+          "command": "npx.cmd ng test ngrx-sqlite-store --watch=false",
+          "code": 0,
+          "signal": null,
+          "file": ".tmp/16bl-library-green.log",
+          "sha256": "d08c0cd31f7f82a638d9287742a42dc35dda50d9e40719605bcf4e1b3ebff1f9",
+          "alreadyCompleted": true
+        },
+        {
+          "name": "tools",
+          "command": "node --test tools/*.test.mjs",
+          "code": 0,
+          "signal": null,
+          "file": ".tmp/16bl-validation-tools.log",
+          "sha256": "f5bc366927aabbbe2b7cf035e06edb96310ce3e5c1312370d0bd9838b7233480"
+        },
+        {
+          "name": "harness",
+          "command": "npx.cmd ng test harness --watch=false",
+          "code": 0,
+          "signal": null,
+          "file": ".tmp/16bl-validation-harness.log",
+          "sha256": "e8926fdb0836c8f92928934fd4e6912282e23b678b07e54a0f35b239a73043c3"
+        },
+        {
+          "name": "e2e",
+          "command": "npx.cmd playwright test",
+          "code": 0,
+          "signal": null,
+          "file": ".tmp/16bl-validation-e2e.log",
+          "sha256": "fc358cf604ac53fb3ee3e3701fc637adc0504fb96c77ffbc58438bfb28347baf"
+        },
+        {
+          "name": "library-build",
+          "command": "npx.cmd ng build ngrx-sqlite-store",
+          "code": 0,
+          "signal": null,
+          "file": ".tmp/16bl-validation-library-build.log",
+          "sha256": "e829ebd9674c5902488b6c779a8302f55db46f542aad63efa9edc3d29442472b"
+        },
+        {
+          "name": "apk-build",
+          "command": "node tools/android-bench.mjs --impl sqlite --build-only true",
+          "code": 0,
+          "signal": null,
+          "file": ".tmp/16bl-validation-apk-build.log",
+          "sha256": "cb4e2b164ebe537a69bc0ccf42995c62fe3a5092ad6882dc56d759531e0d2528"
+        }
+      ],
+      "scope": "16bl selected complete known pointer canonicalization before share; no extra SQL/root-read shortcut; physical metadata-path guard; caveats ADR0138",
+      "sourceHashesAfter": {
+        "projects/ngrx-sqlite-store/src/lib/schema/node-reader.ts": "ba24dd4a3e4aab391d436723fd6ef8481cc984ff77e50f42db5d467c5a5ad40a",
+        "projects/ngrx-sqlite-store/src/lib/schema/node-store.ts": "96ec9c446c820266723eb9bbbcde6232807d037c0a21c906d1d7272f266bab84",
+        "projects/ngrx-sqlite-store/src/lib/reducer/store-tx.ts": "d9419bcc91febfb70fdd710605b95b2d2cd4e66d246c9ac6e0c293115b2d7e1b",
+        "projects/ngrx-sqlite-store/src/lib/selectors/path-cache.ts": "0b7479ca47d1baf529df79ceaaf624ff34214a9e1ceeb33102ebb5cdbc129986",
+        "projects/ngrx-sqlite-store/src/lib/reducer/canonical-cache-metadata.spec.ts": "bcaeba2730b13199fb45e3d0540fbc634dc1b30925f9deeb7a6e8bfcb9108b2f",
+        "projects/ngrx-sqlite-store/src/lib/store/core.ts": "25ee7708a6cba2378f1325209e4aacd811b129b23d312762375ee96e379be7b4",
+        "projects/ngrx-sqlite-store/src/lib/selectors/selection-engine.ts": "38bea5d24d183a0fc8b2dfb616e265c510cb3a4bf18d0bcfca400d4254503a96",
+        "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.ts": "61b0674f04ddb854038cd942afca7ae984fbd249dfa8d5d8e72fae050dc14350",
+        "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.spec.ts": "54f7f2290b35811e4c3d66cf3d4c50f2fcaa994d50c93f0d0a1b9cdde98c541b"
+      },
+      "apkSha256": "e02f5d471fd394effebfcfe4f0e7c2853241ca151b8c1630aa33ce1a783260fb",
+      "classicSha256": "58ad9c2ab62cb9e1ec71004f80bbad22a67edb82b12496698e2ebba5e0526311",
+      "complete": true,
+      "finished": "2026-10-30T18:40:51.140Z"
+    },
+    "candidateApkSha256": "e02f5d471fd394effebfcfe4f0e7c2853241ca151b8c1630aa33ce1a783260fb",
+    "sourceContextsVerified": 9,
+    "runnerSha256": "d33c199ce09cd4b8c51354bef33b4f01eaa5c38182f30055fc9bacf9bd0c85d0",
+    "launcherSha256": "f0001255a4efbd5fa7c2647c9912d2d3ce5941e796081278e828848e38d39830",
+    "verifierSha256": "d414f75df08ac9499ee067f1ca45e542932d9625d02a2148af764172fcbebab4",
+    "manifestSha256": "c96cba72cba2765eda0766ea0c3a426e07668e0abc3a73221313f8cc691b647b",
+    "startupWrapperSha256": "6ceef3dad9fdaff9edab402b428adf3790008b6e12501bb679036ea22e407699",
+    "startupWrapperMatchesPreBuildInspection": true,
+    "hardlinkVerified": true,
+    "verifierNotExecuted": true,
+    "review": "No blocker in active-known repair. Selected pointer traversal/key allocations remain unmeasured; alias and inactive-order caveats explicit ADR0138.",
+    "deviceWorkStarted": false
+  },
+  "validation": {
+    "started": "2026-10-30T18:39:47.397Z",
+    "pid": 42900,
+    "sourceHashes": {
+      "projects/ngrx-sqlite-store/src/lib/schema/node-reader.ts": "ba24dd4a3e4aab391d436723fd6ef8481cc984ff77e50f42db5d467c5a5ad40a",
+      "projects/ngrx-sqlite-store/src/lib/schema/node-store.ts": "96ec9c446c820266723eb9bbbcde6232807d037c0a21c906d1d7272f266bab84",
+      "projects/ngrx-sqlite-store/src/lib/reducer/store-tx.ts": "d9419bcc91febfb70fdd710605b95b2d2cd4e66d246c9ac6e0c293115b2d7e1b",
+      "projects/ngrx-sqlite-store/src/lib/selectors/path-cache.ts": "0b7479ca47d1baf529df79ceaaf624ff34214a9e1ceeb33102ebb5cdbc129986",
+      "projects/ngrx-sqlite-store/src/lib/reducer/canonical-cache-metadata.spec.ts": "bcaeba2730b13199fb45e3d0540fbc634dc1b30925f9deeb7a6e8bfcb9108b2f",
+      "projects/ngrx-sqlite-store/src/lib/store/core.ts": "25ee7708a6cba2378f1325209e4aacd811b129b23d312762375ee96e379be7b4",
+      "projects/ngrx-sqlite-store/src/lib/selectors/selection-engine.ts": "38bea5d24d183a0fc8b2dfb616e265c510cb3a4bf18d0bcfca400d4254503a96",
+      "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.ts": "61b0674f04ddb854038cd942afca7ae984fbd249dfa8d5d8e72fae050dc14350",
+      "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.spec.ts": "54f7f2290b35811e4c3d66cf3d4c50f2fcaa994d50c93f0d0a1b9cdde98c541b"
+    },
+    "checks": [
+      {
+        "name": "library",
+        "command": "npx.cmd ng test ngrx-sqlite-store --watch=false",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bl-library-green.log",
+        "sha256": "d08c0cd31f7f82a638d9287742a42dc35dda50d9e40719605bcf4e1b3ebff1f9",
+        "alreadyCompleted": true
+      },
+      {
+        "name": "tools",
+        "command": "node --test tools/*.test.mjs",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bl-validation-tools.log",
+        "sha256": "f5bc366927aabbbe2b7cf035e06edb96310ce3e5c1312370d0bd9838b7233480"
+      },
+      {
+        "name": "harness",
+        "command": "npx.cmd ng test harness --watch=false",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bl-validation-harness.log",
+        "sha256": "e8926fdb0836c8f92928934fd4e6912282e23b678b07e54a0f35b239a73043c3"
+      },
+      {
+        "name": "e2e",
+        "command": "npx.cmd playwright test",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bl-validation-e2e.log",
+        "sha256": "fc358cf604ac53fb3ee3e3701fc637adc0504fb96c77ffbc58438bfb28347baf"
+      },
+      {
+        "name": "library-build",
+        "command": "npx.cmd ng build ngrx-sqlite-store",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bl-validation-library-build.log",
+        "sha256": "e829ebd9674c5902488b6c779a8302f55db46f542aad63efa9edc3d29442472b"
+      },
+      {
+        "name": "apk-build",
+        "command": "node tools/android-bench.mjs --impl sqlite --build-only true",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bl-validation-apk-build.log",
+        "sha256": "cb4e2b164ebe537a69bc0ccf42995c62fe3a5092ad6882dc56d759531e0d2528"
+      }
+    ],
+    "scope": "16bl selected complete known pointer canonicalization before share; no extra SQL/root-read shortcut; physical metadata-path guard; caveats ADR0138",
+    "sourceHashesAfter": {
+      "projects/ngrx-sqlite-store/src/lib/schema/node-reader.ts": "ba24dd4a3e4aab391d436723fd6ef8481cc984ff77e50f42db5d467c5a5ad40a",
+      "projects/ngrx-sqlite-store/src/lib/schema/node-store.ts": "96ec9c446c820266723eb9bbbcde6232807d037c0a21c906d1d7272f266bab84",
+      "projects/ngrx-sqlite-store/src/lib/reducer/store-tx.ts": "d9419bcc91febfb70fdd710605b95b2d2cd4e66d246c9ac6e0c293115b2d7e1b",
+      "projects/ngrx-sqlite-store/src/lib/selectors/path-cache.ts": "0b7479ca47d1baf529df79ceaaf624ff34214a9e1ceeb33102ebb5cdbc129986",
+      "projects/ngrx-sqlite-store/src/lib/reducer/canonical-cache-metadata.spec.ts": "bcaeba2730b13199fb45e3d0540fbc634dc1b30925f9deeb7a6e8bfcb9108b2f",
+      "projects/ngrx-sqlite-store/src/lib/store/core.ts": "25ee7708a6cba2378f1325209e4aacd811b129b23d312762375ee96e379be7b4",
+      "projects/ngrx-sqlite-store/src/lib/selectors/selection-engine.ts": "38bea5d24d183a0fc8b2dfb616e265c510cb3a4bf18d0bcfca400d4254503a96",
+      "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.ts": "61b0674f04ddb854038cd942afca7ae984fbd249dfa8d5d8e72fae050dc14350",
+      "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.spec.ts": "54f7f2290b35811e4c3d66cf3d4c50f2fcaa994d50c93f0d0a1b9cdde98c541b"
+    },
+    "apkSha256": "e02f5d471fd394effebfcfe4f0e7c2853241ca151b8c1630aa33ce1a783260fb",
+    "classicSha256": "58ad9c2ab62cb9e1ec71004f80bbad22a67edb82b12496698e2ebba5e0526311",
+    "complete": true,
+    "finished": "2026-10-30T18:40:51.140Z"
+  },
+  "extraSqlIntroduced": false,
+  "performanceGainClaimed": false,
+  "bothGoalsAndMeanHeapDebtOpen": true,
+  "limits": [
+    "Matching physical metadata paths required; broader alias WeakMap ownership limitation not repaired.",
+    "Separate pre-existing inactive-adoption ordering limitation remains.",
+    "Selected complete pointer objects still incur traversal and temporary allocations; host tests prove correctness and read count, not application benefit.",
+    "All mandatory guards/reversed/full fresh acceptance remain required before retention; no new floors or extra CPU/heap captures."
+  ]
+}

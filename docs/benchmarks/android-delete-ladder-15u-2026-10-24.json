@@ -1,0 +1,798 @@
+{
+  "size": 1000,
+  "diagnostic": true,
+  "before": [
+    {
+      "nodes": 24,
+      "chunks": 0,
+      "entities": 1012
+    }
+  ],
+  "after": [
+    {
+      "nodes": 24,
+      "chunks": 0,
+      "entities": 1012
+    }
+  ],
+  "out": [
+    {
+      "trial": 0,
+      "mode": "plain",
+      "ms": 18.099999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 0,
+      "mode": "comment",
+      "ms": 7.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 1,
+      "mode": "comment",
+      "ms": 7.099999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 1,
+      "mode": "plain",
+      "ms": 18.79999999993015,
+      "changes": 0
+    },
+    {
+      "trial": 2,
+      "mode": "plain",
+      "ms": 18.300000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 2,
+      "mode": "comment",
+      "ms": 7.699999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 3,
+      "mode": "comment",
+      "ms": 7.5,
+      "changes": 0
+    },
+    {
+      "trial": 3,
+      "mode": "plain",
+      "ms": 17.5,
+      "changes": 0
+    },
+    {
+      "trial": 4,
+      "mode": "plain",
+      "ms": 18.79999999993015,
+      "changes": 0
+    },
+    {
+      "trial": 4,
+      "mode": "comment",
+      "ms": 7.5,
+      "changes": 0
+    },
+    {
+      "trial": 5,
+      "mode": "comment",
+      "ms": 8,
+      "changes": 0
+    },
+    {
+      "trial": 5,
+      "mode": "plain",
+      "ms": 17.099999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 6,
+      "mode": "plain",
+      "ms": 17.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 6,
+      "mode": "comment",
+      "ms": 6.800000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 7,
+      "mode": "comment",
+      "ms": 6.800000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 7,
+      "mode": "plain",
+      "ms": 19.699999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 8,
+      "mode": "plain",
+      "ms": 19.5,
+      "changes": 0
+    },
+    {
+      "trial": 8,
+      "mode": "comment",
+      "ms": 7,
+      "changes": 0
+    },
+    {
+      "trial": 9,
+      "mode": "comment",
+      "ms": 7.5,
+      "changes": 0
+    },
+    {
+      "trial": 9,
+      "mode": "plain",
+      "ms": 19.699999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 10,
+      "mode": "plain",
+      "ms": 19.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 10,
+      "mode": "comment",
+      "ms": 6.299999999930151,
+      "changes": 0
+    },
+    {
+      "trial": 11,
+      "mode": "comment",
+      "ms": 8.20000000006985,
+      "changes": 0
+    },
+    {
+      "trial": 11,
+      "mode": "plain",
+      "ms": 16.800000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 12,
+      "mode": "plain",
+      "ms": 17.5,
+      "changes": 0
+    },
+    {
+      "trial": 12,
+      "mode": "comment",
+      "ms": 7.299999999930151,
+      "changes": 0
+    },
+    {
+      "trial": 13,
+      "mode": "comment",
+      "ms": 6.600000000093132,
+      "changes": 0
+    },
+    {
+      "trial": 13,
+      "mode": "plain",
+      "ms": 17.199999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 14,
+      "mode": "plain",
+      "ms": 17.300000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 14,
+      "mode": "comment",
+      "ms": 8.100000000093132,
+      "changes": 0
+    },
+    {
+      "trial": 15,
+      "mode": "comment",
+      "ms": 8.600000000093132,
+      "changes": 0
+    },
+    {
+      "trial": 15,
+      "mode": "plain",
+      "ms": 17.699999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 16,
+      "mode": "plain",
+      "ms": 17.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 16,
+      "mode": "comment",
+      "ms": 7.099999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 17,
+      "mode": "comment",
+      "ms": 6.400000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 17,
+      "mode": "plain",
+      "ms": 17.099999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 18,
+      "mode": "plain",
+      "ms": 18.099999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 18,
+      "mode": "comment",
+      "ms": 7,
+      "changes": 0
+    },
+    {
+      "trial": 19,
+      "mode": "comment",
+      "ms": 7.299999999930151,
+      "changes": 0
+    },
+    {
+      "trial": 19,
+      "mode": "plain",
+      "ms": 16.699999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 20,
+      "mode": "plain",
+      "ms": 16.5,
+      "changes": 0
+    },
+    {
+      "trial": 20,
+      "mode": "comment",
+      "ms": 6.699999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 21,
+      "mode": "comment",
+      "ms": 7.199999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 21,
+      "mode": "plain",
+      "ms": 17.199999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 22,
+      "mode": "plain",
+      "ms": 16.400000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 22,
+      "mode": "comment",
+      "ms": 6.700000000069849,
+      "changes": 0
+    },
+    {
+      "trial": 23,
+      "mode": "comment",
+      "ms": 6.300000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 23,
+      "mode": "plain",
+      "ms": 16.199999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 24,
+      "mode": "plain",
+      "ms": 16.5,
+      "changes": 0
+    },
+    {
+      "trial": 24,
+      "mode": "comment",
+      "ms": 6.900000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 25,
+      "mode": "comment",
+      "ms": 6.800000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 25,
+      "mode": "plain",
+      "ms": 15.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 26,
+      "mode": "plain",
+      "ms": 16.79999999993015,
+      "changes": 0
+    },
+    {
+      "trial": 26,
+      "mode": "comment",
+      "ms": 6.5,
+      "changes": 0
+    },
+    {
+      "trial": 27,
+      "mode": "comment",
+      "ms": 7.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 27,
+      "mode": "plain",
+      "ms": 16.79999999993015,
+      "changes": 0
+    },
+    {
+      "trial": 28,
+      "mode": "plain",
+      "ms": 16,
+      "changes": 0
+    },
+    {
+      "trial": 28,
+      "mode": "comment",
+      "ms": 6.200000000069849,
+      "changes": 0
+    },
+    {
+      "trial": 29,
+      "mode": "comment",
+      "ms": 7,
+      "changes": 0
+    },
+    {
+      "trial": 29,
+      "mode": "plain",
+      "ms": 16.300000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 30,
+      "mode": "plain",
+      "ms": 15.399999999906868,
+      "changes": 0
+    },
+    {
+      "trial": 30,
+      "mode": "comment",
+      "ms": 7,
+      "changes": 0
+    },
+    {
+      "trial": 31,
+      "mode": "comment",
+      "ms": 7.199999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 31,
+      "mode": "plain",
+      "ms": 16.400000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 32,
+      "mode": "plain",
+      "ms": 15.699999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 32,
+      "mode": "comment",
+      "ms": 7.300000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 33,
+      "mode": "comment",
+      "ms": 6.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 33,
+      "mode": "plain",
+      "ms": 15.800000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 34,
+      "mode": "plain",
+      "ms": 16,
+      "changes": 0
+    },
+    {
+      "trial": 34,
+      "mode": "comment",
+      "ms": 6.800000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 35,
+      "mode": "comment",
+      "ms": 7.099999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 35,
+      "mode": "plain",
+      "ms": 16.900000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 36,
+      "mode": "plain",
+      "ms": 15.70000000006985,
+      "changes": 0
+    },
+    {
+      "trial": 36,
+      "mode": "comment",
+      "ms": 7.799999999930151,
+      "changes": 0
+    },
+    {
+      "trial": 37,
+      "mode": "comment",
+      "ms": 8.400000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 37,
+      "mode": "plain",
+      "ms": 17.79999999993015,
+      "changes": 0
+    },
+    {
+      "trial": 38,
+      "mode": "plain",
+      "ms": 15.600000000093132,
+      "changes": 0
+    },
+    {
+      "trial": 38,
+      "mode": "comment",
+      "ms": 6.699999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 39,
+      "mode": "comment",
+      "ms": 7,
+      "changes": 0
+    },
+    {
+      "trial": 39,
+      "mode": "plain",
+      "ms": 16.29999999993015,
+      "changes": 0
+    },
+    {
+      "trial": 40,
+      "mode": "plain",
+      "ms": 15.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 40,
+      "mode": "comment",
+      "ms": 6.900000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 41,
+      "mode": "comment",
+      "ms": 7.900000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 41,
+      "mode": "plain",
+      "ms": 16.300000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 42,
+      "mode": "plain",
+      "ms": 15.899999999906868,
+      "changes": 0
+    },
+    {
+      "trial": 42,
+      "mode": "comment",
+      "ms": 7.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 43,
+      "mode": "comment",
+      "ms": 6.799999999930151,
+      "changes": 0
+    },
+    {
+      "trial": 43,
+      "mode": "plain",
+      "ms": 16.5,
+      "changes": 0
+    },
+    {
+      "trial": 44,
+      "mode": "plain",
+      "ms": 20.099999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 44,
+      "mode": "comment",
+      "ms": 8.300000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 45,
+      "mode": "comment",
+      "ms": 8.199999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 45,
+      "mode": "plain",
+      "ms": 22.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 46,
+      "mode": "plain",
+      "ms": 19.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 46,
+      "mode": "comment",
+      "ms": 8.300000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 47,
+      "mode": "comment",
+      "ms": 8.099999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 47,
+      "mode": "plain",
+      "ms": 18.099999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 48,
+      "mode": "plain",
+      "ms": 20.900000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 48,
+      "mode": "comment",
+      "ms": 6.699999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 49,
+      "mode": "comment",
+      "ms": 7,
+      "changes": 0
+    },
+    {
+      "trial": 49,
+      "mode": "plain",
+      "ms": 15.70000000006985,
+      "changes": 0
+    },
+    {
+      "trial": 50,
+      "mode": "plain",
+      "ms": 15.600000000093132,
+      "changes": 0
+    },
+    {
+      "trial": 50,
+      "mode": "comment",
+      "ms": 7,
+      "changes": 0
+    },
+    {
+      "trial": 51,
+      "mode": "comment",
+      "ms": 6.5,
+      "changes": 0
+    },
+    {
+      "trial": 51,
+      "mode": "plain",
+      "ms": 15.099999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 52,
+      "mode": "plain",
+      "ms": 16.199999999953434,
+      "changes": 0
+    },
+    {
+      "trial": 52,
+      "mode": "comment",
+      "ms": 7.400000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 53,
+      "mode": "comment",
+      "ms": 6.900000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 53,
+      "mode": "plain",
+      "ms": 15.300000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 54,
+      "mode": "plain",
+      "ms": 14.79999999993015,
+      "changes": 0
+    },
+    {
+      "trial": 54,
+      "mode": "comment",
+      "ms": 6.900000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 55,
+      "mode": "comment",
+      "ms": 7,
+      "changes": 0
+    },
+    {
+      "trial": 55,
+      "mode": "plain",
+      "ms": 15.400000000023283,
+      "changes": 0
+    },
+    {
+      "trial": 56,
+      "mode": "plain",
+      "ms": 15.599999999976717,
+      "changes": 0
+    },
+    {
+      "trial": 56,
+      "mode": "comment",
+      "ms": 8.20000000006985,
+      "changes": 0
+    },
+    {
+      "trial": 57,
+      "mode": "comment",
+      "ms": 7.700000000069849,
+      "changes": 0
+    },
+    {
+      "trial": 57,
+      "mode": "plain",
+      "ms": 19.300000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 58,
+      "mode": "plain",
+      "ms": 16,
+      "changes": 0
+    },
+    {
+      "trial": 58,
+      "mode": "comment",
+      "ms": 8.300000000046566,
+      "changes": 0
+    },
+    {
+      "trial": 59,
+      "mode": "comment",
+      "ms": 7.5,
+      "changes": 0
+    },
+    {
+      "trial": 59,
+      "mode": "plain",
+      "ms": 17.599999999976717,
+      "changes": 0
+    }
+  ],
+  "statements": [
+    {
+      "statement": "DELETE FROM nss_node WHERE path = ?",
+      "values": [
+        "__nss_15u_no_rows__"
+      ]
+    },
+    {
+      "statement": "DELETE FROM nss_node WHERE path >= ? AND path < ?",
+      "values": [
+        "__nss_15u_no_rows__/",
+        "__nss_15u_no_rows__0"
+      ]
+    },
+    {
+      "statement": "DELETE FROM nss_chunk WHERE path = ?",
+      "values": [
+        "__nss_15u_no_rows__"
+      ]
+    },
+    {
+      "statement": "DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+      "values": [
+        "__nss_15u_no_rows__/",
+        "__nss_15u_no_rows__0"
+      ]
+    },
+    {
+      "statement": "DELETE FROM nss_entity WHERE coll = ?",
+      "values": [
+        "__nss_15u_no_rows__"
+      ]
+    },
+    {
+      "statement": "DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+      "values": [
+        "__nss_15u_no_rows__/",
+        "__nss_15u_no_rows__0"
+      ]
+    }
+  ],
+  "indexes": [
+    {
+      "name": "nss_entity_order"
+    },
+    {
+      "name": "nss_entity_sortkey"
+    },
+    {
+      "name": "nss_entity_promoted"
+    },
+    {
+      "name": "nss_query_646f6e65"
+    },
+    {
+      "name": "nss_query_757365724964"
+    }
+  ]
+}

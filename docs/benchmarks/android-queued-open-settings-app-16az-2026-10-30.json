@@ -1,0 +1,1247 @@
+{
+  "startup": [
+    {
+      "probe": "P1",
+      "file": ".tmp/16ba-relaunch-P1.json",
+      "apk": ".tmp/16az-apks/sqlite.apk",
+      "boot": "a8f58aae-39d8-4b36-81f9-f7b3088fabfa",
+      "sha256": "ced53b339bd870d462992867747675cc71b34cd2e7c1ca3b80e8854ea0f19363",
+      "installedHash": "4e52f51c30c8c62388b65fae8e0d46e69925e6fcf303db9bfbc398864200b929",
+      "session": "16ba-P1",
+      "readyMs": 1552.800000000003,
+      "firstNativeStartMs": 1291.5999999999913,
+      "beforeReady": [
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 1291.5999999999913,
+          "ms": 28.40000000000873,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 1292.5,
+          "ms": 61.5,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1292.5999999999913,
+          "ms": 73.90000000000873,
+          "bytes": 265,
+          "values": [],
+          "sql": [
+            "SELECT key, value, NULL AS name, NULL AS tbl_name, NULL AS sql FROM nss_meta\n             UNION ALL SELECT NULL, NULL, name, tbl_name, sql FROM sqlite_master WHERE type = 'index'"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1320.300000000003,
+          "ms": 50,
+          "bytes": 109,
+          "values": [],
+          "sql": [
+            "PRAGMA journal_mode=WAL"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1320.3999999999942,
+          "ms": 55.60000000000582,
+          "bytes": 108,
+          "values": [],
+          "sql": [
+            "PRAGMA cache_size=-512"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "executeSet",
+          "start": 1372.3999999999942,
+          "ms": 15.60000000000582,
+          "bytes": 665,
+          "values": [
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ]
+          ],
+          "sql": [
+            "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1375.699999999997,
+          "ms": 14.19999999999709,
+          "bytes": 3010,
+          "values": [
+            "path",
+            "parent",
+            "kind",
+            "pos",
+            "value",
+            "source",
+            "coll",
+            "id",
+            "data",
+            "sortkey",
+            "seq",
+            "ui",
+            "ui/",
+            "ui0",
+            "ui",
+            "ui/",
+            "ui0",
+            "ui",
+            "ui/",
+            "ui0",
+            "path",
+            "parent",
+            "kind",
+            "pos",
+            "value",
+            "source",
+            "coll",
+            "id",
+            "data",
+            "sortkey",
+            "seq",
+            "router",
+            "router/",
+            "router0",
+            "router",
+            "router/",
+            "router0",
+            "router",
+            "router/",
+            "router0"
+          ],
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"path\",?, \"parent\",?, \"kind\",?, \"pos\",?, \"valu"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1393.0999999999913,
+          "ms": 19.60000000000582,
+          "bytes": 1189,
+          "values": [
+            "false",
+            "todos",
+            "todos"
+          ],
+          "sql": [
+            "SELECT slot, payload FROM (\n              WITH counts AS MATERIALIZED (\n                SELECT COUNT(CASE WHEN (((COALESCE(json_type(data, '$.done') = ?, 0)))) THEN 1 END) AS c0,COUNT(CASE WHEN (1) TH"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1470,
+          "ms": 8.599999999991269,
+          "bytes": 1269,
+          "values": [
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0",
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0",
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "executeSet",
+          "start": 1486.300000000003,
+          "ms": 13.69999999999709,
+          "bytes": 1569,
+          "values": [
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router",
+              null,
+              5,
+              null,
+              null,
+              "router/state",
+              "router",
+              5,
+              1,
+              null,
+              "router/state/root",
+              "router/state",
+              4,
+              1,
+              "{\"params\":{},\"data\":{},\"url\":[],\"outlet\":\"primary\",\"routeConfig\":null,\"queryParams\":{},\"fragment\":null,\"firstChild\":{\"params\":{},\"data\":{},\"url\":[{\"path\":\"todos\",\"parameters\":{}}],\"outlet\":\"primary\",\"routeConfig\":{\"path\":\"todos\",\"title\":\"Todos\"},\"queryParams\":{},\"fragment\":null,\"children\":[]},\"children\":[{\"params\":{},\"data\":{},\"url\":[{\"path\":\"todos\",\"parameters\":{}}],\"outlet\":\"primary\",\"routeConfig\":{\"path\":\"todos\",\"title\":\"Todos\"},\"queryParams\":{},\"fragment\":null,\"children\":[]}]}",
+              "router/state/url",
+              "router/state",
+              3,
+              2,
+              "\"/todos\"",
+              "router/navigationId",
+              "router",
+              2,
+              2,
+              "1"
+            ]
+          ],
+          "sql": [
+            "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1541.0999999999913,
+          "ms": 21.60000000000582,
+          "bytes": 1224,
+          "values": [
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0",
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0",
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        }
+      ],
+      "afterReady": [
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1563.300000000003,
+          "ms": 10.5,
+          "bytes": 1215,
+          "values": [
+            "todos/query",
+            "todos/query/",
+            "todos/query0",
+            "todos/query",
+            "todos/query/",
+            "todos/query0",
+            "todos/query",
+            "todos/query/",
+            "todos/query0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1574.5999999999913,
+          "ms": 750.2000000000116,
+          "bytes": 1224,
+          "values": [
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0",
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0",
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 2325.300000000003,
+          "ms": 851.0999999999913,
+          "bytes": 1161,
+          "values": [
+            "users",
+            "users/",
+            "users0",
+            "users",
+            "users/",
+            "users0",
+            "users",
+            "users/",
+            "users0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 3181.800000000003,
+          "ms": 67.5,
+          "bytes": 982,
+          "values": [
+            "id",
+            "pos",
+            "sortkey",
+            "data",
+            "promoted",
+            "todos",
+            "todos",
+            100,
+            100,
+            0
+          ],
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"id\",?, \"pos\",?, \"sortkey\",?, \"data\",?, \"promo"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 3253.699999999997,
+          "ms": 42.19999999999709,
+          "bytes": 211,
+          "values": [
+            [
+              -1,
+              "ui/visited/#mvufoqfyysstkdlbq43"
+            ]
+          ],
+          "sql": [
+            "UPDATE nss_node SET pos = ? WHERE path = ?"
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1158.699999999997
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1429.699999999997
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1530.5
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1545.699999999997
+        }
+      ],
+      "longTasks": [
+        {
+          "kind": "longtask",
+          "at": 155,
+          "ms": 52
+        },
+        {
+          "kind": "longtask",
+          "at": 1141.8999999999942,
+          "ms": 59
+        },
+        {
+          "kind": "longtask",
+          "at": 1412.3999999999942,
+          "ms": 57
+        }
+      ]
+    },
+    {
+      "probe": "P2",
+      "file": ".tmp/16ba-relaunch-P2.json",
+      "apk": ".tmp/16az-apks/sqlite.apk",
+      "boot": "8eb83ed4-957b-4f5f-9b38-5750b70e9f98",
+      "sha256": "286deee7520a4463afbbec64d8a26447380bf8bcd74a857658d5cec19c247153",
+      "installedHash": "4e52f51c30c8c62388b65fae8e0d46e69925e6fcf303db9bfbc398864200b929",
+      "session": "16ba-P2",
+      "readyMs": 1774.2000000000116,
+      "firstNativeStartMs": 1472.7000000000116,
+      "beforeReady": [
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 1472.7000000000116,
+          "ms": 53.5,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 1473.1000000000058,
+          "ms": 77.60000000000582,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1473.1000000000058,
+          "ms": 87.19999999999709,
+          "bytes": 265,
+          "values": [],
+          "sql": [
+            "SELECT key, value, NULL AS name, NULL AS tbl_name, NULL AS sql FROM nss_meta\n             UNION ALL SELECT NULL, NULL, name, tbl_name, sql FROM sqlite_master WHERE type = 'index'"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1526.6000000000058,
+          "ms": 45.19999999999709,
+          "bytes": 109,
+          "values": [],
+          "sql": [
+            "PRAGMA journal_mode=WAL"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1526.6000000000058,
+          "ms": 52.80000000000291,
+          "bytes": 108,
+          "values": [],
+          "sql": [
+            "PRAGMA cache_size=-512"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "executeSet",
+          "start": 1574.2000000000116,
+          "ms": 13.799999999988358,
+          "bytes": 665,
+          "values": [
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ]
+          ],
+          "sql": [
+            "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1579.2000000000116,
+          "ms": 11,
+          "bytes": 3010,
+          "values": [
+            "path",
+            "parent",
+            "kind",
+            "pos",
+            "value",
+            "source",
+            "coll",
+            "id",
+            "data",
+            "sortkey",
+            "seq",
+            "ui",
+            "ui/",
+            "ui0",
+            "ui",
+            "ui/",
+            "ui0",
+            "ui",
+            "ui/",
+            "ui0",
+            "path",
+            "parent",
+            "kind",
+            "pos",
+            "value",
+            "source",
+            "coll",
+            "id",
+            "data",
+            "sortkey",
+            "seq",
+            "router",
+            "router/",
+            "router0",
+            "router",
+            "router/",
+            "router0",
+            "router",
+            "router/",
+            "router0"
+          ],
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"path\",?, \"parent\",?, \"kind\",?, \"pos\",?, \"valu"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1593.5,
+          "ms": 16.80000000000291,
+          "bytes": 1189,
+          "values": [
+            "false",
+            "todos",
+            "todos"
+          ],
+          "sql": [
+            "SELECT slot, payload FROM (\n              WITH counts AS MATERIALIZED (\n                SELECT COUNT(CASE WHEN (((COALESCE(json_type(data, '$.done') = ?, 0)))) THEN 1 END) AS c0,COUNT(CASE WHEN (1) TH"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1663.7000000000116,
+          "ms": 26.19999999999709,
+          "bytes": 1269,
+          "values": [
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0",
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0",
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "executeSet",
+          "start": 1699.9000000000087,
+          "ms": 86.5,
+          "bytes": 1569,
+          "values": [
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router",
+              null,
+              5,
+              null,
+              null,
+              "router/state",
+              "router",
+              5,
+              1,
+              null,
+              "router/state/root",
+              "router/state",
+              4,
+              1,
+              "{\"params\":{},\"data\":{},\"url\":[],\"outlet\":\"primary\",\"routeConfig\":null,\"queryParams\":{},\"fragment\":null,\"firstChild\":{\"params\":{},\"data\":{},\"url\":[{\"path\":\"todos\",\"parameters\":{}}],\"outlet\":\"primary\",\"routeConfig\":{\"path\":\"todos\",\"title\":\"Todos\"},\"queryParams\":{},\"fragment\":null,\"children\":[]},\"children\":[{\"params\":{},\"data\":{},\"url\":[{\"path\":\"todos\",\"parameters\":{}}],\"outlet\":\"primary\",\"routeConfig\":{\"path\":\"todos\",\"title\":\"Todos\"},\"queryParams\":{},\"fragment\":null,\"children\":[]}]}",
+              "router/state/url",
+              "router/state",
+              3,
+              2,
+              "\"/todos\"",
+              "router/navigationId",
+              "router",
+              2,
+              2,
+              "1"
+            ]
+          ],
+          "sql": [
+            "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        }
+      ],
+      "afterReady": [
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1787.1000000000058,
+          "ms": 28.69999999999709,
+          "bytes": 1224,
+          "values": [
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0",
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0",
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1817.5,
+          "ms": 1749.7000000000116,
+          "bytes": 1215,
+          "values": [
+            "todos/query",
+            "todos/query/",
+            "todos/query0",
+            "todos/query",
+            "todos/query/",
+            "todos/query0",
+            "todos/query",
+            "todos/query/",
+            "todos/query0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 3567.800000000003,
+          "ms": 42.60000000000582,
+          "bytes": 1224,
+          "values": [
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0",
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0",
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 3610.9000000000087,
+          "ms": 12.39999999999418,
+          "bytes": 1161,
+          "values": [
+            "users",
+            "users/",
+            "users0",
+            "users",
+            "users/",
+            "users0",
+            "users",
+            "users/",
+            "users0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 3626.4000000000087,
+          "ms": 20.80000000000291,
+          "bytes": 982,
+          "values": [
+            "id",
+            "pos",
+            "sortkey",
+            "data",
+            "promoted",
+            "todos",
+            "todos",
+            100,
+            100,
+            0
+          ],
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"id\",?, \"pos\",?, \"sortkey\",?, \"data\",?, \"promo"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 3651.2000000000116,
+          "ms": 76.29999999998836,
+          "bytes": 212,
+          "values": [
+            [
+              -1,
+              "ui/visited/#mvufr3odf8afrkdd6mo3"
+            ]
+          ],
+          "sql": [
+            "UPDATE nss_node SET pos = ? WHERE path = ?"
+          ]
+        }
+      ],
+      "marks": [
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1389.5
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1623.7000000000116
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1743.300000000003
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1762.7000000000116
+        }
+      ],
+      "longTasks": [
+        {
+          "kind": "longtask",
+          "at": 270.5,
+          "ms": 132
+        },
+        {
+          "kind": "longtask",
+          "at": 1373.7000000000116,
+          "ms": 50
+        },
+        {
+          "kind": "longtask",
+          "at": 1610.300000000003,
+          "ms": 53
+        },
+        {
+          "kind": "longtask",
+          "at": 3651.5,
+          "ms": 75
+        }
+      ]
+    }
+  ],
+  "complete": true,
+  "diagnosticOnly": true,
+  "acceptanceCleared": false,
+  "session": "16az-diagnostic-1793329643",
+  "environment": {
+    "avd": "Ngrx_SQLite_Benchmark_API35",
+    "serial": "emulator-5556",
+    "port": 5556,
+    "dataDir": "C:/Development/ngrx-sqlite-store/.tmp/benchmark-isolated-20261029",
+    "dataPartitionBytes": 17179869184,
+    "webviewVersion": "154.0.8037.106",
+    "userAuthorizedIsolation": true,
+    "otherDevice": "emulator-5554",
+    "noOtherDeviceMutation": true
+  },
+  "hashes": {
+    "candidate": "4e52f51c30c8c62388b65fae8e0d46e69925e6fcf303db9bfbc398864200b929",
+    "baseline": "e0c50b90dcd0aa095308ed83316aa61ddfffaf6773fb103185c769ac2dcf1db1",
+    "listBaseline": "6deb3638ed9d1f63cce4e7b14c4009e99f4fffd44de16f68941273c5ff3ffeff"
+  },
+  "guards": [
+    {
+      "apk": ".tmp/15aa-apks/sqlite.apk",
+      "boot": "39bf88ef-e168-496e-9464-ace2eb45bff1",
+      "side": "A",
+      "trace": ".tmp/lp30-A-1.json",
+      "round": 1,
+      "installedHash": "6deb3638ed9d1f63cce4e7b14c4009e99f4fffd44de16f68941273c5ff3ffeff",
+      "traceSha256": "cf5b46cd3321eee138af6ee2d0962fa644c11192eb58fdfa9f7696692c3a2be2",
+      "readyMs": 1359.5,
+      "callCount": 68
+    },
+    {
+      "apk": ".tmp/16az-apks/sqlite.apk",
+      "boot": "39bf88ef-e168-496e-9464-ace2eb45bff1",
+      "side": "B",
+      "trace": ".tmp/lp30-B-1.json",
+      "round": 1,
+      "installedHash": "4e52f51c30c8c62388b65fae8e0d46e69925e6fcf303db9bfbc398864200b929",
+      "traceSha256": "66fb264f17275e83915783355ca3566dd590cc90e88df801d91b8a51cd934c08",
+      "readyMs": 1290.5,
+      "callCount": 67
+    },
+    {
+      "apk": ".tmp/15aa-apks/sqlite.apk",
+      "boot": "39bf88ef-e168-496e-9464-ace2eb45bff1",
+      "side": "A",
+      "trace": ".tmp/lp30-A-2.json",
+      "round": 2,
+      "installedHash": "6deb3638ed9d1f63cce4e7b14c4009e99f4fffd44de16f68941273c5ff3ffeff",
+      "traceSha256": "35e0f4b1a74c76b9b809884dce764c6679d43f8c9e1b13a35d451d0a3d6fa03a",
+      "readyMs": 1300.5,
+      "callCount": 68
+    },
+    {
+      "apk": ".tmp/16az-apks/sqlite.apk",
+      "boot": "39bf88ef-e168-496e-9464-ace2eb45bff1",
+      "side": "B",
+      "trace": ".tmp/lp30-B-2.json",
+      "round": 2,
+      "installedHash": "4e52f51c30c8c62388b65fae8e0d46e69925e6fcf303db9bfbc398864200b929",
+      "traceSha256": "5f7931bec98614be83f8339afe449f73f8a51aec67b221624eb5f1704925389a",
+      "readyMs": 1324.3000000000466,
+      "callCount": 67
+    },
+    {
+      "apk": ".tmp/15aa-apks/sqlite.apk",
+      "boot": "39bf88ef-e168-496e-9464-ace2eb45bff1",
+      "side": "A",
+      "trace": ".tmp/lp30-A-3.json",
+      "round": 3,
+      "installedHash": "6deb3638ed9d1f63cce4e7b14c4009e99f4fffd44de16f68941273c5ff3ffeff",
+      "traceSha256": "814e4e1c8a00c31af2728ff7f31a08812ac8bd0cfe3888d8eb252cd85c610dde",
+      "readyMs": 1307.3000000000466,
+      "callCount": 68
+    },
+    {
+      "apk": ".tmp/16az-apks/sqlite.apk",
+      "boot": "39bf88ef-e168-496e-9464-ace2eb45bff1",
+      "side": "B",
+      "trace": ".tmp/lp30-B-3.json",
+      "round": 3,
+      "installedHash": "4e52f51c30c8c62388b65fae8e0d46e69925e6fcf303db9bfbc398864200b929",
+      "traceSha256": "fd8217f1356113fb1035183729ce7ab5697c02c430abe4b3943dfb70de4c1a6f",
+      "readyMs": 1297.5,
+      "callCount": 67
+    }
+  ],
+  "guard": {
+    "baseline": {
+      "n": 3,
+      "mean": 1322.4333333333489,
+      "sd": 32.280231308536635
+    },
+    "candidate": {
+      "n": 3,
+      "mean": 1304.1000000000156,
+      "sd": 17.84040358290531
+    },
+    "delta": -18.333333333333258,
+    "sumSD": 50.120634891441945,
+    "exceedsSumSD": false,
+    "scope": "Document-reload first-ready guard, not direct cold-process startup gain"
+  },
+  "reports": [
+    {
+      "file": ".tmp/16az-fresh-A1.json",
+      "sha256": "4503e523b94c39ac7f6a662f7c31bd0c1e60416dfde38f1a0988f0da002edc67",
+      "session": "16az-A1",
+      "boot": "1e716939-8f1f-48d7-9331-a60bcdc100fa",
+      "apkSha256": "e0c50b90dcd0aa095308ed83316aa61ddfffaf6773fb103185c769ac2dcf1db1"
+    },
+    {
+      "file": ".tmp/16az-fresh-B1.json",
+      "sha256": "75fbb40e27a3d31e9f87179002f5ebde8865f9a37bcb7b96ad49509a902f0191",
+      "session": "16az-B1",
+      "boot": "5bd9ee3d-f1e5-40f4-91b3-3eadae626049",
+      "apkSha256": "4e52f51c30c8c62388b65fae8e0d46e69925e6fcf303db9bfbc398864200b929"
+    },
+    {
+      "file": ".tmp/16az-fresh-B2.json",
+      "sha256": "a070ec1da339925ea6233c1932de27c58e5a8230957ad759ea6fc14999f5d689",
+      "session": "16az-B2",
+      "boot": "bb374bbf-b2f4-4b96-ae3d-4c30afbb2173",
+      "apkSha256": "4e52f51c30c8c62388b65fae8e0d46e69925e6fcf303db9bfbc398864200b929"
+    },
+    {
+      "file": ".tmp/16az-fresh-A2.json",
+      "sha256": "1f2aeddbb098533703818dd9fabfec5aa41e55579d4eabc1e0898926a98ca19a",
+      "session": "16az-A2",
+      "boot": "eb0fd108-3f9d-4e41-bc31-79b2f0720d8c",
+      "apkSha256": "e0c50b90dcd0aa095308ed83316aa61ddfffaf6773fb103185c769ac2dcf1db1"
+    }
+  ],
+  "comparisons": [
+    {
+      "metric": "firstReadyMs",
+      "pairs": [
+        {
+          "baselineLeg": "A1",
+          "candidateLeg": "B1",
+          "baseline": 1382.0999999999913,
+          "candidate": 1473.7999999999884,
+          "delta": 91.69999999999709,
+          "adverse": true
+        },
+        {
+          "baselineLeg": "A2",
+          "candidateLeg": "B2",
+          "baseline": 1472.699999999997,
+          "candidate": 1419.5999999999913,
+          "delta": -53.10000000000582,
+          "adverse": false
+        }
+      ]
+    },
+    {
+      "metric": "relaunchReadyMs",
+      "pairs": [
+        {
+          "baselineLeg": "A1",
+          "candidateLeg": "B1",
+          "baseline": 1595.800000000003,
+          "candidate": 1734.300000000003,
+          "delta": 138.5,
+          "adverse": true
+        },
+        {
+          "baselineLeg": "A2",
+          "candidateLeg": "B2",
+          "baseline": 1750.300000000003,
+          "candidate": 1706.9000000000087,
+          "delta": -43.39999999999418,
+          "adverse": false
+        }
+      ]
+    },
+    {
+      "metric": "heapTodosMb",
+      "pairs": [
+        {
+          "baselineLeg": "A1",
+          "candidateLeg": "B1",
+          "baseline": 5.5678863525390625,
+          "candidate": 5.5225982666015625,
+          "delta": -0.0452880859375,
+          "adverse": false
+        },
+        {
+          "baselineLeg": "A2",
+          "candidateLeg": "B2",
+          "baseline": 5.520908355712891,
+          "candidate": 5.567173004150391,
+          "delta": 0.0462646484375,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "heapNotesMb",
+      "pairs": [
+        {
+          "baselineLeg": "A1",
+          "candidateLeg": "B1",
+          "baseline": 6.277309417724609,
+          "candidate": 6.258644104003906,
+          "delta": -0.018665313720703125,
+          "adverse": false
+        },
+        {
+          "baselineLeg": "A2",
+          "candidateLeg": "B2",
+          "baseline": 6.253917694091797,
+          "candidate": 6.273223876953125,
+          "delta": 0.019306182861328125,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "heapRelaunchMb",
+      "pairs": [
+        {
+          "baselineLeg": "A1",
+          "candidateLeg": "B1",
+          "baseline": 5.038200378417969,
+          "candidate": 5.037609100341797,
+          "delta": -0.000591278076171875,
+          "adverse": false
+        },
+        {
+          "baselineLeg": "A2",
+          "candidateLeg": "B2",
+          "baseline": 5.039142608642578,
+          "candidate": 5.039337158203125,
+          "delta": 0.000194549560546875,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "pssTotalMb",
+      "pairs": [
+        {
+          "baselineLeg": "A1",
+          "candidateLeg": "B1",
+          "baseline": 239.337890625,
+          "candidate": 238.671875,
+          "delta": -0.666015625,
+          "adverse": false
+        },
+        {
+          "baselineLeg": "A2",
+          "candidateLeg": "B2",
+          "baseline": 236.3974609375,
+          "candidate": 240.5419921875,
+          "delta": 4.14453125,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "pssRelaunchTotalMb",
+      "pairs": [
+        {
+          "baselineLeg": "A1",
+          "candidateLeg": "B1",
+          "baseline": 222.5634765625,
+          "candidate": 223.1103515625,
+          "delta": 0.546875,
+          "adverse": true
+        },
+        {
+          "baselineLeg": "A2",
+          "candidateLeg": "B2",
+          "baseline": 221.544921875,
+          "candidate": 222.447265625,
+          "delta": 0.90234375,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "toggleP50",
+      "pairs": [
+        {
+          "baselineLeg": "A1",
+          "candidateLeg": "B1",
+          "baseline": 14.30000000000291,
+          "candidate": 15.400000000008731,
+          "delta": 1.1000000000058208,
+          "adverse": true
+        },
+        {
+          "baselineLeg": "A2",
+          "candidateLeg": "B2",
+          "baseline": 13.5,
+          "candidate": 18.5,
+          "delta": 5,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "toggleP95",
+      "pairs": [
+        {
+          "baselineLeg": "A1",
+          "candidateLeg": "B1",
+          "baseline": 66.10000000000582,
+          "candidate": 71.29999999998836,
+          "delta": 5.199999999982538,
+          "adverse": true
+        },
+        {
+          "baselineLeg": "A2",
+          "candidateLeg": "B2",
+          "baseline": 65,
+          "candidate": 63.60000000000582,
+          "delta": -1.3999999999941792,
+          "adverse": false
+        }
+      ]
+    },
+    {
+      "metric": "emitP50",
+      "pairs": [
+        {
+          "baselineLeg": "A1",
+          "candidateLeg": "B1",
+          "baseline": 3.5,
+          "candidate": 3.5,
+          "delta": 0,
+          "adverse": false
+        },
+        {
+          "baselineLeg": "A2",
+          "candidateLeg": "B2",
+          "baseline": 3.5,
+          "candidate": 3.5,
+          "delta": 0,
+          "adverse": false
+        }
+      ]
+    },
+    {
+      "metric": "emitP95",
+      "pairs": [
+        {
+          "baselineLeg": "A1",
+          "candidateLeg": "B1",
+          "baseline": 5.099999999991269,
+          "candidate": 6.400000000008731,
+          "delta": 1.3000000000174623,
+          "adverse": true
+        },
+        {
+          "baselineLeg": "A2",
+          "candidateLeg": "B2",
+          "baseline": 5.599999999991269,
+          "candidate": 4.80000000000291,
+          "delta": -0.7999999999883585,
+          "adverse": false
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "guards": 6,
+    "reports": 4,
+    "toggles": 120,
+    "emissions": 800,
+    "distinctReversedBoots": 4
+  },
+  "limitations": [
+    "One-trial report verdicts are not acceptance.",
+    "New isolated environment confounds historical causal comparisons.",
+    "Actual installed hash captured immediately before each tool; legacy guard trace itself has no APK hash.",
+    "Both emulators share host resources; no claim of host CPU isolation."
+  ],
+  "actualSettingsOrdering": [
+    {
+      "probe": "P1",
+      "readyMs": 1552.800000000003,
+      "firstNativeStartMs": 1291.5999999999913,
+      "createAck": 1320.0,
+      "openAck": 1354.0,
+      "walSend": 1320.300000000003,
+      "cacheSend": 1320.3999999999942,
+      "beforeOpenAck": true
+    },
+    {
+      "probe": "P2",
+      "readyMs": 1774.2000000000116,
+      "firstNativeStartMs": 1472.7000000000116,
+      "createAck": 1526.2000000000116,
+      "openAck": 1550.7000000000116,
+      "walSend": 1526.6000000000058,
+      "cacheSend": 1526.6000000000058,
+      "beforeOpenAck": true
+    }
+  ],
+  "externalStartSourceProofVerified": true,
+  "decision": "Rejected performance candidate: target relaunch mixed/no repeated application gain; restore16aw production bytes. Keep generic pending-WAL and before-create verification tests."
+}

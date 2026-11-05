@@ -1,0 +1,1641 @@
+{
+  "date": "2026-10-28",
+  "session": "16L11-audit-1793158491",
+  "device": "sdk_gphone64_x86_64",
+  "sdkLevel": "35",
+  "webview": "com.google.android.webview, 154.0.8037.106",
+  "apkHashes": {
+    "classic": "58ad9c2ab62cb9e1ec71004f80bbad22a67edb82b12496698e2ebba5e0526311",
+    "sqlite": "3c5c5790a767933cd655cace1cd0d383d0b3fa457e0b1adf7af38897420dbeb1"
+  },
+  "results": [
+    {
+      "size": 1000,
+      "database": "ngrx-harness",
+      "commit": [
+        8.200000000011642,
+        3.599999999976717,
+        4.099999999976717,
+        4,
+        3.8999999999650754,
+        3.900000000023283,
+        4.7000000000116415,
+        4.900000000023283,
+        4,
+        3.900000000023283,
+        4.900000000023283,
+        4.899999999965075,
+        4.600000000034925,
+        5.199999999953434,
+        5.2999999999883585,
+        4.7000000000116415,
+        4.899999999965075,
+        5.7000000000116415,
+        4.7000000000116415,
+        5.2999999999883585,
+        4,
+        4,
+        4.199999999953434,
+        4,
+        4,
+        4.600000000034925,
+        4.2999999999883585,
+        4.899999999965075,
+        4.900000000023283,
+        4.5,
+        5.400000000023283,
+        5.2999999999883585,
+        5.099999999976717,
+        4.599999999976717,
+        5,
+        4,
+        5.400000000023283,
+        4.7999999999883585,
+        4.400000000023283,
+        4.5,
+        4,
+        3.8999999999650754,
+        3.7999999999883585,
+        3.7000000000116415,
+        4.399999999965075,
+        4.2000000000116415,
+        5.2999999999883585,
+        5.300000000046566,
+        5,
+        4.5,
+        6,
+        4.2999999999883585,
+        5.2000000000116415,
+        5.2000000000116415,
+        4.900000000023283,
+        5.100000000034925,
+        4.899999999965075,
+        4.399999999965075,
+        3.7000000000116415,
+        4.599999999976717,
+        4.2000000000116415,
+        4.7999999999883585,
+        4.7000000000116415,
+        4.7000000000116415,
+        4.599999999976717,
+        4.400000000023283,
+        6.2000000000116415,
+        9.900000000023283,
+        8.099999999976717,
+        9.200000000011642,
+        8.299999999988358,
+        4.400000000023283,
+        3.7999999999883585,
+        3.7999999999883585,
+        3.400000000023283,
+        3.400000000023283,
+        3.5,
+        3.400000000023283,
+        3,
+        3.099999999976717,
+        4.400000000023283,
+        3.400000000023283,
+        4.099999999976717,
+        3.599999999976717,
+        4.100000000034925,
+        3.8999999999650754,
+        4.100000000034925,
+        3.599999999976717,
+        3.400000000023283,
+        3.3999999999650754,
+        4.100000000034925,
+        3.3999999999650754,
+        4.5,
+        2.900000000023283,
+        4.2000000000116415,
+        4.399999999965075,
+        3.300000000046566,
+        3.3999999999650754,
+        3.7999999999883585,
+        4.100000000034925
+      ],
+      "commitPaced": [
+        3.699999999953434,
+        6.5,
+        5,
+        5.399999999965075,
+        4.699999999953434,
+        6.900000000023283,
+        4.599999999976717,
+        3.6000000000349246,
+        3.900000000023283,
+        4.400000000023283,
+        5,
+        4.400000000023283,
+        4.399999999965075,
+        4.7999999999883585,
+        5.2999999999883585,
+        3.900000000023283,
+        5.2999999999883585,
+        5.600000000034925,
+        3.7000000000116415,
+        4.2000000000116415,
+        3.5,
+        3.8999999999650754,
+        4.2999999999883585,
+        4.5,
+        5.099999999976717,
+        3.8999999999650754,
+        4.5,
+        4.600000000034925,
+        4.5,
+        4.100000000034925
+      ],
+      "seed": {
+        "samples": [
+          29.899999999965075,
+          27.20000000001164,
+          27.70000000001164,
+          36.199999999953434,
+          27.20000000001164
+        ],
+        "chunkBytes": [
+          180020,
+          454,
+          1799,
+          3658
+        ],
+        "totalBytes": 185931,
+        "rows": 1000
+      },
+      "seedRows": {
+        "samples": [
+          26.70000000001164,
+          24.5,
+          25.79999999998836,
+          25.800000000046566,
+          32.5
+        ],
+        "rows": 1012,
+        "calls": 1,
+        "wireBytes": 169806
+      },
+      "open": [
+        78,
+        80.79999999998836,
+        95.69999999995343,
+        85.60000000003492,
+        83.40000000002328,
+        98.10000000003492,
+        100.70000000001164,
+        96.70000000001164,
+        89.59999999997672,
+        101.20000000001164
+      ],
+      "pragmas": {
+        "journalMode": [
+          {
+            "journal_mode": "wal"
+          }
+        ],
+        "synchronous": [
+          {
+            "synchronous": 1
+          }
+        ]
+      },
+      "seedTrace": [
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 364.9000000000233,
+          "ms": 41.79999999998836,
+          "bytes": 180020,
+          "sql": [
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 413.6000000000349,
+          "ms": 4.7000000000116415,
+          "bytes": 454,
+          "values": [
+            [
+              "[[\"todos/loaded\",null,\"true\"],[\"todos/seedVersion\",null,\"1\"]]"
+            ]
+          ],
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FRO"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 421.30000000004657,
+          "ms": 11.599999999976717,
+          "bytes": 1799,
+          "values": [
+            [
+              "users",
+              "s:u11",
+              1,
+              "{\"id\":\"u11\",\"name\":\"Ada Hopper\",\"email\":\"ada.hopper@example.dev\",\"hue\":89}",
+              null,
+              "users",
+              "s:u1",
+              2,
+              "{\"id\":\"u1\",\"name\":\"Ada Lovelace\",\"email\":\"ada.lovelace@example.dev\",\"hue\":216}",
+              null,
+              "users",
+              "s:u3",
+              3,
+              "{\"id\":\"u3\",\"name\":\"Alan Hamilton\",\"email\":\"alan.hamilton@example.dev\",\"hue\":306}",
+              null,
+              "users",
+              "s:u5",
+              4,
+              "{\"id\":\"u5\",\"name\":\"Barbara Turing\",\"email\":\"barbara.turing@example.dev\",\"hue\":62}",
+              null,
+              "users",
+              "s:u8",
+              5,
+              "{\"id\":\"u8\",\"name\":\"Dennis Hopper\",\"email\":\"dennis.hopper@example.dev\",\"hue\":224}",
+              null,
+              "users",
+              "s:u10",
+              6,
+              "{\"id\":\"u10\",\"name\":\"Edsger Ritchie\",\"email\":\"edsger.ritchie@example.dev\",\"hue\":170}",
+              null,
+              "users",
+              "s:u12",
+              7,
+              "{\"id\":\"u12\",\"name\":\"Grace Liskov\",\"email\":\"grace.liskov@example.dev\",\"hue\":317}",
+              null,
+              "users",
+              "s:u2",
+              8,
+              "{\"id\":\"u2\",\"name\":\"Grace Torvalds\",\"email\":\"grace.torvalds@example.dev\",\"hue\":161}",
+              null,
+              "users",
+              "s:u6",
+              9,
+              "{\"id\":\"u6\",\"name\":\"Ken Thompson\",\"email\":\"ken.thompson@example.dev\",\"hue\":189}",
+              null,
+              "users",
+              "s:u4",
+              10,
+              "{\"id\":\"u4\",\"name\":\"Linus Dijkstra\",\"email\":\"linus.dijkstra@example.dev\",\"hue\":241}",
+              null,
+              "users",
+              "s:u7",
+              11,
+              "{\"id\":\"u7\",\"name\":\"Margaret Perlman\",\"email\":\"margaret.perlman@example.dev\",\"hue\":98}",
+              null,
+              "users",
+              "s:u9",
+              12,
+              "{\"id\":\"u9\",\"name\":\"Radia Liskov\",\"email\":\"radia.liskov@example.dev\",\"hue\":311}",
+              null
+            ]
+          ],
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 436.70000000001164,
+          "ms": 4,
+          "bytes": 3658,
+          "values": [
+            [
+              "notes/folders/#mvrkfiztniyggs4awks0",
+              "notes/folders",
+              4,
+              1,
+              "{\"id\":\"f1\",\"name\":\"Inbox\",\"notes\":[{\"id\":\"f1n1\",\"title\":\"Inbox note 1\",\"body\":\"Notes about write queue. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f1n2\",\"title\":\"Inbox note 2\",\"body\":\"Notes about row cap. Notes about row cap. Notes about row cap. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":true}]},{\"id\":\"f1n3\",\"title\":\"Inbox note 3\",\"body\":\"Notes about schema. Notes about schema. Notes about schema. Notes about schema. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f1n4\",\"title\":\"Inbox note 4\",\"body\":\"Notes about router state. Notes about router state. Notes about router state. Notes about router state. Notes about router state. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":false}]}]}",
+              "notes/folders/#mvrkfiztniyggs4awks1",
+              "notes/folders",
+              4,
+              2,
+              "{\"id\":\"f2\",\"name\":\"Design\",\"notes\":[{\"id\":\"f2n1\",\"title\":\"Design note 1\",\"body\":\"Notes about write queue. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f2n2\",\"title\":\"Design note 2\",\"body\":\"Notes about schema. Notes about schema. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":true}]},{\"id\":\"f2n3\",\"title\":\"Design note 3\",\"body\":\"Notes about CTE reader. Notes about CTE reader. Notes about CTE reader. Notes about CTE reader. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":true}]},{\"id\":\"f2n4\",\"title\":\"Design note 4\",\"body\":\"Notes about CTE reader. Notes about CTE reader. Notes about CTE reader. Notes about CTE reader. Notes about CTE reader. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":true}]}]}",
+              "notes/folders/#mvrkfiztniyggs4awks2",
+              "notes/folders",
+              4,
+              3,
+              "{\"id\":\"f3\",\"name\":\"Research\",\"notes\":[{\"id\":\"f3n1\",\"title\":\"Research note 1\",\"body\":\"Notes about router state. Notes about router state. Notes about router state. Notes about router state. Notes about router state. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f3n2\",\"title\":\"Research note 2\",\"body\":\"Notes about router state. Notes about router state. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":true}]},{\"id\":\"f3n3\",\"title\":\"Research note 3\",\"body\":\"Notes about schema. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f3n4\",\"title\":\"Research note 4\",\"body\":\"Notes about effect. Notes about effect. Notes about effect. Notes about effect. Notes about effect. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":false}]}]}"
+            ]
+          ],
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        }
+      ],
+      "memoryDiagnostic": {
+        "beforeSeed": 121.9521484375,
+        "afterSeed": 124.7138671875,
+        "afterShrink": 123.2841796875,
+        "cache": {
+          "cache_size": [
+            {
+              "cache_size": -2000
+            }
+          ],
+          "page_size": [
+            {
+              "page_size": 4096
+            }
+          ],
+          "page_count": [
+            {
+              "page_count": 125
+            }
+          ],
+          "freelist_count": [
+            {
+              "freelist_count": 0
+            }
+          ]
+        },
+        "beforeRows": 125.7080078125,
+        "afterRows": 122.4287109375,
+        "beforeOnce": 117.982421875,
+        "afterOnce": 131.2998046875,
+        "onceSamples": [
+          {
+            "beforeOnce": 117.982421875,
+            "afterOnce": 131.2998046875
+          },
+          {
+            "beforeOnce": 117.9609375,
+            "afterOnce": 130.1572265625
+          },
+          {
+            "beforeOnce": 118.5908203125,
+            "afterOnce": 130.916015625
+          }
+        ]
+      }
+    },
+    {
+      "size": 10000,
+      "database": "ngrx-harness",
+      "commit": [
+        8,
+        5.600000000034925,
+        3.7000000000116415,
+        4.7999999999883585,
+        3.900000000023283,
+        4.2999999999883585,
+        4.900000000023283,
+        3.599999999976717,
+        3.7999999999883585,
+        3.5,
+        3.300000000046566,
+        3.3999999999650754,
+        4.100000000034925,
+        3.7999999999883585,
+        3.7000000000116415,
+        4.7999999999883585,
+        4.7999999999883585,
+        4.400000000023283,
+        3.599999999976717,
+        3.300000000046566,
+        3.699999999953434,
+        3.2999999999883585,
+        3.400000000023283,
+        4.2000000000116415,
+        3.7000000000116415,
+        3.900000000023283,
+        3.2999999999883585,
+        3.7000000000116415,
+        3.900000000023283,
+        4.2000000000116415,
+        4,
+        4.5,
+        4,
+        3.699999999953434,
+        3.6000000000349246,
+        4.399999999965075,
+        4.600000000034925,
+        4.099999999976717,
+        3.6000000000349246,
+        3.699999999953434,
+        3.800000000046566,
+        3.7000000000116415,
+        3.7999999999883585,
+        5.400000000023283,
+        4.2999999999883585,
+        4.599999999976717,
+        3.5,
+        3.400000000023283,
+        3.599999999976717,
+        3.6000000000349246,
+        3.2000000000116415,
+        3.699999999953434,
+        3.5,
+        4.400000000023283,
+        4.2000000000116415,
+        4.7999999999883585,
+        3.400000000023283,
+        4.099999999976717,
+        4.5,
+        3.900000000023283,
+        4.2999999999883585,
+        4.400000000023283,
+        3.599999999976717,
+        4.7999999999883585,
+        3.400000000023283,
+        3.599999999976717,
+        4,
+        4.699999999953434,
+        4,
+        3.2000000000116415,
+        3.900000000023283,
+        4.100000000034925,
+        3.7999999999883585,
+        4,
+        3.7999999999883585,
+        3.6000000000349246,
+        3.2999999999883585,
+        3.2000000000116415,
+        3.2000000000116415,
+        4.099999999976717,
+        4.2000000000116415,
+        3.7999999999883585,
+        3.800000000046566,
+        3.8999999999650754,
+        4.2999999999883585,
+        3.3999999999650754,
+        4.399999999965075,
+        3.400000000023283,
+        3.6000000000349246,
+        3.5,
+        3.2000000000116415,
+        3.5,
+        3.400000000023283,
+        3.400000000023283,
+        3.8999999999650754,
+        3.2999999999883585,
+        3.7000000000116415,
+        3.7999999999883585,
+        3.7999999999883585,
+        4.2000000000116415
+      ],
+      "commitPaced": [
+        3.5,
+        4.2000000000116415,
+        3.8999999999650754,
+        3.900000000023283,
+        4.099999999976717,
+        5,
+        3.7999999999883585,
+        4,
+        4.399999999965075,
+        3.7999999999883585,
+        3.8999999999650754,
+        4.2999999999883585,
+        3.900000000023283,
+        3.8999999999650754,
+        4.599999999976717,
+        4.2000000000116415,
+        4.5,
+        4.2000000000116415,
+        5.099999999976717,
+        5.099999999976717,
+        4.2999999999883585,
+        4.7000000000116415,
+        4.5,
+        3.7000000000116415,
+        4.5,
+        4.7000000000116415,
+        4.7999999999883585,
+        4.900000000023283,
+        4.400000000023283,
+        3.6000000000349246
+      ],
+      "seed": {
+        "samples": [
+          146.20000000001164,
+          154,
+          149.79999999998836,
+          133.70000000001164,
+          138.29999999998836
+        ],
+        "chunkBytes": [
+          560,
+          262198,
+          262130,
+          262236,
+          262178,
+          262234,
+          262096,
+          260528,
+          454,
+          1799,
+          3632
+        ],
+        "totalBytes": 1840045,
+        "rows": 10000
+      },
+      "seedRows": {
+        "samples": [
+          170.60000000003492,
+          179.89999999996508,
+          183.70000000001164,
+          185.40000000002328,
+          184.5
+        ],
+        "rows": 10012,
+        "calls": 7,
+        "wireBytes": 1714753
+      },
+      "open": [
+        80.09999999997672,
+        112.10000000003492,
+        82.90000000002328,
+        125.79999999998836,
+        150.40000000002328,
+        105,
+        105.90000000002328,
+        76.79999999998836,
+        105.29999999998836,
+        89
+      ],
+      "pragmas": {
+        "journalMode": [
+          {
+            "journal_mode": "wal"
+          }
+        ],
+        "synchronous": [
+          {
+            "synchronous": 1
+          }
+        ]
+      },
+      "seedTrace": [
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 349.9000000000233,
+          "ms": 47.79999999998836,
+          "bytes": 560,
+          "values": [
+            [],
+            [
+              "todos/~2",
+              "todos/~3"
+            ],
+            [
+              "todos/~2",
+              "todos/~3"
+            ],
+            [
+              "todos/~2",
+              "todos/~3"
+            ],
+            [
+              "todos"
+            ]
+          ],
+          "sql": [
+            "SAVEPOINT nss_replace",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 376.4000000000233,
+          "ms": 51.699999999953434,
+          "bytes": 262198,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 393.9000000000233,
+          "ms": 52.79999999998836,
+          "bytes": 262130,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 410,
+          "ms": 61.90000000002328,
+          "bytes": 262236,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 438.79999999998836,
+          "ms": 51.29999999998836,
+          "bytes": 262178,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 461.4000000000233,
+          "ms": 47.09999999997672,
+          "bytes": 262234,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 477.9000000000233,
+          "ms": 48.59999999997672,
+          "bytes": 262096,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 491.79999999998836,
+          "ms": 51.20000000001164,
+          "bytes": 260528,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F",
+            "RELEASE nss_replace"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 547.2000000000116,
+          "ms": 3.5,
+          "bytes": 454,
+          "values": [
+            [
+              "[[\"todos/loaded\",null,\"true\"],[\"todos/seedVersion\",null,\"1\"]]"
+            ]
+          ],
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FRO"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 555.5999999999767,
+          "ms": 5.300000000046566,
+          "bytes": 1799,
+          "values": [
+            [
+              "users",
+              "s:u11",
+              1,
+              "{\"id\":\"u11\",\"name\":\"Ada Hopper\",\"email\":\"ada.hopper@example.dev\",\"hue\":89}",
+              null,
+              "users",
+              "s:u1",
+              2,
+              "{\"id\":\"u1\",\"name\":\"Ada Lovelace\",\"email\":\"ada.lovelace@example.dev\",\"hue\":216}",
+              null,
+              "users",
+              "s:u3",
+              3,
+              "{\"id\":\"u3\",\"name\":\"Alan Hamilton\",\"email\":\"alan.hamilton@example.dev\",\"hue\":306}",
+              null,
+              "users",
+              "s:u5",
+              4,
+              "{\"id\":\"u5\",\"name\":\"Barbara Turing\",\"email\":\"barbara.turing@example.dev\",\"hue\":62}",
+              null,
+              "users",
+              "s:u8",
+              5,
+              "{\"id\":\"u8\",\"name\":\"Dennis Hopper\",\"email\":\"dennis.hopper@example.dev\",\"hue\":224}",
+              null,
+              "users",
+              "s:u10",
+              6,
+              "{\"id\":\"u10\",\"name\":\"Edsger Ritchie\",\"email\":\"edsger.ritchie@example.dev\",\"hue\":170}",
+              null,
+              "users",
+              "s:u12",
+              7,
+              "{\"id\":\"u12\",\"name\":\"Grace Liskov\",\"email\":\"grace.liskov@example.dev\",\"hue\":317}",
+              null,
+              "users",
+              "s:u2",
+              8,
+              "{\"id\":\"u2\",\"name\":\"Grace Torvalds\",\"email\":\"grace.torvalds@example.dev\",\"hue\":161}",
+              null,
+              "users",
+              "s:u6",
+              9,
+              "{\"id\":\"u6\",\"name\":\"Ken Thompson\",\"email\":\"ken.thompson@example.dev\",\"hue\":189}",
+              null,
+              "users",
+              "s:u4",
+              10,
+              "{\"id\":\"u4\",\"name\":\"Linus Dijkstra\",\"email\":\"linus.dijkstra@example.dev\",\"hue\":241}",
+              null,
+              "users",
+              "s:u7",
+              11,
+              "{\"id\":\"u7\",\"name\":\"Margaret Perlman\",\"email\":\"margaret.perlman@example.dev\",\"hue\":98}",
+              null,
+              "users",
+              "s:u9",
+              12,
+              "{\"id\":\"u9\",\"name\":\"Radia Liskov\",\"email\":\"radia.liskov@example.dev\",\"hue\":311}",
+              null
+            ]
+          ],
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 565,
+          "ms": 4.2000000000116415,
+          "bytes": 3632,
+          "values": [
+            [
+              "notes/folders/#mvrkgvt9ogacfqlbk50",
+              "notes/folders",
+              4,
+              1,
+              "{\"id\":\"f1\",\"name\":\"Inbox\",\"notes\":[{\"id\":\"f1n1\",\"title\":\"Inbox note 1\",\"body\":\"Notes about reducer. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f1n2\",\"title\":\"Inbox note 2\",\"body\":\"Notes about devtools bridge. Notes about devtools bridge. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f1n3\",\"title\":\"Inbox note 3\",\"body\":\"Notes about selector. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f1n4\",\"title\":\"Inbox note 4\",\"body\":\"Notes about selector. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":true}]}]}",
+              "notes/folders/#mvrkgvt9ogacfqlbk51",
+              "notes/folders",
+              4,
+              2,
+              "{\"id\":\"f2\",\"name\":\"Design\",\"notes\":[{\"id\":\"f2n1\",\"title\":\"Design note 1\",\"body\":\"Notes about write queue. Notes about write queue. Notes about write queue. Notes about write queue. Notes about write queue. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f2n2\",\"title\":\"Design note 2\",\"body\":\"Notes about reducer. Notes about reducer. Notes about reducer. Notes about reducer. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f2n3\",\"title\":\"Design note 3\",\"body\":\"Notes about router state. Notes about router state. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f2n4\",\"title\":\"Design note 4\",\"body\":\"Notes about schema. Notes about schema. Notes about schema. Notes about schema. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":true}]}]}",
+              "notes/folders/#mvrkgvt9ogacfqlbk52",
+              "notes/folders",
+              4,
+              3,
+              "{\"id\":\"f3\",\"name\":\"Research\",\"notes\":[{\"id\":\"f3n1\",\"title\":\"Research note 1\",\"body\":\"Notes about reducer. Notes about reducer. Notes about reducer. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f3n2\",\"title\":\"Research note 2\",\"body\":\"Notes about effect. Notes about effect. Notes about effect. Notes about effect. Notes about effect. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":true}]},{\"id\":\"f3n3\",\"title\":\"Research note 3\",\"body\":\"Notes about schema. Notes about schema. Notes about schema. Notes about schema. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f3n4\",\"title\":\"Research note 4\",\"body\":\"Notes about devtools bridge. Notes about devtools bridge. Notes about devtools bridge. Notes about devtools bridge. Notes about devtools bridge. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]}]}"
+            ]
+          ],
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        }
+      ],
+      "memoryDiagnostic": {
+        "beforeSeed": 125.2880859375,
+        "afterSeed": 125.1630859375,
+        "afterShrink": 123.1630859375,
+        "cache": {
+          "cache_size": [
+            {
+              "cache_size": -2000
+            }
+          ],
+          "page_size": [
+            {
+              "page_size": 4096
+            }
+          ],
+          "page_count": [
+            {
+              "page_count": 1121
+            }
+          ],
+          "freelist_count": [
+            {
+              "freelist_count": 0
+            }
+          ]
+        },
+        "beforeRows": 127.4013671875,
+        "afterRows": 126.8935546875,
+        "beforeOnce": 118.00390625,
+        "afterOnce": 133.0810546875,
+        "onceSamples": [
+          {
+            "beforeOnce": 118.00390625,
+            "afterOnce": 133.0810546875
+          },
+          {
+            "beforeOnce": 118.3671875,
+            "afterOnce": 132.7412109375
+          },
+          {
+            "beforeOnce": 117.9892578125,
+            "afterOnce": 133.42578125
+          }
+        ]
+      }
+    },
+    {
+      "size": 50000,
+      "database": "ngrx-harness",
+      "commit": [
+        7.400000000023283,
+        3.3999999999650754,
+        3.099999999976717,
+        2.900000000023283,
+        2.7999999999883585,
+        3.400000000023283,
+        3.2999999999883585,
+        3.1000000000349246,
+        3.2999999999883585,
+        3.2000000000116415,
+        3.599999999976717,
+        3.1000000000349246,
+        3,
+        3.6000000000349246,
+        3.5,
+        3.3999999999650754,
+        3.6000000000349246,
+        3.599999999976717,
+        3.599999999976717,
+        3.5,
+        3.400000000023283,
+        3.300000000046566,
+        3.3999999999650754,
+        3.400000000023283,
+        2.8999999999650754,
+        4.100000000034925,
+        3.2000000000116415,
+        3.2999999999883585,
+        3.2999999999883585,
+        3.099999999976717,
+        3.5,
+        4.5,
+        3.5,
+        3.099999999976717,
+        3.7999999999883585,
+        3.300000000046566,
+        3.7999999999883585,
+        3.5,
+        3.599999999976717,
+        3.1000000000349246,
+        3.2999999999883585,
+        3.3999999999650754,
+        3.7000000000116415,
+        3.2999999999883585,
+        3.5,
+        3.300000000046566,
+        3.099999999976717,
+        3.2999999999883585,
+        3.1000000000349246,
+        4,
+        3.5,
+        3.5,
+        3.199999999953434,
+        3.400000000023283,
+        3.400000000023283,
+        4.899999999965075,
+        3.400000000023283,
+        3.2999999999883585,
+        3,
+        3.2000000000116415,
+        3.5,
+        2.8999999999650754,
+        3.2000000000116415,
+        3.2999999999883585,
+        3.1000000000349246,
+        3.199999999953434,
+        3.1000000000349246,
+        3.3999999999650754,
+        3.2999999999883585,
+        3.099999999976717,
+        3.800000000046566,
+        3.099999999976717,
+        3.400000000023283,
+        3.2999999999883585,
+        3.1000000000349246,
+        3.7999999999883585,
+        3.2000000000116415,
+        3.099999999976717,
+        3,
+        3.300000000046566,
+        3.099999999976717,
+        3.099999999976717,
+        2.8999999999650754,
+        3,
+        3.6000000000349246,
+        3.2000000000116415,
+        3.400000000023283,
+        3.099999999976717,
+        3.400000000023283,
+        3.099999999976717,
+        2.900000000023283,
+        3,
+        3.199999999953434,
+        2.900000000023283,
+        2.900000000023283,
+        2.7999999999883585,
+        3.2000000000116415,
+        3.099999999976717,
+        3.1000000000349246,
+        3.2999999999883585
+      ],
+      "commitPaced": [
+        3.5,
+        3.7999999999883585,
+        4.5,
+        3.8999999999650754,
+        3.2999999999883585,
+        4.300000000046566,
+        3.400000000023283,
+        3.5,
+        3.400000000023283,
+        3.400000000023283,
+        3.699999999953434,
+        3.7999999999883585,
+        3.5,
+        3.3999999999650754,
+        3.7999999999883585,
+        3.599999999976717,
+        3.2999999999883585,
+        3.599999999976717,
+        3.599999999976717,
+        3.400000000023283,
+        4.400000000023283,
+        4.300000000046566,
+        3.5,
+        4.5,
+        4.2999999999883585,
+        3.6000000000349246,
+        5.5,
+        4.099999999976717,
+        4.2000000000116415,
+        4.7999999999883585
+      ],
+      "seed": {
+        "samples": [
+          545.7000000000116,
+          610.1000000000349,
+          542.6000000000349,
+          555.7999999999884,
+          840.5
+        ],
+        "chunkBytes": [
+          560,
+          262198,
+          262130,
+          262236,
+          262178,
+          262234,
+          262096,
+          262146,
+          262105,
+          262110,
+          262232,
+          262110,
+          262138,
+          262226,
+          262153,
+          262134,
+          262118,
+          262153,
+          262156,
+          262069,
+          262154,
+          262227,
+          262088,
+          262214,
+          262118,
+          262104,
+          262184,
+          262137,
+          262112,
+          262102,
+          262234,
+          262063,
+          262107,
+          262124,
+          262181,
+          262221,
+          169579,
+          2553,
+          3650
+        ],
+        "totalBytes": 9351634,
+        "rows": 50000
+      },
+      "seedRows": {
+        "samples": [
+          886.3000000000466,
+          833.4000000000233,
+          848.4000000000233,
+          842.2999999999884,
+          841.9000000000233
+        ],
+        "rows": 50012,
+        "calls": 34,
+        "wireBytes": 8700713
+      },
+      "open": [
+        78.09999999997672,
+        79.29999999998836,
+        75.09999999997672,
+        73.79999999998836,
+        73.80000000004657,
+        85.5,
+        74.79999999998836,
+        82.20000000001164,
+        79.70000000001164,
+        79.5
+      ],
+      "pragmas": {
+        "journalMode": [
+          {
+            "journal_mode": "wal"
+          }
+        ],
+        "synchronous": [
+          {
+            "synchronous": 1
+          }
+        ]
+      },
+      "seedTrace": [
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 401.9000000000233,
+          "ms": 64.29999999998836,
+          "bytes": 560,
+          "values": [
+            [],
+            [
+              "todos/~2",
+              "todos/~3"
+            ],
+            [
+              "todos/~2",
+              "todos/~3"
+            ],
+            [
+              "todos/~2",
+              "todos/~3"
+            ],
+            [
+              "todos"
+            ]
+          ],
+          "sql": [
+            "SAVEPOINT nss_replace",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 443.70000000001164,
+          "ms": 63.40000000002328,
+          "bytes": 262198,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 460.4000000000233,
+          "ms": 79.59999999997672,
+          "bytes": 262130,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 485.20000000001164,
+          "ms": 89.40000000002328,
+          "bytes": 262236,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 521.2000000000116,
+          "ms": 65,
+          "bytes": 262178,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 550.7000000000116,
+          "ms": 54.100000000034925,
+          "bytes": 262234,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 582.9000000000233,
+          "ms": 40.40000000002328,
+          "bytes": 262096,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 597.5,
+          "ms": 44,
+          "bytes": 262146,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 612.5,
+          "ms": 61.600000000034925,
+          "bytes": 262105,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 634.3000000000466,
+          "ms": 62.29999999998836,
+          "bytes": 262110,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 657.9000000000233,
+          "ms": 57.79999999998836,
+          "bytes": 262232,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 683.9000000000233,
+          "ms": 51.29999999998836,
+          "bytes": 262110,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 705.5,
+          "ms": 49,
+          "bytes": 262138,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 727.1000000000349,
+          "ms": 50.70000000001164,
+          "bytes": 262226,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 745.9000000000233,
+          "ms": 61.20000000001164,
+          "bytes": 262153,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 764.6000000000349,
+          "ms": 60.79999999998836,
+          "bytes": 262134,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 781.5,
+          "ms": 61.100000000034925,
+          "bytes": 262118,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 814,
+          "ms": 47.90000000002328,
+          "bytes": 262153,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 832.8000000000466,
+          "ms": 47.699999999953434,
+          "bytes": 262156,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 853,
+          "ms": 53.5,
+          "bytes": 262069,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 871.1000000000349,
+          "ms": 58.399999999965075,
+          "bytes": 262154,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 890.1000000000349,
+          "ms": 73.20000000001164,
+          "bytes": 262227,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 918.2000000000116,
+          "ms": 57.100000000034925,
+          "bytes": 262088,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 941.1000000000349,
+          "ms": 52.79999999998836,
+          "bytes": 262214,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 972.1000000000349,
+          "ms": 49,
+          "bytes": 262118,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 986.4000000000233,
+          "ms": 66.5,
+          "bytes": 262104,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1006.3000000000466,
+          "ms": 91.5,
+          "bytes": 262184,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1046.5,
+          "ms": 64,
+          "bytes": 262137,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1093.600000000035,
+          "ms": 45.20000000001164,
+          "bytes": 262112,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1107.2000000000116,
+          "ms": 63.100000000034925,
+          "bytes": 262102,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1121.7000000000116,
+          "ms": 63.100000000034925,
+          "bytes": 262234,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1141,
+          "ms": 71.90000000002328,
+          "bytes": 262063,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1180.7000000000116,
+          "ms": 48,
+          "bytes": 262107,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1196.5,
+          "ms": 49.5,
+          "bytes": 262124,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1221.4000000000233,
+          "ms": 51.90000000002328,
+          "bytes": 262181,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1233.2000000000116,
+          "ms": 48.20000000001164,
+          "bytes": 262221,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1247.600000000035,
+          "ms": 44.79999999998836,
+          "bytes": 169579,
+          "sql": [
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) SELECT ?,json_extract(value,'$[0]'),json_extract(value,'$[1]'),COALESCE(value -> '$[2][0]',json_extract(value,'$[2]'),''),json_extract(value,'$[3]') F",
+            "RELEASE nss_replace"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1296.3000000000466,
+          "ms": 8.099999999976717,
+          "bytes": 2553,
+          "values": [
+            [
+              "[[\"todos/loaded\",null,\"true\"],[\"todos/seedVersion\",null,\"1\"]]"
+            ],
+            [
+              "users/~2",
+              "users/~3"
+            ],
+            [
+              "users/~2",
+              "users/~3"
+            ],
+            [
+              "users/~2",
+              "users/~3"
+            ],
+            [
+              "users"
+            ],
+            [
+              "users",
+              "s:u11",
+              1,
+              "{\"id\":\"u11\",\"name\":\"Ada Hopper\",\"email\":\"ada.hopper@example.dev\",\"hue\":89}",
+              null,
+              "users",
+              "s:u1",
+              2,
+              "{\"id\":\"u1\",\"name\":\"Ada Lovelace\",\"email\":\"ada.lovelace@example.dev\",\"hue\":216}",
+              null,
+              "users",
+              "s:u3",
+              3,
+              "{\"id\":\"u3\",\"name\":\"Alan Hamilton\",\"email\":\"alan.hamilton@example.dev\",\"hue\":306}",
+              null,
+              "users",
+              "s:u5",
+              4,
+              "{\"id\":\"u5\",\"name\":\"Barbara Turing\",\"email\":\"barbara.turing@example.dev\",\"hue\":62}",
+              null,
+              "users",
+              "s:u8",
+              5,
+              "{\"id\":\"u8\",\"name\":\"Dennis Hopper\",\"email\":\"dennis.hopper@example.dev\",\"hue\":224}",
+              null,
+              "users",
+              "s:u10",
+              6,
+              "{\"id\":\"u10\",\"name\":\"Edsger Ritchie\",\"email\":\"edsger.ritchie@example.dev\",\"hue\":170}",
+              null,
+              "users",
+              "s:u12",
+              7,
+              "{\"id\":\"u12\",\"name\":\"Grace Liskov\",\"email\":\"grace.liskov@example.dev\",\"hue\":317}",
+              null,
+              "users",
+              "s:u2",
+              8,
+              "{\"id\":\"u2\",\"name\":\"Grace Torvalds\",\"email\":\"grace.torvalds@example.dev\",\"hue\":161}",
+              null,
+              "users",
+              "s:u6",
+              9,
+              "{\"id\":\"u6\",\"name\":\"Ken Thompson\",\"email\":\"ken.thompson@example.dev\",\"hue\":189}",
+              null,
+              "users",
+              "s:u4",
+              10,
+              "{\"id\":\"u4\",\"name\":\"Linus Dijkstra\",\"email\":\"linus.dijkstra@example.dev\",\"hue\":241}",
+              null,
+              "users",
+              "s:u7",
+              11,
+              "{\"id\":\"u7\",\"name\":\"Margaret Perlman\",\"email\":\"margaret.perlman@example.dev\",\"hue\":98}",
+              null,
+              "users",
+              "s:u9",
+              12,
+              "{\"id\":\"u9\",\"name\":\"Radia Liskov\",\"email\":\"radia.liskov@example.dev\",\"hue\":311}",
+              null
+            ]
+          ],
+          "sql": [
+            "UPDATE nss_node SET kind = COALESCE(u.kind, nss_node.kind), value = u.value FROM (SELECT json_extract(value,'$[0]') AS path, json_extract(value,'$[1]') AS kind, json_extract(value,'$[2]') AS value FRO",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 1307.3000000000466,
+          "ms": 3.099999999976717,
+          "bytes": 3650,
+          "values": [
+            [
+              "notes/folders/#mvrkigk3a3fgp01odsp0",
+              "notes/folders",
+              4,
+              1,
+              "{\"id\":\"f1\",\"name\":\"Inbox\",\"notes\":[{\"id\":\"f1n1\",\"title\":\"Inbox note 1\",\"body\":\"Notes about row cap. Notes about row cap. Notes about row cap. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f1n2\",\"title\":\"Inbox note 2\",\"body\":\"Notes about effect. Notes about effect. Notes about effect. Notes about effect. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f1n3\",\"title\":\"Inbox note 3\",\"body\":\"Notes about CTE reader. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":true}]},{\"id\":\"f1n4\",\"title\":\"Inbox note 4\",\"body\":\"Notes about CTE reader. Notes about CTE reader. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":false}]}]}",
+              "notes/folders/#mvrkigk3a3fgp01odsp1",
+              "notes/folders",
+              4,
+              2,
+              "{\"id\":\"f2\",\"name\":\"Design\",\"notes\":[{\"id\":\"f2n1\",\"title\":\"Design note 1\",\"body\":\"Notes about reducer. Notes about reducer. Notes about reducer. Notes about reducer. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f2n2\",\"title\":\"Design note 2\",\"body\":\"Notes about entity adapter. Notes about entity adapter. Notes about entity adapter. Notes about entity adapter. Notes about entity adapter. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f2n3\",\"title\":\"Design note 3\",\"body\":\"Notes about selector. Notes about selector. Notes about selector. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]},{\"id\":\"f2n4\",\"title\":\"Design note 4\",\"body\":\"Notes about router state. Notes about router state. Notes about router state. Notes about router state. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":true}]}]}",
+              "notes/folders/#mvrkigk3a3fgp01odsp2",
+              "notes/folders",
+              4,
+              3,
+              "{\"id\":\"f3\",\"name\":\"Research\",\"notes\":[{\"id\":\"f3n1\",\"title\":\"Research note 1\",\"body\":\"Notes about reducer. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":true}]},{\"id\":\"f3n2\",\"title\":\"Research note 2\",\"body\":\"Notes about entity adapter. Notes about entity adapter. Notes about entity adapter. Notes about entity adapter. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":true}]},{\"id\":\"f3n3\",\"title\":\"Research note 3\",\"body\":\"Notes about reducer. Notes about reducer. Notes about reducer. Notes about reducer. Notes about reducer. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":false},{\"text\":\"Step 2\",\"done\":true},{\"text\":\"Step 3\",\"done\":true}]},{\"id\":\"f3n4\",\"title\":\"Research note 4\",\"body\":\"Notes about row cap. \",\"checklist\":[{\"text\":\"Step 1\",\"done\":true},{\"text\":\"Step 2\",\"done\":false},{\"text\":\"Step 3\",\"done\":false}]}]}"
+            ]
+          ],
+          "sql": [
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        }
+      ],
+      "memoryDiagnostic": {
+        "beforeSeed": 125.0205078125,
+        "afterSeed": 132.1611328125,
+        "afterShrink": 125.0439453125,
+        "cache": {
+          "cache_size": [
+            {
+              "cache_size": -2000
+            }
+          ],
+          "page_size": [
+            {
+              "page_size": 4096
+            }
+          ],
+          "page_count": [
+            {
+              "page_count": 5672
+            }
+          ],
+          "freelist_count": [
+            {
+              "freelist_count": 0
+            }
+          ]
+        },
+        "beforeRows": 127.0009765625,
+        "afterRows": 130.2822265625,
+        "beforeOnce": 118.5908203125,
+        "afterOnce": 129.447265625,
+        "onceSamples": [
+          {
+            "beforeOnce": 118.5908203125,
+            "afterOnce": 129.447265625
+          },
+          {
+            "beforeOnce": 119.044921875,
+            "afterOnce": 127.1904296875
+          },
+          {
+            "beforeOnce": 118.4794921875,
+            "afterOnce": 128.150390625
+          }
+        ]
+      }
+    }
+  ]
+}

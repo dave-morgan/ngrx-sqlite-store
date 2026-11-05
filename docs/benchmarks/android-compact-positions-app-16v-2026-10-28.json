@@ -1,0 +1,902 @@
+{
+  "diagnosticOnly": true,
+  "manifest": {
+    "diagnosticOnly": true,
+    "legs": [
+      {
+        "hash": "8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5",
+        "apk": ".tmp/16r-apks/sqlite.apk",
+        "boot": "d3b4476c-bbf4-4dd6-be02-cca7804dfd40",
+        "leg": "A1"
+      },
+      {
+        "hash": "fa889c928ee7369f49ab79297aaf7462bbbc6c613dff7b8c4cc317e2b1a92752",
+        "apk": ".tmp/16v-apks/sqlite.apk",
+        "boot": "a602b9b0-22c4-43d1-90f0-2c7670d9e273",
+        "leg": "B1"
+      },
+      {
+        "hash": "fa889c928ee7369f49ab79297aaf7462bbbc6c613dff7b8c4cc317e2b1a92752",
+        "apk": ".tmp/16v-apks/sqlite.apk",
+        "boot": "d8aab1c3-d688-468f-a63c-3ff3477b7f9c",
+        "leg": "B2"
+      },
+      {
+        "hash": "8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5",
+        "apk": ".tmp/16r-apks/sqlite.apk",
+        "boot": "708b4209-e026-46b4-adab-6fe5e40e26cf",
+        "leg": "A2"
+      }
+    ],
+    "session": "16v-diagnostic-1793150027",
+    "hashes": {
+      "candidate": "fa889c928ee7369f49ab79297aaf7462bbbc6c613dff7b8c4cc317e2b1a92752",
+      "baseline": "8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5",
+      "listBaseline": "6deb3638ed9d1f63cce4e7b14c4009e99f4fffd44de16f68941273c5ff3ffeff"
+    },
+    "protocol": "K5000 3x40 flat actions; aggregate heap+backing counters/PSS only; no heap snapshots/CPU profiler"
+  },
+  "guard": [
+    {
+      "side": "A",
+      "round": 1,
+      "file": ".tmp/lp15-A-1.json",
+      "sha256": "cd1abcdcdc6481ddc4f1b6a29f3a2504a33bd6d95e6375847a9b2232d593492d",
+      "readyMs": 1493.5999999999767,
+      "calls": 68
+    },
+    {
+      "side": "A",
+      "round": 2,
+      "file": ".tmp/lp15-A-2.json",
+      "sha256": "580a54c8a6993d5ddc31f8814be2078b32db49aa108411f6c6378337a051a279",
+      "readyMs": 1487.7000000000698,
+      "calls": 68
+    },
+    {
+      "side": "A",
+      "round": 3,
+      "file": ".tmp/lp15-A-3.json",
+      "sha256": "c09fd20d1527707dbe4745a762af380359710619424cdbce9879ae46d1cc965e",
+      "readyMs": 1487.1999999999534,
+      "calls": 68
+    },
+    {
+      "side": "B",
+      "round": 1,
+      "file": ".tmp/lp15-B-1.json",
+      "sha256": "82afe49173269b1548197800dcb31dcae77573cbaf43d2a636b9cefa85e56818",
+      "readyMs": 1440.3000000000466,
+      "calls": 69
+    },
+    {
+      "side": "B",
+      "round": 2,
+      "file": ".tmp/lp15-B-2.json",
+      "sha256": "93d3e09d6cbc922db030f8d88f92765b322c14992314c7230efb3cf30b457ab4",
+      "readyMs": 1504.8000000000466,
+      "calls": 69
+    },
+    {
+      "side": "B",
+      "round": 3,
+      "file": ".tmp/lp15-B-3.json",
+      "sha256": "98a9a10fdda398e123a8bd6967f588c391777b565fa071599bf9be9c10174d4a",
+      "readyMs": 1477.8000000000466,
+      "calls": 69
+    }
+  ],
+  "guardSummary": [
+    {
+      "side": "A",
+      "n": 3,
+      "mean": 1489.5,
+      "sd": 3.5594943460955113,
+      "p50": 1487.7000000000698,
+      "p95": 1493.5999999999767
+    },
+    {
+      "side": "B",
+      "n": 3,
+      "mean": 1474.3000000000466,
+      "sd": 32.39212867349104,
+      "p50": 1477.8000000000466,
+      "p95": 1504.8000000000466
+    }
+  ],
+  "flat": [
+    {
+      "leg": "A1",
+      "file": ".tmp/16v-flat-A1.json",
+      "sha256": "c5bb6b9bd56a3c5c02c2b8db7c40df73907553a199d39cbd3ee6baa6a3f167f6",
+      "installedApkHash": "8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5",
+      "boot": "d3b4476c-bbf4-4dd6-be02-cca7804dfd40",
+      "scenarios": {
+        "flatSetKey": {
+          "emit": {
+            "n": 40,
+            "mean": 11.44000000000051,
+            "sd": 5.459163080406457,
+            "p50": 9.599999999991269,
+            "p95": 25.19999999999709
+          },
+          "dom": {
+            "n": 40,
+            "mean": 12.045000000000801,
+            "sd": 5.445908838471431,
+            "p50": 10.19999999999709,
+            "p95": 25.5
+          },
+          "native": {
+            "n": 40,
+            "mean": 8.290000000000145,
+            "sd": 5.290669096360188,
+            "p50": 6.099999999991269,
+            "p95": 22.5
+          },
+          "before": {
+            "heap": {
+              "usedSize": 10123356,
+              "totalSize": 10817536,
+              "embedderHeapUsedSize": 551536,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 10654675,
+            "pss": {
+              "appMb": 135.1513671875,
+              "rendererMb": 106.2392578125,
+              "totalMb": 241.390625,
+              "rendererPids": [
+                "3712"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10235956,
+              "totalSize": 10817536,
+              "embedderHeapUsedSize": 550832,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 10767275,
+            "pss": {
+              "appMb": 132.328125,
+              "rendererMb": 109.2412109375,
+              "totalMb": 241.5693359375,
+              "rendererPids": [
+                "3712"
+              ]
+            }
+          }
+        },
+        "flatSetKeys": {
+          "emit": {
+            "n": 40,
+            "mean": 13.632500000002619,
+            "sd": 7.035528427659503,
+            "p50": 10.69999999999709,
+            "p95": 30
+          },
+          "dom": {
+            "n": 40,
+            "mean": 14.227500000001601,
+            "sd": 7.156599518392783,
+            "p50": 11.200000000011642,
+            "p95": 30.30000000000291
+          },
+          "native": {
+            "n": 40,
+            "mean": 9.965000000001236,
+            "sd": 7.113207289872539,
+            "p50": 7.19999999999709,
+            "p95": 27.19999999999709
+          },
+          "before": {
+            "heap": {
+              "usedSize": 10267100,
+              "totalSize": 10817536,
+              "embedderHeapUsedSize": 537200,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 10798419,
+            "pss": {
+              "appMb": 131.931640625,
+              "rendererMb": 109.2509765625,
+              "totalMb": 241.1826171875,
+              "rendererPids": [
+                "3712"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10321812,
+              "totalSize": 11079680,
+              "embedderHeapUsedSize": 550432,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 10853131,
+            "pss": {
+              "appMb": 132.6201171875,
+              "rendererMb": 109.439453125,
+              "totalMb": 242.0595703125,
+              "rendererPids": [
+                "3712"
+              ]
+            }
+          }
+        },
+        "flatReplace": {
+          "emit": {
+            "n": 40,
+            "mean": 14.704999999999563,
+            "sd": 7.9058222621703464,
+            "p50": 12.69999999999709,
+            "p95": 29.10000000000582
+          },
+          "dom": {
+            "n": 40,
+            "mean": 15.362500000001091,
+            "sd": 7.894778784188956,
+            "p50": 13.39999999999418,
+            "p95": 29.5
+          },
+          "native": {
+            "n": 40,
+            "mean": 8.960000000000946,
+            "sd": 7.817134369036372,
+            "p50": 6.899999999994179,
+            "p95": 24
+          },
+          "before": {
+            "heap": {
+              "usedSize": 10491692,
+              "totalSize": 11079680,
+              "embedderHeapUsedSize": 536232,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 11023011,
+            "pss": {
+              "appMb": 132.3818359375,
+              "rendererMb": 109.572265625,
+              "totalMb": 241.9541015625,
+              "rendererPids": [
+                "3712"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10640424,
+              "totalSize": 11341824,
+              "embedderHeapUsedSize": 537392,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 11171743,
+            "pss": {
+              "appMb": 133.322265625,
+              "rendererMb": 109.6708984375,
+              "totalMb": 242.9931640625,
+              "rendererPids": [
+                "3712"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "leg": "B1",
+      "file": ".tmp/16v-flat-B1.json",
+      "sha256": "e6da07c1a356a9e00c6fd227f24df9f2bf92b8647d1ec0a8b4fda5066dd58c1b",
+      "installedApkHash": "fa889c928ee7369f49ab79297aaf7462bbbc6c613dff7b8c4cc317e2b1a92752",
+      "boot": "a602b9b0-22c4-43d1-90f0-2c7670d9e273",
+      "scenarios": {
+        "flatSetKey": {
+          "emit": {
+            "n": 40,
+            "mean": 11.4724999999984,
+            "sd": 6.265697722418902,
+            "p50": 9.400000000008731,
+            "p95": 22.19999999999709
+          },
+          "dom": {
+            "n": 40,
+            "mean": 12.297499999999127,
+            "sd": 6.332354344039236,
+            "p50": 10.099999999991269,
+            "p95": 22.80000000000291
+          },
+          "native": {
+            "n": 40,
+            "mean": 7.882499999998617,
+            "sd": 5.256004502786691,
+            "p50": 6,
+            "p95": 16.19999999999709
+          },
+          "before": {
+            "heap": {
+              "usedSize": 9954096,
+              "totalSize": 10555392,
+              "embedderHeapUsedSize": 552624,
+              "backingStorageSize": 652449
+            },
+            "usedPlusBackingBytes": 10606545,
+            "pss": {
+              "appMb": 138.1044921875,
+              "rendererMb": 106.7470703125,
+              "totalMb": 244.8515625,
+              "rendererPids": [
+                "3752"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10067668,
+              "totalSize": 10817536,
+              "embedderHeapUsedSize": 551920,
+              "backingStorageSize": 652449
+            },
+            "usedPlusBackingBytes": 10720117,
+            "pss": {
+              "appMb": 135.2734375,
+              "rendererMb": 110.1513671875,
+              "totalMb": 245.4248046875,
+              "rendererPids": [
+                "3752"
+              ]
+            }
+          }
+        },
+        "flatSetKeys": {
+          "emit": {
+            "n": 40,
+            "mean": 11.59250000000029,
+            "sd": 4.368675648647841,
+            "p50": 10.19999999999709,
+            "p95": 19.30000000000291
+          },
+          "dom": {
+            "n": 40,
+            "mean": 12.257500000000073,
+            "sd": 4.331570894058115,
+            "p50": 10.89999999999418,
+            "p95": 19.59999999999127
+          },
+          "native": {
+            "n": 40,
+            "mean": 7.6199999999993455,
+            "sd": 3.537506002530426,
+            "p50": 6.399999999994179,
+            "p95": 14.599999999991269
+          },
+          "before": {
+            "heap": {
+              "usedSize": 10102272,
+              "totalSize": 10817536,
+              "embedderHeapUsedSize": 538288,
+              "backingStorageSize": 652449
+            },
+            "usedPlusBackingBytes": 10754721,
+            "pss": {
+              "appMb": 134.888671875,
+              "rendererMb": 110.1748046875,
+              "totalMb": 245.0634765625,
+              "rendererPids": [
+                "3752"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10154892,
+              "totalSize": 10817536,
+              "embedderHeapUsedSize": 551520,
+              "backingStorageSize": 652449
+            },
+            "usedPlusBackingBytes": 10807341,
+            "pss": {
+              "appMb": 135.5546875,
+              "rendererMb": 110.345703125,
+              "totalMb": 245.900390625,
+              "rendererPids": [
+                "3752"
+              ]
+            }
+          }
+        },
+        "flatReplace": {
+          "emit": {
+            "n": 40,
+            "mean": 15.319999999998254,
+            "sd": 8.937853812254719,
+            "p50": 12.60000000000582,
+            "p95": 39.19999999999709
+          },
+          "dom": {
+            "n": 40,
+            "mean": 16.022499999998765,
+            "sd": 9.018769246296504,
+            "p50": 13,
+            "p95": 40.10000000000582
+          },
+          "native": {
+            "n": 40,
+            "mean": 9.770000000000437,
+            "sd": 8.522465034040117,
+            "p50": 7.2000000000116415,
+            "p95": 30.30000000000291
+          },
+          "before": {
+            "heap": {
+              "usedSize": 10327024,
+              "totalSize": 10817536,
+              "embedderHeapUsedSize": 537320,
+              "backingStorageSize": 652449
+            },
+            "usedPlusBackingBytes": 10979473,
+            "pss": {
+              "appMb": 134.33984375,
+              "rendererMb": 110.98046875,
+              "totalMb": 245.3203125,
+              "rendererPids": [
+                "3752"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10479348,
+              "totalSize": 11079680,
+              "embedderHeapUsedSize": 538480,
+              "backingStorageSize": 652449
+            },
+            "usedPlusBackingBytes": 11131797,
+            "pss": {
+              "appMb": 136.87109375,
+              "rendererMb": 110.9580078125,
+              "totalMb": 247.8291015625,
+              "rendererPids": [
+                "3752"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "leg": "B2",
+      "file": ".tmp/16v-flat-B2.json",
+      "sha256": "cb3887e8f1574f43100556448d63dc0c386c9ebea42d7a0ff1eceaddfbed7435",
+      "installedApkHash": "fa889c928ee7369f49ab79297aaf7462bbbc6c613dff7b8c4cc317e2b1a92752",
+      "boot": "d8aab1c3-d688-468f-a63c-3ff3477b7f9c",
+      "scenarios": {
+        "flatSetKey": {
+          "emit": {
+            "n": 40,
+            "mean": 11.110000000000582,
+            "sd": 4.248486910140996,
+            "p50": 9.60000000000582,
+            "p95": 18.59999999999127
+          },
+          "dom": {
+            "n": 40,
+            "mean": 11.937500000000364,
+            "sd": 4.312634241686463,
+            "p50": 10.69999999999709,
+            "p95": 19.40000000000873
+          },
+          "native": {
+            "n": 40,
+            "mean": 7.472500000000946,
+            "sd": 2.962845782048026,
+            "p50": 6.400000000008731,
+            "p95": 13.700000000011642
+          },
+          "before": {
+            "heap": {
+              "usedSize": 9954464,
+              "totalSize": 10555392,
+              "embedderHeapUsedSize": 549360,
+              "backingStorageSize": 652454
+            },
+            "usedPlusBackingBytes": 10606918,
+            "pss": {
+              "appMb": 133.244140625,
+              "rendererMb": 106.3447265625,
+              "totalMb": 239.5888671875,
+              "rendererPids": [
+                "3728"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10066176,
+              "totalSize": 10817536,
+              "embedderHeapUsedSize": 548656,
+              "backingStorageSize": 652454
+            },
+            "usedPlusBackingBytes": 10718630,
+            "pss": {
+              "appMb": 128.314453125,
+              "rendererMb": 107.0419921875,
+              "totalMb": 235.3564453125,
+              "rendererPids": [
+                "3728"
+              ]
+            }
+          }
+        },
+        "flatSetKeys": {
+          "emit": {
+            "n": 40,
+            "mean": 11.67750000000051,
+            "sd": 7.5997465376096205,
+            "p50": 9.5,
+            "p95": 29.5
+          },
+          "dom": {
+            "n": 40,
+            "mean": 12.252500000000873,
+            "sd": 7.546029266595953,
+            "p50": 10.30000000000291,
+            "p95": 30
+          },
+          "native": {
+            "n": 40,
+            "mean": 8.400000000001091,
+            "sd": 7.59821166543945,
+            "p50": 5.69999999999709,
+            "p95": 25.69999999999709
+          },
+          "before": {
+            "heap": {
+              "usedSize": 10100512,
+              "totalSize": 10817536,
+              "embedderHeapUsedSize": 535024,
+              "backingStorageSize": 652454
+            },
+            "usedPlusBackingBytes": 10752966,
+            "pss": {
+              "appMb": 127.90625,
+              "rendererMb": 107.0830078125,
+              "totalMb": 234.9892578125,
+              "rendererPids": [
+                "3728"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10153324,
+              "totalSize": 10817536,
+              "embedderHeapUsedSize": 548256,
+              "backingStorageSize": 652454
+            },
+            "usedPlusBackingBytes": 10805778,
+            "pss": {
+              "appMb": 128.5908203125,
+              "rendererMb": 107.0810546875,
+              "totalMb": 235.671875,
+              "rendererPids": [
+                "3728"
+              ]
+            }
+          }
+        },
+        "flatReplace": {
+          "emit": {
+            "n": 40,
+            "mean": 18.087500000000365,
+            "sd": 9.225304873009927,
+            "p50": 15.60000000000582,
+            "p95": 43.39999999999418
+          },
+          "dom": {
+            "n": 40,
+            "mean": 19.407499999999708,
+            "sd": 9.994367323904028,
+            "p50": 16,
+            "p95": 45.59999999999127
+          },
+          "native": {
+            "n": 40,
+            "mean": 10.8625,
+            "sd": 7.985072210387727,
+            "p50": 8.400000000008731,
+            "p95": 30.30000000000291
+          },
+          "before": {
+            "heap": {
+              "usedSize": 10325456,
+              "totalSize": 10817536,
+              "embedderHeapUsedSize": 534056,
+              "backingStorageSize": 652449
+            },
+            "usedPlusBackingBytes": 10977905,
+            "pss": {
+              "appMb": 128.435546875,
+              "rendererMb": 107.4482421875,
+              "totalMb": 235.8837890625,
+              "rendererPids": [
+                "3728"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10477788,
+              "totalSize": 11079680,
+              "embedderHeapUsedSize": 535224,
+              "backingStorageSize": 652449
+            },
+            "usedPlusBackingBytes": 11130237,
+            "pss": {
+              "appMb": 129.357421875,
+              "rendererMb": 107.5498046875,
+              "totalMb": 236.9072265625,
+              "rendererPids": [
+                "3728"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "leg": "A2",
+      "file": ".tmp/16v-flat-A2.json",
+      "sha256": "d6739f5547253048a90dde5b667858ba16fd5dc89c907afa331381121f601efb",
+      "installedApkHash": "8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5",
+      "boot": "708b4209-e026-46b4-adab-6fe5e40e26cf",
+      "scenarios": {
+        "flatSetKey": {
+          "emit": {
+            "n": 40,
+            "mean": 11.770000000000437,
+            "sd": 4.660703149327487,
+            "p50": 10.900000000008731,
+            "p95": 23.30000000000291
+          },
+          "dom": {
+            "n": 40,
+            "mean": 12.477499999999418,
+            "sd": 4.932024471210592,
+            "p50": 11.5,
+            "p95": 23.69999999999709
+          },
+          "native": {
+            "n": 40,
+            "mean": 8.315000000001238,
+            "sd": 4.41138096873166,
+            "p50": 6.600000000005821,
+            "p95": 20.20000000001164
+          },
+          "before": {
+            "heap": {
+              "usedSize": 10133588,
+              "totalSize": 10555392,
+              "embedderHeapUsedSize": 553168,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 10664907,
+            "pss": {
+              "appMb": 135.48046875,
+              "rendererMb": 106.4326171875,
+              "totalMb": 241.9130859375,
+              "rendererPids": [
+                "3725"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10248908,
+              "totalSize": 10555392,
+              "embedderHeapUsedSize": 552464,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 10780227,
+            "pss": {
+              "appMb": 132.69140625,
+              "rendererMb": 109.7041015625,
+              "totalMb": 242.3955078125,
+              "rendererPids": [
+                "3725"
+              ]
+            }
+          }
+        },
+        "flatSetKeys": {
+          "emit": {
+            "n": 40,
+            "mean": 13.55500000000102,
+            "sd": 8.05474696796587,
+            "p50": 11.39999999999418,
+            "p95": 36.39999999999418
+          },
+          "dom": {
+            "n": 40,
+            "mean": 14.100000000000364,
+            "sd": 8.032849224694628,
+            "p50": 11.80000000000291,
+            "p95": 36.89999999999418
+          },
+          "native": {
+            "n": 40,
+            "mean": 9.770000000001165,
+            "sd": 7.724327204955752,
+            "p50": 8,
+            "p95": 30.60000000000582
+          },
+          "before": {
+            "heap": {
+              "usedSize": 10282436,
+              "totalSize": 10555392,
+              "embedderHeapUsedSize": 538832,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 10813755,
+            "pss": {
+              "appMb": 132.33203125,
+              "rendererMb": 109.6201171875,
+              "totalMb": 241.9521484375,
+              "rendererPids": [
+                "3725"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10334968,
+              "totalSize": 11079680,
+              "embedderHeapUsedSize": 552064,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 10866287,
+            "pss": {
+              "appMb": 133.0283203125,
+              "rendererMb": 109.9375,
+              "totalMb": 242.9658203125,
+              "rendererPids": [
+                "3725"
+              ]
+            }
+          }
+        },
+        "flatReplace": {
+          "emit": {
+            "n": 40,
+            "mean": 15.06250000000109,
+            "sd": 8.878487036159964,
+            "p50": 13,
+            "p95": 26.59999999999127
+          },
+          "dom": {
+            "n": 40,
+            "mean": 15.55500000000102,
+            "sd": 8.889289146970711,
+            "p50": 13.5,
+            "p95": 28.19999999999709
+          },
+          "native": {
+            "n": 40,
+            "mean": 9.3950000000008,
+            "sd": 8.625185245129764,
+            "p50": 7.399999999994179,
+            "p95": 17.30000000000291
+          },
+          "before": {
+            "heap": {
+              "usedSize": 10506884,
+              "totalSize": 11079680,
+              "embedderHeapUsedSize": 537864,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 11038203,
+            "pss": {
+              "appMb": 132.802734375,
+              "rendererMb": 110.14453125,
+              "totalMb": 242.947265625,
+              "rendererPids": [
+                "3725"
+              ]
+            }
+          },
+          "after": {
+            "heap": {
+              "usedSize": 10655728,
+              "totalSize": 11341824,
+              "embedderHeapUsedSize": 539032,
+              "backingStorageSize": 531319
+            },
+            "usedPlusBackingBytes": 11187047,
+            "pss": {
+              "appMb": 133.763671875,
+              "rendererMb": 110.23828125,
+              "totalMb": 244.001953125,
+              "rendererPids": [
+                "3725"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "baseline": "A1",
+      "candidate": "B1",
+      "scenario": "flatSetKey",
+      "emitMeanDelta": 0.03249999999789033,
+      "emitP50Delta": -0.1999999999825377,
+      "emitP95Delta": -3,
+      "usedPlusBackingBeforeDelta": -48130,
+      "usedPlusBackingAfterDelta": -47158,
+      "pssAfterDelta": 3.85546875
+    },
+    {
+      "baseline": "A1",
+      "candidate": "B1",
+      "scenario": "flatSetKeys",
+      "emitMeanDelta": -2.040000000002328,
+      "emitP50Delta": -0.5,
+      "emitP95Delta": -10.69999999999709,
+      "usedPlusBackingBeforeDelta": -43698,
+      "usedPlusBackingAfterDelta": -45790,
+      "pssAfterDelta": 3.8408203125
+    },
+    {
+      "baseline": "A1",
+      "candidate": "B1",
+      "scenario": "flatReplace",
+      "emitMeanDelta": 0.614999999998691,
+      "emitP50Delta": -0.09999999999126885,
+      "emitP95Delta": 10.099999999991269,
+      "usedPlusBackingBeforeDelta": -43538,
+      "usedPlusBackingAfterDelta": -39946,
+      "pssAfterDelta": 4.8359375
+    },
+    {
+      "baseline": "A2",
+      "candidate": "B2",
+      "scenario": "flatSetKey",
+      "emitMeanDelta": -0.6599999999998545,
+      "emitP50Delta": -1.3000000000029104,
+      "emitP95Delta": -4.7000000000116415,
+      "usedPlusBackingBeforeDelta": -57989,
+      "usedPlusBackingAfterDelta": -61597,
+      "pssAfterDelta": -7.0390625
+    },
+    {
+      "baseline": "A2",
+      "candidate": "B2",
+      "scenario": "flatSetKeys",
+      "emitMeanDelta": -1.8775000000005093,
+      "emitP50Delta": -1.8999999999941792,
+      "emitP95Delta": -6.899999999994179,
+      "usedPlusBackingBeforeDelta": -60789,
+      "usedPlusBackingAfterDelta": -60509,
+      "pssAfterDelta": -7.2939453125
+    },
+    {
+      "baseline": "A2",
+      "candidate": "B2",
+      "scenario": "flatReplace",
+      "emitMeanDelta": 3.024999999999274,
+      "emitP50Delta": 2.6000000000058208,
+      "emitP95Delta": 16.80000000000291,
+      "usedPlusBackingBeforeDelta": -60298,
+      "usedPlusBackingAfterDelta": -56810,
+      "pssAfterDelta": -7.0947265625
+    }
+  ],
+  "limitations": [
+    "Guard APK provenance is install-script/archive only; flat probes capture installed APK hashes.",
+    "Aggregate counters/GC/native instrumentation are diagnostic, not acceptance/floors.",
+    "Backing bytes included; no extra heap snapshots or CPU profiles."
+  ]
+}

@@ -3,19 +3,18 @@
 Native apps can start SQLite recovery and schema checks before Angular bootstrap
 with `prewarmSqliteStore`; see the [startup API and adoption rules](projects/ngrx-sqlite-store/README.md#early-native-startup).
 
-## Performance (this version: Phase 15f)
+## Performance (Phase 16)
 
-These numbers are the verified acceptance run for the code on `main`: **session 15f, 2026-10-23**. Full data is in [android-parity-15f-2026-10-23.md](docs/benchmarks/android-parity-15f-2026-10-23.md) and the outcome is [ADR-0068](docs/decisions/0068-phase15f-measured-outcomes.md).
+Latest verified acceptance: **16av (shapes) / 16L20 (lists)**, 2026-10-29. Full data is in [android-acceptance-16av-2026-10-29.json](docs/benchmarks/android-acceptance-16av-2026-10-29.json) and the decision is [ADR-0129](docs/decisions/0129-fresh-process-pipelined-open.md).
 
 ### Method
-- **Device:** Android 35 emulator (Pixel 9 Pro image, WebView 154), release APKs.
-- **Pairing:** classic `@ngrx/store` and `ngrx-sqlite-store` run the same harness app.
-- **Trials:** 5 independent trials per implementation and list size. Each one starts from a cleared app and a fresh process, and the implementation order alternates (ADR-0038).
-- **Values:** each cell is a mean over the 5 trials. Latency is in ms and memory in MB.
+- **Device:** isolated Android 35 emulator (`emulator-5556`, WebView 154), release APKs.
+- **Pairing:** classic `@ngrx/store` and `ngrx-sqlite-store` run the same harness app. There are 5 paired, alternating trials per metric, with fresh matched controls in each session (ADR-0038, ADR-0128).
+- **Values:** each cell is a mean of trial medians/percentiles. Latency is in ms and memory in MB.
 
 Verdicts:
 - **PASS:** sqlite is within classic's mean + 1 SD.
-- **PLATFORM-BOUND (PB):** the extra cost fits within a measured store-free platform floor, such as the Capacitor bridge round trip or a SQLite commit.
+- **PLATFORM-BOUND (PB):** the extra cost fits within a measured store-free platform floor, such as the Capacitor bridge round trip plus repaint, or a SQLite commit (ADR-0084 / ADR-0093).
 - **CODE-BOUND (CB):** heap only; the extra is the library's own compiled code, measured with an empty-store control (ADR-0062).
 - **FAIL:** none of the above.
 
@@ -23,36 +22,78 @@ Verdicts:
 
 | Metric | 1k classic | 1k sqlite | 10k classic | 10k sqlite | 50k classic | 50k sqlite |
 |---|---:|---:|---:|---:|---:|---:|
-| First ready (ms) | 371 | 613 PB | 598 | 807 PASS | 394 | 1831 PB |
-| Relaunch ready (ms) | 1391 | 1667 PB | 1470 | 1690 PB | 1519 | 1886 PB |
-| Toggle p50 (ms) | 3.2 | 19.8 **FAIL** | 8.1 | 19.1 PB | 31.5 | 19.0 PASS |
-| Toggle p95 (ms) | 9.3 | 62.8 **FAIL** | 17.2 | 55.4 **FAIL** | 54.1 | 59.6 PASS |
-| Emit p50 (ms) | 0.1 | 4.9 PB | 0.1 | 4.6 PB | 0.1 | 4.7 PB |
-| Emit p95 (ms) | 0.5 | 8.8 PB | 0.4 | 7.6 PB | 0.4 | 8.1 PB |
-| JS heap, todos loaded (MB) | 4.6 | 5.4 CB | 7.0 | 5.4 PASS | 18.5 | 5.4 PASS |
-| JS heap, notes loaded (MB) | 5.2 | 6.1 **FAIL** | 7.6 | 6.1 PASS | 19.0 | 6.1 PASS |
-| JS heap, after relaunch (MB) | 4.6 | 5.0 CB | 7.0 | 5.0 PASS | 18.4 | 5.0 PASS |
-| PSS total, loaded (MB) | 225 | 239 **FAIL** | 231 | 246 **FAIL** | 243 | 243 PASS |
-| PSS total, after relaunch (MB) | 222 | 224 PASS | 226 | 225 PASS | 240 | 226 PASS |
+| First ready (ms) | 387 | 476 PB | 321 | 600 PB | 409 | 1278 PB |
+| Relaunch ready (ms) | 1498 | 1702 PB | 1398 | 1616 **FAIL** | 1519 | 1743 PB |
+| Toggle p50 (ms) | 4.2 | 16.4 PB | 7.7 | 16.9 PB | 30.4 | 16.5 PASS |
+| Toggle p95 (ms) | 11.9 | 64.7 PB | 17.4 | 69.2 PB | 54.0 | 62.3 PASS |
+| Emit p50 (ms) | 0.1 | 3.4 PB | 0.1 | 3.5 PB | 0.1 | 3.5 PB |
+| Emit p95 (ms) | 0.4 | 5.3 PB | 0.4 | 5.4 PB | 0.5 | 5.5 **FAIL** |
+| JS heap, loaded (MB) | 4.6 | 5.5 CB | 7.1 | 5.5 PASS | 18.5 | 5.5 PASS |
+| JS heap, after relaunch (MB) | 4.6 | 5.0 CB | 7.0 | 5.0 PASS | 18.5 | 5.0 PASS |
+| PSS total, loaded (MB) | 222 | 234 PB | 229 | 242 PB | 241 | 239 PASS |
+| PSS total, after relaunch (MB) | 221 | 221 PASS | 225 | 221 PASS | 237 | 222 PASS |
 
-Overall: **13 PASS / 12 PLATFORM-BOUND / 2 CODE-BOUND / 6 FAIL** of 33 metrics.
+Lists overall: **12 PASS / 16 PLATFORM-BOUND / 3 CODE-BOUND / 2 FAIL** of 33 metrics.
 
-The six FAILs are:
-- 1k notes heap: 0.06 MB over its allowance.
-- 1k and 10k loaded PSS.
-- 1k toggle p50 and p95.
-- 10k toggle p95.
+Remaining list FAILs:
+- 10k relaunch is 48 ms over its allowance.
+- 50k emit p95 is 0.18 ms over.
 
-The sqlite JS heap stays flat at about 5–6 MB as the list grows; classic grows to 19 MB at 50k.
+At 10k and 50k items, sqlite keeps the JS heap flat (about 5 MB, against classic's 7–19 MB), because only the visible page is held in memory.
+
+### Flat objects and workflow state (shapes)
+
+These workloads use flat objects of 50 / 500 / 5000 keys and a nested workflow form with drafts and events. Values are emit p50 in ms.
+
+| Workload | classic | sqlite | Verdict |
+|---|---:|---:|---|
+| Single key write, K=50 / 500 / 5000 | 0.4 / 0.4 / 1.6 | 10.3 / 9.2 / 11.1 | FAIL |
+| 10-key write, K=50 / 500 / 5000 | 0.4 / 0.5 / 1.5 | 9.4 / 10.5 / 11.5 | FAIL |
+| Replace 1% of keys, K=50 / 500 / 5000 | 0.4 / 0.4 / 0.4 | 7.7 / 9.5 / 13.9 | PB / PB / FAIL |
+| Workflow field edit, depth 1 / 4 / 10 | 0.4 / 0.4 / 0.5 | 8.6 / 8.7 / 8.5 | FAIL / FAIL / PB |
+| Workflow step change | 0.3 | 9.4 | FAIL |
+| Workflow form reset | 0.3 | 31.3 | FAIL |
+| Append 100 events | 0.4 | 12.6 | FAIL |
+| Load cycle (with simulated API) | 8.4 | 15.1 | PASS |
+| Relaunch ready | 1470 ms | 921 ms | PASS |
+
+Shapes overall: **3 PASS / 54 PLATFORM-BOUND / 0 CODE-BOUND / 29 FAIL** of 86 metrics.
+
+The p95 latencies are mostly PLATFORM-BOUND. The remaining FAILs are:
+- median single writes, about 1–3 ms above the store-free commit+render floor;
+- reset and append100;
+- burst backlog (1–2 pending emissions against classic's 0; see ADR-0105);
+- heap and PSS at small state sizes.
 
 Every write is persisted and committed before subscribers are notified. Classic keeps state only in memory, so its sub-millisecond emits have no durability cost.
 
-### Later work
-Later rounds have not been merged to `main`:
-- **15y–15aa:** large-list parity, 16 PASS / 14 PB / 3 CB / 0 FAIL under the user-approved toggle floor (ADR-0090).
-- **Phase 16:** flat-object and workflow workloads.
+### Status: Phase 16 goals met (2026-11-05)
+Both goals are met as defined, but not every metric is now within its allowance. The rows listed below are still raw FAIL in the reports; they are closed by a user acceptance or by an evidenced-limit ADR.
 
-Both are on the [`phase16-wip`](https://github.com/dave-morgan/ngrx-sqlite-store/tree/phase16-wip) branch, together with their benchmark results.
+**Large lists (33 metrics, 16L20):** 31 measure within the allowance (12 PASS / 16 PB / 3 CB). Two are accepted by the user as limitations:
+
+| Metric | Over allowance | ADR |
+|---|---:|---|
+| 10k relaunch (one-time cold-start cost) | 48 ms | [ADR-0145](docs/decisions/0145-relaunch-startup-limit-accepted.md) |
+| 50k emit p95 | 0.18 ms | [ADR-0152](docs/decisions/0152-50k-emit-p95-accepted.md) |
+
+**Shapes (86 metrics, 16av):** 57 measure within the allowance (3 PASS / 54 PB). The other 29 are documented as evidenced limits:
+
+| Rows | Gap | Cause | ADR |
+|---|---|---|---|
+| Workflow reset ×4 | 14–19 ms over | The `onState` compatibility bridge must materialise the whole feature | [0146](docs/decisions/0146-onstate-reset-evidenced-limit.md) |
+| Append 100 events, replace at K=5000 ×4 | 3–6 ms over | Multi-row native writes plus the diff and copy persistence needs | [0147](docs/decisions/0147-bulk-write-evidenced-limits.md) |
+| Burst backlog ×3 | 2 vs 0 | A store-free commit+render control shows the same backlog | [0148](docs/decisions/0148-burst-backlog-platform-tail.md) |
+| Small writes ×9 | 0.4–3.2 ms over | One native commit plus a serial post-commit refresh (notify-after-commit) | [0149](docs/decisions/0149-small-write-post-commit-limit.md) |
+| JS heap ×5 | +0.7–1.8 MB | Library code plus the persistence metadata the write path needs | [0150](docs/decisions/0150-shape-heap-metadata-limit.md) |
+| PSS ×4 | +10–18 MB | Native SQLite/plugin and WebView working set; partly attributed | [0151](docs/decisions/0151-shape-pss-working-set-limit.md) |
+
+In practice, sqlite trades write latency and some memory for durable persistence:
+- **Writes:** a persisted write emits in about 8–14 ms, against about 0.4 ms for in-memory NgRx. A reset through the classic bridge takes about 31 ms.
+- **Memory:** process memory is a few MB higher.
+- **Large lists:** at 10k–50k items the JS heap stays near 5 MB, against 7–19 MB for classic.
+
+The per-run history is in [docs/decisions/README.md](docs/decisions/README.md), and the evidence is under [docs/benchmarks](docs/benchmarks).
 
 ---
 

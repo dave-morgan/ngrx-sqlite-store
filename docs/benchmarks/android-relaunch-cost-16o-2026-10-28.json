@@ -1,0 +1,1215 @@
+{
+  "pkg": "dev.ngrxsqlite.harness.sqlite",
+  "session": "16o4-relaunch-cost",
+  "installedApkHash": "aece947ff0ed477d198527b639c8db7e1d2214592b36648a5e05de52fa8df7f0",
+  "diagnosticOnly": true,
+  "bootId": "6923042f-1fdc-4a30-a5fe-02a861a11b98",
+  "size": 50000,
+  "protocol": "Same measure() setup,30toggles,notes,200emissions,benchBridge,force-stop/relaunch as acceptance; startup call tracing enabled only before relaunch.",
+  "limitations": [
+    "Startup wrapper perturbs timings; not acceptance/floor/native SQL CPU.",
+    "Extra6s profiling-flag persistence idle before force-stop differs from acceptance and may allow maintenance/cache changes.",
+    "Existing benchmark GC/heap-usage checks retained; no heap snapshot capture or CPU profiler."
+  ],
+  "result": {
+    "impl": "sqlite",
+    "size": 50000,
+    "trial": 1,
+    "firstReadyMs": 1241.3999999999942,
+    "relaunchReadyMs": 1554.699999999997,
+    "relaunchTrace": {
+      "ready": {
+        "total": 50000,
+        "ms": 1554.699999999997
+      },
+      "profileFlag": "true",
+      "calls": [
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 1258,
+          "ms": 37.80000000000291,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 1258.5,
+          "ms": 72.09999999999127,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1258.5,
+          "ms": 79.80000000000291,
+          "bytes": 265,
+          "values": [],
+          "sql": [
+            "SELECT key, value, NULL AS name, NULL AS tbl_name, NULL AS sql FROM nss_meta\n             UNION ALL SELECT NULL, NULL, name, tbl_name, sql FROM sqlite_master WHERE type = 'index'"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1330.8999999999942,
+          "ms": 12.900000000008731,
+          "bytes": 109,
+          "values": [],
+          "sql": [
+            "PRAGMA journal_mode=WAL"
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "query",
+          "start": 1331,
+          "ms": 19.09999999999127,
+          "bytes": 108,
+          "values": [],
+          "sql": [
+            "PRAGMA cache_size=-512"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "executeSet",
+          "start": 1346,
+          "ms": 13.099999999991269,
+          "bytes": 665,
+          "values": [
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ]
+          ],
+          "sql": [
+            "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1349.8999999999942,
+          "ms": 9.80000000000291,
+          "bytes": 3010,
+          "values": [
+            "path",
+            "parent",
+            "kind",
+            "pos",
+            "value",
+            "source",
+            "coll",
+            "id",
+            "data",
+            "sortkey",
+            "seq",
+            "ui",
+            "ui/",
+            "ui0",
+            "ui",
+            "ui/",
+            "ui0",
+            "ui",
+            "ui/",
+            "ui0",
+            "path",
+            "parent",
+            "kind",
+            "pos",
+            "value",
+            "source",
+            "coll",
+            "id",
+            "data",
+            "sortkey",
+            "seq",
+            "router",
+            "router/",
+            "router0",
+            "router",
+            "router/",
+            "router0",
+            "router",
+            "router/",
+            "router0"
+          ],
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"path\",?, \"parent\",?, \"kind\",?, \"pos\",?, \"valu"
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1363.199999999997,
+          "ms": 69.19999999999709,
+          "bytes": 1239,
+          "values": [
+            0,
+            "todos",
+            "todos"
+          ],
+          "sql": [
+            "SELECT slot, payload FROM (\n              WITH counts AS MATERIALIZED (\n                SELECT COUNT(CASE WHEN ((((COALESCE(json_type(data, '$.done') IN ('true','false'), 0) AND json_extract(data, '$."
+          ]
+        },
+        {
+          "transaction": 1,
+          "method": "query",
+          "start": 1480.5999999999913,
+          "ms": 10,
+          "bytes": 1269,
+          "values": [
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0",
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0",
+            "todos/seedVersion",
+            "todos/seedVersion/",
+            "todos/seedVersion0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "executeSet",
+          "start": 1498.8999999999942,
+          "ms": 66.10000000000582,
+          "bytes": 1569,
+          "values": [
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router"
+            ],
+            [
+              "router/",
+              "router0"
+            ],
+            [
+              "router",
+              null,
+              5,
+              null,
+              null,
+              "router/state",
+              "router",
+              5,
+              1,
+              null,
+              "router/state/root",
+              "router/state",
+              4,
+              1,
+              "{\"params\":{},\"data\":{},\"url\":[],\"outlet\":\"primary\",\"routeConfig\":null,\"queryParams\":{},\"fragment\":null,\"firstChild\":{\"params\":{},\"data\":{},\"url\":[{\"path\":\"todos\",\"parameters\":{}}],\"outlet\":\"primary\",\"routeConfig\":{\"path\":\"todos\",\"title\":\"Todos\"},\"queryParams\":{},\"fragment\":null,\"children\":[]},\"children\":[{\"params\":{},\"data\":{},\"url\":[{\"path\":\"todos\",\"parameters\":{}}],\"outlet\":\"primary\",\"routeConfig\":{\"path\":\"todos\",\"title\":\"Todos\"},\"queryParams\":{},\"fragment\":null,\"children\":[]}]}",
+              "router/state/url",
+              "router/state",
+              3,
+              2,
+              "\"/todos\"",
+              "router/navigationId",
+              "router",
+              2,
+              2,
+              "1"
+            ]
+          ],
+          "sql": [
+            "/*nss*/ DELETE FROM nss_node WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_node WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path = ?",
+            "/*nss*/ DELETE FROM nss_chunk WHERE path >= ? AND path < ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll = ?",
+            "/*nss*/ DELETE FROM nss_entity WHERE coll >= ? AND coll < ?",
+            "INSERT INTO nss_node (path,parent,kind,pos,value) VALUES (?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?)"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1566.5999999999913,
+          "ms": 21.40000000000873,
+          "bytes": 1224,
+          "values": [
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0",
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0",
+            "todos/filter",
+            "todos/filter/",
+            "todos/filter0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 1588.5,
+          "ms": 614.6999999999971,
+          "bytes": 1215,
+          "values": [
+            "todos/query",
+            "todos/query/",
+            "todos/query0",
+            "todos/query",
+            "todos/query/",
+            "todos/query0",
+            "todos/query",
+            "todos/query/",
+            "todos/query0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 2203.5999999999913,
+          "ms": 731.4000000000087,
+          "bytes": 1224,
+          "values": [
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0",
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0",
+            "todos/userId",
+            "todos/userId/",
+            "todos/userId0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 2935.5999999999913,
+          "ms": 27.90000000000873,
+          "bytes": 1161,
+          "values": [
+            "users",
+            "users/",
+            "users0",
+            "users",
+            "users/",
+            "users0",
+            "users",
+            "users/",
+            "users0"
+          ],
+          "sql": [
+            "SELECT path, parent, kind, pos, value, source, coll, id, data, sortkey, seq FROM (\n      SELECT path, parent, kind, pos, value, 0 AS source,\n        NULL AS coll, NULL AS id, NULL AS data, NULL AS sor"
+          ]
+        },
+        {
+          "transaction": 2,
+          "method": "query",
+          "start": 2966.5999999999913,
+          "ms": 23.10000000000582,
+          "bytes": 982,
+          "values": [
+            "id",
+            "pos",
+            "sortkey",
+            "data",
+            "promoted",
+            "todos",
+            "todos",
+            100,
+            100,
+            0
+          ],
+          "sql": [
+            "SELECT 0 AS slot, CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n            FROM (SELECT json_group_array(json_object(?, \"id\",?, \"pos\",?, \"sortkey\",?, \"data\",?, \"promo"
+          ]
+        },
+        {
+          "transaction": 3,
+          "method": "executeSet",
+          "start": 2995.0999999999913,
+          "ms": 72.30000000000291,
+          "bytes": 212,
+          "values": [
+            [
+              -3,
+              "ui/visited/#mvr0vqc79ga8tllfr3d3"
+            ]
+          ],
+          "sql": [
+            "UPDATE nss_node SET pos = ? WHERE path = ?"
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "kind": "raf",
+          "at": 1181.1
+        },
+        {
+          "kind": "longtask",
+          "at": 406,
+          "ms": 68
+        },
+        {
+          "kind": "raf",
+          "at": 1197.7
+        },
+        {
+          "kind": "raf",
+          "at": 1214.4
+        },
+        {
+          "kind": "raf",
+          "at": 1231
+        },
+        {
+          "kind": "raf",
+          "at": 1247.7
+        },
+        {
+          "kind": "raf",
+          "at": 1264.3
+        },
+        {
+          "kind": "raf",
+          "at": 1281
+        },
+        {
+          "kind": "raf",
+          "at": 1297.7
+        },
+        {
+          "kind": "raf",
+          "at": 1314.3
+        },
+        {
+          "kind": "raf",
+          "at": 1331
+        },
+        {
+          "kind": "raf",
+          "at": 1347.7
+        },
+        {
+          "kind": "raf",
+          "at": 1364.3
+        },
+        {
+          "kind": "raf",
+          "at": 1381
+        },
+        {
+          "kind": "raf",
+          "at": 1397.8
+        },
+        {
+          "kind": "raf",
+          "at": 1414.4
+        },
+        {
+          "kind": "raf",
+          "at": 1431
+        },
+        {
+          "kind": "raf",
+          "at": 1481.1
+        },
+        {
+          "kind": "raf",
+          "at": 1497.7
+        },
+        {
+          "kind": "raf",
+          "at": 1514.4
+        },
+        {
+          "kind": "summary",
+          "at": 1554.699999999997,
+          "text": "32487 open \u00b7 50000 total"
+        },
+        {
+          "kind": "raf",
+          "at": 1547.7
+        },
+        {
+          "kind": "raf",
+          "at": 1564.3
+        },
+        {
+          "kind": "raf",
+          "at": 1581
+        },
+        {
+          "kind": "raf",
+          "at": 2181.1
+        },
+        {
+          "kind": "raf",
+          "at": 2214.3
+        },
+        {
+          "kind": "raf",
+          "at": 2897.7
+        },
+        {
+          "kind": "raf",
+          "at": 2931
+        },
+        {
+          "kind": "raf",
+          "at": 2947.7
+        },
+        {
+          "kind": "summary",
+          "at": 2977.699999999997,
+          "text": "32487 open \u00b7 50000 total"
+        },
+        {
+          "kind": "raf",
+          "at": 2964.3
+        },
+        {
+          "kind": "raf",
+          "at": 2981.1
+        },
+        {
+          "kind": "summary",
+          "at": 3042.699999999997,
+          "text": "32487 open \u00b7 50000 total"
+        },
+        {
+          "kind": "raf",
+          "at": 2997.7
+        },
+        {
+          "kind": "raf",
+          "at": 3047.7
+        }
+      ],
+      "marks": [
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1189.5999999999913
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1445.5999999999913
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1533.199999999997
+        },
+        {
+          "name": "mark_feature_usage",
+          "startTime": 1547.5
+        }
+      ],
+      "resources": [
+        {
+          "name": "https://localhost/chunk-DmLvXUtC.js",
+          "startTime": 388.5,
+          "duration": 752,
+          "transferSize": 0
+        },
+        {
+          "name": "https://localhost/chunk-DMkbI0ct.js",
+          "startTime": 398,
+          "duration": 756.8999999999942,
+          "transferSize": 0
+        },
+        {
+          "name": "https://localhost/main-ACIUDKIF.js",
+          "startTime": 398.8999999999942,
+          "duration": 758.1000000000058,
+          "transferSize": 0
+        },
+        {
+          "name": "https://localhost/styles-KJH7WCTL.css",
+          "startTime": 460.59999999999127,
+          "duration": 685.8000000000029,
+          "transferSize": 0
+        },
+        {
+          "name": "https://localhost/chunk-BNcc7NNG.js",
+          "startTime": 1207.8999999999942,
+          "duration": 22.5,
+          "transferSize": 0
+        },
+        {
+          "name": "https://localhost/chunk-DSUUdNsW.js",
+          "startTime": 1209.0999999999913,
+          "duration": 27,
+          "transferSize": 0
+        },
+        {
+          "name": "https://localhost/chunk-CFvaC571.js",
+          "startTime": 1210.8999999999942,
+          "duration": 25.5,
+          "transferSize": 0
+        },
+        {
+          "name": "https://localhost/chunk-Ck0a3O7x.js",
+          "startTime": 1211.199999999997,
+          "duration": 28.60000000000582,
+          "transferSize": 0
+        },
+        {
+          "name": "https://localhost/favicon.ico",
+          "startTime": 1223.300000000003,
+          "duration": 13.39999999999418,
+          "transferSize": 0
+        },
+        {
+          "name": "https://localhost/chunk-DzJRdbLL.js",
+          "startTime": 1252.8999999999942,
+          "duration": 10,
+          "transferSize": 0
+        },
+        {
+          "name": "https://localhost/chunk-D6M9vgvH.js",
+          "startTime": 1479.0999999999913,
+          "duration": 12.60000000000582,
+          "transferSize": 0
+        },
+        {
+          "name": "https://localhost/chunk-CbvdXUus.js",
+          "startTime": 1499.800000000003,
+          "duration": 8.599999999991269,
+          "transferSize": 0
+        }
+      ]
+    },
+    "heapTodosMb": 5.501399993896484,
+    "heapNotesMb": 6.2364044189453125,
+    "heapRelaunchMb": 5.078433990478516,
+    "pssAppMb": 136.9033203125,
+    "pssRendererMb": 103.2529296875,
+    "pssTotalMb": 240.15625,
+    "pssRelaunchTotalMb": 224.1640625,
+    "toggleP50": 18.10000000000582,
+    "toggleP95": 44.69999999999709,
+    "emitP50": 3.1999999999970896,
+    "emitP95": 4.900000000008731,
+    "toggleSamples": [
+      12.599999999991269,
+      37.5,
+      55,
+      18.89999999999418,
+      15.299999999988358,
+      19.90000000000873,
+      27.90000000000873,
+      16.19999999999709,
+      10.80000000000291,
+      18.10000000000582,
+      22.40000000000873,
+      37.30000000000291,
+      5.5,
+      5.69999999999709,
+      8.19999999999709,
+      34.69999999999709,
+      44.69999999999709,
+      6.80000000000291,
+      18.39999999999418,
+      33.30000000000291,
+      27.80000000000291,
+      20.20000000001164,
+      7.5,
+      21.80000000000291,
+      4.80000000000291,
+      10.19999999999709,
+      13.19999999999709,
+      13.80000000000291,
+      6.2000000000116415,
+      8.599999999991269
+    ],
+    "emission": {
+      "runs": 200,
+      "p50": 3.1999999999970896,
+      "p95": 4.900000000008731,
+      "max": 14.19999999999709,
+      "samples": [
+        6.69999999999709,
+        14.19999999999709,
+        4.80000000000291,
+        4.19999999999709,
+        5.600000000005821,
+        5.600000000005821,
+        7.5,
+        7.100000000005821,
+        7.599999999991269,
+        4.30000000000291,
+        6.19999999999709,
+        3,
+        4.600000000005821,
+        3.1999999999970896,
+        2.900000000008731,
+        4.599999999991269,
+        3.1000000000058208,
+        2.8999999999941792,
+        3.1000000000058208,
+        3,
+        2.8999999999941792,
+        3,
+        4.19999999999709,
+        3.3000000000029104,
+        3.1000000000058208,
+        4.69999999999709,
+        3.3999999999941792,
+        3.5,
+        3.3000000000029104,
+        2.8000000000029104,
+        3.5,
+        3.3000000000029104,
+        3.5,
+        3.1000000000058208,
+        3.3999999999941792,
+        3.1999999999970896,
+        3.2000000000116415,
+        3.6999999999970896,
+        3.1999999999970896,
+        3.3999999999941792,
+        3.1000000000058208,
+        3.6000000000058208,
+        3.3999999999941792,
+        3.5,
+        4,
+        3.3999999999941792,
+        3.5,
+        3.099999999991269,
+        3,
+        3.099999999991269,
+        3.400000000008731,
+        3.8000000000029104,
+        3.6999999999970896,
+        3.400000000008731,
+        2.8999999999941792,
+        2.8000000000029104,
+        3.1999999999970896,
+        3.5,
+        3.3000000000029104,
+        3.1000000000058208,
+        3,
+        3.1999999999970896,
+        4,
+        4.100000000005821,
+        3.1999999999970896,
+        2.8999999999941792,
+        3,
+        2.900000000008731,
+        3.099999999991269,
+        3.5,
+        3.1000000000058208,
+        3,
+        3.5,
+        3.5,
+        3,
+        3.1000000000058208,
+        4.400000000008731,
+        5.2999999999883585,
+        3,
+        3,
+        2.8999999999941792,
+        3.5,
+        3.2000000000116415,
+        2.8999999999941792,
+        3.1000000000058208,
+        3.400000000008731,
+        2.8999999999941792,
+        3.5,
+        3.1999999999970896,
+        2.6000000000058208,
+        3.1999999999970896,
+        2.8000000000029104,
+        3,
+        2.8000000000029104,
+        3.1999999999970896,
+        3.6000000000058208,
+        3,
+        2.8999999999941792,
+        2.6999999999970896,
+        2.8999999999941792,
+        3.900000000008731,
+        3.099999999991269,
+        3.1000000000058208,
+        3.5,
+        3.3000000000029104,
+        3.599999999991269,
+        3.3000000000029104,
+        3.1999999999970896,
+        3.1999999999970896,
+        4.399999999994179,
+        4.30000000000291,
+        3.3000000000029104,
+        3.6999999999970896,
+        4,
+        3.099999999991269,
+        3.5,
+        3.2000000000116415,
+        2.8999999999941792,
+        3.6999999999970896,
+        3.8000000000029104,
+        3.3999999999941792,
+        3.1000000000058208,
+        4.100000000005821,
+        3.6999999999970896,
+        3.099999999991269,
+        3.1000000000058208,
+        2.6999999999970896,
+        3,
+        3,
+        2.8999999999941792,
+        3,
+        3.900000000008731,
+        3.599999999991269,
+        2.900000000008731,
+        3,
+        3,
+        2.900000000008731,
+        3.7000000000116415,
+        3.2999999999883585,
+        4.900000000008731,
+        3.6999999999970896,
+        4.899999999994179,
+        4.400000000008731,
+        3,
+        3.6000000000058208,
+        3.1999999999970896,
+        3.1999999999970896,
+        3.1000000000058208,
+        3.099999999991269,
+        3.1999999999970896,
+        3.5,
+        3.3000000000029104,
+        2.8999999999941792,
+        2.6999999999970896,
+        2.8000000000029104,
+        3.5,
+        3.400000000008731,
+        4.099999999991269,
+        3.6999999999970896,
+        4.400000000008731,
+        3.3999999999941792,
+        3.6000000000058208,
+        3.5,
+        3.099999999991269,
+        2.900000000008731,
+        2.8000000000029104,
+        2.6999999999970896,
+        3,
+        3.1000000000058208,
+        3.5,
+        3.1999999999970896,
+        3.3000000000029104,
+        3.3000000000029104,
+        3.1999999999970896,
+        3.400000000008731,
+        3.099999999991269,
+        3,
+        3.1999999999970896,
+        2.8000000000029104,
+        2.8999999999941792,
+        3.1000000000058208,
+        3.2000000000116415,
+        3,
+        3.099999999991269,
+        3.1000000000058208,
+        3,
+        2.8000000000029104,
+        3.6999999999970896,
+        3,
+        3,
+        3.5,
+        3.3000000000029104,
+        2.8999999999941792,
+        3.5,
+        4.30000000000291,
+        3.1999999999970896,
+        2.8000000000029104,
+        3,
+        2.8000000000029104,
+        2.6999999999970896
+      ]
+    },
+    "bridge": {
+      "echo": {
+        "p50": 1.8999999999941792,
+        "mean": 1.9654999999998837,
+        "sd": 0.985400844388842,
+        "samples": [
+          2.1999999999970896,
+          1.6000000000058208,
+          1.8999999999941792,
+          1.6000000000058208,
+          1.3999999999941792,
+          1.8000000000029104,
+          1.6999999999970896,
+          2.1999999999970896,
+          1.7000000000116415,
+          1.7999999999883585,
+          1.8000000000029104,
+          1.8000000000029104,
+          1.6000000000058208,
+          2.099999999991269,
+          1.6999999999970896,
+          1.8000000000029104,
+          1.6999999999970896,
+          1.7000000000116415,
+          2.3999999999941792,
+          2.1999999999970896,
+          1.9000000000087311,
+          1.8999999999941792,
+          1.8999999999941792,
+          2.6000000000058208,
+          2.2999999999883585,
+          2.2000000000116415,
+          2.6999999999970896,
+          4.2000000000116415,
+          2.599999999991269,
+          2,
+          1.6999999999970896,
+          2,
+          1.5999999999912689,
+          1.8000000000029104,
+          1.6999999999970896,
+          1.5,
+          1.8000000000029104,
+          1.8999999999941792,
+          1.4000000000087311,
+          1.6999999999970896,
+          1.5,
+          1.8000000000029104,
+          1.3999999999941792,
+          2,
+          1.6000000000058208,
+          1.3999999999941792,
+          2.1000000000058208,
+          1.6999999999970896,
+          1.5,
+          1.5,
+          2.1999999999970896,
+          1.4000000000087311,
+          1.8000000000029104,
+          1.5,
+          1.5,
+          1.7999999999883585,
+          2.2000000000116415,
+          1.7999999999883585,
+          1.7000000000116415,
+          1.7999999999883585,
+          1.5,
+          1.6000000000058208,
+          1.8999999999941792,
+          2.1000000000058208,
+          1.7999999999883585,
+          1.7000000000116415,
+          1.5,
+          2,
+          1.7999999999883585,
+          1.6000000000058208,
+          1.6000000000058208,
+          1.6999999999970896,
+          1.7000000000116415,
+          2,
+          2.099999999991269,
+          1.5999999999912689,
+          1.8999999999941792,
+          1.9000000000087311,
+          1.8999999999941792,
+          2,
+          2,
+          1.6999999999970896,
+          2.2000000000116415,
+          1.8999999999941792,
+          2.3999999999941792,
+          1.8000000000029104,
+          2.400000000008731,
+          1.6999999999970896,
+          1.7000000000116415,
+          1.9000000000087311,
+          2,
+          2,
+          1.8999999999941792,
+          1.6999999999970896,
+          2.1000000000058208,
+          2,
+          1.6999999999970896,
+          1.6999999999970896,
+          1.9000000000087311,
+          1.8000000000029104,
+          1.8000000000029104,
+          1.6999999999970896,
+          1.8000000000029104,
+          15.200000000011642,
+          1.7999999999883585,
+          2,
+          2,
+          2,
+          2,
+          2.400000000008731,
+          2,
+          1.8999999999941792,
+          1.8999999999941792,
+          1.8999999999941792,
+          1.6000000000058208,
+          1.8999999999941792,
+          1.9000000000087311,
+          2.099999999991269,
+          2.1000000000058208,
+          1.8999999999941792,
+          1.6000000000058208,
+          2,
+          1.8999999999941792,
+          2.1999999999970896,
+          1.6999999999970896,
+          2.2000000000116415,
+          1.8999999999941792,
+          1.6999999999970896,
+          1.9000000000087311,
+          1.8999999999941792,
+          2,
+          2.5,
+          1.6000000000058208,
+          1.6999999999970896,
+          2.1999999999970896,
+          1.8999999999941792,
+          1.7000000000116415,
+          1.7999999999883585,
+          1.7000000000116415,
+          2.1999999999970896,
+          1.8999999999941792,
+          2,
+          2,
+          2,
+          1.6999999999970896,
+          1.7000000000116415,
+          1.7999999999883585,
+          1.7000000000116415,
+          2.1999999999970896,
+          2.099999999991269,
+          2,
+          1.6999999999970896,
+          2,
+          2.1999999999970896,
+          1.6000000000058208,
+          2.1000000000058208,
+          2.1999999999970896,
+          1.8999999999941792,
+          2,
+          1.9000000000087311,
+          2.1999999999970896,
+          1.8999999999941792,
+          1.8999999999941792,
+          1.6999999999970896,
+          1.9000000000087311,
+          2.1999999999970896,
+          2,
+          1.8000000000029104,
+          1.5999999999912689,
+          2.1000000000058208,
+          1.8999999999941792,
+          1.8999999999941792,
+          1.6000000000058208,
+          1.8000000000029104,
+          2,
+          2.099999999991269,
+          1.7000000000116415,
+          1.8999999999941792,
+          1.8000000000029104,
+          1.5999999999912689,
+          2,
+          2.1000000000058208,
+          2.3999999999941792,
+          2.1999999999970896,
+          2.1000000000058208,
+          2.099999999991269,
+          1.8000000000029104,
+          1.8000000000029104,
+          1.8999999999941792,
+          2.1000000000058208,
+          1.6999999999970896,
+          2,
+          1.8999999999941792,
+          2,
+          1.8000000000029104,
+          1.6999999999970896,
+          2.6000000000058208,
+          2,
+          2,
+          1.6999999999970896
+        ]
+      },
+      "bandwidth": {
+        "bytesPerMs": 31895.880561641363,
+        "interceptMs": 7.768765505913578,
+        "samples": [
+          {
+            "bytes": 65669,
+            "ms": 10.400000000008731
+          },
+          {
+            "bytes": 65669,
+            "ms": 8.89999999999418
+          },
+          {
+            "bytes": 65669,
+            "ms": 9
+          },
+          {
+            "bytes": 65669,
+            "ms": 9.69999999999709
+          },
+          {
+            "bytes": 65669,
+            "ms": 8.89999999999418
+          },
+          {
+            "bytes": 262277,
+            "ms": 15.400000000008731
+          },
+          {
+            "bytes": 262277,
+            "ms": 14.80000000000291
+          },
+          {
+            "bytes": 262277,
+            "ms": 15.19999999999709
+          },
+          {
+            "bytes": 262277,
+            "ms": 14.5
+          },
+          {
+            "bytes": 262277,
+            "ms": 16.60000000000582
+          },
+          {
+            "bytes": 1048709,
+            "ms": 45.09999999999127
+          },
+          {
+            "bytes": 1048709,
+            "ms": 40.90000000000873
+          },
+          {
+            "bytes": 1048709,
+            "ms": 41
+          },
+          {
+            "bytes": 1048709,
+            "ms": 39.30000000000291
+          },
+          {
+            "bytes": 1048709,
+            "ms": 44.19999999999709
+          },
+          {
+            "bytes": 4194437,
+            "ms": 146.5
+          },
+          {
+            "bytes": 4194437,
+            "ms": 128.1999999999971
+          },
+          {
+            "bytes": 4194437,
+            "ms": 145.09999999999127
+          },
+          {
+            "bytes": 4194437,
+            "ms": 131
+          },
+          {
+            "bytes": 4194437,
+            "ms": 144
+          }
+        ],
+        "settings": {
+          "journalMode": [
+            {
+              "journal_mode": "delete"
+            }
+          ],
+          "synchronous": [
+            {
+              "synchronous": 1
+            }
+          ]
+        }
+      }
+    },
+    "memoryAfterSeed": {
+      "timestamp": 1793125936244,
+      "javaHeapMb": 12.109375,
+      "nativeHeapMb": 27.80078125,
+      "codeMb": 26.0546875,
+      "stackMb": 1.59765625,
+      "graphicsMb": 0,
+      "privateOtherMb": 24.84765625,
+      "systemMb": 42.9970703125,
+      "totalPssMb": 135.4072265625,
+      "raw": "Applications Memory Usage (in Kilobytes):\r\nUptime: 95709 Realtime: 95709\r\n\r\n** MEMINFO in pid 3534 [dev.ngrxsqlite.harness.sqlite] **\r\n                   Pss  Private  Private  SwapPss      Rss     Heap     Heap     Heap\r\n                 Total    Dirty    Clean    Dirty    Total     Size    Alloc     Free\r\n                ------   ------   ------   ------   ------   ------   ------   ------\r\n  Native Heap    28523    28468       48       35    29440    39064    28550     6345\r\n  Dalvik Heap     5577     3188        4       15     9128     9075     4538     4537\r\n Dalvik Other     8519     2876        0        0    14524                           \r\n        Stack     1636     1636        0        0     1640                           \r\n       Ashmem      354      108        0        0     1180                           \r\n    Other dev       12        4        4        0      324                           \r\n     .so mmap     6393      252     2732        7    42232                           \r\n    .jar mmap     3201        0      796        0    44692                           \r\n    .apk mmap    46290     2168    20300        0    73116                           \r\n    .ttf mmap      528        0      400        0      656                           \r\n    .dex mmap       88        0        4        0     1076                           \r\n    .oat mmap       24        0        0        0     1728                           \r\n    .art mmap    10627     8112     1100       51    25924                           \r\n   Other mmap     5283      416      524        0    10584                           \r\n      Unknown    21494    21472       16        0    21880                           \r\n        TOTAL   138657    68700    25928      108   278124    48139    33088    10882\r\n \r\n App Summary\r\n                       Pss(KB)                        Rss(KB)\r\n                        ------                         ------\r\n           Java Heap:    12400                          35052\r\n         Native Heap:    28468                          29440\r\n                Code:    26680                         174768\r\n               Stack:     1636                           1640\r\n            Graphics:        0                              0\r\n       Private Other:    25444\r\n              System:    44029\r\n             Unknown:                                   37224\r\n \r\n           TOTAL PSS:   138657            TOTAL RSS:   278124       TOTAL SWAP PSS:      108\r\n \r\n Objects\r\n               Views:        9         ViewRootImpl:        1\r\n         AppContexts:        6           Activities:        1\r\n              Assets:       21        AssetManagers:        0\r\n       Local Binders:       57        Proxy Binders:       71\r\n       Parcel memory:       13         Parcel count:       52\r\n    Death Recipients:        6             WebViews:        1\r\n \r\n SQL\r\n         MEMORY_USED:        0\r\n  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:        0\r\n \r\n"
+    }
+  },
+  "verification": {
+    "pkgVerified": true,
+    "installedHashVerified": true,
+    "toggleSamples": 30,
+    "emissionSamples": 200,
+    "readyTotal": 50000,
+    "nativeCalls": 16,
+    "traceFinite": true,
+    "protocolExtraIdleMs": 6000
+  }
+}

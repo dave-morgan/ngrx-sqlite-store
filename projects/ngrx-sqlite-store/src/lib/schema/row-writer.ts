@@ -10,6 +10,9 @@ import type { NodeKind } from './kinds';
 import { utf8ByteLength } from './utf8';
 import { serializedStringSize } from './size';
 
+/** Row count from which inserts use one json_each binding instead of per-column parameters. */
+const JSON_INSERT_MIN_ROWS = 16;
+
 /** Preserve lexical whitespace and avoid adding depth to JSON1's parser limit. */
 function needsStringEnvelope(data: string): boolean {
   let quoted = false;
@@ -54,6 +57,10 @@ export class RowWriter {
   ) {}
 
   private async write(sql: string, params?: SqlValue[]): Promise<void> {
+    // These reserved tables have no native-plugin sync columns (ADR-0080).
+    // Prefix before the engine measures/splits transport batches.
+    if (this.exec.directDeletes && /^DELETE FROM nss_(?:node|chunk|entity)\b/.test(sql))
+      sql = '/*nss*/ ' + sql;
     if (this.exec.write) await this.exec.write(sql, params);
     else await this.exec.run(sql, params);
   }
@@ -123,7 +130,9 @@ export class RowWriter {
     values: (row: T) => SqlValue[],
     canonicalJson = false,
   ): Generator<{ sql: string; params: SqlValue[]; rows: T[] }> {
-    if (rows.length && rows.length > Math.floor(999 / values(rows[0]).length)) {
+    // Many rows bind as one JSON string: the native plugin parses and binds each `?`
+    // separately, so dozens of rows x columns of parameters cost more than json_each.
+    if (rows.length && (rows.length >= JSON_INSERT_MIN_ROWS || rows.length > Math.floor(999 / values(rows[0]).length))) {
       yield* this.jsonInsertBatches(rows, prefix, suffix, values, canonicalJson);
       return;
     }
@@ -223,6 +232,14 @@ export class RowWriter {
     this.changes.add(changePath);
   }
 
+  /** A leaf changing between row-free kinds (scalars, inline JSON): one row update. */
+  async updateKindValue(path: string, kind: number, value: string | null, changePath = path): Promise<void> {
+    this.check(path, value);
+    await this.flush();
+    await this.write('UPDATE nss_node SET kind = ?, value = ? WHERE path = ?', [kind, value, path]);
+    this.changes.add(changePath);
+  }
+
   async updatePosition(path: string, pos: number, changePath = path): Promise<void> {
     await this.flush();
     await this.write('UPDATE nss_node SET pos = ? WHERE path = ?', [pos, path]);
@@ -258,20 +275,32 @@ export class RowWriter {
     upsert: boolean,
     orderChanges?: ReadonlySet<string>,
     collectionReplacement = false,
-    options: { canonicalJson?: boolean } = {},
-  ): Promise<void> {
+    options: { canonicalJson?: boolean; holdTail?: boolean } = {},
+  ): Promise<EntityRow[]> {
     for (const row of rows) {
       this.check(row.coll, row.data);
       this.check(row.coll, row.sortkey ?? null);
     }
     await this.flush();
-    for (const batch of this.insertBatches(
+    // `holdTail` (streamed writers): the last, possibly partial, transport group is
+    // returned unwritten so the caller prepends it to its next rows. Batches stay
+    // full instead of ending every chunk with a small one.
+    // Only whole-collection replacements, which journal no per-row writes, may hold.
+    if (options.holdTail && !collectionReplacement) throw new Error('holdTail requires a collection replacement');
+    let held: { sql: string; params: SqlValue[]; rows: EntityRow[] } | undefined;
+    const batches = this.insertBatches(
       rows,
       'INSERT INTO nss_entity (coll,id,pos,data,sortkey) VALUES ',
       ` ON CONFLICT(coll,id) DO ${upsert ? 'UPDATE SET data = excluded.data, pos = excluded.pos, sortkey = excluded.sortkey' : 'NOTHING'}`,
-      ({ coll, id, pos, data, sortkey }) => [coll, id, pos, data, sortkey ?? null],
+      ({ coll, id, pos, data, sortkey }: EntityRow) => [coll, id, pos, data, sortkey ?? null],
       options.canonicalJson,
-    )) {
+    );
+    for (const next of options.holdTail ? batches : []) {
+      if (held) await this.write(held.sql, held.params);
+      held = next;
+    }
+    if (options.holdTail) return held?.rows ?? [];
+    for (const batch of batches) {
       await this.write(batch.sql, batch.params);
       if (collectionReplacement) continue;
       for (const row of batch.rows) {
@@ -295,6 +324,7 @@ export class RowWriter {
         }
       }
     }
+    return [];
   }
 
   async updateEntitySortKey(coll: string, id: string, sortkey: string): Promise<void> {
@@ -353,12 +383,10 @@ export class RowWriter {
     await this.flush();
     const lower = `${coll}/~2`;
     const upper = `${coll}/~3`;
-    for (const [table, column] of [['nss_node', 'path'], ['nss_chunk', 'path'], ['nss_entity', 'coll']]) {
-      await this.write(
-        `DELETE FROM ${table} WHERE ${column} >= ? AND ${column} < ?${table === 'nss_entity' ? ' OR coll = ?' : ''}`,
-        table === 'nss_entity' ? [lower, upper, coll] : [lower, upper],
-      );
-    }
+    // Equality and range as separate statements: avoids the slow MULTI-INDEX OR plan (ADR-0070).
+    for (const [table, column] of [['nss_node', 'path'], ['nss_chunk', 'path'], ['nss_entity', 'coll']])
+      await this.write(`DELETE FROM ${table} WHERE ${column} >= ? AND ${column} < ?`, [lower, upper]);
+    await this.write('DELETE FROM nss_entity WHERE coll = ?', [coll]);
     this.changes.add(coll);
     for (const key of entityChanges(this.changes).keys())
       if (key === coll || (key >= lower && key < upper)) entityChanges(this.changes).delete(key);
@@ -410,10 +438,9 @@ export class RowWriter {
       ['nss_chunk', 'path'],
       ['nss_entity', 'coll'],
     ]) {
-      await this.write(
-        `DELETE FROM ${table} WHERE ${column} = ? OR (${column} >= ? AND ${column} < ?)`,
-        [path, lower, upper],
-      );
+      // Equality and range as separate statements: avoids the slow MULTI-INDEX OR plan (ADR-0070).
+      await this.write(`DELETE FROM ${table} WHERE ${column} = ?`, [path]);
+      await this.write(`DELETE FROM ${table} WHERE ${column} >= ? AND ${column} < ?`, [lower, upper]);
     }
     this.changes.add(changePath);
   }

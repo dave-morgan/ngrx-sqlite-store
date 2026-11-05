@@ -6,10 +6,53 @@ import { SCHEMA_MIGRATIONS } from './migrations';
 import { RowWriter } from './row-writer';
 import type { EntityRow } from './row-writer';
 
-describe('RowWriter bounded bridge groups', () => {
+describe.each([false, true])('RowWriter bounded bridge groups (directDeletes=%s)', (directDeletes) => {
   const driver = new SqlJsDriver();
+  Object.defineProperty(driver, 'directDeletes', { value: directDeletes });
   const engine = new StorageEngine(driver, { migrations: SCHEMA_MIGRATIONS });
   afterEach(async () => { await engine.close(); vi.restoreAllMocks(); });
+
+  it('drains pending inserts before a subsequent scalar update', async () => {
+    await engine.open();
+    await engine.transaction(async (tx) => {
+      const writer = new RowWriter(tx, tx.changes, 1_000_000);
+      writer.insertNode({ path: 'ordered', parent: null, kind: 3, pos: null, value: '"before"' });
+      await writer.updateValue('ordered', '"after"');
+      await writer.flush();
+    });
+    expect(await driver.query('SELECT value FROM nss_node WHERE path=?', ['ordered']))
+      .toEqual([{ value: '"after"' }]);
+  });
+
+  it('deletes the exact subtree with bound values and rolls back a failed atomic delete', async () => {
+    await engine.open();
+    await engine.transaction(async (tx) => {
+      const writer = new RowWriter(tx, tx.changes, 1_000_000);
+      for (const path of ["a'quoted", "a'quoted/child", "a'quoted-neighbor"])
+        writer.insertNode({ path, parent: null, pos: null, kind: 0, value: null });
+      writer.insertChunk("a'quoted/child", 0, 'chunk');
+      writer.insertEntity({ coll: "a'quoted/items", id: 'one', pos: 1, data: '{}'});
+      await writer.flush();
+    });
+    const batch = vi.spyOn(driver, 'batch');
+    await expect(engine.transaction(async (tx) => {
+      await new RowWriter(tx, tx.changes, 1_000_000).deletePrefix("a'quoted");
+      await tx.write!("INSERT INTO missing_table VALUES (1)");
+    })).rejects.toThrow();
+    expect(await driver.query('SELECT path FROM nss_node ORDER BY path')).toHaveLength(3);
+    batch.mockClear();
+    await engine.transaction((tx) => new RowWriter(tx, tx.changes, 1_000_000).deletePrefix("a'quoted"));
+    const deletes = batch.mock.calls.flatMap(([statements]) => statements).filter(({ sql }) => /DELETE FROM/.test(sql));
+    expect(deletes).toHaveLength(6);
+    for (const { sql, params } of deletes) {
+      expect(sql.startsWith('/*nss*/ DELETE')).toBe(directDeletes);
+      expect(sql).not.toContain("a'quoted");
+      expect(params?.length).toBeGreaterThan(0);
+    }
+    expect(await driver.query('SELECT path FROM nss_node')).toEqual([{ path: "a'quoted-neighbor" }]);
+    expect(await driver.query('SELECT * FROM nss_chunk')).toEqual([]);
+    expect(await driver.query('SELECT * FROM nss_entity')).toEqual([]);
+  });
 
   it('reuses canonical entity JSON without parsing again and preserves exact transport bytes and deep values', async () => {
     await engine.open();

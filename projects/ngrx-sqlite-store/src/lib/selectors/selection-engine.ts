@@ -75,9 +75,10 @@ export class SqliteSelectionEngine implements SelectionEngine {
     }
     owner.onDestroy(stop);
     return computed(() => {
-      this.cache.generation();
+      // Keep this dependency even on failure, so the computed can recover.
+      const next = value();
       if (failed) throw failure;
-      return value() as T;
+      return next as T;
     }, options);
   }
 
@@ -101,6 +102,38 @@ export class SqliteSelectionEngine implements SelectionEngine {
     };
   }
 
+  private defaultsMemo?: { generation: number; features: [string, unknown, boolean][]; view: object };
+  /**
+   * The defaults view (loaded cache plus seeds for unloaded features) is shared by every
+   * selector that needs it. It depends only on the cache generation and each feature's
+   * seed and readiness, so build it once per change instead of once per selector per
+   * generation; structural sharing with the previous view keeps unchanged identities.
+   */
+  private defaultsView(): object {
+    const generation = this.cache.generations.value;
+    const initial = this.core.selectionFeatures() as Record<string, unknown>;
+    const features = Object.keys(initial).map(
+      (key): [string, unknown, boolean] => [key, initial[key], this.core.selectionReady(escapeSegment(key))],
+    );
+    const memo = this.defaultsMemo;
+    if (
+      memo &&
+      memo.generation === generation &&
+      memo.features.length === features.length &&
+      memo.features.every(([key, seed, ready], index) =>
+        key === features[index][0] && seed === features[index][1] && ready === features[index][2])
+    )
+      return memo.view;
+    // Merge only unloaded branches; loaded null/undefined values are authoritative.
+    const filled = { ...this.cache.withDefaults(initial) };
+    // Cached data from a removed feature must not override a session seed.
+    for (const [key, seed, ready] of features)
+      if (!ready) Object.defineProperty(filled, key, { value: seed, enumerable: true });
+    const view = share(memo?.view, filled) as object;
+    this.defaultsMemo = { generation, features, view };
+    return view;
+  }
+
   private watch(
     selector: Projection,
     props: unknown,
@@ -111,6 +144,9 @@ export class SqliteSelectionEngine implements SelectionEngine {
   ): () => void {
     const queries = querySources(selector);
     this.cache.registerQueries(queries);
+    const staticSources = paths === 'dynamic' ? undefined : paths
+      .filter((path) => !queries.some((query) => query.id === path))
+      .map((path) => path.split('/'));
     const available = (path: string) =>
       this.core.selectionReady(queries.find((query) => query.id === path)?.path ?? path);
     const leases = new Map<string, () => void>();
@@ -121,6 +157,7 @@ export class SqliteSelectionEngine implements SelectionEngine {
     let emitted = false;
     let defaultView: unknown;
     let scopedView: unknown;
+    let scopedValues: unknown[] | undefined;
     let evaluatedView: unknown;
     let previousQueryValues: unknown[] = [];
 
@@ -151,39 +188,42 @@ export class SqliteSelectionEngine implements SelectionEngine {
       evaluating = true;
       try {
         let view = this.viewState;
-        if (defaults) {
-          // Merge only unloaded branches; loaded null/undefined values are authoritative.
-          const initial = this.core.selectionFeatures();
-          const filled = { ...this.cache.withDefaults(initial) };
-          // Cached data from a removed feature must not override a session seed.
-          for (const [key, seed] of Object.entries(initial))
-            if (!this.core.selectionReady(escapeSegment(key)))
-              Object.defineProperty(filled, key, { value: seed, enumerable: true });
-          defaultView = share(defaultView, filled);
+        const readyStatic =
+          paths !== 'dynamic' && paths.every((path) => available(path) && this.cache.ready(path));
+        // A fully loaded static projection already has authoritative data in viewState.
+        // Defaults are only needed for unavailable sources or dynamic discovery.
+        if (defaults && !readyStatic) {
+          defaultView = this.defaultsView();
           view = defaultView as object;
+        } else if (defaults) {
+          // Drop any previous discovery view so it cannot retain unrelated sources.
+          defaultView = undefined;
         }
         // NgRx retains this map through its last view argument. Never attach
         // unrelated queries: they must be collectable when their cache evicts.
         const queryValues = queries.length
           ? this.cache.queryValues(queries.filter((query) => available(query.id)))
           : undefined;
-        if (paths !== 'dynamic') {
+        if (staticSources) {
           // A selector retains its last state argument. Give static selectors
           // only their own sources, so a ui/count memo cannot retain a list.
-          let scoped: unknown = {};
-          for (const path of paths) {
-            if (queries.some((query) => query.id === path)) continue;
-            scoped = put(scoped, path.split('/'), at(view, path.split('/')));
+          const previousValues = scopedValues;
+          if (!previousValues || staticSources.some((segments, index) => at(view, segments) !== previousValues[index])) {
+            let scoped: unknown = {};
+            scopedValues = [];
+            for (const segments of staticSources) {
+              const input = at(view, segments);
+              scopedValues.push(input);
+              scoped = put(scoped, segments, input);
+            }
+            scopedView = share(scopedView, scoped);
           }
-          scopedView = share(scopedView, scoped);
           view = scopedView as object;
         }
         const nextQueryValues = queries.map((query) => queryValues?.get(query.id));
         const sameQueries =
           nextQueryValues.length === previousQueryValues.length &&
           nextQueryValues.every((value, index) => value === previousQueryValues[index]);
-        const readyStatic =
-          paths !== 'dynamic' && paths.every((path) => available(path) && this.cache.ready(path));
         if (emitted && paths !== 'dynamic' && readyStatic && evaluatedView === view && sameQueries)
           return;
         evaluatedView = view;
@@ -287,7 +327,7 @@ export class SqliteSelectionEngine implements SelectionEngine {
         .filter((path) => this.core.selectionReady(path))
         .map((path) => this.cache.ensure(path)),
     );
-    await this.cache.refresh();
+    await this.cache.refresh(false);
     this.cache.notify();
     // A conditional dynamic selector can discover another feature during refresh.
     // Drain those loads before ScannedActions, but never await bootstrap from its own hook.

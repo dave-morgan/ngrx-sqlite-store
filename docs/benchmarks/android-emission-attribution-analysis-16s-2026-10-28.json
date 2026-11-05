@@ -1,0 +1,860 @@
+{
+  "diagnosticOnly": true,
+  "installedApkHash": "8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5",
+  "session": "16s-emission-cpu",
+  "boot": "cebb3235-c784-4fd7-a571-786737230b5e",
+  "seedSummary": " 6523 open · 10000 total ",
+  "toggleObservations": 30,
+  "emissionObservations": 2000,
+  "emission": {
+    "n": 2000,
+    "p50": 3.099999999991269,
+    "p95": 4.099999999991269,
+    "mean": 3.255449999999968
+  },
+  "profileNodes": 347,
+  "profileSamples": 4650,
+  "wallMs": 6754.436,
+  "weightedSampleMs": 6753.285,
+  "self": [
+    {
+      "functionName": "(idle)",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 3986,
+      "weightedMs": 5641.399000000019
+    },
+    {
+      "functionName": "(program)",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 95,
+      "weightedMs": 317.401
+    },
+    {
+      "functionName": "now",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 129,
+      "weightedMs": 192.74600000000004
+    },
+    {
+      "functionName": "removeEventListener",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 147,
+      "weightedMs": 190.92100000000005
+    },
+    {
+      "functionName": "(garbage collector)",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 25,
+      "weightedMs": 37.93100000000001
+    },
+    {
+      "functionName": "win.androidBridge.onmessage",
+      "url": "",
+      "lineNumber": 928,
+      "columnNumber": 55,
+      "samples": 16,
+      "weightedMs": 27.645
+    },
+    {
+      "functionName": "W$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 12809,
+      "samples": 16,
+      "weightedMs": 22.794999999999998
+    },
+    {
+      "functionName": "postToNative",
+      "url": "",
+      "lineNumber": 843,
+      "columnNumber": 31,
+      "samples": 13,
+      "weightedMs": 20.656
+    },
+    {
+      "functionName": "v",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 30993,
+      "samples": 10,
+      "weightedMs": 16.332
+    },
+    {
+      "functionName": "recount",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 27488,
+      "samples": 7,
+      "weightedMs": 10.657
+    },
+    {
+      "functionName": "jn",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 12439,
+      "samples": 6,
+      "weightedMs": 10.013
+    },
+    {
+      "functionName": "x",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 58,
+      "columnNumber": 6976,
+      "samples": 7,
+      "weightedMs": 9.53
+    },
+    {
+      "functionName": "m",
+      "url": "https://localhost/chunk-DmLvXUtC.js",
+      "lineNumber": 0,
+      "columnNumber": 1106,
+      "samples": 5,
+      "weightedMs": 9.522
+    },
+    {
+      "functionName": "selectionReady",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 3922,
+      "samples": 6,
+      "weightedMs": 9.478
+    },
+    {
+      "functionName": "cap.toNative",
+      "url": "",
+      "lineNumber": 894,
+      "columnNumber": 27,
+      "samples": 7,
+      "weightedMs": 8.906
+    },
+    {
+      "functionName": "j$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 1751,
+      "samples": 6,
+      "weightedMs": 8.019
+    },
+    {
+      "functionName": "rr$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 3334,
+      "samples": 7,
+      "weightedMs": 7.726
+    },
+    {
+      "functionName": "publish",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 27965,
+      "samples": 6,
+      "weightedMs": 7.113999999999999
+    },
+    {
+      "functionName": "se$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 14396,
+      "samples": 4,
+      "weightedMs": 6.883
+    },
+    {
+      "functionName": "evict",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 27648,
+      "samples": 5,
+      "weightedMs": 6.773999999999999
+    },
+    {
+      "functionName": "f",
+      "url": "https://localhost/chunk-DmLvXUtC.js",
+      "lineNumber": 0,
+      "columnNumber": 901,
+      "samples": 5,
+      "weightedMs": 6.297
+    },
+    {
+      "functionName": "record",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 34,
+      "columnNumber": 516,
+      "samples": 4,
+      "weightedMs": 6.096000000000001
+    },
+    {
+      "functionName": "owner",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 21890,
+      "samples": 5,
+      "weightedMs": 5.435
+    },
+    {
+      "functionName": "An._next",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 10891,
+      "samples": 3,
+      "weightedMs": 5.221
+    },
+    {
+      "functionName": "selectionFeatures",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 4078,
+      "samples": 5,
+      "weightedMs": 4.999
+    },
+    {
+      "functionName": "SD",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 6,
+      "columnNumber": 6746,
+      "samples": 4,
+      "weightedMs": 4.368
+    },
+    {
+      "functionName": "refreshEntry",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 25208,
+      "samples": 3,
+      "weightedMs": 4.181
+    },
+    {
+      "functionName": "write",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 20,
+      "columnNumber": 231,
+      "samples": 2,
+      "weightedMs": 3.935
+    },
+    {
+      "functionName": "executeSet",
+      "url": "https://localhost/chunk-DIhppnLk.js",
+      "lineNumber": 0,
+      "columnNumber": 9738,
+      "samples": 3,
+      "weightedMs": 3.802
+    },
+    {
+      "functionName": "Be$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 12562,
+      "samples": 3,
+      "weightedMs": 3.731
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 22726,
+      "samples": 3,
+      "weightedMs": 3.718
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 20165,
+      "samples": 2,
+      "weightedMs": 3.709
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 24918,
+      "samples": 3,
+      "weightedMs": 3.666
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 6,
+      "columnNumber": 7442,
+      "samples": 3,
+      "weightedMs": 3.484
+    },
+    {
+      "functionName": "diff",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 10899,
+      "samples": 3,
+      "weightedMs": 3.48
+    },
+    {
+      "functionName": "flush",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 20,
+      "columnNumber": 1146,
+      "samples": 2,
+      "weightedMs": 3.3310000000000004
+    },
+    {
+      "functionName": "diffWrite",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 15527,
+      "samples": 2,
+      "weightedMs": 3.085
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 5394,
+      "samples": 2,
+      "weightedMs": 3.081
+    },
+    {
+      "functionName": "get core",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 29301,
+      "samples": 2,
+      "weightedMs": 3.0140000000000002
+    },
+    {
+      "functionName": "transaction",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 35,
+      "columnNumber": 2310,
+      "samples": 2,
+      "weightedMs": 3.011
+    },
+    {
+      "functionName": "withDefaults",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 21661,
+      "samples": 3,
+      "weightedMs": 3.008
+    },
+    {
+      "functionName": "Eg",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 3,
+      "columnNumber": 8913,
+      "samples": 2,
+      "weightedMs": 2.95
+    },
+    {
+      "functionName": "next",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 16642,
+      "samples": 2,
+      "weightedMs": 2.8810000000000002
+    },
+    {
+      "functionName": "C$2",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 1389,
+      "samples": 2,
+      "weightedMs": 2.8729999999999998
+    },
+    {
+      "functionName": "K",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 58,
+      "columnNumber": 6607,
+      "samples": 2,
+      "weightedMs": 2.734
+    },
+    {
+      "functionName": "check",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 20,
+      "columnNumber": 404,
+      "samples": 2,
+      "weightedMs": 2.7279999999999998
+    },
+    {
+      "functionName": "next",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 2471,
+      "samples": 3,
+      "weightedMs": 2.6109999999999998
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 7160,
+      "samples": 2,
+      "weightedMs": 2.532
+    },
+    {
+      "functionName": "register",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 17749,
+      "samples": 1,
+      "weightedMs": 2.489
+    },
+    {
+      "functionName": "refresh",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 24821,
+      "samples": 1,
+      "weightedMs": 2.435
+    },
+    {
+      "functionName": "F$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 3806,
+      "samples": 2,
+      "weightedMs": 2.417
+    },
+    {
+      "functionName": "_subscribe",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 21469,
+      "samples": 1,
+      "weightedMs": 2.261
+    },
+    {
+      "functionName": "set",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 3728,
+      "samples": 2,
+      "weightedMs": 2.246
+    },
+    {
+      "functionName": "gh",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 16565,
+      "samples": 1,
+      "weightedMs": 2.204
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 6,
+      "columnNumber": 7151,
+      "samples": 1,
+      "weightedMs": 2.175
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 31244,
+      "samples": 1,
+      "weightedMs": 2.156
+    },
+    {
+      "functionName": "next",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 11112,
+      "samples": 1,
+      "weightedMs": 2.145
+    },
+    {
+      "functionName": "load",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 2662,
+      "samples": 1,
+      "weightedMs": 2.14
+    },
+    {
+      "functionName": "reducer",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 3247,
+      "samples": 2,
+      "weightedMs": 2.135
+    },
+    {
+      "functionName": "location",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 22408,
+      "samples": 1,
+      "weightedMs": 2.075
+    },
+    {
+      "functionName": "queryValues",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 21533,
+      "samples": 1,
+      "weightedMs": 2.058
+    },
+    {
+      "functionName": "publishView",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 33032,
+      "samples": 1,
+      "weightedMs": 2.054
+    },
+    {
+      "functionName": "l",
+      "url": "https://localhost/chunk-DmLvXUtC.js",
+      "lineNumber": 0,
+      "columnNumber": 989,
+      "samples": 2,
+      "weightedMs": 2.037
+    },
+    {
+      "functionName": "overlaps",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 34,
+      "columnNumber": 899,
+      "samples": 2,
+      "weightedMs": 2.037
+    },
+    {
+      "functionName": "kr$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 15017,
+      "samples": 1,
+      "weightedMs": 1.975
+    },
+    {
+      "functionName": "get",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 3,
+      "columnNumber": 6737,
+      "samples": 1,
+      "weightedMs": 1.975
+    },
+    {
+      "functionName": "u",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 6,
+      "columnNumber": 6461,
+      "samples": 1,
+      "weightedMs": 1.947
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 35073,
+      "samples": 2,
+      "weightedMs": 1.9180000000000001
+    },
+    {
+      "functionName": "whenEvicted",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 21800,
+      "samples": 1,
+      "weightedMs": 1.908
+    },
+    {
+      "functionName": "Ee",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 3340,
+      "samples": 1,
+      "weightedMs": 1.907
+    },
+    {
+      "functionName": "Iu",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 30322,
+      "samples": 1,
+      "weightedMs": 1.872
+    },
+    {
+      "functionName": "de$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 19,
+      "columnNumber": 2869,
+      "samples": 1,
+      "weightedMs": 1.855
+    },
+    {
+      "functionName": "Dr$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 12272,
+      "samples": 1,
+      "weightedMs": 1.828
+    },
+    {
+      "functionName": "invalidate",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 3360,
+      "samples": 1,
+      "weightedMs": 1.822
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 32265,
+      "samples": 1,
+      "weightedMs": 1.794
+    },
+    {
+      "functionName": "m",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 30755,
+      "samples": 1,
+      "weightedMs": 1.755
+    },
+    {
+      "functionName": "returnResult",
+      "url": "",
+      "lineNumber": 938,
+      "columnNumber": 33,
+      "samples": 2,
+      "weightedMs": 1.748
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 58,
+      "columnNumber": 7012,
+      "samples": 1,
+      "weightedMs": 1.692
+    },
+    {
+      "functionName": "next",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 3056,
+      "samples": 3,
+      "weightedMs": 1.6039999999999999
+    },
+    {
+      "functionName": "decideKind",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 8363,
+      "samples": 1,
+      "weightedMs": 1.562
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 33099,
+      "samples": 2,
+      "weightedMs": 1.458
+    },
+    {
+      "functionName": "Q$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 1489,
+      "samples": 1,
+      "weightedMs": 1.443
+    },
+    {
+      "functionName": "evaluate",
+      "url": "",
+      "lineNumber": 363,
+      "columnNumber": 10,
+      "samples": 1,
+      "weightedMs": 1.349
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 1303,
+      "samples": 1,
+      "weightedMs": 1.337
+    },
+    {
+      "functionName": "executor",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 35,
+      "columnNumber": 6044,
+      "samples": 1,
+      "weightedMs": 1.224
+    },
+    {
+      "functionName": "n",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 34,
+      "columnNumber": 718,
+      "samples": 1,
+      "weightedMs": 1.164
+    },
+    {
+      "functionName": "",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1,
+      "samples": 2,
+      "weightedMs": 1.1629999999999998
+    },
+    {
+      "functionName": "remove",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 1130,
+      "samples": 1,
+      "weightedMs": 1.136
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 23998,
+      "samples": 1,
+      "weightedMs": 1.088
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 29269,
+      "samples": 1,
+      "weightedMs": 1.018
+    },
+    {
+      "functionName": "Zn",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 0,
+      "columnNumber": 1615,
+      "samples": 1,
+      "weightedMs": 1.004
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 27708,
+      "samples": 1,
+      "weightedMs": 0.996
+    },
+    {
+      "functionName": "je$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 33,
+      "columnNumber": 9068,
+      "samples": 1,
+      "weightedMs": 0.989
+    },
+    {
+      "functionName": "",
+      "url": "",
+      "lineNumber": 1003,
+      "columnNumber": 35,
+      "samples": 1,
+      "weightedMs": 0.943
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 24860,
+      "samples": 1,
+      "weightedMs": 0.863
+    },
+    {
+      "functionName": "updateValue",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 20,
+      "columnNumber": 2738,
+      "samples": 1,
+      "weightedMs": 0.83
+    },
+    {
+      "functionName": "write",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 35,
+      "columnNumber": 3062,
+      "samples": 1,
+      "weightedMs": 0.797
+    },
+    {
+      "functionName": "",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 30288,
+      "samples": 1,
+      "weightedMs": 0.793
+    },
+    {
+      "functionName": "s",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 26418,
+      "samples": 1,
+      "weightedMs": 0.751
+    },
+    {
+      "functionName": "benchEmit",
+      "url": "https://localhost/chunk-DrLqp8_5.js",
+      "lineNumber": 0,
+      "columnNumber": 5940,
+      "samples": 1,
+      "weightedMs": 0.68
+    },
+    {
+      "functionName": "refresh",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 32593,
+      "samples": 1,
+      "weightedMs": 0.638
+    },
+    {
+      "functionName": "Ze",
+      "url": "https://localhost/chunk-DMkbI0ct.js",
+      "lineNumber": 2,
+      "columnNumber": 30358,
+      "samples": 2,
+      "weightedMs": 0.634
+    },
+    {
+      "functionName": "postponeMaintenance",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 35,
+      "columnNumber": 4891,
+      "samples": 1,
+      "weightedMs": 0.178
+    },
+    {
+      "functionName": "te$1",
+      "url": "https://localhost/main-WXNYKF2G.js",
+      "lineNumber": 49,
+      "columnNumber": 12755,
+      "samples": 1,
+      "weightedMs": 0.174
+    }
+  ],
+  "rawSha256": "c9a6ff45fb878ddc1f636ca27ac1239942d57656482949093b078e6e3ba10ad1",
+  "profileSha256": "099afe6d63e5246ca23c60d96684e894e68bdec9b2ec2100e0a1a1b34bacb47c",
+  "limitations": [
+    "V8 sampling perturbs timings and includes garbage collection; diagnostic only, not acceptance, a floor, or native SQL CPU.",
+    "Normalized seed,30toggles,notes,diagnostics with20emission warmup; does not duplicate the acceptance GC/memory protocol.",
+    "No native wrapper or raw replay, no heap snapshot/capture, no production code change."
+  ]
+}

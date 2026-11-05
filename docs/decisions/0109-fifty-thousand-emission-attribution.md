@@ -1,0 +1,16 @@
+# ADR-0109: locate remaining50klistemission work
+
+Status: Diagnostic16y pending. No production change. Retained16rAPK8394ff506bac866e0d3405083eea4aac782f99986ac85e80266033ada8fa42a5;16xrejectedandreverted.
+
+16xshared-pathscanoptimization reduced syntheticwork and replacementresidual,butfull16L12still3FAILwith6meansoversumSDvsretained16L8;reverted. Targettheactualremaininglistmetricbeforenextimplementation. Prior16ssamplingused10kandlocatedrecount;16tincrementalrecountwasrejected. New16ychangesseedto50000,notunchangedacceptancererunforvariance.
+
+Protocol:postrevertcheckscomplete first,verifiedcoldboot+60settle/installfrozen16r;normalize50000seedviahook+settle/benchSeed(size),30standardtoggles,notes/diagnosticsnavigation,20emissionwarmup,then2000scalarbenchEmitactionsunder100usrequestedV8sampling. ActualAPKhash/session/boot/seed,30toggleand2000emissionarrays,profileheader/nodes/samples/deltas/checkpoints/errorspreserved. No nativewrapper/replay/extraheapsnapshot/production/floorchange. .tmp/16y-run.ps1/.tmp/16y-emission-profile.mjs/.tmp/16y-analyze.cjs.
+
+Samplingperturbstiming/includesGC/idle/nativewaitingandcanbesparserthanrequested;weightedselfsamplesnotexactCPUpercent/nativeSQLCPU. AggregateCPUprofilecannotattributeindividualP95emissionswithoutalignedtimestamps;do notclaimotherwise. SetupdoesnotduplicatetheacceptanceGC/memoryprotocol. No rawverdictchanges. Afterverificationlocatecallers/sourcebeforefix;retainallfailedattempts/nooverwrite/automaticretry. Nextsourcechange stillrequiresregression/listguard/reversedmeasurements/fullfreshacceptanceifwarranted.
+
+Postrevert416library/25tools/1harness/30e2e/librarybuildPASS(.tmp/16x-revert-checks.stdout.log16X_REVERT_CHECKS_DONE).16xRejected;allsource/APK/rawoutcomesretained. Newdiagnostic16y ACTIVE .tmp/16y-run.ps1 PID39360 logs .tmp/16y-run.stdout.log/.stderr.log,onunchangedretained16r at50k,targetlistemission. No appchange/rebuild/acceptancererun/newfloor.
+
+
+16Y_DONE COMPLETE/verifiedretained16rAPKh-boot-session/50000seed/30finite toggles/2000finiteemissions/349profile nodes/5422samples+finite nonnegative deltas. Diagnostic emissionp503.5/P954.8ms under sampling,notacceptance. Weightedselfsampletime mostlyidle6554.392ms;program339.750,performance.now225.303,CapacitorremoveEventListener206.459,GC45.038;storeevict16.811/vwatchcallback19.962/put14.555/share14.292ms coarse samples. No exact CPUpercent/P95causation/nativeSQLclaim. Raw/profile/analysis/hashmatchedAPKsource snippets durably android-emission-attribution-16y-2026-10-28.* and -analysis/-source files.
+
+Sourceinspection confirms evict always filters/sorts inactiveentries;priorrecountoptimization16trejected and not repeated. SDKexecuteSet also appears in profile. Exact installedSDKsource executeSet awaits native then awaits async reorderRows and Promise.resolve evenwithreturnMode=no/no returned rows. Candidatehypothesis next:measureSDKfacade versuspublicnativeplugin executeSet onidentical atomic/no-returnoptions,before any driverchange. Existingdriver alreadyusesrawpublicplugin foropen/catalogprefetch;do notbypass nativeengine/SQL/transactionsemantics or readonlyguards. This potential JSfacade work removal is unproved untilalternating diagnostic;do not assume application benefit from few samples.

@@ -1,0 +1,767 @@
+{
+  "session": "16q2-boolean-count",
+  "pkg": "dev.ngrxsqlite.harness.sqlite",
+  "installedApkHash": "aece947ff0ed477d198527b639c8db7e1d2214592b36648a5e05de52fa8df7f0",
+  "diagnosticOnly": true,
+  "protocol": "Exact captured production count SQL versus equivalent Boolean type-only aggregate predicate; alternating native reads,no DDL/data mutation/startup latency/floor/CPU/heap capture claim.",
+  "sql": "SELECT slot, payload FROM (\n              WITH counts AS MATERIALIZED (\n                SELECT COUNT(CASE WHEN ((((COALESCE(json_type(data, '$.done') IN ('true','false'), 0) AND json_extract(data, '$.done') IS ?)))) THEN 1 END) AS c0,COUNT(CASE WHEN (1) THEN 1 END) AS c1 FROM nss_entity\n                WHERE coll = ? AND data != '' AND json_valid(data)\n              ), promoted AS MATERIALIZED (\n                SELECT id FROM nss_entity WHERE coll = ? AND data = ''\n              ) SELECT 0 AS slot,\n                CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n                FROM (SELECT json_group_array(json_object('id',id,'value',value)) AS payload\n                  FROM (SELECT id,NULL AS value FROM promoted UNION ALL SELECT NULL,c0 FROM counts)) UNION ALL SELECT 1 AS slot,\n                CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n                FROM (SELECT json_group_array(json_object('id',id,'value',value)) AS payload\n                  FROM (SELECT id,NULL AS value FROM promoted UNION ALL SELECT NULL,c1 FROM counts))\n            )",
+  "values": [
+    0,
+    "todos",
+    "todos"
+  ],
+  "observations": [
+    {
+      "round": -3,
+      "mode": "fast",
+      "warmup": true,
+      "ms": 51.299999999813735
+    },
+    {
+      "round": -3,
+      "mode": "old",
+      "warmup": true,
+      "ms": 60.5
+    },
+    {
+      "round": -2,
+      "mode": "old",
+      "warmup": true,
+      "ms": 61.300000000046566
+    },
+    {
+      "round": -2,
+      "mode": "fast",
+      "warmup": true,
+      "ms": 52
+    },
+    {
+      "round": -1,
+      "mode": "fast",
+      "warmup": true,
+      "ms": 51.199999999953434
+    },
+    {
+      "round": -1,
+      "mode": "old",
+      "warmup": true,
+      "ms": 60.699999999953434
+    },
+    {
+      "round": 0,
+      "mode": "old",
+      "warmup": false,
+      "ms": 62.10000000009313
+    },
+    {
+      "round": 0,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 50.60000000009313
+    },
+    {
+      "round": 1,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.10000000009313
+    },
+    {
+      "round": 1,
+      "mode": "old",
+      "warmup": false,
+      "ms": 62.300000000046566
+    },
+    {
+      "round": 2,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61.300000000046566
+    },
+    {
+      "round": 2,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.800000000046566
+    },
+    {
+      "round": 3,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 52.199999999953434
+    },
+    {
+      "round": 3,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61.4000000001397
+    },
+    {
+      "round": 4,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61
+    },
+    {
+      "round": 4,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 50.800000000046566
+    },
+    {
+      "round": 5,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 52.5
+    },
+    {
+      "round": 5,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61.800000000046566
+    },
+    {
+      "round": 6,
+      "mode": "old",
+      "warmup": false,
+      "ms": 62.300000000046566
+    },
+    {
+      "round": 6,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 52.700000000186265
+    },
+    {
+      "round": 7,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 52.200000000186265
+    },
+    {
+      "round": 7,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61.5
+    },
+    {
+      "round": 8,
+      "mode": "old",
+      "warmup": false,
+      "ms": 60.800000000046566
+    },
+    {
+      "round": 8,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 50.9000000001397
+    },
+    {
+      "round": 9,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.4000000001397
+    },
+    {
+      "round": 9,
+      "mode": "old",
+      "warmup": false,
+      "ms": 60.5
+    },
+    {
+      "round": 10,
+      "mode": "old",
+      "warmup": false,
+      "ms": 60.800000000046566
+    },
+    {
+      "round": 10,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 52.0999999998603
+    },
+    {
+      "round": 11,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.199999999953434
+    },
+    {
+      "round": 11,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61.5
+    },
+    {
+      "round": 12,
+      "mode": "old",
+      "warmup": false,
+      "ms": 60.799999999813735
+    },
+    {
+      "round": 12,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 52.89999999990687
+    },
+    {
+      "round": 13,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 52.5
+    },
+    {
+      "round": 13,
+      "mode": "old",
+      "warmup": false,
+      "ms": 60.199999999953434
+    },
+    {
+      "round": 14,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61.0999999998603
+    },
+    {
+      "round": 14,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.699999999953434
+    },
+    {
+      "round": 15,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 50.199999999953434
+    },
+    {
+      "round": 15,
+      "mode": "old",
+      "warmup": false,
+      "ms": 60.5
+    },
+    {
+      "round": 16,
+      "mode": "old",
+      "warmup": false,
+      "ms": 60.60000000009313
+    },
+    {
+      "round": 16,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.800000000046566
+    },
+    {
+      "round": 17,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.300000000046566
+    },
+    {
+      "round": 17,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61.5
+    },
+    {
+      "round": 18,
+      "mode": "old",
+      "warmup": false,
+      "ms": 60.300000000046566
+    },
+    {
+      "round": 18,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 52.39999999990687
+    },
+    {
+      "round": 19,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 50.800000000046566
+    },
+    {
+      "round": 19,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61.39999999990687
+    },
+    {
+      "round": 20,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61
+    },
+    {
+      "round": 20,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 52.9000000001397
+    },
+    {
+      "round": 21,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 50.5
+    },
+    {
+      "round": 21,
+      "mode": "old",
+      "warmup": false,
+      "ms": 62.39999999990687
+    },
+    {
+      "round": 22,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61.9000000001397
+    },
+    {
+      "round": 22,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.699999999953434
+    },
+    {
+      "round": 23,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.89999999990687
+    },
+    {
+      "round": 23,
+      "mode": "old",
+      "warmup": false,
+      "ms": 60.9000000001397
+    },
+    {
+      "round": 24,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61.199999999953434
+    },
+    {
+      "round": 24,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 50.5
+    },
+    {
+      "round": 25,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.199999999953434
+    },
+    {
+      "round": 25,
+      "mode": "old",
+      "warmup": false,
+      "ms": 60.200000000186265
+    },
+    {
+      "round": 26,
+      "mode": "old",
+      "warmup": false,
+      "ms": 60.800000000046566
+    },
+    {
+      "round": 26,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.199999999953434
+    },
+    {
+      "round": 27,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 52
+    },
+    {
+      "round": 27,
+      "mode": "old",
+      "warmup": false,
+      "ms": 62.800000000046566
+    },
+    {
+      "round": 28,
+      "mode": "old",
+      "warmup": false,
+      "ms": 61.39999999990687
+    },
+    {
+      "round": 28,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 51.39999999990687
+    },
+    {
+      "round": 29,
+      "mode": "fast",
+      "warmup": false,
+      "ms": 50.5
+    },
+    {
+      "round": 29,
+      "mode": "old",
+      "warmup": false,
+      "ms": 59.39999999990687
+    }
+  ],
+  "cleanupErrors": [],
+  "originalIndexes": [
+    {
+      "name": "nss_entity_order",
+      "sql": "CREATE INDEX nss_entity_order ON nss_entity(coll, pos)"
+    },
+    {
+      "name": "nss_entity_sortkey",
+      "sql": "CREATE INDEX nss_entity_sortkey ON nss_entity(coll, sortkey, pos)"
+    },
+    {
+      "name": "nss_entity_promoted",
+      "sql": "CREATE INDEX nss_entity_promoted ON nss_entity(coll) WHERE data = ''"
+    },
+    {
+      "name": "nss_query_646f6e65",
+      "sql": "CREATE INDEX nss_query_646f6e65 ON nss_entity(coll,json_extract(data,'$.done')) WHERE data != '' AND json_valid(data)"
+    },
+    {
+      "name": "nss_query_757365724964",
+      "sql": "CREATE INDEX nss_query_757365724964 ON nss_entity(coll,json_extract(data,'$.userId')) WHERE data != '' AND json_valid(data)"
+    }
+  ],
+  "sourceRows": 50000,
+  "expected": [
+    {
+      "slot": 0,
+      "payload": [
+        {
+          "id": null,
+          "value": 32487
+        }
+      ]
+    },
+    {
+      "slot": 1,
+      "payload": [
+        {
+          "id": null,
+          "value": 50000
+        }
+      ]
+    }
+  ],
+  "beforePlan": [
+    {
+      "id": 1,
+      "parent": 0,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 2,
+      "parent": 1,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 4,
+      "parent": 2,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-5)"
+    },
+    {
+      "id": 6,
+      "parent": 4,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-4)"
+    },
+    {
+      "id": 7,
+      "parent": 6,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 8,
+      "parent": 7,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 11,
+      "parent": 8,
+      "notused": 0,
+      "detail": "MATERIALIZE promoted"
+    },
+    {
+      "id": 14,
+      "parent": 11,
+      "notused": 54,
+      "detail": "SEARCH nss_entity USING COVERING INDEX nss_entity_promoted (coll=?)"
+    },
+    {
+      "id": 28,
+      "parent": 8,
+      "notused": 48,
+      "detail": "SCAN promoted"
+    },
+    {
+      "id": 34,
+      "parent": 7,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 37,
+      "parent": 34,
+      "notused": 0,
+      "detail": "MATERIALIZE counts"
+    },
+    {
+      "id": 41,
+      "parent": 37,
+      "notused": 56,
+      "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+    },
+    {
+      "id": 89,
+      "parent": 34,
+      "notused": 16,
+      "detail": "SCAN counts"
+    },
+    {
+      "id": 97,
+      "parent": 4,
+      "notused": 49,
+      "detail": "SCAN (subquery-4)"
+    },
+    {
+      "id": 109,
+      "parent": 2,
+      "notused": 16,
+      "detail": "SCAN (subquery-5)"
+    },
+    {
+      "id": 124,
+      "parent": 1,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 126,
+      "parent": 124,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-9)"
+    },
+    {
+      "id": 128,
+      "parent": 126,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-8)"
+    },
+    {
+      "id": 129,
+      "parent": 128,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 130,
+      "parent": 129,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 133,
+      "parent": 130,
+      "notused": 216,
+      "detail": "SCAN promoted"
+    },
+    {
+      "id": 139,
+      "parent": 129,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 142,
+      "parent": 139,
+      "notused": 216,
+      "detail": "SCAN counts"
+    },
+    {
+      "id": 150,
+      "parent": 126,
+      "notused": 226,
+      "detail": "SCAN (subquery-8)"
+    },
+    {
+      "id": 162,
+      "parent": 124,
+      "notused": 16,
+      "detail": "SCAN (subquery-9)"
+    }
+  ],
+  "optimizedSql": "SELECT slot, payload FROM (\n              WITH counts AS MATERIALIZED (\n                SELECT COUNT(CASE WHEN (((COALESCE(json_type(data, '$.done') = ?, 0)))) THEN 1 END) AS c0,COUNT(CASE WHEN (1) THEN 1 END) AS c1 FROM nss_entity\n                WHERE coll = ? AND data != '' AND json_valid(data)\n              ), promoted AS MATERIALIZED (\n                SELECT id FROM nss_entity WHERE coll = ? AND data = ''\n              ) SELECT 0 AS slot,\n                CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n                FROM (SELECT json_group_array(json_object('id',id,'value',value)) AS payload\n                  FROM (SELECT id,NULL AS value FROM promoted UNION ALL SELECT NULL,c0 FROM counts)) UNION ALL SELECT 1 AS slot,\n                CASE WHEN length(CAST(payload AS BLOB)) <= 1048576 THEN payload END AS payload\n                FROM (SELECT json_group_array(json_object('id',id,'value',value)) AS payload\n                  FROM (SELECT id,NULL AS value FROM promoted UNION ALL SELECT NULL,c1 FROM counts))\n            )",
+  "optimizedValues": [
+    "false",
+    "todos",
+    "todos"
+  ],
+  "afterPlan": [
+    {
+      "id": 1,
+      "parent": 0,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 2,
+      "parent": 1,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 4,
+      "parent": 2,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-5)"
+    },
+    {
+      "id": 6,
+      "parent": 4,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-4)"
+    },
+    {
+      "id": 7,
+      "parent": 6,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 8,
+      "parent": 7,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 11,
+      "parent": 8,
+      "notused": 0,
+      "detail": "MATERIALIZE promoted"
+    },
+    {
+      "id": 14,
+      "parent": 11,
+      "notused": 54,
+      "detail": "SEARCH nss_entity USING COVERING INDEX nss_entity_promoted (coll=?)"
+    },
+    {
+      "id": 28,
+      "parent": 8,
+      "notused": 48,
+      "detail": "SCAN promoted"
+    },
+    {
+      "id": 34,
+      "parent": 7,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 37,
+      "parent": 34,
+      "notused": 0,
+      "detail": "MATERIALIZE counts"
+    },
+    {
+      "id": 41,
+      "parent": 37,
+      "notused": 56,
+      "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+    },
+    {
+      "id": 79,
+      "parent": 34,
+      "notused": 16,
+      "detail": "SCAN counts"
+    },
+    {
+      "id": 87,
+      "parent": 4,
+      "notused": 49,
+      "detail": "SCAN (subquery-4)"
+    },
+    {
+      "id": 99,
+      "parent": 2,
+      "notused": 16,
+      "detail": "SCAN (subquery-5)"
+    },
+    {
+      "id": 114,
+      "parent": 1,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 116,
+      "parent": 114,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-9)"
+    },
+    {
+      "id": 118,
+      "parent": 116,
+      "notused": 0,
+      "detail": "CO-ROUTINE (subquery-8)"
+    },
+    {
+      "id": 119,
+      "parent": 118,
+      "notused": 0,
+      "detail": "COMPOUND QUERY"
+    },
+    {
+      "id": 120,
+      "parent": 119,
+      "notused": 0,
+      "detail": "LEFT-MOST SUBQUERY"
+    },
+    {
+      "id": 123,
+      "parent": 120,
+      "notused": 216,
+      "detail": "SCAN promoted"
+    },
+    {
+      "id": 129,
+      "parent": 119,
+      "notused": 0,
+      "detail": "UNION ALL"
+    },
+    {
+      "id": 132,
+      "parent": 129,
+      "notused": 216,
+      "detail": "SCAN counts"
+    },
+    {
+      "id": 140,
+      "parent": 116,
+      "notused": 226,
+      "detail": "SCAN (subquery-8)"
+    },
+    {
+      "id": 152,
+      "parent": 114,
+      "notused": 16,
+      "detail": "SCAN (subquery-9)"
+    }
+  ],
+  "cleanupAbsent": true,
+  "finalRows": 50000
+}

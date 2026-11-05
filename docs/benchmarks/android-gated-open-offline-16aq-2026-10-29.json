@@ -1,0 +1,25 @@
+{
+  "kind": "offline gated-open candidate; no APK or device measurement",
+  "date": "2026-10-29",
+  "context": "driver variant tested atop provisional16ap core/selection; baseline choice must be explicit before any future APK experiment",
+  "checks": {
+    "library": 433,
+    "tools": 29,
+    "harness": 1,
+    "e2e": 30,
+    "libraryBuild": "PASS"
+  },
+  "hashes": {
+    "capacitor-sqlite-driver.ts": {
+      "candidate": "ca953d2bcab47331949bd5bdc5f64bcaa2434c0431cbefb3e1fa2130067880e2",
+      "baseline": "9925d41f4a72c56ebf0d418fd4262190a2ccff0eab11da366226aef5d8a9e9f5"
+    },
+    "capacitor-sqlite-driver.spec.ts": {
+      "candidate": "b56d158a2a3a71b1c3f5bbead93bfb73c50a0a47bf8fa767b0df42e6c3c92aa6",
+      "baseline": "d37f0be84e22ef0c4335572067266751cb7650f8033ad20dc1c460fdcfefd842"
+    }
+  },
+  "liveDriverRestoredExactly": true,
+  "deviceValidated": false,
+  "apkBuilt": false
+}

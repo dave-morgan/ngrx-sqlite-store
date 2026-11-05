@@ -1,5 +1,13 @@
 import { invalidateWrites } from './committed-writes';
-import { entityChanges, recordEntityChange, releaseEntityChanges } from './entity-changes';
+import {
+  dropEntityReplacements,
+  entityChanges,
+  entityReplacements,
+  recordEntityChange,
+  recordEntityReplacement,
+  releaseEntityChanges,
+  releaseEntityReplacements,
+} from './entity-changes';
 interface Branch {
   path?: string;
   children: Map<string, Branch>;
@@ -12,14 +20,23 @@ export class ChangeSet {
 
   add(path: string): void {
     this.physical.add(path);
+    dropEntityReplacements(this, path, true);
     this.record(path);
   }
   addEntity(coll: string, id: string): void {
     entityChanges(this).get(coll)?.delete(id);
+    this.touchEntities(coll);
     this.record(`${coll}/${escapeSegment(id)}`);
   }
   addEntityOrder(coll: string): void {
+    this.touchEntities(coll);
     this.record(`${coll}/#order`);
+  }
+  /** Collections with entity row or order writes (drops replacement records on merge). */
+  private readonly entityCollections = new Set<string>();
+  private touchEntities(coll: string): void {
+    this.entityCollections.add(coll);
+    dropEntityReplacements(this, coll, false);
   }
   physicalOverlaps(path: string): boolean {
     for (const changed of this.physical) if (pathsOverlap(changed, path)) return true;
@@ -80,10 +97,20 @@ export class ChangeSet {
     for (const [coll, rows] of entityChanges(this))
       for (const id of rows.keys())
         if (other.overlaps(`${coll}/${escapeSegment(id)}`)) rows.delete(id);
+    for (const coll of other.entityCollections) dropEntityReplacements(this, coll, false);
+    for (const path of other.physical) dropEntityReplacements(this, path, true);
+    for (const coll of other.entityCollections) this.entityCollections.add(coll);
     for (const path of other.paths()) this.record(path);
     for (const path of other.physical) this.physical.add(path);
     for (const { coll, change } of incoming) recordEntityChange(this, coll, change);
-    if (!includeEntities) releaseEntityChanges(this);
+    // A replacement determines the whole collection, superseding earlier history.
+    if (includeEntities)
+      for (const [coll, entities] of entityReplacements(other) ?? [])
+        recordEntityReplacement(this, coll, entities);
+    if (!includeEntities) {
+      releaseEntityChanges(this);
+      releaseEntityReplacements(this);
+    }
   }
 }
 import { escapeSegment, pathsOverlap } from './path';

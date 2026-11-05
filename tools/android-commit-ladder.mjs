@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { benchmarkSerial } from './android-benchmark-target.mjs';
 // Phase 15f diagnostic: single-transaction commit cost of F_commit's statement versus the
 // store's real toggle writes, on the seeded harness database. Never an acceptance input.
 // [--size 1000] [--samples 60] [--serial emulator-5554] [--output FILE]
@@ -10,7 +11,7 @@ import { execAdb } from './android-adb.mjs';
 const argv = process.argv.slice(2);
 const option = (name, fallback) => argv.includes(`--${name}`) ? argv[argv.indexOf(`--${name}`) + 1] : fallback;
 const adbFile = process.env.BENCH_ADB ?? join(process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT, 'platform-tools', 'adb.exe');
-const adb = (...args) => execAdb(adbFile, ['-s', option('serial', 'emulator-5554'), ...args], {
+const adb = (...args) => execAdb(adbFile, ['-s', benchmarkSerial(option('serial')), ...args], {
   encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
 });
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -19,6 +20,7 @@ const pkg = `${base}.sqlite`;
 const size = Number(option('size', '1000'));
 const samples = Number(option('samples', '60'));
 const gap = Number(option('gap', '15'));
+const afterReset = argv.includes('--after-reset');
 
 async function launch() {
   for (const name of [`${base}.classic`, pkg]) adb('shell', 'am', 'force-stop', name);
@@ -51,7 +53,7 @@ try {
   await page.reload();
   await page.waitForFunction(() => window.__harness?.ready, null, { timeout: 300000 });
   await page.evaluate(() => window.__harness.settle());
-  const result = await page.evaluate(async ({ count, gap }) => {
+  const result = await page.evaluate(async ({ count, gap, afterReset }) => {
     const database = 'ngrx-harness';
     const native = (method, options) =>
       window.Capacitor.nativePromise('CapacitorSQLite', method, { database, readonly: false, ...options });
@@ -68,6 +70,35 @@ try {
       'node UPDATE nss_node (effect write)': (i) => set('UPDATE nss_node SET value = ? WHERE path = ?', [node.value, node.path]),
       'nss_bench UPDATE same bytes as todo': (i) => set('INSERT OR REPLACE INTO nss_bench(k,v) VALUES (2,?)', [flip(todo.data, i)]),
     };
+    if (afterReset) {
+      // Commit latency by position after each kind of WAL maintenance (Phase 15f).
+      const variants = {
+        'truncate+shrink': async () => { await native('query', { statement: 'PRAGMA wal_checkpoint(TRUNCATE)', values: [] }); await native('query', { statement: 'PRAGMA shrink_memory', values: [] }); },
+        truncate: () => native('query', { statement: 'PRAGMA wal_checkpoint(TRUNCATE)', values: [] }),
+        passive: () => native('query', { statement: 'PRAGMA wal_checkpoint(PASSIVE)', values: [] }),
+        shrink: () => native('query', { statement: 'PRAGMA shrink_memory', values: [] }),
+        none: async () => undefined,
+      };
+      const positions = {};
+      for (let round = 0; round < 6; round++) {
+        const names = Object.keys(variants);
+        if (round % 2) names.reverse();
+        for (const name of names) {
+          // Grow the WAL first, as the store's toggles and effects do before maintenance.
+          for (let i = 0; i < 20; i++) await steps['todo UPDATE nss_entity (store toggle)'](i);
+          await variants[name]();
+          await new Promise((r) => setTimeout(r, 300));
+          positions[name] ??= Array.from({ length: 8 }, () => []);
+          for (let i = 0; i < 8; i++) {
+            const began = performance.now();
+            await steps['todo UPDATE nss_entity (store toggle)'](i);
+            positions[name][i].push(performance.now() - began);
+            await new Promise((r) => setTimeout(r, gap));
+          }
+        }
+      }
+      return { positions };
+    }
     const out = {};
     for (const name of Object.keys(steps)) out[name] = [];
     for (let i = 0; i < count; i++) {
@@ -85,7 +116,13 @@ try {
       pragmas[name] = (await native('query', { statement: `PRAGMA ${name}`, values: [] })).values?.[0];
     const indexes = (await native('query', { statement: "SELECT name FROM sqlite_master WHERE type='index' AND tbl_name='nss_entity'", values: [] })).values;
     return { out, pragmas, indexes, todoBytes: todo.data.length, nodePath: node.path };
-  }, { count: samples, gap });
+  }, { count: samples, gap, afterReset });
+  if (result.positions) {
+    for (const [name, rows] of Object.entries(result.positions))
+      console.log(name.padEnd(16), rows.map((v) => [...v].sort((a, b) => a - b)[Math.floor(v.length / 2)].toFixed(1).padStart(6)).join(' '), ' | max', rows.map((v) => Math.max(...v).toFixed(0).padStart(4)).join(' '));
+    writeFileSync(`.tmp/commit-after-reset-${size}.json`, JSON.stringify(result, null, 2));
+    process.exit(0);
+  }
   const pct = (v, p) => [...v].sort((a, b) => a - b)[Math.min(v.length - 1, Math.floor(v.length * p))];
   const summary = Object.fromEntries(Object.entries(result.out).map(([k, v]) => [k, { p50: pct(v, 0.5), p95: pct(v, 0.95), mean: v.reduce((a, b) => a + b, 0) / v.length }]));
   writeFileSync(option('output', `.tmp/commit-ladder-${size}-gap${gap}.json`), JSON.stringify({ size, samples, gap, ...result, summary }, null, 2) + '\n');

@@ -40,7 +40,7 @@ import { PathCache } from '../selectors/path-cache';
 import { SqliteSelectionEngine } from '../selectors/selection-engine';
 import type { SqliteFeatureConfig, SqliteStoreConfig } from './tokens';
 import type { RegisteredFeature } from './tokens';
-import { PREWARM_READY, prewarmSqliteStore, registerPrewarm, registerPrewarmFeature, takePrewarm } from './prewarm';
+import { PREWARM_CLEARED, PREWARM_READY, prewarmSqliteStore, registerPrewarm, registerPrewarmFeature, takePrewarm } from './prewarm';
 import { getTxReducerMetadata, isTxReducer } from '../reducer/reducer';
 
 export type SqliteRootConfig<T, A extends Action = Action> = RootStoreConfig<T, A> & {
@@ -95,6 +95,7 @@ function rootProviders<T, A extends Action>(
       },
     },
     { provide: PREWARM_READY, useFactory: () => { inject(SQL_DRIVER); return prewarm?.ready; } },
+    { provide: PREWARM_CLEARED, useFactory: () => { inject(SQL_DRIVER); return prewarm?.cleared ?? []; } },
     SqliteStoreCore,
     PathCache,
     SqliteSelectionEngine,

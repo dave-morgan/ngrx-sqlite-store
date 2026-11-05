@@ -1,3 +1,4 @@
+import { shareKnown } from './share-known';
 import type { EntityRow, NodeRow } from '../schema/row-writer';
 import type { SqlValue } from '../driver/sql-driver';
 import { committedWrites } from '../storage/committed-writes';
@@ -7,23 +8,23 @@ import { NodeKind } from '../schema/kinds';
 import { getNodeMeta, setNodeMeta } from '../schema/meta';
 import { NodeStore } from '../schema/node-store';
 import { ChangeSet } from '../storage/change-set';
-import { isAncestorOrSelf, parentPath, pathsOverlap } from '../storage/path';
+import { disjointPaths, isAncestorOrSelf, parentPath, pathsOverlap } from '../storage/path';
 import { StorageEngine } from '../storage/storage-engine';
 import { referenceChanges } from '../storage/reference-changes';
 import type { SqlExecutor } from '../storage/storage-engine';
 import { STORE_CONFIGURATION } from '../store/tokens';
-import { at, child, put, share } from './view-state';
+import { at, child, put, putMany, share } from './view-state';
+import type { PutUpdate } from './view-state';
 import type { QuerySource } from './metadata';
 import type { EntityValue } from '../schema/entity-brand';
 import { refreshEntities } from './entity-refresh';
 import { retainedSize } from './retained-size';
 import { SelectorCleanup } from './selector-cleanup';
-import { learnedColumns, queryBatch } from './query-batch';
+import { SUBTREE_COLUMNS, learnedColumns, queryBatch } from './query-batch';
 import { releaseEntityChanges } from '../storage/entity-changes';
 import { refreshQuery } from './query-refresh';
-import type { SqlReader } from './query-selector';
+import type { EntityCountPlan, SqlReader } from './query-selector';
 
-const SUBTREE_COLUMNS = ['path', 'parent', 'kind', 'pos', 'value', 'source', 'coll', 'id', 'data', 'sortkey', 'seq'];
 
 interface Entry {
   query?: QuerySource;
@@ -70,6 +71,8 @@ export class PathCache {
   private clock = 0;
   private revision = 0;
   private currentView: object = Object.freeze({});
+  /** Entry values placed in currentView by the last publish (non-query roots). */
+  private published = new Map<string, unknown>();
   readonly generation = signal(0);
   readonly generations = new BehaviorSubject(0);
   private readonly subscription = this.engine.changes$.subscribe((changes) => {
@@ -175,9 +178,33 @@ export class PathCache {
   }
 
   private owner(path: string): [string, Entry] | undefined {
-    return [...this.entries].find(([root, entry]) =>
-      entry.query ? root === path : isAncestorOrSelf(root, path),
-    );
+    // Hot path (every peek/ready/location, for every active selector on each commit).
+    // Candidates are the exact key and the path's ancestor prefixes: O(depth) lookups
+    // instead of a scan of all entries. Non-query roots are disjoint (loading a root
+    // absorbs its descendants), so one candidate is the norm; if several match, keep the
+    // original first-in-insertion-order rule.
+    let found: [string, Entry] | undefined;
+    let matches = 0;
+    const exact = this.entries.get(path);
+    if (exact) {
+      found = [path, exact];
+      matches++;
+    }
+    for (let end = path.lastIndexOf('/'); ; end = path.lastIndexOf('/', end - 1)) {
+      const prefix = end < 0 ? '' : path.slice(0, end);
+      if (prefix !== path) {
+        const entry = this.entries.get(prefix);
+        if (entry && !entry.query) {
+          found ??= [prefix, entry];
+          matches++;
+        }
+      }
+      if (end < 0) break;
+    }
+    if (matches <= 1) return found;
+    for (const [root, entry] of this.entries)
+      if (entry.query ? root === path : isAncestorOrSelf(root, path)) return [root, entry];
+    return undefined;
   }
   ready(path: string): boolean {
     const owner = this.owner(path);
@@ -324,7 +351,8 @@ export class PathCache {
     if (value !== undefined || !path.includes('/')) return { path, value, location };
     return this.resolveRead(sql, parentPath(path));
   }
-  async refresh(): Promise<void> {
+  /** Selection refresh can defer publication to its final notify/eviction step. */
+  async refresh(publishChanges = true): Promise<void> {
     if (![...this.entries.values()].some((entry) => entry.refcount && !entry.dirty.isEmpty)) return;
     await this.engine.read(async (sql) => {
       const queries: Promise<void>[] = [];
@@ -337,7 +365,7 @@ export class PathCache {
           queries.push(this.refreshEntry(sql, path, entry, batched));
       await Promise.all(queries);
     });
-    this.publish();
+    if (publishChanges) this.publish();
   }
   private async refreshEntry(
     sql: SqlExecutor,
@@ -355,11 +383,12 @@ export class PathCache {
       const entityRows = new Map<string, EntityRow>();
       const queryPath = entry.query.path;
       const next = await entry.query.reader({
-        query: async <R>(statement: string, params?: SqlValue[], columns?: readonly string[]) => {
+        query: async <R>(statement: string, params?: SqlValue[], columns?: readonly string[], entityCount?: EntityCountPlan) => {
           const rows = await reader.query<R>(
             statement,
             params,
             columns ?? entry.transportColumns?.get(statement),
+            entityCount,
           );
           if (!columns && rows.length) {
             const inferred = learnedColumns(statement, rows[0]);
@@ -396,12 +425,12 @@ export class PathCache {
       entry.version = this.revision;
       return;
     }
-    const targets = new ChangeSet();
+    const targets: string[] = [];
     for (const changed of entry.dirty.paths()) {
       if (!pathsOverlap(path, changed)) continue;
       let target = isAncestorOrSelf(changed, path) ? path : changed;
       if (committedWrites(entry.dirty).values.has(target)) {
-        targets.add(target);
+        targets.push(target);
         continue;
       }
       let cursor = path;
@@ -417,11 +446,52 @@ export class PathCache {
         value = child(value, segment);
         cursor += `/${segment}`;
       }
-      targets.add(target);
+      targets.push(target);
     }
-    for (const target of targets.paths()) {
+    // Write-through targets need no read: splice them in one pass (each container copied
+    // once). Targets are disjoint, so their order relative to the reads below is free.
+    const known = committedWrites(entry.dirty).values;
+    const knownAncestor = (target: string): string | undefined => {
+      for (let cursor = target; ; cursor = parentPath(cursor)) {
+        if (known.has(cursor)) return cursor;
+        if (!cursor.includes('/')) return undefined;
+      }
+    };
+    // A leaf splice keeps ancestor metadata. Widen only a changed physical child position.
+    for (let index = 0; index < targets.length; index++) {
+      const target = targets[index];
+      const owner = knownAncestor(target);
+      if (owner === undefined || owner === target) continue;
+      let cursor = isAncestorOrSelf(owner, path) ? path : owner;
+      if (cursor === target) continue;
+      let before = at(entry.value, cursor === path ? [] : cursor.slice(path.length + 1).split('/'));
+      let after = at(known.get(owner), cursor === owner ? [] : cursor.slice(owner.length + 1).split('/'));
+      for (const segment of target.slice(cursor.length + 1).split('/')) {
+        const prior = getNodeMeta(before);
+        const next = getNodeMeta(after);
+        if (prior?.kind === NodeKind.Obj && next?.kind === NodeKind.Obj &&
+            prior.path === cursor && next.path === cursor &&
+            prior.childPos?.get(segment) !== next.childPos?.get(segment)) {
+          targets[index] = cursor;
+          entry.replaced.add(cursor);
+          break;
+        }
+        before = child(before, segment);
+        after = child(after, segment);
+        cursor += `/${segment}`;
+      }
+    }
+    const spliced: PutUpdate[] = [];
+    for (const target of disjointPaths(targets)) {
       const suffix = target === path ? [] : target.slice(path.length + 1).split('/');
       const previous = at(entry.value, suffix);
+      const knownPath = knownAncestor(target);
+      // Entity containers below a known ancestor still try their row-level refresh first.
+      if (knownPath !== undefined && !(knownPath !== target && getNodeMeta(previous)?.kind === NodeKind.Entity)) {
+        const next = at(known.get(knownPath), target === knownPath ? [] : target.slice(knownPath.length + 1).split('/'));
+        spliced.push({ segments: suffix, next: shareKnown(previous, next, entry.replaced, target), remove: next === undefined });
+        continue;
+      }
       if (
         !committedWrites(entry.dirty).values.has(target) &&
         getNodeMeta(previous)?.kind === NodeKind.Entity
@@ -439,8 +509,6 @@ export class PathCache {
           continue;
         }
       }
-      const known = committedWrites(entry.dirty).values;
-      let knownPath = [...known.keys()].find((key) => isAncestorOrSelf(key, target));
       const next =
         knownPath === undefined
           ? await this.read(sql, target, target === path ? entry : undefined)
@@ -473,6 +541,7 @@ export class PathCache {
         cursor += `/${segment}`;
       }
     }
+    entry.value = putMany(entry.value, spliced);
     entry.dirty = new ChangeSet();
     entry.replaced.clear();
     entry.version = this.revision;
@@ -502,10 +571,34 @@ export class PathCache {
     if (removed) this.publish();
   }
   private publish(): void {
-    let view: unknown = Object.freeze({});
-    for (const [path, entry] of this.entries)
-      if (!entry.query) view = put(view, path.split('/'), entry.value);
-    this.currentView = share(this.currentView, view) as object;
+    const current = new Map<string, unknown>();
+    for (const [path, entry] of this.entries) if (!entry.query) current.set(path, entry.value);
+    let incremental = current.size === this.published.size;
+    if (incremental)
+      for (const path of current.keys())
+        if (!this.published.has(path)) {
+          incremental = false;
+          break;
+        }
+    if (incremental) {
+      // Same (disjoint) roots: only re-place the entries whose value changed since the
+      // last publish, instead of rebuilding and reconciling the whole view (Phase 15y).
+      let view: unknown = this.currentView;
+      for (const [path, value] of current)
+        if (this.published.get(path) !== value) {
+          const segments = path.split('/');
+          const before = at(view, segments);
+          // Entry values are already shared against their previous value; when the view still
+          // holds exactly that previous value, a second O(size) share finds nothing new.
+          view = put(view, segments, before === this.published.get(path) ? value : share(before, value));
+        }
+      this.currentView = view as object;
+    } else {
+      let view: unknown = Object.freeze({});
+      for (const [path, value] of current) view = put(view, path.split('/'), value);
+      this.currentView = share(this.currentView, view) as object;
+    }
+    this.published = current;
     const generation = this.generation() + 1;
     this.generation.set(generation);
     this.generations.next(generation);

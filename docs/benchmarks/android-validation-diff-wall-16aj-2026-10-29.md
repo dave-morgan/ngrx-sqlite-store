@@ -1,0 +1,12 @@
+# ADR0119: locate transaction validation and diff wall cost
+
+Status: diagnostic16aj, unchanged retained16r APK; no production change.
+
+After16ai failed the full list/DOM/heap guards, avoid another speculative allocation or Promise change. Source shows diffWrite validates next through policy.decideKind before recursive SubtreeWriter.diff calls decideKind again. serializedSize memoizes object sizes in a bounded WeakMap, so repeated calls are NOT proof of repeated full traversal. Its bounded4096 key-size map clears on capacity; a5000-key replacement may cross that boundary. Neither observation establishes actual application cost.
+
+Capture the existing flat feature NodeStore and policy via the existing Store closure, using the prior targeted setup breakpoint. Remove/resume/disable debugger BEFORE timing. Wrap nodes.read/write/diffWrite and policy.decideKind/hint, recording path/depth only (no state values/object graph), alongside existing transaction/cache/native spans. Three scenarios,30actions each,5000keys/50backgroundtodos; unchanged16r, verified coldboot+60settle/installedhash/session/seed/SQLproof. No CPU profiler/heap capture/GC/PSS/new floor or source/APK change. Restore all descriptors/native/temporaryStore before SQLproof.
+
+Nested walls are not additive CPU, SQLCPU, acceptance or paint evidence; .then instrumentation can perturb scheduling. Verify90finiteactions/nativeatomicwrites/debuggerdisabled/restoration/hash-boot-session/persisted5001rows+target, then attribute policy calls by path and enclosing transaction wall. Implement only a located cost with RED/GREEN/all checks/mandatory50kguard/reversedAPKs/full fresh matched acceptance. Preserve every failure/partial, no automatic retry/overwrite.
+
+
+16AJ_DONE/verified90finiteactions+90nativeatomicUPDATEs/actual16rhash-boot-session/5000keys50todos/SQL5001rows+targetproof/debuggerdisabledBEFOREtiming/wrappersrestored. Scalar/tenkey/replacement invokeNodeStore.diffWrite30/300/1500timesandpolicy.decideKind90/900/4500times. NOrootpolicycall:replaceactiondiffs50scalarpathsviabridge;5000-keyvalidationcachehypothesisNOTapplicabletotimedpath. Policycallmean~.014-.016ms(coarse100usclock/instrumentation),nodes.diffWriteincludesnestedcalls;replacementpreNative8.6333msheavilyinstrumentedNOTexactCPU/crossprobecomparison. RefreshEntry1.5367/1.3933/1.2833,publish1.71/1.1/1.0267inclusive. Sourceconfirmsonepublicnextdecisionrepeatedinsideprivatewriter.diff forsameprimitive. Next16aktestprimitivekindreuseONLYwithinexistingcall;object/containerpathunchanged/nocache,notclaimappgainbeforeAB.

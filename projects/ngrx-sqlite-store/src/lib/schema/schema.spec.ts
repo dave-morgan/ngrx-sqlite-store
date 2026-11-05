@@ -1,12 +1,14 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SqlJsDriver } from '../driver/sqljs-driver';
 import type { SqlExecutor } from '../storage/storage-engine';
+import type { SqlValue } from '../driver/sql-driver';
 import { StorageEngine } from '../storage/storage-engine';
 import { brandEntityState, NSS_ENTITY_BRAND } from './entity-brand';
 import { getNodeMeta } from './meta';
 import { SCHEMA_MIGRATIONS } from './migrations';
 import { readSubtreeCte } from './node-reader';
 import { NodeStore } from './node-store';
+import { StoreTx } from '../reducer/store-tx';
 import { StoragePolicy } from './policy';
 import { serializedSize } from './size';
 import { utf8ByteLength } from './utf8';
@@ -114,7 +116,85 @@ describe('schema engine', () => {
     return statements;
   }
 
-  it('registers the v2 tables and v3 sort-key index without changing v1', async () => {
+  it('preserves ordered primitive writes and neighboring values', async () => {
+    await write({ value: 'before', neighbor: true });
+    let previous = 'before';
+    const nextValues = Array.from({ length: 50 }, (_, i) => `after-${i}`);
+    await engine.transaction(async (tx) => {
+      for (const next of nextValues) {
+        await store.diffWrite(tx, 'feature/value', previous, next, tx.changes, {
+          parent: 'feature', pos: 1,
+        });
+        previous = next;
+      }
+    });
+    expect(await read()).toEqual({ value: 'after-49', neighbor: true });
+  });
+
+  it('preserves large object iteration, mutation positions and reloads', async () => {
+    const value = Object.fromEntries(Array.from({ length: 5000 }, (_, i) => [`k${i}`, i]));
+    await write(value);
+    expect(getNodeMeta(value)!.childPos).toBeInstanceOf(Map);
+    const loaded = (await read()) as Record<string, unknown>;
+    const positions = getNodeMeta(loaded)!.childPos!;
+    expect(positions).toBeInstanceOf(Map);
+    expect(positions.size).toBe(5000);
+    const next: Record<string, unknown> = { ...loaded, k2: 'changed', added: true };
+    delete next['k3'];
+    await diff(loaded, next);
+    const result = (await read()) as Record<string, unknown>;
+    expect(result).toEqual(next);
+    expect(Object.keys(result)).toEqual(Object.keys(next));
+    const expected = new Map(positions);
+    expected.delete('k3');
+    expected.set('added', Math.max(...positions.values()) + 1);
+    expect([...getNodeMeta(next)!.childPos!]).toEqual([...expected]);
+    expect([...getNodeMeta(result)!.childPos!]).toEqual([...expected]);
+    expect(getNodeMeta(next)!.childPos).toBeInstanceOf(Map);
+  });
+
+  it('copies positions on membership changes while isolating prior snapshots and keeping append order', async () => {
+    await write({ z: 1, 'a/b': 2, high: 3 });
+    const prev = (await read()) as Record<string, unknown>;
+    const positions = getNodeMeta(prev)!.childPos!;
+    const first = { ...prev, z: 'changed' };
+    await diff(prev, first);
+    const next: Record<string, unknown> = { ...first, added: 4 };
+    delete next['high'];
+    await diff(first, next);
+    expect(getNodeMeta(next)!.childPos).not.toBe(positions);
+    expect([...positions]).toEqual([['z', 1], ['a~1b', 2], ['high', 3]]);
+    expect([...getNodeMeta(next)!.childPos!]).toEqual([['z', 1], ['a~1b', 2], ['added', 4]]);
+    expect(await read()).toEqual(next);
+    expect(Object.keys((await read()) as object)).toEqual(['z', 'a/b', 'added']);
+  });
+
+  it('uses loaded large-object positions for scalar writes without a location query', async () => {
+    await write(Object.fromEntries(Array.from({ length: 5000 }, (_, i) => [`k${i}`, i])));
+    const loaded = await read();
+    const queries: string[] = [];
+    await engine.transaction(async (tx) => {
+      const sql: SqlExecutor = { ...tx, query: <R>(text: string, params?: SqlValue[]) => {
+        queries.push(text);
+        return tx.query<R>(text, params);
+      } };
+      const handle = new StoreTx(path, store, sql, tx.changes, new Map(), { peek: (key) => key === path ? loaded : undefined });
+      await handle.get();
+      await handle.set('k2', 200);
+    });
+    expect(queries).toHaveLength(0);
+    expect(((await read()) as Record<string, unknown>)['k2']).toBe(200);
+  });
+
+  it('keeps array position maps unchanged for ordering operations', async () => {
+    store = new NodeStore(new StoragePolicy({ hints: { items: 'collection' } }));
+    await write({ items: Array.from({ length: 300 }, (_, i) => i) });
+    const value = (await read()) as { items: number[] };
+    expect(getNodeMeta(value.items)!.childPos).toBeInstanceOf(Map);
+    expect(getNodeMeta(value.items)!.childPos!.size).toBe(300);
+  });
+
+  it('registers the v2 tables, v3 sort-key and v4 promoted indexes without changing v1', async () => {
     const rows = await engine.read((sql) =>
       sql.query<{ name: string; sql: string }>(
         "SELECT name, sql FROM sqlite_master WHERE name LIKE 'nss_%' ORDER BY name",
@@ -124,6 +204,7 @@ describe('schema engine', () => {
       'nss_chunk',
       'nss_entity',
       'nss_entity_order',
+      'nss_entity_promoted',
       'nss_entity_sortkey',
       'nss_meta',
       'nss_node',

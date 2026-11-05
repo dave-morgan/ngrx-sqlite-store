@@ -1,0 +1,15 @@
+# Object-shell full acceptance 16bj / 16L23: rejected
+
+Full acceptance completed with genuine parent/list exits0, matching scripts/source/tool/environment hashes and frozen APKs. Independent audits verified30 list observations,66 means/sampleSD,120 raw percentiles,30 maxima,33 raw verdicts,4 controls and6 boots; shapes10 paired rows/86 means+SD/verdicts/20 controls and journals also agree. All119 metrics and every comparator/adverse row are retained in JSON. No retry, overwrite, outlier removal or changed floor.
+
+Lists:12PASS/17PLATFORM-BOUND/3CODE-BOUND/1FAIL=32/33. Remaining1kPSS:classic222.223046875/SQLite234.4330078125MiB, excess12.2099609375 versus allowance11.829670853562, over.380290083938MiB. Four SQLite heap means exceed summedSD against retained16L20:1knotes+.018174744>.017170333,10knotes+.012698364>.011330542,50ktodos+.046630096>.028170790,50knotes+.027964020>.014750422MiB. Five adverse means versus16L21 and five heaps versus rejected16L22 remain in full precision;10ktodos crosses rejected16L22 by only.000043628091MiB beyondSD and is not rounded away. Historical15aa has seven adverse heap means; debt is not dismissed.
+
+Shapes:2PASS/54PB/0CB/30FAIL=56/86, versus retained16av57/86. Five means exceed summedSD versus16av:K50backlog and four heaps. Six versus16ay include worse resetP95; all five heap data-parity checksFAIL. Complete raw controls/code/data/PSS and all86 comparisons are in the [shapes evidence](android-object-shell-shapes-16bj-2026-10-30.md).
+
+Qualification counts do not prove a workload gain:10krelaunch becomesPB despite SQLite slowing72.5ms, while classic slows120.56ms and allowance grows142.381321ms largely throughSD. 50kemitP95 improves.28ms withinSDsum.582447752, while its commitfloor increases4.4→5.0ms. New1kPSSFAIL is driven largely by smaller seed/plugin controls; SQLite's.639844MiB increase itself is withinSDsum3.570957339. 10kemitP95's margin inside the allowance is only.000826941443ms. All control movement remains visible; it establishes neither source causality nor guard clearance.
+
+The unchanged raw MD has an inherited explanation typo: PSS prose prints max(0,pluginDelta,seed), whereas the independently verified numeric formula adds max(0,pluginDelta)+max(0,seed). This affects presentation only; numeric allowance11.829670853562 and rawFAIL remain correct. Raw MD is preserved; no verdict is reclassified.
+
+The targeted66→9row reduction and repeated reset mean benefit remain proven by16bi diagnostics, with adverse tails and wall/CPU limitations retained. They do not override full0FAIL/mean/heap gates. Reject16bi and restore the exact four pre-candidate production files. All nine candidate source/context files,15 tests, frozenAPK/raw/controls and all30 source/tool/environment bytes are archived. The real active-cache child-position regression discovered during TDD is separately open; it must be isolated and fixed rather than silently discarded or claimed baseline-correct. No root-read shortcut or retention is accepted.
+
+Both goals remain open; reference16av/16L20 stays31/33lists57/86shapes,16aw safety driver provisional. No extra CPU/heap capture, new floor or commit.

@@ -68,6 +68,221 @@ async function boot(eager: string[] = [], wholeStore?: 'loaded' | 'pin-all') {
 }
 
 describe('phase 4b selectors', () => {
+  it('keeps many static inputs current while isolating prior views', async () => {
+    const tick = ngrx.createAction('[scoped assembly] tick');
+    const initial: Record<string, number> = { ...Object.fromEntries(Array.from({ length: 20 }, (_, i) => [`k${i}`, i])), unrelated: 99 };
+    const driver = new SqlJsDriver();
+    TestBed.configureTestingModule({ providers: [provideStore({
+      flat: ngrx.createReducer(initial, ngrx.on(tick, (state) => ({ ...state, k1: state['k1'] + 1 }))),
+    }, { sqlite: { driver, eager: ['flat'] } })] });
+    const store = TestBed.inject(Store);
+    core = TestBed.inject(SqliteStoreCore);
+    await store.settle();
+    const keys = Array.from({ length: 20 }, (_, i) => `k${i}`);
+    const views: object[] = [];
+    const selector = (state: { flat: Record<string, number> }) => {
+      views.push(state);
+      return keys.reduce((sum, key) => sum + state.flat[key], 0);
+    };
+    Object.defineProperty(selector, NSS_DEPS, { value: keys.map((key) => `flat/${key}`) });
+    const selected = store.selectSignal(selector);
+    expect(selected()).toBe(190);
+    expect(Object.keys(views[0])).toEqual(['flat']);
+    expect(Object.keys((views[0] as { flat: object }).flat)).toEqual(keys);
+    await store.dispatchAsync(tick());
+    expect(selected()).toBe(191);
+    expect(selector(views[0] as { flat: Record<string, number> })).toBe(190);
+  });
+
+  it('preserves overlapping static sources and missing descendants', async () => {
+    const { store } = await boot(['todos']);
+    const selector = (state: { todos: { items: string[]; filter: string } }) => ({
+      items: state.todos.items,
+      filter: state.todos.filter,
+      keys: Object.keys(state.todos),
+    });
+    Object.defineProperty(selector, NSS_DEPS, { value: [
+      'todos', 'todos/items', 'todos/filter', 'todos/missing',
+      'todos/other', 'todos/absent', 'todos/none', 'todos/void',
+    ] });
+    const selected = store.selectSignal(selector);
+    const before = selected();
+    expect(before).toEqual({ items: ['one'], filter: 'all', keys: ['items', 'filter', 'missing', 'other', 'absent', 'none', 'void'] });
+    await store.dispatchAsync(append());
+    expect(selected().items).toEqual(['one', 'two']);
+    expect(before.items).toEqual(['one']);
+  });
+
+  it('keeps escaped keys, own undefined and prototype isolation in a many-input scope', async () => {
+    const initial: Record<string, number> = { a: 1, b: 2, c: 3, d: 4, e: 5, 'a/b': 6, unrelated: 99 };
+    Object.defineProperty(initial, '__proto__', { value: 7, enumerable: true });
+    const driver = new SqlJsDriver();
+    TestBed.configureTestingModule({ providers: [provideStore({ flat: ngrx.createReducer(initial) }, {
+      sqlite: { driver, eager: ['flat'] },
+    })] });
+    const store = TestBed.inject(Store);
+    core = TestBed.inject(SqliteStoreCore);
+    await store.settle();
+    const selector = (state: { flat: Record<string, unknown> }) => state.flat;
+    Object.defineProperty(selector, NSS_DEPS, { value: [
+      'flat/a', 'flat/b', 'flat/c', 'flat/d', 'flat/e', 'flat/a~1b', 'flat/__proto__', 'flat/missing',
+    ] });
+    const selected = store.selectSignal(selector)();
+    expect(Object.getPrototypeOf(selected)).toBe(Object.prototype);
+    expect(Object.isFrozen(selected)).toBe(true);
+    expect(Object.keys(selected)).toEqual(['a', 'b', 'c', 'd', 'e', 'a/b', '__proto__', 'missing']);
+    expect(selected['a/b']).toBe(6);
+    expect(selected['__proto__']).toBe(7);
+    expect(Object.hasOwn(selected, 'missing')).toBe(true);
+    expect(selected['missing']).toBeUndefined();
+    expect(Object.hasOwn(selected, 'unrelated')).toBe(false);
+    expect(await firstValueFrom(store.select(selector))).toEqual(selected);
+  });
+
+  it('keeps a static signal current after a committed update', async () => {
+    const { store } = await boot(['todos']);
+    const selector = createSelector(feature.selectItems, (items) => items.length);
+    const selected = store.selectSignal(selector);
+    expect(selected()).toBe(1);
+    await store.dispatchAsync(append());
+    expect(selected()).toBe(2);
+  });
+
+  it('recovers a failed static signal on a later generation with unchanged inputs', async () => {
+    const { store } = await boot(['todos']);
+    let fail = true;
+    const selector = createSelector(feature.selectItems, (items) => {
+      if (fail) throw new Error('retry static projection');
+      return items.length;
+    });
+    const selected = store.selectSignal(selector);
+    expect(() => selected()).toThrow('retry static projection');
+    fail = false;
+    await store.dispatchAsync(filter());
+    expect(selected()).toBe(1);
+  });
+
+  it('keeps an earlier published view immutable across a changed action', async () => {
+    const { store } = await boot(['todos']);
+    const cache = TestBed.inject(PathCache);
+    const before = cache.view;
+    const generation = cache.generations.value;
+    await store.dispatchAsync(append());
+    expect(cache.generations.value).toBe(generation + 1);
+    expect((before as { todos: { items: string[] } }).todos.items).toEqual(['one']);
+    expect((cache.view as { todos: { items: string[] } }).todos.items).toEqual(['one', 'two']);
+  });
+
+  it.each(['observable', 'signal'] as const)(
+    'keeps a loaded static %s current across a later append', async (mode) => {
+      const { store } = await boot(['todos']);
+      const values: number[] = [];
+      let stop = () => {};
+      try {
+        if (mode === 'observable') {
+          const subscription = store.select(feature.selectCount).subscribe((value) => values.push(value));
+          stop = () => subscription.unsubscribe();
+        } else {
+          const selected = store.selectSignal(feature.selectCount);
+          values.push(selected());
+        }
+        expect(values).toEqual([1]);
+        await store.dispatchAsync(append());
+        expect(await firstValueFrom(store.select(feature.selectCount))).toBe(2);
+      } finally {
+        stop();
+      }
+    },
+  );
+
+  it('recounts leases when a loaded ancestor absorbs retained descendants', async () => {
+    await boot();
+    const cache = TestBed.inject(PathCache);
+    const entries = (cache as unknown as { entries: Map<string, { refcount: number }> }).entries;
+    const items = cache.retain('todos/items');
+    await cache.ensure('todos/items');
+    const filter = cache.retain('todos/filter');
+    await cache.ensure('todos/filter');
+    expect(entries.get('todos/items')!.refcount).toBe(1);
+    expect(entries.get('todos/filter')!.refcount).toBe(1);
+    const root = cache.retain('todos');
+    await cache.ensure('todos');
+    expect(entries.has('todos/items')).toBe(false);
+    expect(entries.has('todos/filter')).toBe(false);
+    expect(entries.get('todos')!.refcount).toBe(3);
+    items();
+    expect(entries.get('todos')!.refcount).toBe(2);
+    filter();
+    expect(entries.get('todos')!.refcount).toBe(1);
+    root();
+    expect(entries.get('todos')!.refcount).toBe(0);
+  });
+
+  it('publishes one cache generation for a changed action refresh', async () => {
+    const { store } = await boot(['todos']);
+    const selected = store.selectSignal(feature.selectFilter);
+    expect(selected()).toBe('all');
+    const cache = TestBed.inject(PathCache);
+    const generations: number[] = [];
+    const subscription = cache.generations.subscribe((value) => generations.push(value));
+    generations.length = 0;
+    try {
+      await store.dispatchAsync(filter());
+      expect(selected()).toBe('done');
+      expect(generations).toHaveLength(1);
+    } finally {
+      subscription.unsubscribe();
+    }
+  });
+
+  it('still publishes when PathCache.refresh is called directly', async () => {
+    const { store } = await boot(['todos']);
+    const selected = store.selectSignal(feature.selectFilter);
+    expect(selected()).toBe('all');
+    await core.engine.transaction((sql) =>
+      new NodeStore().diffWrite(sql, 'todos/filter', 'all', 'done', sql.changes));
+    const cache = TestBed.inject(PathCache);
+    const before = cache.generations.value;
+    await cache.refresh();
+    expect(cache.generations.value).toBe(before + 1);
+    expect(selected()).toBe('done');
+  });
+
+  it('reuses a static scoped view when its input is unchanged by a sibling commit', async () => {
+    const { store } = await boot(['todos']);
+    const items = store.selectSignal(feature.selectItems);
+    expect(items()).toEqual(['one']);
+    const freeze = vi.spyOn(Object, 'freeze');
+    try {
+      await store.dispatchAsync(filter());
+      expect(items()).toEqual(['one']);
+      const scopes = freeze.mock.calls.filter(([value]) => {
+        if (!value || typeof value !== 'object' || Object.keys(value).join() !== 'todos') return false;
+        const todos = (value as { todos?: object }).todos;
+        return !!todos && Object.keys(todos).join() === 'items';
+      });
+      expect(scopes).toHaveLength(0);
+      await store.dispatchAsync(append());
+      expect(items()).toEqual(['one', 'two']);
+    } finally {
+      freeze.mockRestore();
+    }
+  });
+
+  it('does not rerun signal equality for a commit to an unrelated selected sibling', async () => {
+    const { store } = await boot(['todos']);
+    const equal = vi.fn((left: string[], right: string[]) => left === right);
+    const items = store.selectSignal(feature.selectItems, { equal });
+    expect(items()).toEqual(['one']);
+    equal.mockClear();
+    await store.dispatchAsync(filter());
+    expect(items()).toEqual(['one']);
+    expect(equal).not.toHaveBeenCalled();
+    await store.dispatchAsync(append());
+    expect(items()).toEqual(['one', 'two']);
+    expect(equal).toHaveBeenCalled();
+  });
+
   it('preloads independent roots in one bounded read transport', async () => {
     const driver = new SqlJsDriver();
     TestBed.configureTestingModule({
@@ -194,6 +409,19 @@ describe('phase 4b selectors', () => {
     const count = TestBed.runInInjectionContext(() => store.selectSignal(feature.selectCount));
     expect(count()).toBe(1);
     await expect.poll(() => count()).toBe(2);
+  });
+
+  it('does not rebuild unrelated fallback defaults for loaded static signals', async () => {
+    const { store } = await boot(['todos']);
+    const fallback = vi.spyOn(TestBed.inject(PathCache), 'withDefaults');
+    const count = store.selectSignal(feature.selectCount);
+    const filterValue = store.selectSignal(feature.selectFilter);
+    expect(count()).toBe(1);
+    expect(filterValue()).toBe('all');
+    await store.dispatchAsync(append());
+    expect(count()).toBe(2);
+    expect(filterValue()).toBe('all');
+    expect(fallback).not.toHaveBeenCalled();
   });
 
   it('invalidates committed values synchronously before the next transaction reads', async () => {
@@ -554,6 +782,14 @@ describe('phase 4b selectors', () => {
     await store.settle();
     expect(views.at(-1)).toEqual({ todos: { items: ['one'], filter: 'all' } });
     expect(await store.materialize()).toEqual(views.at(-1));
+    store.addReducer('late', ngrx.createReducer({ value: 5 }));
+    await store.settle();
+    expect(views.at(-1)).toEqual({ todos: { items: ['one'], filter: 'all' }, late: { value: 5 } });
+    const changed = ngrx.createAction('[selectors] late changed');
+    store.addReducer('late', ngrx.createReducer({ value: 5 }, ngrx.on(changed, () => ({ value: 9 }))));
+    await store.settle();
+    await store.dispatchAsync(changed());
+    expect(views.at(-1)).toEqual({ todos: { items: ['one'], filter: 'all' }, late: { value: 9 } });
     subscription.unsubscribe();
   });
 

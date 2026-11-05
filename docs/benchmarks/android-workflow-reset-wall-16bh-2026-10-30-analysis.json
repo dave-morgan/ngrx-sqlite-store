@@ -1,0 +1,1412 @@
+{
+  "verified": {
+    "session": "16bh-workflow-reset",
+    "boot": "da79e6da-79ed-4e06-a284-48043f8f15d0",
+    "installedApkHash": "e0c50b90dcd0aa095308ed83316aa61ddfffaf6773fb103185c769ac2dcf1db1",
+    "rawSha256": "f9ba65d59ec38579ecf8f3d4a9ebc59eb6c878bbf090f0f41aac0283e45539a6",
+    "sourceToolHashes": 14,
+    "rootExit": 0,
+    "rebootExit": 0,
+    "resetActions": 30,
+    "dirtyActions": 30,
+    "finiteSpans": 600,
+    "nativeQueries": 30,
+    "rowsPerQuery": 66,
+    "nativeAtomicWrites": 60,
+    "resetChangedRows": 5,
+    "dirtyChangedRows": 1,
+    "debuggerDisabledBeforeTiming": true,
+    "methodsRestoredBeforeProof": 7,
+    "persistedNameAndTableCounts": true,
+    "wholeWorkflowAbsentFromCache": true
+  },
+  "actions": {
+    "emit": {
+      "n": 30,
+      "mean": 25.71666666666812,
+      "sd": 9.38458322456764,
+      "p50": 24.30000000000291,
+      "p95": 47.5,
+      "max": 50.5
+    },
+    "dom": {
+      "n": 30,
+      "mean": 25.753333333334982,
+      "sd": 9.399366571956813,
+      "p50": 24.30000000000291,
+      "p95": 47.60000000000582,
+      "max": 50.5
+    }
+  },
+  "byPhase": {
+    "dirty": {
+      "enqueueToCallback": {
+        "n": 30,
+        "mean": 0.38333333333284825,
+        "sd": 0.3363939945056547,
+        "p50": 0.3000000000029104,
+        "p95": 1.5,
+        "max": 1.5999999999912689
+      },
+      "previousWork": {
+        "n": 30,
+        "mean": 0.26333333333362435,
+        "sd": 0.20423673439898668,
+        "p50": 0.19999999999708962,
+        "p95": 0.6000000000058208,
+        "max": 1.1999999999970896
+      },
+      "transaction": {
+        "n": 30,
+        "mean": 9.309999999999611,
+        "sd": 5.249784888860094,
+        "p50": 7,
+        "p95": 19,
+        "max": 22.5
+      },
+      "callback": {
+        "n": 30,
+        "mean": 0.339999999999903,
+        "sd": 0.22221455925635916,
+        "p50": 0.3000000000029104,
+        "p95": 0.6999999999970896,
+        "max": 1.2000000000116415
+      },
+      "diffWrite": {
+        "n": 30,
+        "mean": 0.17666666666579356,
+        "sd": 0.12780193008437385,
+        "p50": 0.19999999999708962,
+        "p95": 0.5,
+        "max": 0.5
+      },
+      "nativeWrite": {
+        "n": 30,
+        "mean": 8.790000000000388,
+        "sd": 5.207842229720921,
+        "p50": 6.69999999999709,
+        "p95": 18.5,
+        "max": 22.19999999999709
+      },
+      "selectionRefresh": {
+        "n": 30,
+        "mean": 0.7333333333328482,
+        "sd": 0.1881549862489624,
+        "p50": 0.6999999999970896,
+        "p95": 1,
+        "max": 1.1000000000058208
+      },
+      "enqueueToPipeline": {
+        "n": 30,
+        "mean": 10.560000000001066,
+        "sd": 5.179308967353905,
+        "p50": 8.80000000000291,
+        "p95": 20.10000000000582,
+        "max": 23.60000000000582
+      },
+      "preWrite": {
+        "n": 30,
+        "mean": 0.40333333333401244,
+        "sd": 0.23116397126142144,
+        "p50": 0.3000000000029104,
+        "p95": 0.8000000000029104,
+        "max": 1.3000000000029104
+      },
+      "writeEndToRefresh": {
+        "n": 30,
+        "mean": 0.10999999999961195,
+        "sd": 0.06617635789823313,
+        "p50": 0.10000000000582077,
+        "p95": 0.19999999999708962,
+        "max": 0.19999999999708962
+      },
+      "refreshEndToPipeline": {
+        "n": 30,
+        "mean": 0.14000000000135818,
+        "sd": 0.404798800596892,
+        "p50": 0,
+        "p95": 0.9000000000087311,
+        "max": 2.099999999991269
+      }
+    },
+    "reset": {
+      "enqueueToCallback": {
+        "n": 30,
+        "mean": 0.3100000000005821,
+        "sd": 0.42697815497691904,
+        "p50": 0.19999999999708962,
+        "p95": 1,
+        "max": 2.3000000000029104
+      },
+      "previousWork": {
+        "n": 30,
+        "mean": 0.22333333333469152,
+        "sd": 0.4116269932940585,
+        "p50": 0.10000000000582077,
+        "p95": 1,
+        "max": 2.1999999999970896
+      },
+      "transaction": {
+        "n": 30,
+        "mean": 24.63666666666492,
+        "sd": 9.353534583002766,
+        "p50": 23.5,
+        "p95": 46.69999999999709,
+        "max": 49.30000000000291
+      },
+      "callback": {
+        "n": 30,
+        "mean": 15.639999999998933,
+        "sd": 5.914132693578655,
+        "p50": 14.400000000008731,
+        "p95": 22.39999999999418,
+        "max": 38.10000000000582
+      },
+      "diffWrite": {
+        "n": 30,
+        "mean": 0.25666666666705473,
+        "sd": 0.1695497756917345,
+        "p50": 0.20000000001164153,
+        "p95": 0.6999999999970896,
+        "max": 0.9000000000087311
+      },
+      "nativeWrite": {
+        "n": 30,
+        "mean": 8.693333333332946,
+        "sd": 5.870260132481597,
+        "p50": 6.400000000008731,
+        "p95": 24.39999999999418,
+        "max": 26.90000000000873
+      },
+      "selectionRefresh": {
+        "n": 30,
+        "mean": 0.6866666666678308,
+        "sd": 0.21613107984995855,
+        "p50": 0.6999999999970896,
+        "p95": 1.1000000000058208,
+        "max": 1.3999999999941792
+      },
+      "enqueueToPipeline": {
+        "n": 30,
+        "mean": 25.720000000000194,
+        "sd": 9.409914067546305,
+        "p50": 24.20000000001164,
+        "p95": 47.59999999999127,
+        "max": 50.40000000000873
+      },
+      "preWrite": {
+        "n": 30,
+        "mean": 15.719999999999224,
+        "sd": 5.895492141137751,
+        "p50": 14.5,
+        "p95": 22.5,
+        "max": 38.10000000000582
+      },
+      "writeEndToRefresh": {
+        "n": 30,
+        "mean": 0.20333333333255724,
+        "sd": 0.23412836640114132,
+        "p50": 0.19999999999708962,
+        "p95": 0.3000000000029104,
+        "max": 1.3999999999941792
+      },
+      "refreshEndToPipeline": {
+        "n": 30,
+        "mean": 0.10666666666705472,
+        "sd": 0.11121068335402448,
+        "p50": 0.10000000000582077,
+        "p95": 0.39999999999417923,
+        "max": 0.40000000000873115
+      },
+      "subtreeRead": {
+        "n": 30,
+        "mean": 14.870000000001165,
+        "sd": 5.462862076692972,
+        "p50": 13.900000000008731,
+        "p95": 21.80000000000291,
+        "max": 34.10000000000582
+      },
+      "nativeQuery": {
+        "n": 30,
+        "mean": 14.413333333333624,
+        "sd": 5.427372091178343,
+        "p50": 13.60000000000582,
+        "p95": 21.20000000001164,
+        "max": 33.80000000000291
+      },
+      "readOutsideQuery": {
+        "n": 30,
+        "mean": 0.4566666666675398,
+        "sd": 0.3539757768176332,
+        "p50": 0.39999999999417923,
+        "p95": 1,
+        "max": 2.099999999991269
+      },
+      "readEndToWrite": {
+        "n": 30,
+        "mean": 0.799999999999515,
+        "sd": 0.6454081841272645,
+        "p50": 0.6999999999970896,
+        "p95": 1.4000000000087311,
+        "max": 4
+      },
+      "queryPlusWrite": {
+        "n": 30,
+        "mean": 23.10666666666657,
+        "sd": 9.043265100513837,
+        "p50": 22.19999999999709,
+        "p95": 44.89999999999418,
+        "max": 45.20000000001164
+      }
+    }
+  },
+  "cycles": [
+    {
+      "cycle": 1,
+      "action": {
+        "emit": 14.69999999999709,
+        "dom": 14.69999999999709
+      },
+      "dirty": {
+        "enqueueToCallback": 1.5999999999912689,
+        "previousWork": 1.1999999999970896,
+        "transaction": 5.399999999994179,
+        "callback": 1.2000000000116415,
+        "diffWrite": 0.5,
+        "nativeWrite": 3.8000000000029104,
+        "selectionRefresh": 1,
+        "enqueueToPipeline": 8.80000000000291,
+        "preWrite": 1.3000000000029104,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.9000000000087311
+      },
+      "reset": {
+        "enqueueToCallback": 1,
+        "previousWork": 1,
+        "transaction": 12.89999999999418,
+        "callback": 8.799999999988358,
+        "diffWrite": 0.09999999999126885,
+        "nativeWrite": 3.6999999999970896,
+        "selectionRefresh": 0.5,
+        "enqueueToPipeline": 14.39999999999418,
+        "preWrite": 9,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0,
+        "subtreeRead": 8.400000000008731,
+        "nativeQuery": 7.69999999999709,
+        "readOutsideQuery": 0.7000000000116415,
+        "readEndToWrite": 0.5,
+        "queryPlusWrite": 11.39999999999418
+      }
+    },
+    {
+      "cycle": 2,
+      "action": {
+        "emit": 19.30000000000291,
+        "dom": 19.39999999999418
+      },
+      "dirty": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.19999999999708962,
+        "transaction": 7.30000000000291,
+        "callback": 0.19999999999708962,
+        "diffWrite": 0.10000000000582077,
+        "nativeWrite": 6.899999999994179,
+        "selectionRefresh": 0.6999999999970896,
+        "enqueueToPipeline": 8.30000000000291,
+        "preWrite": 0.19999999999708962,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0.10000000000582077
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.10000000000582077,
+        "transaction": 18.5,
+        "callback": 12.39999999999418,
+        "diffWrite": 0.3000000000029104,
+        "nativeWrite": 5.80000000000291,
+        "selectionRefresh": 0.5999999999912689,
+        "enqueueToPipeline": 19.29999999998836,
+        "preWrite": 12.599999999991269,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0,
+        "subtreeRead": 11.700000000011642,
+        "nativeQuery": 11.200000000011642,
+        "readOutsideQuery": 0.5,
+        "readEndToWrite": 0.7999999999883585,
+        "queryPlusWrite": 17.000000000014552
+      }
+    },
+    {
+      "cycle": 3,
+      "action": {
+        "emit": 24.30000000000291,
+        "dom": 24.30000000000291
+      },
+      "dirty": {
+        "enqueueToCallback": 0.40000000000873115,
+        "previousWork": 0.19999999999708962,
+        "transaction": 22.5,
+        "callback": 0.19999999999708962,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 22.19999999999709,
+        "selectionRefresh": 0.5999999999912689,
+        "enqueueToPipeline": 23.60000000000582,
+        "preWrite": 0.19999999999708962,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0.10000000000582077
+      },
+      "reset": {
+        "enqueueToCallback": 0.10000000000582077,
+        "previousWork": 0.10000000000582077,
+        "transaction": 23.5,
+        "callback": 18.5,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 4.899999999994179,
+        "selectionRefresh": 0.5,
+        "enqueueToPipeline": 24.20000000001164,
+        "preWrite": 18.5,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0.10000000000582077,
+        "subtreeRead": 17.79999999998836,
+        "nativeQuery": 17.5,
+        "readOutsideQuery": 0.29999999998835847,
+        "readEndToWrite": 0.6000000000058208,
+        "queryPlusWrite": 22.39999999999418
+      }
+    },
+    {
+      "cycle": 4,
+      "action": {
+        "emit": 50.5,
+        "dom": 50.5
+      },
+      "dirty": {
+        "enqueueToCallback": 0.39999999999417923,
+        "previousWork": 0.29999999998835847,
+        "transaction": 5.5,
+        "callback": 0.19999999999708962,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 5,
+        "selectionRefresh": 1.1000000000058208,
+        "enqueueToPipeline": 7,
+        "preWrite": 0.3000000000029104,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.20000000001164153,
+        "transaction": 49.30000000000291,
+        "callback": 38.10000000000582,
+        "diffWrite": 0.29999999998835847,
+        "nativeWrite": 11.099999999991269,
+        "selectionRefresh": 0.6999999999970896,
+        "enqueueToPipeline": 50.40000000000873,
+        "preWrite": 38.10000000000582,
+        "writeEndToRefresh": 0.20000000001164153,
+        "refreshEndToPipeline": 0,
+        "subtreeRead": 34.10000000000582,
+        "nativeQuery": 33.80000000000291,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 4,
+        "queryPlusWrite": 44.89999999999418
+      }
+    },
+    {
+      "cycle": 5,
+      "action": {
+        "emit": 17.10000000000582,
+        "dom": 17.19999999999709
+      },
+      "dirty": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.3000000000029104,
+        "transaction": 5.19999999999709,
+        "callback": 0.19999999999708962,
+        "diffWrite": 0,
+        "nativeWrite": 4.900000000008731,
+        "selectionRefresh": 0.5999999999912689,
+        "enqueueToPipeline": 6.19999999999709,
+        "preWrite": 0.29999999998835847,
+        "writeEndToRefresh": 0,
+        "refreshEndToPipeline": 0.10000000000582077
+      },
+      "reset": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.10000000000582077,
+        "transaction": 16.09999999999127,
+        "callback": 10,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 4.600000000005821,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 17.19999999999709,
+        "preWrite": 10.099999999991269,
+        "writeEndToRefresh": 1.3999999999941792,
+        "refreshEndToPipeline": 0.19999999999708962,
+        "subtreeRead": 9.599999999991269,
+        "nativeQuery": 9.299999999988358,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 0.5,
+        "queryPlusWrite": 13.89999999999418
+      }
+    },
+    {
+      "cycle": 6,
+      "action": {
+        "emit": 47.5,
+        "dom": 47.60000000000582
+      },
+      "dirty": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.19999999999708962,
+        "transaction": 5.30000000000291,
+        "callback": 0.3000000000029104,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 4.899999999994179,
+        "selectionRefresh": 0.8999999999941792,
+        "enqueueToPipeline": 6.5,
+        "preWrite": 0.40000000000873115,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.10000000000582077,
+        "transaction": 46.69999999999709,
+        "callback": 19.5,
+        "diffWrite": 0.3000000000029104,
+        "nativeWrite": 26.90000000000873,
+        "selectionRefresh": 0.5,
+        "enqueueToPipeline": 47.59999999999127,
+        "preWrite": 19.59999999999127,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.19999999999708962,
+        "subtreeRead": 18.70000000001164,
+        "nativeQuery": 18.30000000000291,
+        "readOutsideQuery": 0.40000000000873115,
+        "readEndToWrite": 0.7999999999883585,
+        "queryPlusWrite": 45.20000000001164
+      }
+    },
+    {
+      "cycle": 7,
+      "action": {
+        "emit": 16.10000000000582,
+        "dom": 16.10000000000582
+      },
+      "dirty": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.3000000000029104,
+        "transaction": 16.19999999999709,
+        "callback": 0.5999999999912689,
+        "diffWrite": 0,
+        "nativeWrite": 15.39999999999418,
+        "selectionRefresh": 0.8999999999941792,
+        "enqueueToPipeline": 17.39999999999418,
+        "preWrite": 0.6999999999970896,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.19999999999708962,
+        "transaction": 15.19999999999709,
+        "callback": 11.60000000000582,
+        "diffWrite": 0.20000000001164153,
+        "nativeWrite": 3.3999999999941792,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 16,
+        "preWrite": 11.60000000000582,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0,
+        "subtreeRead": 11.19999999999709,
+        "nativeQuery": 10.89999999999418,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 0.3000000000029104,
+        "queryPlusWrite": 14.299999999988358
+      }
+    },
+    {
+      "cycle": 8,
+      "action": {
+        "emit": 25.29999999998836,
+        "dom": 25.29999999998836
+      },
+      "dirty": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.3000000000029104,
+        "transaction": 8.5,
+        "callback": 0.19999999999708962,
+        "diffWrite": 0.09999999999126885,
+        "nativeWrite": 8.10000000000582,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 9.5,
+        "preWrite": 0.3000000000029104,
+        "writeEndToRefresh": 0.09999999999126885,
+        "refreshEndToPipeline": 0.09999999999126885
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.09999999999126885,
+        "transaction": 24.10000000000582,
+        "callback": 17.30000000000291,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 6.400000000008731,
+        "selectionRefresh": 0.7999999999883585,
+        "enqueueToPipeline": 25.19999999999709,
+        "preWrite": 17.39999999999418,
+        "writeEndToRefresh": 0.3000000000029104,
+        "refreshEndToPipeline": 0.10000000000582077,
+        "subtreeRead": 16.89999999999418,
+        "nativeQuery": 16.5,
+        "readOutsideQuery": 0.39999999999417923,
+        "readEndToWrite": 0.5,
+        "queryPlusWrite": 22.90000000000873
+      }
+    },
+    {
+      "cycle": 9,
+      "action": {
+        "emit": 17,
+        "dom": 17
+      },
+      "dirty": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.20000000001164153,
+        "transaction": 11.5,
+        "callback": 0.10000000000582077,
+        "diffWrite": 0.10000000000582077,
+        "nativeWrite": 11.200000000011642,
+        "selectionRefresh": 0.6999999999970896,
+        "enqueueToPipeline": 12.5,
+        "preWrite": 0.19999999999708962,
+        "writeEndToRefresh": 0.09999999999126885,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.09999999999126885,
+        "previousWork": 0.09999999999126885,
+        "transaction": 16.40000000000873,
+        "callback": 12.30000000000291,
+        "diffWrite": 0.10000000000582077,
+        "nativeWrite": 3.8999999999941792,
+        "selectionRefresh": 0.3000000000029104,
+        "enqueueToPipeline": 16.80000000000291,
+        "preWrite": 12.400000000008731,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0,
+        "subtreeRead": 11.60000000000582,
+        "nativeQuery": 11.30000000000291,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 0.6999999999970896,
+        "queryPlusWrite": 15.19999999999709
+      }
+    },
+    {
+      "cycle": 10,
+      "action": {
+        "emit": 17.40000000000873,
+        "dom": 17.40000000000873
+      },
+      "dirty": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.19999999999708962,
+        "transaction": 6.80000000000291,
+        "callback": 0.39999999999417923,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 6.30000000000291,
+        "selectionRefresh": 0.7999999999883585,
+        "enqueueToPipeline": 7.7999999999883585,
+        "preWrite": 0.39999999999417923,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.09999999999126885,
+        "transaction": 16.39999999999418,
+        "callback": 11,
+        "diffWrite": 0.10000000000582077,
+        "nativeWrite": 5.19999999999709,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 17.5,
+        "preWrite": 11.10000000000582,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.09999999999126885,
+        "subtreeRead": 10.39999999999418,
+        "nativeQuery": 10.19999999999709,
+        "readOutsideQuery": 0.19999999999708962,
+        "readEndToWrite": 0.6000000000058208,
+        "queryPlusWrite": 15.39999999999418
+      }
+    },
+    {
+      "cycle": 11,
+      "action": {
+        "emit": 20.89999999999418,
+        "dom": 21
+      },
+      "dirty": {
+        "enqueueToCallback": 0.20000000001164153,
+        "previousWork": 0.20000000001164153,
+        "transaction": 4.899999999994179,
+        "callback": 0.29999999998835847,
+        "diffWrite": 0.09999999999126885,
+        "nativeWrite": 4.600000000005821,
+        "selectionRefresh": 0.5999999999912689,
+        "enqueueToPipeline": 5.900000000008731,
+        "preWrite": 0.29999999998835847,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0.10000000000582077
+      },
+      "reset": {
+        "enqueueToCallback": 0.29999999998835847,
+        "previousWork": 0.19999999999708962,
+        "transaction": 19.80000000000291,
+        "callback": 12.400000000008731,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 7.19999999999709,
+        "selectionRefresh": 0.8000000000029104,
+        "enqueueToPipeline": 21,
+        "preWrite": 12.400000000008731,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.10000000000582077,
+        "subtreeRead": 11.900000000008731,
+        "nativeQuery": 11.60000000000582,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 0.5,
+        "queryPlusWrite": 18.80000000000291
+      }
+    },
+    {
+      "cycle": 12,
+      "action": {
+        "emit": 22.5,
+        "dom": 22.5
+      },
+      "dirty": {
+        "enqueueToCallback": 0.29999999998835847,
+        "previousWork": 0.19999999999708962,
+        "transaction": 15.5,
+        "callback": 0.6000000000058208,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 14.60000000000582,
+        "selectionRefresh": 0.5,
+        "enqueueToPipeline": 16.39999999999418,
+        "preWrite": 0.8000000000029104,
+        "writeEndToRefresh": 0.09999999999126885,
+        "refreshEndToPipeline": 0.10000000000582077
+      },
+      "reset": {
+        "enqueueToCallback": 0.10000000000582077,
+        "previousWork": 0.10000000000582077,
+        "transaction": 21.69999999999709,
+        "callback": 13.5,
+        "diffWrite": 0.20000000001164153,
+        "nativeWrite": 8,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 22.40000000000873,
+        "preWrite": 13.5,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0,
+        "subtreeRead": 12.39999999999418,
+        "nativeQuery": 12.099999999991269,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 1,
+        "queryPlusWrite": 20.09999999999127
+      }
+    },
+    {
+      "cycle": 13,
+      "action": {
+        "emit": 35.10000000000582,
+        "dom": 35.20000000001164
+      },
+      "dirty": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.10000000000582077,
+        "transaction": 5.5,
+        "callback": 0.19999999999708962,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 5.19999999999709,
+        "selectionRefresh": 0.5,
+        "enqueueToPipeline": 6.400000000008731,
+        "preWrite": 0.3000000000029104,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.10000000000582077,
+        "previousWork": 0.10000000000582077,
+        "transaction": 34.29999999998836,
+        "callback": 19.69999999999709,
+        "diffWrite": 0.9000000000087311,
+        "nativeWrite": 14.5,
+        "selectionRefresh": 0.7000000000116415,
+        "enqueueToPipeline": 35.19999999999709,
+        "preWrite": 19.69999999999709,
+        "writeEndToRefresh": 0.09999999999126885,
+        "refreshEndToPipeline": 0.09999999999126885,
+        "subtreeRead": 18.09999999999127,
+        "nativeQuery": 16,
+        "readOutsideQuery": 2.099999999991269,
+        "readEndToWrite": 1.4000000000087311,
+        "queryPlusWrite": 30.5
+      }
+    },
+    {
+      "cycle": 14,
+      "action": {
+        "emit": 25.19999999999709,
+        "dom": 25.19999999999709
+      },
+      "dirty": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.10000000000582077,
+        "transaction": 7,
+        "callback": 0.19999999999708962,
+        "diffWrite": 0.10000000000582077,
+        "nativeWrite": 6.69999999999709,
+        "selectionRefresh": 0.8999999999941792,
+        "enqueueToPipeline": 8.099999999991269,
+        "preWrite": 0.3000000000029104,
+        "writeEndToRefresh": 0,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.09999999999126885,
+        "previousWork": 0.09999999999126885,
+        "transaction": 24.19999999999709,
+        "callback": 19.69999999999709,
+        "diffWrite": 0.6999999999970896,
+        "nativeWrite": 4.19999999999709,
+        "selectionRefresh": 0.8000000000029104,
+        "enqueueToPipeline": 25.19999999999709,
+        "preWrite": 19.80000000000291,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.10000000000582077,
+        "subtreeRead": 18.80000000000291,
+        "nativeQuery": 18.19999999999709,
+        "readOutsideQuery": 0.6000000000058208,
+        "readEndToWrite": 1,
+        "queryPlusWrite": 22.39999999999418
+      }
+    },
+    {
+      "cycle": 15,
+      "action": {
+        "emit": 23.09999999999127,
+        "dom": 23.09999999999127
+      },
+      "dirty": {
+        "enqueueToCallback": 0.39999999999417923,
+        "previousWork": 0.39999999999417923,
+        "transaction": 5.30000000000291,
+        "callback": 0.3000000000029104,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 4.899999999994179,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 6.399999999994179,
+        "preWrite": 0.3000000000029104,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.20000000001164153,
+        "previousWork": 0.10000000000582077,
+        "transaction": 22.09999999999127,
+        "callback": 16,
+        "diffWrite": 0.20000000001164153,
+        "nativeWrite": 5.599999999991269,
+        "selectionRefresh": 0.6999999999970896,
+        "enqueueToPipeline": 23.20000000001164,
+        "preWrite": 16.5,
+        "writeEndToRefresh": 0,
+        "refreshEndToPipeline": 0.20000000001164153,
+        "subtreeRead": 15.400000000008731,
+        "nativeQuery": 15,
+        "readOutsideQuery": 0.40000000000873115,
+        "readEndToWrite": 1,
+        "queryPlusWrite": 20.59999999999127
+      }
+    },
+    {
+      "cycle": 16,
+      "action": {
+        "emit": 20.5,
+        "dom": 20.60000000000582
+      },
+      "dirty": {
+        "enqueueToCallback": 0.39999999999417923,
+        "previousWork": 0.19999999999708962,
+        "transaction": 19,
+        "callback": 0.3000000000029104,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 18.5,
+        "selectionRefresh": 0.6999999999970896,
+        "enqueueToPipeline": 20.10000000000582,
+        "preWrite": 0.3000000000029104,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0.10000000000582077
+      },
+      "reset": {
+        "enqueueToCallback": 0.10000000000582077,
+        "previousWork": 0.10000000000582077,
+        "transaction": 19.39999999999418,
+        "callback": 13.599999999991269,
+        "diffWrite": 0.3000000000029104,
+        "nativeWrite": 5.69999999999709,
+        "selectionRefresh": 0.7999999999883585,
+        "enqueueToPipeline": 20.60000000000582,
+        "preWrite": 13.599999999991269,
+        "writeEndToRefresh": 0.20000000001164153,
+        "refreshEndToPipeline": 0.20000000001164153,
+        "subtreeRead": 12.5,
+        "nativeQuery": 11.5,
+        "readOutsideQuery": 1,
+        "readEndToWrite": 1,
+        "queryPlusWrite": 17.19999999999709
+      }
+    },
+    {
+      "cycle": 17,
+      "action": {
+        "emit": 33,
+        "dom": 33.10000000000582
+      },
+      "dirty": {
+        "enqueueToCallback": 0.6999999999970896,
+        "previousWork": 0.6000000000058208,
+        "transaction": 12.19999999999709,
+        "callback": 0.19999999999708962,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 11.80000000000291,
+        "selectionRefresh": 1,
+        "enqueueToPipeline": 14,
+        "preWrite": 0.3000000000029104,
+        "writeEndToRefresh": 0.09999999999126885,
+        "refreshEndToPipeline": 0.10000000000582077
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.19999999999708962,
+        "transaction": 31.89999999999418,
+        "callback": 22,
+        "diffWrite": 0.09999999999126885,
+        "nativeWrite": 9.80000000000291,
+        "selectionRefresh": 0.8000000000029104,
+        "enqueueToPipeline": 33.09999999999127,
+        "preWrite": 22,
+        "writeEndToRefresh": 0.09999999999126885,
+        "refreshEndToPipeline": 0.19999999999708962,
+        "subtreeRead": 21.5,
+        "nativeQuery": 21.09999999999127,
+        "readOutsideQuery": 0.40000000000873115,
+        "readEndToWrite": 0.5,
+        "queryPlusWrite": 30.89999999999418
+      }
+    },
+    {
+      "cycle": 18,
+      "action": {
+        "emit": 29.19999999999709,
+        "dom": 29.19999999999709
+      },
+      "dirty": {
+        "enqueueToCallback": 0.20000000001164153,
+        "previousWork": 0.20000000001164153,
+        "transaction": 8,
+        "callback": 0.19999999999708962,
+        "diffWrite": 0.10000000000582077,
+        "nativeWrite": 7.600000000005821,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 8.900000000008731,
+        "preWrite": 0.39999999999417923,
+        "writeEndToRefresh": 0.09999999999126885,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.10000000000582077,
+        "transaction": 28.20000000001164,
+        "callback": 12.10000000000582,
+        "diffWrite": 0.3000000000029104,
+        "nativeWrite": 15.89999999999418,
+        "selectionRefresh": 0.7999999999883585,
+        "enqueueToPipeline": 29.19999999999709,
+        "preWrite": 12.200000000011642,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0,
+        "subtreeRead": 11.5,
+        "nativeQuery": 11.19999999999709,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 0.7000000000116415,
+        "queryPlusWrite": 27.09999999999127
+      }
+    },
+    {
+      "cycle": 19,
+      "action": {
+        "emit": 13.900000000008731,
+        "dom": 13.900000000008731
+      },
+      "dirty": {
+        "enqueueToCallback": 0.09999999999126885,
+        "previousWork": 0.09999999999126885,
+        "transaction": 4.100000000005821,
+        "callback": 0.6000000000058208,
+        "diffWrite": 0.5,
+        "nativeWrite": 3.5,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 4.80000000000291,
+        "preWrite": 0.6000000000058208,
+        "writeEndToRefresh": 0,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.20000000001164153,
+        "previousWork": 0.10000000000582077,
+        "transaction": 13.099999999991269,
+        "callback": 7.899999999994179,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 5,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 13.900000000008731,
+        "preWrite": 8,
+        "writeEndToRefresh": 0.09999999999126885,
+        "refreshEndToPipeline": 0,
+        "subtreeRead": 7.30000000000291,
+        "nativeQuery": 7,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 0.6000000000058208,
+        "queryPlusWrite": 12
+      }
+    },
+    {
+      "cycle": 20,
+      "action": {
+        "emit": 47,
+        "dom": 47.09999999999127
+      },
+      "dirty": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.10000000000582077,
+        "transaction": 4.899999999994179,
+        "callback": 0.19999999999708962,
+        "diffWrite": 0.09999999999126885,
+        "nativeWrite": 4.399999999994179,
+        "selectionRefresh": 1,
+        "enqueueToPipeline": 6.100000000005821,
+        "preWrite": 0.3000000000029104,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.19999999999708962,
+        "transaction": 46.10000000000582,
+        "callback": 21.5,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 24.39999999999418,
+        "selectionRefresh": 0.40000000000873115,
+        "enqueueToPipeline": 47,
+        "preWrite": 21.60000000000582,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.19999999999708962,
+        "subtreeRead": 20.89999999999418,
+        "nativeQuery": 20.5,
+        "readOutsideQuery": 0.39999999999417923,
+        "readEndToWrite": 0.7000000000116415,
+        "queryPlusWrite": 44.89999999999418
+      }
+    },
+    {
+      "cycle": 21,
+      "action": {
+        "emit": 30,
+        "dom": 30
+      },
+      "dirty": {
+        "enqueueToCallback": 0.5,
+        "previousWork": 0.40000000000873115,
+        "transaction": 4.600000000005821,
+        "callback": 0.3000000000029104,
+        "diffWrite": 0.10000000000582077,
+        "nativeWrite": 4.30000000000291,
+        "selectionRefresh": 0.39999999999417923,
+        "enqueueToPipeline": 5.600000000005821,
+        "preWrite": 0.3000000000029104,
+        "writeEndToRefresh": 0,
+        "refreshEndToPipeline": 0.10000000000582077
+      },
+      "reset": {
+        "enqueueToCallback": 0.20000000001164153,
+        "previousWork": 0.10000000000582077,
+        "transaction": 29.10000000000582,
+        "callback": 14.599999999991269,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 14.30000000000291,
+        "selectionRefresh": 0.7999999999883585,
+        "enqueueToPipeline": 30,
+        "preWrite": 14.599999999991269,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0,
+        "subtreeRead": 14.19999999999709,
+        "nativeQuery": 13.89999999999418,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 0.39999999999417923,
+        "queryPlusWrite": 28.19999999999709
+      }
+    },
+    {
+      "cycle": 22,
+      "action": {
+        "emit": 20.80000000000291,
+        "dom": 20.80000000000291
+      },
+      "dirty": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.19999999999708962,
+        "transaction": 13.5,
+        "callback": 0.3000000000029104,
+        "diffWrite": 0.09999999999126885,
+        "nativeWrite": 12.89999999999418,
+        "selectionRefresh": 0.7000000000116415,
+        "enqueueToPipeline": 14.400000000008731,
+        "preWrite": 0.3000000000029104,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.10000000000582077,
+        "previousWork": 0.10000000000582077,
+        "transaction": 20.09999999999127,
+        "callback": 13.69999999999709,
+        "diffWrite": 0.3000000000029104,
+        "nativeWrite": 6.100000000005821,
+        "selectionRefresh": 0.40000000000873115,
+        "enqueueToPipeline": 20.60000000000582,
+        "preWrite": 13.799999999988358,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0,
+        "subtreeRead": 13.10000000000582,
+        "nativeQuery": 12.80000000000291,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 0.5999999999912689,
+        "queryPlusWrite": 18.90000000000873
+      }
+    },
+    {
+      "cycle": 23,
+      "action": {
+        "emit": 32.30000000000291,
+        "dom": 32.40000000000873
+      },
+      "dirty": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.19999999999708962,
+        "transaction": 5.69999999999709,
+        "callback": 0.3000000000029104,
+        "diffWrite": 0.10000000000582077,
+        "nativeWrite": 5.19999999999709,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 8.599999999991269,
+        "preWrite": 0.39999999999417923,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 2.099999999991269
+      },
+      "reset": {
+        "enqueueToCallback": 2.3000000000029104,
+        "previousWork": 2.1999999999970896,
+        "transaction": 29,
+        "callback": 12.5,
+        "diffWrite": 0.3000000000029104,
+        "nativeWrite": 16.20000000001164,
+        "selectionRefresh": 1.1000000000058208,
+        "enqueueToPipeline": 32.39999999999418,
+        "preWrite": 12.599999999991269,
+        "writeEndToRefresh": 0.09999999999126885,
+        "refreshEndToPipeline": 0.09999999999126885,
+        "subtreeRead": 11.80000000000291,
+        "nativeQuery": 11.5,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 0.7999999999883585,
+        "queryPlusWrite": 27.70000000001164
+      }
+    },
+    {
+      "cycle": 24,
+      "action": {
+        "emit": 29.80000000000291,
+        "dom": 29.80000000000291
+      },
+      "dirty": {
+        "enqueueToCallback": 1.5,
+        "previousWork": 0.29999999998835847,
+        "transaction": 7,
+        "callback": 0.5,
+        "diffWrite": 0.3000000000029104,
+        "nativeWrite": 6.30000000000291,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 9.10000000000582,
+        "preWrite": 0.5,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.10000000000582077,
+        "transaction": 28.89999999999418,
+        "callback": 22.39999999999418,
+        "diffWrite": 0.10000000000582077,
+        "nativeWrite": 6.19999999999709,
+        "selectionRefresh": 0.7000000000116415,
+        "enqueueToPipeline": 30,
+        "preWrite": 22.5,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.19999999999708962,
+        "subtreeRead": 21.80000000000291,
+        "nativeQuery": 21.20000000001164,
+        "readOutsideQuery": 0.5999999999912689,
+        "readEndToWrite": 0.6999999999970896,
+        "queryPlusWrite": 27.40000000000873
+      }
+    },
+    {
+      "cycle": 25,
+      "action": {
+        "emit": 20.60000000000582,
+        "dom": 20.60000000000582
+      },
+      "dirty": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.19999999999708962,
+        "transaction": 3.6000000000058208,
+        "callback": 0.10000000000582077,
+        "diffWrite": 0.10000000000582077,
+        "nativeWrite": 3.3999999999941792,
+        "selectionRefresh": 1,
+        "enqueueToPipeline": 4.80000000000291,
+        "preWrite": 0.10000000000582077,
+        "writeEndToRefresh": 0,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.20000000001164153,
+        "previousWork": 0.10000000000582077,
+        "transaction": 19.69999999999709,
+        "callback": 10.099999999991269,
+        "diffWrite": 0.3000000000029104,
+        "nativeWrite": 9.30000000000291,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 20.5,
+        "preWrite": 10.19999999999709,
+        "writeEndToRefresh": 0.09999999999126885,
+        "refreshEndToPipeline": 0.09999999999126885,
+        "subtreeRead": 9.39999999999418,
+        "nativeQuery": 9,
+        "readOutsideQuery": 0.39999999999417923,
+        "readEndToWrite": 0.8000000000029104,
+        "queryPlusWrite": 18.30000000000291
+      }
+    },
+    {
+      "cycle": 26,
+      "action": {
+        "emit": 25.20000000001164,
+        "dom": 25.20000000001164
+      },
+      "dirty": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.19999999999708962,
+        "transaction": 18,
+        "callback": 0.6999999999970896,
+        "diffWrite": 0.5,
+        "nativeWrite": 17.20000000001164,
+        "selectionRefresh": 0.8999999999941792,
+        "enqueueToPipeline": 19.30000000000291,
+        "preWrite": 0.6999999999970896,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.10000000000582077
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.10000000000582077,
+        "transaction": 24.19999999999709,
+        "callback": 15.19999999999709,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 8.69999999999709,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 25,
+        "preWrite": 15.30000000000291,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0,
+        "subtreeRead": 14.5,
+        "nativeQuery": 14.30000000000291,
+        "readOutsideQuery": 0.19999999999708962,
+        "readEndToWrite": 0.7000000000116415,
+        "queryPlusWrite": 23
+      }
+    },
+    {
+      "cycle": 27,
+      "action": {
+        "emit": 25.60000000000582,
+        "dom": 25.60000000000582
+      },
+      "dirty": {
+        "enqueueToCallback": 0.29999999998835847,
+        "previousWork": 0.19999999999708962,
+        "transaction": 13.69999999999709,
+        "callback": 0.3000000000029104,
+        "diffWrite": 0.09999999999126885,
+        "nativeWrite": 13,
+        "selectionRefresh": 0.6999999999970896,
+        "enqueueToPipeline": 14.599999999991269,
+        "preWrite": 0.40000000000873115,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0,
+        "transaction": 24.30000000000291,
+        "callback": 19.19999999999709,
+        "diffWrite": 0.09999999999126885,
+        "nativeWrite": 4.80000000000291,
+        "selectionRefresh": 1,
+        "enqueueToPipeline": 25.79999999998836,
+        "preWrite": 19.19999999999709,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.39999999999417923,
+        "subtreeRead": 18.80000000000291,
+        "nativeQuery": 18.10000000000582,
+        "readOutsideQuery": 0.6999999999970896,
+        "readEndToWrite": 0.39999999999417923,
+        "queryPlusWrite": 22.90000000000873
+      }
+    },
+    {
+      "cycle": 28,
+      "action": {
+        "emit": 25,
+        "dom": 25.19999999999709
+      },
+      "dirty": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.19999999999708962,
+        "transaction": 16.89999999999418,
+        "callback": 0.39999999999417923,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 16.30000000000291,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 17.90000000000873,
+        "preWrite": 0.5,
+        "writeEndToRefresh": 0.09999999999126885,
+        "refreshEndToPipeline": 0.10000000000582077
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.10000000000582077,
+        "transaction": 23.5,
+        "callback": 19,
+        "diffWrite": 0.3000000000029104,
+        "nativeWrite": 4.19999999999709,
+        "selectionRefresh": 1.3999999999941792,
+        "enqueueToPipeline": 25.10000000000582,
+        "preWrite": 19,
+        "writeEndToRefresh": 0.20000000001164153,
+        "refreshEndToPipeline": 0.10000000000582077,
+        "subtreeRead": 18.40000000000873,
+        "nativeQuery": 18,
+        "readOutsideQuery": 0.40000000000873115,
+        "readEndToWrite": 0.5999999999912689,
+        "queryPlusWrite": 22.19999999999709
+      }
+    },
+    {
+      "cycle": 29,
+      "action": {
+        "emit": 19.5,
+        "dom": 19.5
+      },
+      "dirty": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.19999999999708962,
+        "transaction": 9.80000000000291,
+        "callback": 0.3000000000029104,
+        "diffWrite": 0.10000000000582077,
+        "nativeWrite": 9.19999999999709,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 10.69999999999709,
+        "preWrite": 0.40000000000873115,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.09999999999126885
+      },
+      "reset": {
+        "enqueueToCallback": 0.19999999999708962,
+        "previousWork": 0.09999999999126885,
+        "transaction": 18.5,
+        "callback": 10.19999999999709,
+        "diffWrite": 0.39999999999417923,
+        "nativeWrite": 8,
+        "selectionRefresh": 0.6999999999970896,
+        "enqueueToPipeline": 19.69999999999709,
+        "preWrite": 10.19999999999709,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.40000000000873115,
+        "subtreeRead": 9.5,
+        "nativeQuery": 9.10000000000582,
+        "readOutsideQuery": 0.39999999999417923,
+        "readEndToWrite": 0.6999999999970896,
+        "queryPlusWrite": 17.10000000000582
+      }
+    },
+    {
+      "cycle": 30,
+      "action": {
+        "emit": 23.10000000000582,
+        "dom": 23.10000000000582
+      },
+      "dirty": {
+        "enqueueToCallback": 0.3000000000029104,
+        "previousWork": 0.20000000001164153,
+        "transaction": 5.899999999994179,
+        "callback": 0.3000000000029104,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 5.399999999994179,
+        "selectionRefresh": 1,
+        "enqueueToPipeline": 7.100000000005821,
+        "preWrite": 0.3000000000029104,
+        "writeEndToRefresh": 0.10000000000582077,
+        "refreshEndToPipeline": 0
+      },
+      "reset": {
+        "enqueueToCallback": 0.8999999999941792,
+        "previousWork": 0.39999999999417923,
+        "transaction": 21.89999999999418,
+        "callback": 14.400000000008731,
+        "diffWrite": 0.19999999999708962,
+        "nativeWrite": 6.80000000000291,
+        "selectionRefresh": 0.6000000000058208,
+        "enqueueToPipeline": 23.10000000000582,
+        "preWrite": 14.5,
+        "writeEndToRefresh": 0.19999999999708962,
+        "refreshEndToPipeline": 0.10000000000582077,
+        "subtreeRead": 13.900000000008731,
+        "nativeQuery": 13.60000000000582,
+        "readOutsideQuery": 0.3000000000029104,
+        "readEndToWrite": 0.5999999999912689,
+        "queryPlusWrite": 20.40000000000873
+      }
+    }
+  ],
+  "limitations": [
+    "Unchanged onState workload; instrumented nested wall spans include scheduling/native and instrumentation, not additive CPU/SQLCPU/floor/acceptance.",
+    "Dirty selector emission precedes scanned-action completion; reset can include predecessor tail. DOM text wait can see old Ada without dirty paint; no paint proof.",
+    "No CPU/heap/PSS/GC capture, state/objectgraph dump, caching/lease change or production edit. Setup captures an existing Store closure binding by name/type only. First prelude reset is untimed setup; retained separately.",
+    "Reset coalesced JSON binding paths were not captured: changedRows=5 and coalesced SQL are proven, exact five target paths require source attribution rather than raw bindings.",
+    "Single instrumented unchanged-baseline session; not a comparative benefit or acceptance result. Nested spans and native query/write spans are not additive CPU or exact queue blocking."
+  ]
+}

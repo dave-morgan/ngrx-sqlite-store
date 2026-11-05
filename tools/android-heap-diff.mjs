@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { benchmarkSerial, benchmarkPort } from './android-benchmark-target.mjs';
 // ADR-0067 workload code control: post-GC heap snapshots of classic and sqlite at the same
 // three android-bench heap points (todos, notes, relaunch), split into V8 code space and
 // data. Paired, alternating, fresh process per trial. Never run alongside another runner.
@@ -8,12 +9,13 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium } from '@playwright/test';
 import { execAdb } from './android-adb.mjs';
+import { toggleLatency } from './android-toggle-workload.mjs';
 import { summarizeHeap } from './heap-summary.mjs';
 
 const argv = process.argv.slice(2);
 const option = (name, fallback) => argv.includes(`--${name}`) ? argv[argv.indexOf(`--${name}`) + 1] : fallback;
 const adbFile = process.env.BENCH_ADB ?? join(process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT, 'platform-tools', 'adb.exe');
-const adb = (...args) => execAdb(adbFile, ['-s', option('serial', 'emulator-5554'), ...args], {
+const adb = (...args) => execAdb(adbFile, ['-s', benchmarkSerial(option('serial')), ...args], {
   encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
 });
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -22,6 +24,7 @@ const size = Number(option('size', '1000'));
 const trials = Number(option('trials', '5'));
 const date = new Date().toISOString().slice(0, 10);
 const provenance = {
+  workload: { togglesBeforeNotes: 30, toggleGapMs: 20 },
   date, session: option('session', undefined),
   device: adb('shell', 'getprop', 'ro.product.model').trim(),
   sdkLevel: adb('shell', 'getprop', 'ro.build.version.sdk').trim(),
@@ -39,8 +42,8 @@ async function launch(pkg) {
       const pid = adb('shell', 'pidof', pkg).trim().split(/\s+/)[0];
       const socket = `webview_devtools_remote_${pid}`;
       if (!adb('shell', 'cat', '/proc/net/unix').includes(socket)) continue;
-      adb('forward', 'tcp:9348', `localabstract:${socket}`);
-      const browser = await chromium.connectOverCDP('http://localhost:9348');
+      adb('forward', `tcp:${benchmarkPort(9348)}`, `localabstract:${socket}`);
+      const browser = await chromium.connectOverCDP(`http://localhost:${benchmarkPort(9348)}`);
       const page = browser.contexts()[0]?.pages()[0];
       if (page) return { browser, page };
       await browser.close();
@@ -85,6 +88,8 @@ async function trial(impl) {
     await page.waitForFunction((n) => window.__harness?.ready?.total === n, size, { timeout: 300000 });
     await page.evaluate(() => window.__harness.settle());
     const todos = await measure(page);
+    // Acceptance executes these paths before navigating to notes (ADR-0071).
+    await toggleLatency(page, 30);
     await page.getByTestId('nav-notes').click();
     await page.getByTestId('note-stats').waitFor();
     await delay(500);

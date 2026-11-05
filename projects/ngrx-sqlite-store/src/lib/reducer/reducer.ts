@@ -125,9 +125,27 @@ export async function runHandlers<S>(
     : (metadata.handlers.get(action.type) ?? []);
   for (const handler of handlers) {
     const partial = await handler.reducer(tx, action);
-    if (partial !== undefined)
-      for (const [key, value] of Object.entries(partial as object))
-        await tx.set(escapeSegment(key), value);
+    if (partial !== undefined) {
+      // Unchanged keys (identical references) are no-ops for set(): skip them before any
+      // read, so a whole-object return costs O(changed) store work, not O(keys).
+      // One root lookup instead of a path lookup per key when the root is known.
+      const root = tx.currentRoot();
+      // Pairs are built only for changed keys: Object.entries would allocate one per key.
+      const source = partial as Record<string, unknown>;
+      const entries: [string, unknown][] = [];
+      for (const key of Object.keys(source)) {
+        const value = source[key];
+        if (
+          root && value !== undefined
+            ? !Object.hasOwn(root, key) || root[key] !== value
+            : !tx.isCurrent(escapeSegment(key), value)
+        )
+          entries.push([key, value]);
+      }
+      // One batched read for every key's previous value instead of one round trip each.
+      await tx.prefetch(entries.map(([key]) => escapeSegment(key)));
+      for (const [key, value] of entries) await tx.set(escapeSegment(key), value);
+    }
   }
 }
 export { combineReducers, compose, createReducerFactory } from '@ngrx/store';

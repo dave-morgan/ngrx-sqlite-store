@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-24",
+  "size": 50000,
+  "samples": 6,
+  "environment": {
+    "sqliteVersion": "3.53.3",
+    "coll": "todos",
+    "rows": 50000,
+    "scratch": {
+      "journal": {
+        "journal_mode": "wal"
+      },
+      "synchronous": {
+        "synchronous": 1
+      },
+      "cache": {
+        "cache_size": -2000
+      },
+      "page": {
+        "page_size": 4096
+      }
+    },
+    "store": {
+      "journal": {
+        "journal_mode": "wal"
+      },
+      "synchronous": {
+        "synchronous": 1
+      },
+      "cache": {
+        "cache_size": -512
+      },
+      "page": {
+        "page_size": 4096
+      }
+    }
+  },
+  "lastCount": 50000,
+  "results": {
+    "production": {
+      "table": "ent",
+      "transport": "embed",
+      "indexes": [
+        "order",
+        "expr"
+      ],
+      "samples": [
+        1299.1999999999534,
+        1296.0999999999767,
+        1326.8000000000466,
+        1339.5999999999767,
+        1337.3000000000466,
+        1308.1999999999534
+      ],
+      "storageProof": {
+        "n": 50000,
+        "textRows": 50000,
+        "validRows": 50000
+      },
+      "calls": 36,
+      "wireBytes": 9330855,
+      "encodeMs": 231.09999999997672,
+      "mean": 1317.8666666666588,
+      "sd": 19.211836629216975
+    },
+    "production-jsonb-each": {
+      "table": "ent",
+      "transport": "embed",
+      "indexes": [
+        "order",
+        "expr"
+      ],
+      "jsonbEach": true,
+      "samples": [
+        1238.6999999999534,
+        1223.8999999999069,
+        1228.7999999999302,
+        1240.0999999999767,
+        1249.6999999999534,
+        1236.5
+      ],
+      "storageProof": {
+        "n": 50000,
+        "textRows": 50000,
+        "validRows": 50000
+      },
+      "calls": 36,
+      "wireBytes": 9330855,
+      "encodeMs": 247.5,
+      "mean": 1236.2833333332867,
+      "sd": 9.05326828648122
+    }
+  }
+}

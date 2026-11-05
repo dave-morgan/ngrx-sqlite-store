@@ -68,13 +68,19 @@ function like(value: string, pattern: string): boolean {
   return new RegExp('^' + regex + '$', 'u').test(fold(value));
 }
 
-/** Compile once to parameterized SQL and the exact same two-valued JS predicate. */
-export function compileWhere(where: Where = {}): {
+interface CompiledWhere {
   sql: string;
   params: SqlValue[];
   test: (entity: unknown) => boolean;
   fields: ReadonlySet<string>;
-} {
+}
+
+/** Compile once to parameterized SQL and the exact same two-valued JS predicate. */
+export function compileWhere(where: Where = {}): CompiledWhere {
+  return compilePredicate(where, false);
+}
+
+function compilePredicate(where: Where, sharedCount: boolean): CompiledWhere {
   const params: SqlValue[] = [];
   const fields = new Set<string>();
   const bind = (v: SqlValue) => {
@@ -139,6 +145,10 @@ export function compileWhere(where: Where = {}): {
           const path = "'$." + field + "'";
           const json = () => `json_extract(data, ${path})`;
           const type = () => `json_type(data, ${path})`;
+          // Shared counts already scan the collection: JSON type alone identifies
+          // booleans exactly. Ordinary filters keep json_extract for value indexes.
+          if (sharedCount && typeof value === 'boolean' && ['eq', 'ne', 'in'].includes(op))
+            return `COALESCE(${type()} = ${bind(String(value))}, 0)`;
           const guard =
             value === null
               ? `${json()} IS NULL`
@@ -244,6 +254,7 @@ export function entityQueries<S, T, Id = string | number>(
     page?: QueryPage,
   ): MemoizedSelector<S, R> {
     const filter = compileWhere(where);
+    const countFilter = kind === 'count' || kind === 'exists' ? compilePredicate(where ?? {}, true) : filter;
     if (
       page &&
       (!Number.isSafeInteger(page.offset) ||
@@ -267,6 +278,7 @@ export function entityQueries<S, T, Id = string | number>(
              UNION ALL SELECT NULL, COUNT(*) FROM nss_entity WHERE ${predicate}`,
             [path, path, ...filter.params],
             ['id', 'value'],
+            { path, predicate: countFilter.sql, params: countFilter.params },
           );
           let value = transport.find((row) => row.id === null)!.value!;
           for (const row of transport)
@@ -285,7 +297,7 @@ export function entityQueries<S, T, Id = string | number>(
         }>(
           `WITH promoted AS (
             SELECT id,pos,sortkey${kind === 'page' ? ',data' : ''},1 AS promoted
-            FROM nss_entity WHERE coll = ? AND data = ''
+            FROM nss_entity INDEXED BY nss_entity_promoted WHERE coll = ? AND data = ''
           ), inline AS (
             SELECT id,pos,sortkey${kind === 'page' ? ',data' : ''},0 AS promoted
             FROM nss_entity WHERE ${predicate} ORDER BY sortkey,pos

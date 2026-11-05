@@ -255,6 +255,32 @@ describe('StorageEngine', () => {
     expect(await engine.read((sql) => sql.query('SELECT count(*) n FROM test'))).toEqual([{ n: 5 }]);
   });
 
+  it('releaseOnSend lets later operations queue natively behind one atomic batch', async () => {
+    await engine.open();
+    const log = pipelineDriver();
+    const done = engine.transaction(async (tx) => {
+      await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [1, 'session']);
+    }, { releaseOnSend: true });
+    const read = engine.read((sql) => sql.query('SELECT count(*) n FROM test'));
+    // The read is issued before the batch has executed, and executes after it.
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(log).toContain('call:batch1');
+    expect(log).not.toContain('run:batch1');
+    expect(await read).toEqual([{ n: 1 }]);
+    await done;
+    expect(log.filter((entry) => entry.startsWith('run:'))).toEqual(['run:batch1', 'run:query']);
+  });
+
+  it('releaseOnSend still rejects a failed batch', async () => {
+    await engine.open();
+    pipelineDriver();
+    await engine.transaction(async (tx) => { await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [1, 'a']); });
+    await expect(engine.transaction(async (tx) => {
+      await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [1, 'conflict']);
+    }, { releaseOnSend: true })).rejects.toThrow();
+    expect(await engine.read((sql) => sql.query('SELECT name FROM test'))).toEqual([{ name: 'a' }]);
+  });
+
   it('settles every pipelined batch, then rolls back when one fails', async () => {
     await engine.open();
     pipelineDriver();
@@ -375,11 +401,43 @@ describe('StorageEngine', () => {
     await Promise.all([engine.open(), engine.open()]);
     expect(engine.status()).toBe('ready');
     expect(opening).toHaveBeenCalledOnce();
-    expect(query).toHaveBeenCalledExactlyOnceWith('SELECT value FROM nss_meta WHERE key = ?', ['schema_version']);
+    // One read returns the schema version together with all metadata and the index catalog.
+    expect(query).toHaveBeenCalledOnce();
+    expect(engine.bootCatalog()?.meta.get('schema_version')).toBe('2');
     expect(begin).not.toHaveBeenCalled();
     expect(exec).not.toHaveBeenCalled();
     expect(run).not.toHaveBeenCalled();
     expect(commit).not.toHaveBeenCalled();
+  });
+
+  it('keeps the boot catalog only until a statement can change metadata or schema', async () => {
+    await engine.open();
+    // A freshly migrated schema has no open-time catalog.
+    expect(engine.bootCatalog()).toBeUndefined();
+    const reopen = async () => {
+      const data = driver.export();
+      await engine.close();
+      driver = new SqlJsDriver({ data });
+      engine = new StorageEngine(driver, { migrations: [migration] });
+      await engine.open();
+    };
+    await reopen();
+    expect(engine.bootCatalog()?.meta.get('schema_version')).toBe('2');
+    // Unrelated row writes keep it exact.
+    await engine.transaction(async (tx) => {
+      await tx.write!('INSERT INTO test(id,name) VALUES (?,?)', [1, 'a']);
+    });
+    expect(engine.bootCatalog()).toBeDefined();
+    await engine.transaction(async (tx) => {
+      await tx.run('INSERT OR REPLACE INTO nss_meta (key, value) VALUES (?, ?)', ['feature:x:version', '1']);
+    });
+    expect(engine.bootCatalog()).toBeUndefined();
+    await reopen();
+    expect(engine.bootCatalog()?.meta.get('feature:x:version')).toBe('1');
+    await engine.transaction(async (tx) => {
+      await tx.exec('CREATE INDEX test_name ON test(name)');
+    });
+    expect(engine.bootCatalog()).toBeUndefined();
   });
 
   it('migrates missing version metadata atomically', async () => {

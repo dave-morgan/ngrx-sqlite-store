@@ -1,0 +1,3156 @@
+{
+  "size": 50000,
+  "diagnostic": true,
+  "out": [
+    {
+      "trial": 0,
+      "variant": "baseline",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          9.5,
+          8.400000000023283,
+          8.899999999906868,
+          7.800000000046566,
+          9
+        ],
+        "total": [
+          45.70000000006985,
+          45.29999999993015,
+          46.5,
+          46.70000000006985,
+          46.199999999953434
+        ],
+        "open": [
+          68,
+          67.69999999995343,
+          68,
+          69.20000000006985,
+          67.19999999995343
+        ],
+        "forced_total": [
+          42.5,
+          42.5,
+          42.800000000046566,
+          42.5,
+          41.90000000002328
+        ],
+        "forced_open": [
+          62.89999999990687,
+          61.70000000006985,
+          60.199999999953434,
+          59.59999999997672,
+          70.90000000002328
+        ],
+        "cover_open": [
+          40.800000000046566,
+          35.79999999993015,
+          38.90000000002328,
+          32.800000000046566,
+          33.09999999997672
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    },
+    {
+      "trial": 0,
+      "variant": "indexed",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_promoted",
+          "sql": "CREATE INDEX nss_probe_promoted ON nss_entity(coll) WHERE data=''"
+        },
+        {
+          "name": "nss_probe_inline",
+          "sql": "CREATE INDEX nss_probe_inline ON nss_entity(coll) WHERE data!='' AND json_valid(data)"
+        },
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          3,
+          2.099999999976717,
+          1.900000000023283,
+          2.099999999976717,
+          2.5
+        ],
+        "total": [
+          40.59999999997672,
+          40.70000000006985,
+          43.5,
+          45.29999999993015,
+          51.10000000009313
+        ],
+        "open": [
+          65.40000000002328,
+          64.5,
+          64,
+          62.90000000002328,
+          64.40000000002328
+        ],
+        "forced_total": [
+          36.800000000046566,
+          36.5,
+          37.09999999997672,
+          36.5,
+          36.70000000006985
+        ],
+        "forced_open": [
+          51.90000000002328,
+          52.59999999997672,
+          52.70000000006985,
+          51,
+          52.29999999993015
+        ],
+        "cover_open": [
+          28.099999999976717,
+          27.5,
+          27.399999999906868,
+          28.100000000093132,
+          27.699999999953434
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    },
+    {
+      "trial": 1,
+      "variant": "indexed",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_promoted",
+          "sql": "CREATE INDEX nss_probe_promoted ON nss_entity(coll) WHERE data=''"
+        },
+        {
+          "name": "nss_probe_inline",
+          "sql": "CREATE INDEX nss_probe_inline ON nss_entity(coll) WHERE data!='' AND json_valid(data)"
+        },
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          2.099999999976717,
+          2.099999999976717,
+          2,
+          2.099999999976717,
+          2.700000000069849
+        ],
+        "total": [
+          40.29999999993015,
+          40.70000000006985,
+          42.5,
+          40.5,
+          40.09999999997672
+        ],
+        "open": [
+          63.59999999997672,
+          62.5,
+          62.90000000002328,
+          63.59999999997672,
+          65.39999999990687
+        ],
+        "forced_total": [
+          36.59999999997672,
+          36.29999999993015,
+          45.300000000046566,
+          37.20000000006985,
+          37.39999999990687
+        ],
+        "forced_open": [
+          52.09999999997672,
+          51.29999999993015,
+          51.60000000009313,
+          52.79999999993015,
+          61.90000000002328
+        ],
+        "cover_open": [
+          33.5,
+          28.100000000093132,
+          28.29999999993015,
+          28.100000000093132,
+          28.899999999906868
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    },
+    {
+      "trial": 1,
+      "variant": "baseline",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          8.79999999993015,
+          9.300000000046566,
+          9.699999999953434,
+          9.400000000023283,
+          9.600000000093132
+        ],
+        "total": [
+          46.699999999953434,
+          47.699999999953434,
+          46.5,
+          46.10000000009313,
+          46.5
+        ],
+        "open": [
+          72.30000000004657,
+          71.19999999995343,
+          71.09999999997672,
+          70.90000000002328,
+          68.69999999995343
+        ],
+        "forced_total": [
+          43.90000000002328,
+          43,
+          42.59999999997672,
+          42.40000000002328,
+          43.59999999997672
+        ],
+        "forced_open": [
+          59.09999999997672,
+          58.90000000002328,
+          59.40000000002328,
+          57.699999999953434,
+          58.40000000002328
+        ],
+        "cover_open": [
+          34.300000000046566,
+          33.29999999993015,
+          34.300000000046566,
+          33.800000000046566,
+          33.39999999990687
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    },
+    {
+      "trial": 2,
+      "variant": "baseline",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          9.699999999953434,
+          8.900000000023283,
+          9.199999999953434,
+          9.5,
+          8.70000000006985
+        ],
+        "total": [
+          45.40000000002328,
+          47.199999999953434,
+          46.40000000002328,
+          45.699999999953434,
+          45.800000000046566
+        ],
+        "open": [
+          69.19999999995343,
+          69.59999999997672,
+          69,
+          70,
+          69.09999999997672
+        ],
+        "forced_total": [
+          42.300000000046566,
+          42.59999999997672,
+          42.199999999953434,
+          41.5,
+          41.90000000002328
+        ],
+        "forced_open": [
+          58,
+          57.300000000046566,
+          58.199999999953434,
+          58,
+          58.70000000006985
+        ],
+        "cover_open": [
+          34.199999999953434,
+          32.800000000046566,
+          33,
+          33.300000000046566,
+          32.5
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    },
+    {
+      "trial": 2,
+      "variant": "indexed",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_promoted",
+          "sql": "CREATE INDEX nss_probe_promoted ON nss_entity(coll) WHERE data=''"
+        },
+        {
+          "name": "nss_probe_inline",
+          "sql": "CREATE INDEX nss_probe_inline ON nss_entity(coll) WHERE data!='' AND json_valid(data)"
+        },
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          2.599999999976717,
+          2,
+          2.200000000069849,
+          2.099999999976717,
+          3.400000000023283
+        ],
+        "total": [
+          42.59999999997672,
+          47.800000000046566,
+          40.09999999997672,
+          42.199999999953434,
+          47.5
+        ],
+        "open": [
+          66.40000000002328,
+          65.79999999993015,
+          66,
+          70.5,
+          65.19999999995343
+        ],
+        "forced_total": [
+          35.90000000002328,
+          38.20000000006985,
+          36.79999999993015,
+          36.800000000046566,
+          36.90000000002328
+        ],
+        "forced_open": [
+          51.800000000046566,
+          52.40000000002328,
+          53.29999999993015,
+          52.800000000046566,
+          53.199999999953434
+        ],
+        "cover_open": [
+          27.70000000006985,
+          28,
+          28.5,
+          28.699999999953434,
+          27.599999999976717
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    },
+    {
+      "trial": 3,
+      "variant": "indexed",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_promoted",
+          "sql": "CREATE INDEX nss_probe_promoted ON nss_entity(coll) WHERE data=''"
+        },
+        {
+          "name": "nss_probe_inline",
+          "sql": "CREATE INDEX nss_probe_inline ON nss_entity(coll) WHERE data!='' AND json_valid(data)"
+        },
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          2.400000000023283,
+          2.099999999976717,
+          2.199999999953434,
+          2.200000000069849,
+          2.599999999976717
+        ],
+        "total": [
+          41.29999999993015,
+          41.09999999997672,
+          40.60000000009313,
+          41,
+          40
+        ],
+        "open": [
+          63.699999999953434,
+          63.40000000002328,
+          64.70000000006985,
+          66.79999999993015,
+          72
+        ],
+        "forced_total": [
+          37.199999999953434,
+          36.800000000046566,
+          36.39999999990687,
+          36.60000000009313,
+          36.39999999990687
+        ],
+        "forced_open": [
+          53.09999999997672,
+          52.90000000002328,
+          52.59999999997672,
+          52.300000000046566,
+          53.199999999953434
+        ],
+        "cover_open": [
+          28,
+          29.599999999976717,
+          28.400000000023283,
+          27.900000000023283,
+          28.699999999953434
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    },
+    {
+      "trial": 3,
+      "variant": "baseline",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          8.900000000023283,
+          8.79999999993015,
+          8.5,
+          8.600000000093132,
+          8.699999999953434
+        ],
+        "total": [
+          44.59999999997672,
+          46.59999999997672,
+          47,
+          45.59999999997672,
+          44.5
+        ],
+        "open": [
+          69.59999999997672,
+          69.5,
+          68.59999999997672,
+          69.69999999995343,
+          70.90000000002328
+        ],
+        "forced_total": [
+          42.79999999993015,
+          42.09999999997672,
+          41.90000000002328,
+          43.40000000002328,
+          42.90000000002328
+        ],
+        "forced_open": [
+          58.70000000006985,
+          59.199999999953434,
+          57.800000000046566,
+          59.59999999997672,
+          58.199999999953434
+        ],
+        "cover_open": [
+          33.5,
+          34.40000000002328,
+          34,
+          34.5,
+          33.40000000002328
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    },
+    {
+      "trial": 4,
+      "variant": "baseline",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          8.699999999953434,
+          9.20000000006985,
+          9,
+          8.899999999906868,
+          9.5
+        ],
+        "total": [
+          46.20000000006985,
+          47.40000000002328,
+          45.40000000002328,
+          46.09999999997672,
+          46.79999999993015
+        ],
+        "open": [
+          71.09999999997672,
+          77.20000000006985,
+          70.59999999997672,
+          70.09999999997672,
+          69.59999999997672
+        ],
+        "forced_total": [
+          41.90000000002328,
+          42.199999999953434,
+          43,
+          42.5,
+          42.20000000006985
+        ],
+        "forced_open": [
+          58,
+          59.5,
+          59,
+          59.699999999953434,
+          57.300000000046566
+        ],
+        "cover_open": [
+          34.59999999997672,
+          34,
+          32.800000000046566,
+          32.199999999953434,
+          35.5
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    },
+    {
+      "trial": 4,
+      "variant": "indexed",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_promoted",
+          "sql": "CREATE INDEX nss_probe_promoted ON nss_entity(coll) WHERE data=''"
+        },
+        {
+          "name": "nss_probe_inline",
+          "sql": "CREATE INDEX nss_probe_inline ON nss_entity(coll) WHERE data!='' AND json_valid(data)"
+        },
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          2.6000000000931323,
+          2.3999999999068677,
+          2.200000000069849,
+          2.099999999976717,
+          3.699999999953434
+        ],
+        "total": [
+          50.59999999997672,
+          45.70000000006985,
+          42.90000000002328,
+          39.79999999993015,
+          40.300000000046566
+        ],
+        "open": [
+          69.80000000004657,
+          64.40000000002328,
+          62.90000000002328,
+          63.79999999993015,
+          64.70000000006985
+        ],
+        "forced_total": [
+          36.10000000009313,
+          36.29999999993015,
+          36.300000000046566,
+          37.79999999993015,
+          36.40000000002328
+        ],
+        "forced_open": [
+          53,
+          51.20000000006985,
+          50.89999999990687,
+          53.300000000046566,
+          51.59999999997672
+        ],
+        "cover_open": [
+          27.79999999993015,
+          27.900000000023283,
+          28,
+          26.800000000046566,
+          27.699999999953434
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    },
+    {
+      "trial": 5,
+      "variant": "indexed",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_promoted",
+          "sql": "CREATE INDEX nss_probe_promoted ON nss_entity(coll) WHERE data=''"
+        },
+        {
+          "name": "nss_probe_inline",
+          "sql": "CREATE INDEX nss_probe_inline ON nss_entity(coll) WHERE data!='' AND json_valid(data)"
+        },
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 17,
+            "parent": 14,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 54,
+            "detail": "SEARCH nss_entity USING COVERING INDEX nss_probe_promoted (coll=?)"
+          },
+          {
+            "id": 14,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 18,
+            "parent": 14,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          2.200000000069849,
+          2.099999999976717,
+          2.799999999930151,
+          2.6000000000931323,
+          2.599999999976717
+        ],
+        "total": [
+          40.79999999993015,
+          41.70000000006985,
+          40.39999999990687,
+          40.800000000046566,
+          40.699999999953434
+        ],
+        "open": [
+          63.10000000009313,
+          62.79999999993015,
+          63.300000000046566,
+          63.40000000002328,
+          63.09999999997672
+        ],
+        "forced_total": [
+          36.40000000002328,
+          36.79999999993015,
+          36.300000000046566,
+          36.800000000046566,
+          36.39999999990687
+        ],
+        "forced_open": [
+          51.90000000002328,
+          51.90000000002328,
+          52.29999999993015,
+          53.10000000009313,
+          51.79999999993015
+        ],
+        "cover_open": [
+          27.5,
+          27.399999999906868,
+          27.5,
+          27.5,
+          26.800000000046566
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    },
+    {
+      "trial": 5,
+      "variant": "baseline",
+      "activeIndexes": [
+        {
+          "name": "nss_probe_donecover",
+          "sql": "CREATE INDEX nss_probe_donecover ON nss_entity(coll,json_extract(data,'$.done'),json_type(data,'$.done')) WHERE data!='' AND json_valid(data)"
+        }
+      ],
+      "plans": {
+        "promoted": [
+          {
+            "id": 2,
+            "parent": 0,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 19,
+            "parent": 16,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          }
+        ],
+        "forced_total": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 62,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=?)"
+          }
+        ],
+        "forced_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_query_646f6e65 (coll=? AND <expr>=?)"
+          }
+        ],
+        "cover_open": [
+          {
+            "id": 1,
+            "parent": 0,
+            "notused": 0,
+            "detail": "COMPOUND QUERY"
+          },
+          {
+            "id": 2,
+            "parent": 1,
+            "notused": 0,
+            "detail": "LEFT-MOST SUBQUERY"
+          },
+          {
+            "id": 4,
+            "parent": 2,
+            "notused": 56,
+            "detail": "SEARCH nss_entity USING PRIMARY KEY (coll=?)"
+          },
+          {
+            "id": 16,
+            "parent": 1,
+            "notused": 0,
+            "detail": "UNION ALL"
+          },
+          {
+            "id": 20,
+            "parent": 16,
+            "notused": 61,
+            "detail": "SEARCH nss_entity USING INDEX nss_probe_donecover (coll=? AND <expr>=?)"
+          }
+        ]
+      },
+      "samples": {
+        "promoted": [
+          9.5,
+          8.600000000093132,
+          9,
+          8.29999999993015,
+          9.20000000006985
+        ],
+        "total": [
+          45.40000000002328,
+          46.800000000046566,
+          47.79999999993015,
+          45.5,
+          46.59999999997672
+        ],
+        "open": [
+          69.5,
+          70.40000000002328,
+          69.29999999993015,
+          69.40000000002328,
+          69.40000000002328
+        ],
+        "forced_total": [
+          43.199999999953434,
+          42.40000000002328,
+          42.199999999953434,
+          42.800000000046566,
+          42.800000000046566
+        ],
+        "forced_open": [
+          58.90000000002328,
+          58.5,
+          59.40000000002328,
+          58.699999999953434,
+          59.5
+        ],
+        "cover_open": [
+          32.90000000002328,
+          33.5,
+          33.79999999993015,
+          35,
+          33.90000000002328
+        ]
+      },
+      "values": {
+        "promoted": [],
+        "total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "forced_total": [
+          {
+            "id": null,
+            "value": 50000
+          }
+        ],
+        "forced_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ],
+        "cover_open": [
+          {
+            "id": null,
+            "value": 32487
+          }
+        ]
+      }
+    }
+  ],
+  "indexes": [
+    {
+      "name": "nss_entity_order",
+      "sql": "CREATE INDEX nss_entity_order ON nss_entity(coll, pos)"
+    },
+    {
+      "name": "nss_entity_sortkey",
+      "sql": "CREATE INDEX nss_entity_sortkey ON nss_entity(coll, sortkey, pos)"
+    },
+    {
+      "name": "nss_query_646f6e65",
+      "sql": "CREATE INDEX nss_query_646f6e65 ON nss_entity(coll,json_extract(data,'$.done')) WHERE data != '' AND json_valid(data)"
+    },
+    {
+      "name": "nss_query_757365724964",
+      "sql": "CREATE INDEX nss_query_757365724964 ON nss_entity(coll,json_extract(data,'$.userId')) WHERE data != '' AND json_valid(data)"
+    }
+  ]
+}

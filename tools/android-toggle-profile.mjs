@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { benchmarkSerial } from './android-benchmark-target.mjs';
 // Phase 15f diagnostic: attribute sampled CPU inside each toggle's dispatch -> DOM window.
 // Requires a source-mapped sqlite APK and its maps directory. Never an acceptance input.
 // --maps DIR [--size 1000] [--toggles 30] [--serial emulator-5554] [--output FILE]
@@ -11,7 +12,7 @@ import { execAdb } from './android-adb.mjs';
 const argv = process.argv.slice(2);
 const option = (name, fallback) => argv.includes(`--${name}`) ? argv[argv.indexOf(`--${name}`) + 1] : fallback;
 const adbFile = process.env.BENCH_ADB ?? join(process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT, 'platform-tools', 'adb.exe');
-const adb = (...args) => execAdb(adbFile, ['-s', option('serial', 'emulator-5554'), ...args], {
+const adb = (...args) => execAdb(adbFile, ['-s', benchmarkSerial(option('serial')), ...args], {
   encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
 });
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -165,6 +166,7 @@ try {
     phasesPerToggleMs: Object.fromEntries(Object.entries(phases).map(([p, m]) => [p, Object.fromEntries([...m].sort((a, b) => b[1] - a[1]).map(([k, v]) => [k, +(v / n).toFixed(3)]))])),
     topSelfPerToggleMs: [...selfIn].sort((a, b) => b[1] - a[1]).slice(0, 40).map(([k, v]) => [k, +(v / n).toFixed(3)]),
     perToggle,
+    windows: run.windows, calls: run.calls,
   };
   const output = option('output', `.tmp/toggle-profile-${size}.json`);
   writeFileSync(output, JSON.stringify(report, null, 2) + '\n');

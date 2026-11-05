@@ -9,6 +9,7 @@ import { StoreTx } from '../reducer/store-tx';
 import { brandEntityState, NSS_ENTITY_BRAND } from '../schema/entity-brand';
 import { SCHEMA_MIGRATIONS } from '../schema/migrations';
 import { NodeStore } from '../schema/node-store';
+import { RowWriter } from '../schema/row-writer';
 import { createFeatureSelector } from '../selectors/selectors';
 import { StorageEngine } from '../storage/storage-engine';
 import { entityChanges } from '../storage/entity-changes';
@@ -309,6 +310,69 @@ describe('dual-form entity adapter', () => {
       await expect(collection.replaceAll([{ id: 'bad', entity: original }])).rejects.toThrow('Row cap exceeded');
     });
     expect(await engine.read((sql) => nodes.read(sql, 'items'))).toEqual({ ids: ['original'], entities: { original } });
+  });
+
+  it('streams large replacements in chunks with exact rows, positions, duplicates and promoted data', async () => {
+    const adapter = createEntityAdapter<Item>();
+    await seed(adapter.addOne({ id: 'stale', rank: 0, name: 'gone' }, adapter.getInitialState()));
+    const rows: Item[] = Array.from({ length: 4000 }, (_, i) => ({ id: `r${i}`, rank: i % 7, name: `row ${i}` }));
+    rows[2500] = { ...rows[2500], payload: 'x'.repeat(1_100_000) };
+    const input = [...rows, { ...rows[10], name: 'duplicate ignored' }];
+    await engine.transaction(async (sql) => {
+      const collection = new StoreTx('items', nodes, sql, sql.changes).entities<Item>();
+      await collection.replaceAll(input.map((entity) => ({ id: entity.id, entity })));
+    });
+    const expected = createClassicAdapter<Item>().setAll(rows, createClassicAdapter<Item>().getInitialState());
+    expect(await engine.read((sql) => nodes.read(sql, 'items'))).toEqual(expected);
+  });
+
+  it('keeps streamed replacement transport batches as full as a one-shot write', async () => {
+    const driver = new SqlJsDriver();
+    const local = new StorageEngine(driver, { migrations: SCHEMA_MIGRATIONS });
+    await local.open();
+    try {
+      const rows: Item[] = Array.from({ length: 6000 }, (_, i) => ({ id: `r${i}`, rank: i % 7, name: `row "${i}" ${'n'.repeat(i % 50)}` }));
+      const statements: string[] = [];
+      const original = driver.batch.bind(driver);
+      vi.spyOn(driver, 'batch').mockImplementation(async (set, opts) => {
+        for (const { sql } of set) statements.push(sql);
+        return original(set, opts);
+      });
+      await local.transaction(async (sql) => {
+        await new StoreTx('items', nodes, sql, sql.changes).entities<Item>().replaceAll(rows.map((entity) => ({ id: entity.id, entity })));
+      });
+      const streamed = statements.filter((sql) => sql.startsWith('INSERT INTO nss_entity')).length;
+      statements.length = 0;
+      await local.transaction(async (sql) => {
+        const writer = new RowWriter(sql, sql.changes, 1_048_576);
+        await writer.writeEntityRows(
+          rows.map((entity, i) => ({ coll: 'other', id: String(entity.id), pos: i + 1, data: JSON.stringify(entity) })),
+          false, undefined, true, { canonicalJson: true },
+        );
+      });
+      const oneShot = statements.filter((sql) => sql.startsWith('INSERT INTO nss_entity')).length;
+      expect(oneShot).toBeGreaterThan(2);
+      expect(streamed).toBe(oneShot);
+    } finally {
+      await local.close();
+    }
+  });
+
+  it('rolls a streamed replacement back to its savepoint when a late row fails validation', async () => {
+    const adapter = createEntityAdapter<Item>();
+    const original = { id: 'original', rank: 0, name: 'keep' };
+    await seed(adapter.addOne(original, adapter.getInitialState()));
+    const rows = Array.from({ length: 4000 }, (_, i) => ({ id: `r${i}`, entity: { id: `r${i}`, rank: 0, name: `${i}` } as Item, pos: i === 3500 ? NaN : undefined }));
+    await engine.transaction(async (sql) => {
+      const tx = new StoreTx('items', nodes, sql, sql.changes);
+      await expect(tx.entities<Item>().replaceAll(rows)).rejects.toThrow('Invalid entity position');
+      // The transaction continues and commits its other work after the caught failure.
+      await adapter.addOne(tx, { id: 'after', rank: 1, name: 'later' });
+    });
+    expect(await engine.read((sql) => nodes.read(sql, 'items'))).toEqual({
+      ids: ['original', 'after'],
+      entities: { original, after: { id: 'after', rank: 1, name: 'later' } },
+    });
   });
 
   it('discards earlier entity deltas when a later full replacement supersedes them', async () => {

@@ -1,0 +1,13 @@
+# Phase15t native execution attribution
+
+Full15s stillhas8FAIL+3CODE-BOUND metrics. Earlier toggle diagnostics locate long spans inside native-response/queued-effect waits, which include scheduling/transport and do not measure SQLiteCPU. Investigate before changing the native path.
+
+ACTIVE `.tmp/15t-native-profile.sh` PID43640, logs `.tmp/15t-native-profile.stdout.log/.stderr.log`: verifiedcoldboot, explicitlyinstallunchanged15s candidate, seed1k then capture30toggles at20msgap with Android Java method tracing (dualclock,format3). No V8CPU profiler or acceptance runner alongside it. Raw `.tmp/15t-native-method.trace` and `.tmp/15t-native-toggle.json` retain trace,APKhash,JS call/DOM timing,devicepath and available errors. `.tmp/15t-analyze.cjs` checks dictionary/header/recordstride/overflow, pairs completed Database.executeSet calls with JS writes only if counts match, writes `.tmp/15t-native-analysis.json`.
+
+[Android guidance](https://developer.android.com/studio/profile/generate-trace-logs) warns that profiling slows the app and these timings should not establish absolute performance. Inclusive Java methodwall/threadCPU and residualtransport/plugin/scheduling spans are diagnostic only. Unmatched/overflow traces support no exact pairing; preserve original artifacts before any repaired attempt. No production code/schema/floor change in15t. Do not edit running scripts.
+
+## Capture outcome: whole-run pairing rejected
+
+Capture completed30toggles/60JS atomic writes,2.85MB trace with headerdual/version3/nooverflow. Analysis fails to pair because only one Database.executeSet has a complete enter/exit pair and a second entry is unfinished. Android SDK dmtracedump independently reports only initial database entries; its summary is `.tmp/15t-dmtrace-summary.txt`. Plugin-thread trace events end134.810ms after tracing begins, while the JS toggle window spans1384.1ms. Thus no whole-run native/bridge timing estimate is supported, despite the header overflow flag being false. Original trace,JSdata,failedanalysis andlogs retained; initialanalysis copied to `.tmp/15t-native-analysis-initial.json`. No rerun to replace this capture.
+
+The retained open stack locates Database.deleteSQL ->UtilsJson.isLastModified ->UtilsDrop.getTablesNames ->SQLiteCursor/SQLiteConnection lookup. Installed plugin source confirms prepareSQL invokes deleteSQL for ordinary DELETE statements and performs sync-metadata checks. This is a qualitative located code path, not an absolute CPU measurement or proof it dominates all unprofiled tails. Next15u diagnostic compares plain versus commented no-op six-statement deletes to the same internal tables, preserving bindings/transaction/zero-row effects.

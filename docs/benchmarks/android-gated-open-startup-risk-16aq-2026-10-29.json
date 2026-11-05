@@ -1,0 +1,391 @@
+{
+  "kind": "Offline analysis of saved startup guard bridge traces; no new device samples",
+  "referenceLabels": {
+    "A": "15aa archive/install lineage",
+    "B": "16ap archive/install lineage"
+  },
+  "apkHashCapturedInsideTrace": false,
+  "protocol": "Inspected current android-first-ready-profile.mjs resets and reloads, then navigates to /todos?seed=size; every saved trace independently exhibits create/open/sweep/create/open recovery sequence.",
+  "limitations": [
+    "Bridge call elapsed includes native queueing and acknowledgement scheduling; not native SQL CPU.",
+    "Captured send gaps are scheduling observations, not candidate latency predictions or lower bounds.",
+    "Removing initial speculative open changes subsequent queue/cache/connection state; differences must not be added or subtracted into a claimed application speedup.",
+    "Guard protocol exercises document reload recovery; no general cold-process startup gain can be inferred.",
+    "No APK hash or raw native response payload is contained in these legacy traces; use recorded runner/archive lineage only.",
+    "Current profiler source is inspected explanatory context, not a source hash captured inside those historical measurements."
+  ],
+  "rows": [
+    {
+      "side": "A",
+      "trial": 1,
+      "file": ".tmp/lp25-A-1.json",
+      "sha256": "0d0f71f7d1cb492f2699eb5c0132281476d48d6fb77792d0e8a807dc8ba55191",
+      "readyMs": 1523,
+      "startupCalls": [
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 191.79999999998836,
+          "ms": 71,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 192,
+          "ms": 71.29999999998836,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "checkConnectionsConsistency",
+          "start": 263.4000000000233,
+          "ms": 11.899999999965075,
+          "bytes": 29,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 263.6000000000349,
+          "ms": 14.5,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 263.6000000000349,
+          "ms": 15.5,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        }
+      ],
+      "capturedInitialOpenSendBeforeCreateAckMs": 70.79999999998836,
+      "capturedInitialPairCompletionAfterCreateAckMs": 0.5,
+      "capturedRecoveryOpenSendBeforeCreateAckMs": 14.5
+    },
+    {
+      "side": "A",
+      "trial": 2,
+      "file": ".tmp/lp25-A-2.json",
+      "sha256": "e05735bbd5048f2c5fd3bc55a6dca9b7e21b22b7a7c793bbddd9fce1834b0a74",
+      "readyMs": 1505.5,
+      "startupCalls": [
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 233.09999999997672,
+          "ms": 57.40000000002328,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 233.30000000004657,
+          "ms": 57.29999999993015,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "checkConnectionsConsistency",
+          "start": 290.80000000004657,
+          "ms": 4.099999999976717,
+          "bytes": 29,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 291,
+          "ms": 4.099999999976717,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 291.0999999999767,
+          "ms": 4.800000000046566,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        }
+      ],
+      "capturedInitialOpenSendBeforeCreateAckMs": 57.199999999953434,
+      "capturedInitialPairCompletionAfterCreateAckMs": 0.09999999997671694,
+      "capturedRecoveryOpenSendBeforeCreateAckMs": 4
+    },
+    {
+      "side": "A",
+      "trial": 3,
+      "file": ".tmp/lp25-A-3.json",
+      "sha256": "4b8827e525f49d5ffbfd0a7031aeaa81659b153944030379c49a23bd65344995",
+      "readyMs": 1426.1000000000931,
+      "startupCalls": [
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 188.4000000001397,
+          "ms": 46.89999999990687,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 188.60000000009313,
+          "ms": 47,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "checkConnectionsConsistency",
+          "start": 235.80000000004657,
+          "ms": 5.300000000046566,
+          "bytes": 29,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 235.9000000001397,
+          "ms": 5.300000000046566,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 235.9000000001397,
+          "ms": 5.5,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        }
+      ],
+      "capturedInitialOpenSendBeforeCreateAckMs": 46.699999999953434,
+      "capturedInitialPairCompletionAfterCreateAckMs": 0.30000000004656613,
+      "capturedRecoveryOpenSendBeforeCreateAckMs": 5.300000000046566
+    },
+    {
+      "side": "B",
+      "trial": 1,
+      "file": ".tmp/lp25-B-1.json",
+      "sha256": "01344266356fd9d6c530384fbaad9560f61dc0621cb972b0a57367ed5cd18fdd",
+      "readyMs": 1459,
+      "startupCalls": [
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 216.39999999990687,
+          "ms": 4.700000000069849,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 216.59999999997672,
+          "ms": 62.59999999997672,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "checkConnectionsConsistency",
+          "start": 279.29999999993015,
+          "ms": 8.300000000046566,
+          "bytes": 29,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 279.5,
+          "ms": 8.199999999953434,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 279.5999999999767,
+          "ms": 17.79999999993015,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        }
+      ],
+      "capturedInitialOpenSendBeforeCreateAckMs": 4.5,
+      "capturedInitialPairCompletionAfterCreateAckMs": 58.09999999997672,
+      "capturedRecoveryOpenSendBeforeCreateAckMs": 8.099999999976717
+    },
+    {
+      "side": "B",
+      "trial": 2,
+      "file": ".tmp/lp25-B-2.json",
+      "sha256": "17cf2401249d036be4b3aef80e646dc8f89f388268e681c3069e025beac03b26",
+      "readyMs": 1436.6999999999534,
+      "startupCalls": [
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 218.39999999990687,
+          "ms": 8.700000000186265,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 218.60000000009313,
+          "ms": 40.5,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "checkConnectionsConsistency",
+          "start": 259.19999999995343,
+          "ms": 4.5,
+          "bytes": 29,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 259.5,
+          "ms": 4.600000000093132,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 259.5,
+          "ms": 5.899999999906868,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        }
+      ],
+      "capturedInitialOpenSendBeforeCreateAckMs": 8.5,
+      "capturedInitialPairCompletionAfterCreateAckMs": 32,
+      "capturedRecoveryOpenSendBeforeCreateAckMs": 4.600000000093132
+    },
+    {
+      "side": "B",
+      "trial": 3,
+      "file": ".tmp/lp25-B-3.json",
+      "sha256": "8615dbb52392c5d9ad18375ed3849f995550bd9563aa80867be94903c8096402",
+      "readyMs": 1714.5,
+      "startupCalls": [
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 189.4000000001397,
+          "ms": 249.5999999998603,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 189.5,
+          "ms": 268.80000000004657,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "checkConnectionsConsistency",
+          "start": 458.4000000001397,
+          "ms": 5.800000000046566,
+          "bytes": 29,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "createConnection",
+          "start": 458.60000000009313,
+          "ms": 22,
+          "bytes": 97,
+          "sql": [
+            ""
+          ]
+        },
+        {
+          "transaction": 0,
+          "method": "open",
+          "start": 458.60000000009313,
+          "ms": 26.300000000046566,
+          "bytes": 44,
+          "sql": [
+            ""
+          ]
+        }
+      ],
+      "capturedInitialOpenSendBeforeCreateAckMs": 249.5,
+      "capturedInitialPairCompletionAfterCreateAckMs": 19.300000000046566,
+      "capturedRecoveryOpenSendBeforeCreateAckMs": 22
+    }
+  ]
+}

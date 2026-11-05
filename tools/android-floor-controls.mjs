@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { benchmarkSerial, benchmarkPort } from './android-benchmark-target.mjs';
 // ADR-0051 native controls. Never run alongside another device runner.
 // --session ID [--sizes 1000,10000,50000] [--output FILE]
 import { createHash } from 'node:crypto';
@@ -10,7 +11,7 @@ import { execAdb } from './android-adb.mjs';
 const argv = process.argv.slice(2);
 const option = (name, fallback) => argv.includes(`--${name}`) ? argv[argv.indexOf(`--${name}`) + 1] : fallback;
 const adbFile = process.env.BENCH_ADB ?? join(process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT, 'platform-tools', 'adb.exe');
-const adb = (...args) => execAdb(adbFile, ['-s', option('serial', 'emulator-5554'), ...args], {
+const adb = (...args) => execAdb(adbFile, ['-s', benchmarkSerial(option('serial')), ...args], {
   encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
 });
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -40,8 +41,8 @@ async function launch(pkg) {
       const pid = adb('shell', 'pidof', pkg).trim().split(/\s+/)[0];
       const socket = `webview_devtools_remote_${pid}`;
       if (!adb('shell', 'cat', '/proc/net/unix').includes(socket)) continue;
-      adb('forward', 'tcp:9336', `localabstract:${socket}`);
-      const browser = await chromium.connectOverCDP('http://localhost:9336');
+      adb('forward', `tcp:${benchmarkPort(9336)}`, `localabstract:${socket}`);
+      const browser = await chromium.connectOverCDP(`http://localhost:${benchmarkPort(9336)}`);
       const page = browser.contexts()[0]?.pages()[0];
       if (page) return { browser, page };
       await browser.close();
@@ -122,7 +123,8 @@ try {
     page = session.page;
     await page.waitForFunction(() => window.__floor, null, { timeout: 120000 });
     const open = [];
-    for (let trial = 0; trial < 5; trial++) {
+    // ADR-0087: ten fresh-process F_open trials (was five) for a more precise mean.
+    for (let trial = 0; trial < 10; trial++) {
       await browser.close();
       session = await launch(active);
       browser = session.browser;
@@ -132,14 +134,40 @@ try {
     }
     // Open controls precede bulk scratch inserts so F_open sees precisely the
     // populated store plus one scratch row, not a second N-row data set.
-    const commit = await page.evaluate(() => window.__floor.commit(20));
+    // ADR-0070 memory floor: first in this fresh process, one real-row seed exactly like the
+    // store's single bulk transfer, then android-bench's own pre-PSS steps (two V8 GCs).
+    // ADR-0087: three independent brackets, each in its own fresh floor process (was one).
+    const onceSamples = [];
+    for (let bracket = 0; bracket < 3; bracket++) {
+      if (bracket) {
+        await browser.close();
+        session = await launch(active);
+        browser = session.browser;
+        page = session.page;
+        await page.waitForFunction(() => window.__floor, null, { timeout: 120000 });
+      }
+      const beforeOnce = pss(active);
+      await page.evaluate(() => window.__floor.seedRows(1, true));
+      const gc = await page.context().newCDPSession(page);
+      await gc.send('HeapProfiler.collectGarbage');
+      await delay(300);
+      await gc.send('HeapProfiler.collectGarbage');
+      await gc.detach();
+      onceSamples.push({ beforeOnce, afterOnce: pss(active) });
+    }
+    const { beforeOnce, afterOnce } = onceSamples[0];
+    // ADR-0087: 100 back-to-back F_commit samples (was 20) for a more precise percentile.
+    const commit = await page.evaluate(() => window.__floor.commit(100));
     // ADR-0066: paced like android-bench's toggle loop (20 ms between toggles).
     const commitPaced = await page.evaluate(() => window.__floor.commit(30, 20));
+    // ADR-0066 F_seed (real persisted rows) first, in its own ADR-0069 PSS bracket: the
+    // store's bulk bridge payloads are real rows, so their Java-side garbage is the floor.
+    const beforeRows = pss(active);
+    const seedRows = await page.evaluate(() => window.__floor.seedRows(5));
+    const afterRows = pss(active);
     const beforeSeed = pss(active);
     const seed = await page.evaluate(({ size, chunkBytes }) => window.__floor.seed(size, chunkBytes, 5), { size, chunkBytes });
     const afterSeed = pss(active);
-    // ADR-0066 F_seed (real persisted rows); after the legacy control, outside its PSS bracket.
-    const seedRows = await page.evaluate(() => window.__floor.seedRows(5));
     const cache = await page.evaluate(async () => {
       const native = (method, options) => window.Capacitor.nativePromise('CapacitorSQLite', method, { database: 'ngrx-harness', readonly: false, ...options });
       const stats = {};
@@ -151,7 +179,7 @@ try {
     const afterShrink = pss(active);
     const pragmas = await page.evaluate(() => window.__floor.pragmas);
     const row = { size, database: 'ngrx-harness', commit, commitPaced, seed, seedRows, open, pragmas, seedTrace: seedCalls,
-      memoryDiagnostic: { beforeSeed, afterSeed, afterShrink, cache } };
+      memoryDiagnostic: { beforeSeed, afterSeed, afterShrink, cache, beforeRows, afterRows, beforeOnce, afterOnce, onceSamples } };
     results.push(row);
     console.log(JSON.stringify(row));
     await page.evaluate(() => localStorage.removeItem('harness:empty'));

@@ -12,6 +12,8 @@ interface Prewarm {
   driver: SqlDriver;
   engine: StorageEngine;
   ready: Promise<void>;
+  /** Session feature subtrees deleted before `ready` resolved. */
+  cleared: readonly string[];
 }
 const defaultDriver = {};
 const pending = new WeakMap<object, Prewarm>();
@@ -29,6 +31,8 @@ export function registerPrewarmFeature(providers: EnvironmentProviders, feature:
   registrations.set(providers, feature);
 }
 export const PREWARM_READY = new InjectionToken<Promise<void> | undefined>('NSS prewarm ready');
+/** Session subtrees the adopted prewarm deleted: startup seeding knows they are empty. */
+export const PREWARM_CLEARED = new InjectionToken<readonly string[]>('NSS prewarm cleared');
 
 /** Start recovery and schema open before bootstrap; provideStore adopts by driver identity. */
 export function prewarmSqliteStore(input: SqliteStoreConfig | readonly unknown[] = {}): Promise<void> {
@@ -57,15 +61,20 @@ export function prewarmSqliteStore(input: SqliteStoreConfig | readonly unknown[]
     const engine = new StorageEngine(driver, { migrations: SCHEMA_MIGRATIONS });
     const ready = engine.open().then(async () => {
       if (!session.length) return;
-      await engine.transaction(async (tx) => {
+      // ADR-0070: nothing observes the store yet, so later startup reads need not wait for
+      // this deletion's round trip; they execute natively after it. A failure after release
+      // fails the engine, so every later operation surfaces it like a failed open.
+      const { sent, committed } = engine.transactionStages(async (tx) => {
         const writer = new RowWriter(tx, tx.changes, 1_048_576);
         for (const key of session) await writer.deletePrefix(escapeSegment(key));
-      });
+      }, { releaseOnSend: true });
+      committed.catch((error: unknown) => engine.fail(error));
+      await sent;
     });
     // Keep the original rejected promise for bootstrap. This handler only prevents
     // an unhandled rejection while the framework is still starting.
     void ready.catch(() => undefined);
-    warm = { driver, engine, ready };
+    warm = { driver, engine, ready, cleared: session };
     pending.set(key, warm);
   }
   return warm.ready;

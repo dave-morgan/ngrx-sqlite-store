@@ -5,6 +5,7 @@
       "@store": ["./src/app/store-impl/sqlite/store.ts"],
       "@store/entity": ["./src/app/store-impl/sqlite/entity.ts"],
       "@impl": ["./src/app/store-impl/sqlite/index.ts"],
+      "@impl/shapes": ["./src/app/store-impl/sqlite/shapes.ts"],
       "ngrx-sqlite-store": ["../ngrx-sqlite-store/src/public-api.ts"],
       "ngrx-sqlite-store/*": ["../ngrx-sqlite-store/*/src/public-api.ts"]
     }

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { benchmarkSerial } from './android-benchmark-target.mjs';
 // Run only while the statistical benchmark is stopped: this force-stops harness apps.
 // Usage: node tools/android-commit-probe.mjs [--bulk] [--samples 100] [--serial emulator-5554]
 // Timings are WebView -> native -> WebView elapsed times, including bridge transport.
@@ -19,7 +20,7 @@ if (!Number.isInteger(samples) || samples < 2) throw new Error('--samples must b
 const sdk = process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT;
 if (!sdk) throw new Error('ANDROID_HOME or ANDROID_SDK_ROOT is required');
 const adbPath = join(sdk, 'platform-tools', process.platform === 'win32' ? 'adb.exe' : 'adb');
-const serial = option('serial', 'emulator-5554');
+const serial = benchmarkSerial(option('serial'));
 const adb = (...args) => execFileSync(adbPath, ['-s', serial, ...args], {
   cwd: root, encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
 });

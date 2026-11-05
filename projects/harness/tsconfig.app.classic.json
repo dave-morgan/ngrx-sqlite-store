@@ -4,7 +4,8 @@
     "paths": {
       "@store": ["./src/app/store-impl/classic/store.ts"],
       "@store/entity": ["./src/app/store-impl/classic/entity.ts"],
-      "@impl": ["./src/app/store-impl/classic/index.ts"]
+      "@impl": ["./src/app/store-impl/classic/index.ts"],
+      "@impl/shapes": ["./src/app/store-impl/classic/shapes.ts"]
     }
   },
   "include": ["src/**/*.ts"],

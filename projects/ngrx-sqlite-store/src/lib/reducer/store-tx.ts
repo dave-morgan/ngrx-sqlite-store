@@ -8,6 +8,8 @@ import type { SqlExecutor } from '../storage/storage-engine';
 import { recordReferences, recordReplacement } from '../storage/reference-changes';
 import type { EntityRow, NodeRow } from '../schema/row-writer';
 import { EntityTx } from './entity-tx';
+import type { SqlValue } from '../driver/sql-driver';
+import { queryBatch, SUBTREE_COLUMNS } from '../selectors/query-batch';
 
 export const STORE_TX_BRAND = Symbol.for('ngrx-sqlite-store/StoreTx');
 export function isStoreTx(value: unknown): value is StoreTx {
@@ -20,6 +22,8 @@ export function isStoreTx(value: unknown): value is StoreTx {
 
 export interface CommittedCache {
   peek(fullPath: string): unknown | undefined;
+  /** A fresh cached owner may prove that a path is absent. */
+  ready?(fullPath: string): boolean;
   peekEntity?(coll: string, id: string): EntityRow | undefined;
   location?(path: string): Pick<NodeRow, 'parent' | 'pos'> | undefined;
 }
@@ -51,6 +55,8 @@ export class StoreTx<S = unknown> {
   private readonly entityCollections = new Map<string, EntityTx<unknown>>();
   private readonly root: string;
   private readonly locations = new Map<string, NodeRow>();
+  /** Physical child positions per parent path, valid until the parent itself is rewritten. */
+  private readonly childPositions = new Map<string, ReadonlyMap<string, number>>();
   constructor(
     featureKey: string,
     private readonly nodes: NodeStore,
@@ -99,7 +105,55 @@ export class StoreTx<S = unknown> {
     return collection as EntityTx<T>;
   }
 
+  /**
+   * Synchronously true when `value` is the identical value already at `path` (cached in
+   * this transaction or committed and unchanged since). set() would return early for it.
+   */
+  isCurrent(path: string, value: unknown): boolean {
+    const full = this.fullPath(path);
+    if (this.cache.has(full)) return this.cache.get(full) === value;
+    if (value === undefined || this.changes.overlaps(full)) return false;
+    return this.committedCache.peek(full) === value;
+  }
+
+  /**
+   * The feature root object when it is known without a read: cached in this transaction,
+   * or committed and untouched since. isCurrent(key, v) equals `root[key] === v` for it.
+   */
+  currentRoot(): Readonly<Record<string, unknown>> | undefined {
+    const value = this.cache.has(this.root)
+      ? this.cache.get(this.root)
+      : this.changes.overlaps(this.root)
+        ? undefined
+        : this.committedCache.peek(this.root);
+    return value && typeof value === 'object' && !Array.isArray(value)
+      ? (value as Record<string, unknown>)
+      : undefined;
+  }
+
   async get<T = S>(path = ''): Promise<T> {
+    return this.load<T>(path, this.sql);
+  }
+
+  /**
+   * Phase 15x: read several uncached paths through one batched transport instead of one
+   * native round trip each (for example every key of a reducer's returned partial).
+   * Values and row locations land in this transaction's cache exactly as get() would
+   * leave them; a later get()/set() of those paths reads nothing.
+   */
+  async prefetch(paths: readonly string[]): Promise<void> {
+    const unique = [...new Set(paths)];
+    if (unique.length < 2) return;
+    const batched = queryBatch(this.sql);
+    const reader: SqlExecutor = {
+      ...this.sql,
+      query: <R>(statement: string, params?: SqlValue[]) =>
+        batched.query<R>(statement, params, SUBTREE_COLUMNS),
+    };
+    await Promise.all(unique.map((path) => this.load(path, reader)));
+  }
+
+  private async load<T>(path: string, reader: SqlExecutor): Promise<T> {
     const full = this.fullPath(path);
     if (this.cache.has(full)) return this.cache.get(full) as T;
     let ancestor = parentPath(full);
@@ -123,9 +177,10 @@ export class StoreTx<S = unknown> {
       if (ancestor === this.root) break;
       ancestor = parentPath(ancestor);
     }
-    let value = this.changes.overlaps(full) ? undefined : this.committedCache.peek(full);
-    if (value === undefined)
-      value = await this.nodes.read(this.sql, full, (rows) => {
+    const unchanged = !this.changes.overlaps(full);
+    let value = unchanged ? this.committedCache.peek(full) : undefined;
+    if (value === undefined && !(unchanged && this.committedCache.ready?.(full)))
+      value = await this.nodes.read(reader, full, (rows) => {
         for (const row of rows) this.locations.set(row.path, row);
       });
     // Inline JSON children have no separate SQL row. Resolve through their parent.
@@ -141,6 +196,8 @@ export class StoreTx<S = unknown> {
 
   /** Ancestors are dropped after writes and reloaded on demand; descendants expire. */
   private invalidate(full: string, value: unknown, cacheValue = true): void {
+    // Child positions survive descendant writes; a rewrite of the parent or above drops them.
+    for (const key of this.childPositions.keys()) if (isAncestorOrSelf(full, key)) this.childPositions.delete(key);
     for (const key of this.locations.keys()) {
       if (isAncestorOrSelf(full, key) || isAncestorOrSelf(key, full)) this.locations.delete(key);
     }
@@ -164,15 +221,21 @@ export class StoreTx<S = unknown> {
         (this.changes.overlaps(parent) ? undefined : this.committedCache.peek(parent)),
     );
     const segment = full.slice(full.lastIndexOf('/') + 1);
-    // Parent metadata identifies physical children, including scalar leaves.
-    const physical =
-      ownerMeta && ownerMeta.kind !== NodeKind.Json && ownerMeta.childPos?.has(segment);
+    // Parent metadata identifies physical children, including scalar leaves. Rewriting a
+    // child keeps every sibling's row and position, so the map stays valid across child
+    // writes in this transaction (one key after another needs no location read).
+    let positions = this.childPositions.get(parent);
+    if (!positions && ownerMeta && ownerMeta.kind !== NodeKind.Json && ownerMeta.childPos) {
+      positions = ownerMeta.childPos;
+      this.childPositions.set(parent, positions);
+    }
+    const physical = positions?.has(segment) === true;
     const row =
       this.locations.get(full) ??
       (this.changes.overlaps(full) ? undefined : this.committedCache.location?.(full)) ??
       (physical
-        ? { parent, pos: ownerMeta.childPos!.get(segment)! }
-        : path === '' && getNodeMeta(previous)
+        ? { parent, pos: positions!.get(segment)! }
+        : path === '' && (previous === undefined || getNodeMeta(previous))
           ? { parent: null, pos: null }
           : (
               await this.sql.query<{ parent: string | null; pos: number | null }>(
@@ -196,8 +259,10 @@ export class StoreTx<S = unknown> {
       } else await this.set(parent, { ...owner, [unescapeSegment(segment)]: value });
       return;
     }
-    await this.nodes.diffWrite(this.sql, full, previous, value, this.changes, row);
+    // ADR-0021 identity hints first: they add equal-content descendant paths, which must not
+    // invalidate the committed value diffWrite records next (ADR-0070 write-through).
     recordReferences(this.changes, full, previous, value);
+    await this.nodes.diffWrite(this.sql, full, previous, value, this.changes, row);
     // Reload container metadata only if a later read needs it. This preserves
     // generated array ids without an unconditional sibling/container round trip.
     this.invalidate(full, value);

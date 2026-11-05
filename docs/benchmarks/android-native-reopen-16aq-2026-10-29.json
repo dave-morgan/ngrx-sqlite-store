@@ -1,0 +1,31 @@
+{
+  "databaseJavaSha256": "d17cdd1d021cf5475713946535e833d4d78cd4ed78b219c0e5ac6da917d6cc50",
+  "model": "open replaces native _db; consistency closes only current owned handle; no real native database or SQL used",
+  "productionChanged": false,
+  "date": "2026-10-29",
+  "kind": "offline source ownership model; no device work",
+  "red": {
+    "failed": 1,
+    "passed": 25,
+    "error": "expected [1] to deeply equal [] (one unowned live underlying database)"
+  },
+  "restoredLibrary": {
+    "passed": 432,
+    "failed": 0,
+    "log": ".tmp/16aq-offline-restored-library.log"
+  },
+  "tools": {
+    "passed": 29,
+    "failed": 0,
+    "log": ".tmp/16ap-failfast-green.log"
+  },
+  "candidateApkSha256": "f418098b972ee9877dd31fbf9e434310018bb65dea0699dc3420709b460f630a",
+  "nativeSource": "node_modules/@capacitor-community/sqlite/android/src/main/java/com/getcapacitor/community/database/sqlite/SQLite/Database.java",
+  "causeEstablished": false,
+  "productionRepair": false,
+  "artifactHashes": {
+    ".tmp/16aq-reopen-regression-candidate.spec.ts": "9708d9cd8d8c822e57d72f6eccf703a5a9dd92acef46fbc7062e451153089bcd",
+    ".tmp/16aq-reopen-driver-tests-baseline.ts": "d37f0be84e22ef0c4335572067266751cb7650f8033ad20dc1c460fdcfefd842",
+    ".tmp/16aq-reopen-red.log": "a8356666135d541d6156e4c71f53397278663a5544fd3ffe7c9f66658baa4cf2"
+  }
+}

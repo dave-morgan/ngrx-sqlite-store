@@ -1,0 +1,49 @@
+{
+  "observedAt": "2026-10-30T03:10:07.909066+00:00",
+  "diagnosticOnly": true,
+  "acceptanceCleared": false,
+  "candidateSha256": "4e52f51c30c8c62388b65fae8e0d46e69925e6fcf303db9bfbc398864200b929",
+  "baselineSha256": "e0c50b90dcd0aa095308ed83316aa61ddfffaf6773fb103185c769ac2dcf1db1",
+  "sourceHashes": {
+    "capacitor-sqlite-driver.ts": "7e0d8c1dea27452aadd3009d2ebb2390a3d616a7838644ae35949075c8e3bddc",
+    "capacitor-sqlite-driver.spec.ts": "1ac234c5699a7390b72466ee81fa301ce2068e33e082ba3866a2d2daede14ef6"
+  },
+  "tests": {
+    "red": {
+      "failed": 2,
+      "passed": 35,
+      "file": ".tmp/16az-settings-red.log"
+    },
+    "green": {
+      "passed": 37,
+      "file": ".tmp/16az-settings-green2.log"
+    }
+  },
+  "validation": {
+    "complete": true,
+    "execSession": 84162,
+    "exitCode": 0,
+    "observedSentinel": "16AZ_VALIDATION_DONE",
+    "counts": {
+      "library": 443,
+      "tools": 40,
+      "harness": 1,
+      "e2e": 30
+    },
+    "candidateSha256": "4e52f51c30c8c62388b65fae8e0d46e69925e6fcf303db9bfbc398864200b929",
+    "logHashes": {
+      "library": "fba8ba59b6784a57eac84ac64a743d4f52c797fccad232330cdc5d3d568f347c",
+      "tools": "7bf8a2710a1798acf05c99e734f438f03b3d3c4766fe779b82a4a04bbab49bc9",
+      "harness": "2353eeeffc327202a83d15564aeec59e5aa80f08466a4df16fa245b0f8fc5960",
+      "e2e": "49bbd500ef10634cedee917f4df890bd290d737a5e329e1740839a1c7310e83a",
+      "library-build": "2246c00c029a18fb1dbe2cc9548204c47e8935d2188d58daab1c147b8ded8b6b",
+      "apk-build": "91368e1c94f540c6937ab71306ec0ce86b2687d8e5a938be42a1c3aba776f283"
+    }
+  },
+  "limits": [
+    "No measured app gain yet.",
+    "Initial implementation log2oldorderingassertionsfailed and remains retained; expectedcallorder explicitly updated for intended settings timing.",
+    "Create-success/marker gating, catalog order and mandatory first-use WAL verification tests remain.",
+    "Normal successful-path SQL statements/call counts unchanged; nativeopenfailure can have queued settings queries handled before cleanup."
+  ]
+}

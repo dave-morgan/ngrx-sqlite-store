@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { benchmarkSerial } from './android-benchmark-target.mjs';
 // Diagnostic only: stops harness apps. Never run alongside android-bench.mjs.
 // Usage: node tools/android-app-journal-probe.mjs [--serial emulator-5554] [--port 9335]
 // Temporarily changes the actual harness database PRAGMAs; restores both in finally.
@@ -17,7 +18,7 @@ const option = (name, fallback) => {
 const sdk = process.env.ANDROID_HOME ?? process.env.ANDROID_SDK_ROOT;
 if (!sdk) throw new Error('ANDROID_HOME or ANDROID_SDK_ROOT is required');
 const adbFile = join(sdk, 'platform-tools', process.platform === 'win32' ? 'adb.exe' : 'adb');
-const serial = option('serial', 'emulator-5554');
+const serial = benchmarkSerial(option('serial'));
 const adb = (...values) => execFileSync(adbFile, ['-s', serial, ...values], {
   cwd: root, encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'],
 });

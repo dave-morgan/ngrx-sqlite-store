@@ -15,10 +15,17 @@ import { RowCapExceededError } from '../schema/errors';
 import { utf8ByteLength } from '../schema/utf8';
 import type { ChangeSet } from '../storage/change-set';
 import type { SqlExecutor } from '../storage/storage-engine';
-import { changedFields, entityChanges, recordEntityChange } from '../storage/entity-changes';
+import {
+  changedFields,
+  entityChanges,
+  recordEntityChange,
+  recordEntityReplacement,
+} from '../storage/entity-changes';
 import { escapeSegment } from '../storage/path';
 
 const EMPTY_CHANGED_FIELDS: ReadonlySet<string> = new Set<string>();
+/** Rows per streamed replacement chunk (about one 256 KiB transport batch of small rows). */
+const REPLACE_STREAM_ROWS = 1500;
 
 export type EntityId = string | number;
 export interface EntityInput<T> {
@@ -347,6 +354,9 @@ export class EntityTx<T> {
     await this.writer.writeEntityRows(batch, false, undefined, replace, { canonicalJson: true });
     for (const record of deltas) record();
     this.changed();
+    // Inline-only replacement: aggregate queries recount from these entities.
+    if (replace && encoded.every((row) => row.data !== ''))
+      recordEntityReplacement(this.changes, this.coll, encoded.map((row) => row.entity));
   }
   /** Full replacement invalidates the collection instead of retaining one delta per row. */
   async replaceAll(rows: readonly EntityInput<T>[]): Promise<void> {
@@ -358,7 +368,54 @@ export class EntityTx<T> {
       await this.insert(rows);
       return;
     }
-    await this.insertRows(rows, {}, true);
+    if (rows.length > REPLACE_STREAM_ROWS) await this.streamReplace(rows);
+    else await this.insertRows(rows, {}, true);
+  }
+  /**
+   * Large replacement: validate and encode one chunk while the previous chunk executes
+   * natively. A savepoint keeps validation all-or-nothing: a failure rolls the
+   * collection back before rethrowing, so a caught error leaves the rows intact.
+   */
+  private async streamReplace(rows: readonly EntityInput<T>[]): Promise<void> {
+    const statement = (sql: string) => (this.sql.write ?? this.sql.run)(sql);
+    await statement('SAVEPOINT nss_replace');
+    const seen = new Set<string>();
+    const entities: T[] = [];
+    let inline = true;
+    let last = 0;
+    let held: EntityRow[] = [];
+    try {
+      await this.writer.clearEntities(this.coll);
+      for (let start = 0; start < rows.length; start += REPLACE_STREAM_ROWS) {
+        const batch: EntityRow[] = held;
+        for (let index = start; index < Math.min(rows.length, start + REPLACE_STREAM_ROWS); index++) {
+          const row = rows[index];
+          const id = encodeEntityId(row.id);
+          if (seen.has(id)) continue;
+          seen.add(id);
+          const { data, sortkey } = this.encodeInput(row, row.pos);
+          const pos = row.pos ?? ++last;
+          batch.push({ coll: this.coll, id, pos, data, sortkey });
+          entities.push(row.entity);
+          if (data === '') {
+            inline = false;
+            await this.nodes.write(this.sql, entityValuePath(this.coll, id), row.entity, this.changes);
+          }
+        }
+        const final = start + REPLACE_STREAM_ROWS >= rows.length;
+        held = await this.writer.writeEntityRows(batch, false, undefined, true, { canonicalJson: true, holdTail: !final });
+      }
+    } catch (error) {
+      await this.writer.flush();
+      await statement('ROLLBACK TO nss_replace');
+      await statement('RELEASE nss_replace');
+      // Invalidation only: readers reload the restored rows from SQL.
+      this.changed();
+      throw error;
+    }
+    await statement('RELEASE nss_replace');
+    this.changed();
+    if (inline) recordEntityReplacement(this.changes, this.coll, entities);
   }
   async upsert(rows: readonly EntityInput<T>[]): Promise<void> {
     if (!rows.length) return;

@@ -6,17 +6,41 @@ export function traceStartup(): void {
   } }).Capacitor;
   if (!capacitor?.nativePromise) throw new Error('Startup profiling needs a native bridge');
   const original = capacitor.nativePromise;
-  const calls: { method: unknown; start: number; ms?: number; bytes: number; sql: string[]; transaction: number }[] = [];
+  const calls: { method: unknown; start: number; ms?: number; bytes: number; sql: string[]; transaction: number; values?: unknown }[] = [];
   const encoder = new TextEncoder();
   let transaction = 0;
   Object.defineProperty(window, '__startupTrace', { configurable: true, value: calls });
+  // Diagnostic timeline: JS long tasks, animation frames and summary text changes.
+  const timeline: { kind: string; at: number; ms?: number; text?: string }[] = [];
+  Object.defineProperty(window, '__startupTimeline', { configurable: true, value: timeline });
+  try {
+    new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) timeline.push({ kind: 'longtask', at: entry.startTime, ms: entry.duration });
+    }).observe({ type: 'longtask', buffered: true });
+  } catch { /* unsupported */ }
+  let frames = 0;
+  const frame = (at: number) => {
+    timeline.push({ kind: 'raf', at });
+    if (++frames < 400 && typeof requestAnimationFrame === 'function') requestAnimationFrame(frame);
+  };
+  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(frame);
+  if (typeof MutationObserver === 'function') new MutationObserver(() => {
+    const text = document.querySelector('[data-testid=todo-summary]')?.textContent?.trim();
+    if (text) timeline.push({ kind: 'summary', at: performance.now(), text });
+  }).observe(document.documentElement, { subtree: true, childList: true, characterData: true });
   capacitor.nativePromise = function (...args: unknown[]) {
     const options = args[2] as { statement?: string; statements?: string; transaction?: boolean; set?: { statement: string }[] } | undefined;
     if (args[1] === 'beginTransaction' || (args[1] === 'executeSet' && options?.transaction)) transaction++;
+    const json = JSON.stringify(options ?? {});
     const row = {
       transaction,
       method: args[1], start: performance.now(), ms: undefined as number | undefined,
-      bytes: encoder.encode(JSON.stringify(options ?? {})).length,
+      bytes: encoder.encode(json).length,
+      // Small payloads only: statement parameters identify paths in diagnostics.
+      values: json.length < 4096
+        ? (options as { values?: unknown; set?: { values?: unknown }[] } | undefined)?.set?.map((entry) => entry.values) ??
+          (options as { values?: unknown } | undefined)?.values
+        : undefined,
       sql: options?.set?.map((entry) => entry.statement.slice(0, 200)) ??
         [String(options?.statement ?? options?.statements ?? '').slice(0, 200)],
     };

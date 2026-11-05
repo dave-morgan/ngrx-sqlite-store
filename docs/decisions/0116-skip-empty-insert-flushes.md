@@ -1,0 +1,17 @@
+# ADR0116: skip known-empty insert flushes on scalar updates
+
+Status: Rejected16ag, reverted; no repeatable device benefit.
+
+Source-located cost: RowWriter.updateValue/updateKindValue await flush even when its pending insert map is empty. NodeWriter.diffWrite then awaits that same empty flush again. Each scalar UPDATE therefore traverses two resolved async flush calls; a50-key partial can create100 such barriers without sending any inserts.
+
+Guard calls by the actual pending map size. Expose readonly hasPendingRows for the NodeWriter final drain; RowWriter's existing operations inspect the private pending map directly. Keep public flush returning Promise and unchanged when explicitly called. Pending insert drains, real writes and their awaits stay ordered. Do not bypass engine FIFO, change SQL/coalescing/byte budgets/row caps, or add caches/schema/Store API. All mutation/failure/notification semantics must pass existing contracts.
+
+Regression:50changed scalar properties must preserve one coalesced UPDATE, exact persisted values and old snapshot immutability while making zero empty insert-flush calls rather than100. Mixed pending INSERT→UPDATE correctness must remain ordered in both directDeletes capability modes. All library tests and required checks, then mandatory50kguard versus15aa and reversed freshbootK5000flat actions versus retained16r are required. New measurement protocol targets this multikey path, not unchanged acceptance variance.
+
+No application win/retention claim from synthetic counts. Native wrappers are diagnostic, not SQLCPU/floor; no profiler/additionalheapcapture/newfloor. Only demonstrated benefit/proven redundant work removal can justify provisional retention, with full fresh shapes/list acceptance and no mean regression before closure.
+
+
+RED100emptyflushcallsinstead0 withSQL/persistedvaluescorrect;GREEN424librarytests inclpendingINSERT-beforeUPDATEbothcapabilitymodes.25tools1harness30e2e/library+SQLiteAPKbuildPASS(.tmp/16ag-validate.stdout.log16AG_VALIDATION_DONE). FrozenAPKbdebd3bba55cfb419f3a3e1082112770df38aa6e8fea00d22d17de9f579651ea. Candidate/baselinesourcearchived16ag-source/16ag-source-baseline. DiagnosticACTIVE16ag-run.ps1 PID18204:mandatorylp21guardvs15aa(unchangeduntimed300sperleg),thenreversed4boots/K5000three40actionscenariosvsretained16r. Timing-onlyhelperremovesGC/heap/PSScapturefrompriorflatprobeprotocol;bothmodesuseidenticalnewprotocol/actualinstalledhash-boot-session/background50/5000keys/persisted5001rows+targetproof. NativewrappersrestorebeforeSQLproof/errorpartialscheckpointed. No measuredbenefit/retentionclaim.
+
+
+16AG_DONE verified6guards4reports4distinctboots/actualinstalledhash-session-seed/480finiteactions40atomicUPDATEspereachscenario/persisted5001rows+targetproof. Guard15aa1467.133333SD47.092922->16ag1470.266667SD14.843293ms,+3.133333withinsumSD61.936215/no startupwin. Tenkeytotalmean-1.1525/+1.2075,residual-.575/+.6275ms;replacetotal+.540/-3.175,residual+.5275/-1.670/P50+1.4/-.5/P95-1.2/+3.3;singleP95+1.4/+1.1adverseboth. Allraw/adversedurableandroid-empty-insert-flush-16ag-2026-10-28.json/md. Valid100->0syntheticflushworkremovalbutNOrepeatabletargetbenefit;reject/revertwithoutfullacceptancevariancehunt. SourceRowWriter+NodeWriterexactbaselinebytesrestored/asserted/nogitcheckout;candidateallsource/tests/APKs/rawarchived. Removeonlyflushspy/assertion/imports;keep50-keypersistence+immutabilityandbothpendingINSERT-beforeUPDATEcorrectnesstests. Postrevert16ag-revert-checks.cjs required. No sourcecausalclaimforcrossbootnative/schedulingdifferences.

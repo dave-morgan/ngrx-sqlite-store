@@ -1,0 +1,354 @@
+{
+  "diagnosticOnly": true,
+  "acceptanceCleared": false,
+  "guards": [
+    {
+      "apk": ".tmp/15aa-apks/sqlite.apk",
+      "boot": "cf6717a6-cfcd-4913-a52d-1ec67c3ff887",
+      "side": "A",
+      "trace": ".tmp/lp28-A-1.json",
+      "round": 1,
+      "installedHash": "6deb3638ed9d1f63cce4e7b14c4009e99f4fffd44de16f68941273c5ff3ffeff",
+      "traceSha256": "87d7e3485c488c2e54c66b1a7ce66ba33815ac67b96a602d201ad67e8894d129",
+      "readyMs": 1299.4000000000233,
+      "callCount": 68
+    },
+    {
+      "apk": ".tmp/16au-apks/sqlite.apk",
+      "boot": "cf6717a6-cfcd-4913-a52d-1ec67c3ff887",
+      "side": "B",
+      "trace": ".tmp/lp28-B-1.json",
+      "round": 1,
+      "installedHash": "70988b25c4994ce8894532396642317103c001e842627d99a2909afc831d5fc7",
+      "traceSha256": "0c6d7a3554549364cdea5955edbb05324f49de59376650efb4df6b96b009120f",
+      "readyMs": 1256.0999999999767,
+      "callCount": 67
+    },
+    {
+      "apk": ".tmp/15aa-apks/sqlite.apk",
+      "boot": "cf6717a6-cfcd-4913-a52d-1ec67c3ff887",
+      "side": "A",
+      "trace": ".tmp/lp28-A-2.json",
+      "round": 2,
+      "installedHash": "6deb3638ed9d1f63cce4e7b14c4009e99f4fffd44de16f68941273c5ff3ffeff",
+      "traceSha256": "d06008fc632423c1aa411012ac8da4d5f584ca154f7d77c09834dad6980142b4",
+      "readyMs": 1287.1999999999534,
+      "callCount": 68
+    },
+    {
+      "apk": ".tmp/16au-apks/sqlite.apk",
+      "boot": "cf6717a6-cfcd-4913-a52d-1ec67c3ff887",
+      "side": "B",
+      "trace": ".tmp/lp28-B-2.json",
+      "round": 2,
+      "installedHash": "70988b25c4994ce8894532396642317103c001e842627d99a2909afc831d5fc7",
+      "traceSha256": "5109da903aaaf9414b833f61e2b10598428bd09946c2e1041ef44723b96fa69e",
+      "readyMs": 1296.3000000000466,
+      "callCount": 67
+    },
+    {
+      "apk": ".tmp/15aa-apks/sqlite.apk",
+      "boot": "cf6717a6-cfcd-4913-a52d-1ec67c3ff887",
+      "side": "A",
+      "trace": ".tmp/lp28-A-3.json",
+      "round": 3,
+      "installedHash": "6deb3638ed9d1f63cce4e7b14c4009e99f4fffd44de16f68941273c5ff3ffeff",
+      "traceSha256": "f276e4f4c9fce9412c6eae5aa2769f6ca94fadf1a938b39b7d44c8e7158814a1",
+      "readyMs": 1333,
+      "callCount": 68
+    },
+    {
+      "apk": ".tmp/16au-apks/sqlite.apk",
+      "boot": "cf6717a6-cfcd-4913-a52d-1ec67c3ff887",
+      "side": "B",
+      "trace": ".tmp/lp28-B-3.json",
+      "round": 3,
+      "installedHash": "70988b25c4994ce8894532396642317103c001e842627d99a2909afc831d5fc7",
+      "traceSha256": "33c6b327687b8aedeee6d8b74ee25bc68738bf3fdbe71d96d6c52294226dcc9f",
+      "readyMs": 1358.5999999998603,
+      "callCount": 73
+    }
+  ],
+  "stats": {
+    "A": {
+      "n": 3,
+      "mean": 1306.5333333333256,
+      "sampleSD": 23.71862840330502
+    },
+    "B": {
+      "n": 3,
+      "mean": 1303.6666666666279,
+      "sampleSD": 51.645554826397436
+    }
+  },
+  "pairedGuardDeltas": [
+    -43.300000000046566,
+    9.100000000093132,
+    25.5999999998603
+  ],
+  "reports": [
+    {
+      "file": ".tmp/16au-fresh-A1.json",
+      "sha256": "f8f2c47346608050cac473c08a5685d90aad498b20d4ec6a8aa4c2cfde6c1446",
+      "boot": "65f39a0d-c99c-47b9-8dee-e79c4c1d4ccc",
+      "installedHash": "0076a0ad073a12bb5c2428c52cfe72cc33c8a05465e5a83cd891390ea26f177d"
+    },
+    {
+      "file": ".tmp/16au-fresh-B1.json",
+      "sha256": "b22de6b399ec1daa5def7eaaf211aec7618953a4e7afa7efb498705277a033e4",
+      "boot": "e85c1c75-0318-41ad-97a8-cfd58d2be335",
+      "installedHash": "70988b25c4994ce8894532396642317103c001e842627d99a2909afc831d5fc7"
+    },
+    {
+      "file": ".tmp/16au-fresh-B2.json",
+      "sha256": "31b47ed08193707a380a047c2736106334593962a541dff0d9a80a0006760730",
+      "boot": "ea1c7180-b113-4e4f-959f-d88c59e398fb",
+      "installedHash": "70988b25c4994ce8894532396642317103c001e842627d99a2909afc831d5fc7"
+    },
+    {
+      "file": ".tmp/16au-fresh-A2.json",
+      "sha256": "9b77e4685df210bc59b0a805f94a63354288f6b355912f5061048a0ebd6c7beb",
+      "boot": "9adab71c-bd92-42b3-b442-014bcc839887",
+      "installedHash": "0076a0ad073a12bb5c2428c52cfe72cc33c8a05465e5a83cd891390ea26f177d"
+    }
+  ],
+  "comparisons": [
+    {
+      "metric": "firstReadyMs",
+      "pairs": [
+        {
+          "baseline": "A1",
+          "candidate": "B1",
+          "baselineValue": 1370.1000000000058,
+          "candidateValue": 1405.9000000000087,
+          "delta": 35.80000000000291,
+          "adverse": true
+        },
+        {
+          "baseline": "A2",
+          "candidate": "B2",
+          "baselineValue": 1362.300000000003,
+          "candidateValue": 1361.6000000000058,
+          "delta": -0.6999999999970896,
+          "adverse": false
+        }
+      ]
+    },
+    {
+      "metric": "relaunchReadyMs",
+      "pairs": [
+        {
+          "baseline": "A1",
+          "candidate": "B1",
+          "baselineValue": 1626.5,
+          "candidateValue": 1570,
+          "delta": -56.5,
+          "adverse": false
+        },
+        {
+          "baseline": "A2",
+          "candidate": "B2",
+          "baselineValue": 1765.699999999997,
+          "candidateValue": 1597.3999999999942,
+          "delta": -168.3000000000029,
+          "adverse": false
+        }
+      ]
+    },
+    {
+      "metric": "heapTodosMb",
+      "pairs": [
+        {
+          "baseline": "A1",
+          "candidate": "B1",
+          "baselineValue": 5.544757843017578,
+          "candidateValue": 5.567359924316406,
+          "delta": 0.022602081298828125,
+          "adverse": true
+        },
+        {
+          "baseline": "A2",
+          "candidate": "B2",
+          "baselineValue": 5.532745361328125,
+          "candidateValue": 5.566143035888672,
+          "delta": 0.033397674560546875,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "heapNotesMb",
+      "pairs": [
+        {
+          "baseline": "A1",
+          "candidate": "B1",
+          "baselineValue": 6.265689849853516,
+          "candidateValue": 6.27886962890625,
+          "delta": 0.013179779052734375,
+          "adverse": true
+        },
+        {
+          "baseline": "A2",
+          "candidate": "B2",
+          "baselineValue": 6.263885498046875,
+          "candidateValue": 6.273830413818359,
+          "delta": 0.009944915771484375,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "heapRelaunchMb",
+      "pairs": [
+        {
+          "baseline": "A1",
+          "candidate": "B1",
+          "baselineValue": 5.036319732666016,
+          "candidateValue": 4.976207733154297,
+          "delta": -0.06011199951171875,
+          "adverse": false
+        },
+        {
+          "baseline": "A2",
+          "candidate": "B2",
+          "baselineValue": 5.037929534912109,
+          "candidateValue": 5.03826904296875,
+          "delta": 0.000339508056640625,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "pssTotalMb",
+      "pairs": [
+        {
+          "baseline": "A1",
+          "candidate": "B1",
+          "baselineValue": 238.2685546875,
+          "candidateValue": 236.5400390625,
+          "delta": -1.728515625,
+          "adverse": false
+        },
+        {
+          "baseline": "A2",
+          "candidate": "B2",
+          "baselineValue": 238.9150390625,
+          "candidateValue": 236.2705078125,
+          "delta": -2.64453125,
+          "adverse": false
+        }
+      ]
+    },
+    {
+      "metric": "pssRelaunchTotalMb",
+      "pairs": [
+        {
+          "baseline": "A1",
+          "candidate": "B1",
+          "baselineValue": 220.1298828125,
+          "candidateValue": 222.314453125,
+          "delta": 2.1845703125,
+          "adverse": true
+        },
+        {
+          "baseline": "A2",
+          "candidate": "B2",
+          "baselineValue": 220.7333984375,
+          "candidateValue": 220.83984375,
+          "delta": 0.1064453125,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "toggleP50",
+      "pairs": [
+        {
+          "baseline": "A1",
+          "candidate": "B1",
+          "baselineValue": 12.60000000000582,
+          "candidateValue": 11.5,
+          "delta": -1.1000000000058208,
+          "adverse": false
+        },
+        {
+          "baseline": "A2",
+          "candidate": "B2",
+          "baselineValue": 13.099999999991269,
+          "candidateValue": 21.19999999999709,
+          "delta": 8.10000000000582,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "toggleP95",
+      "pairs": [
+        {
+          "baseline": "A1",
+          "candidate": "B1",
+          "baselineValue": 53.5,
+          "candidateValue": 57.19999999999709,
+          "delta": 3.6999999999970896,
+          "adverse": true
+        },
+        {
+          "baseline": "A2",
+          "candidate": "B2",
+          "baselineValue": 54.39999999999418,
+          "candidateValue": 55.80000000000291,
+          "delta": 1.4000000000087311,
+          "adverse": true
+        }
+      ]
+    },
+    {
+      "metric": "emitP50",
+      "pairs": [
+        {
+          "baseline": "A1",
+          "candidate": "B1",
+          "baselineValue": 3.400000000008731,
+          "candidateValue": 3.5,
+          "delta": 0.09999999999126885,
+          "adverse": true
+        },
+        {
+          "baseline": "A2",
+          "candidate": "B2",
+          "baselineValue": 3.5,
+          "candidateValue": 3.400000000008731,
+          "delta": -0.09999999999126885,
+          "adverse": false
+        }
+      ]
+    },
+    {
+      "metric": "emitP95",
+      "pairs": [
+        {
+          "baseline": "A1",
+          "candidate": "B1",
+          "baselineValue": 4.80000000000291,
+          "candidateValue": 5.899999999994179,
+          "delta": 1.0999999999912689,
+          "adverse": true
+        },
+        {
+          "baseline": "A2",
+          "candidate": "B2",
+          "baselineValue": 5.19999999999709,
+          "candidateValue": 5.5,
+          "delta": 0.3000000000029104,
+          "adverse": true
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Original MD omitted some both-order adverse channels; all11 retained here.",
+    "One guard boot for all6 observations;4distinct reversedboots.",
+    "Mean delta within combined sampleSD does not prove equivalence or causality.",
+    "Marker ownership tests do not measure physical native leakage."
+  ]
+}

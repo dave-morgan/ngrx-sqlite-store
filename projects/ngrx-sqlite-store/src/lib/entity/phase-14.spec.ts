@@ -391,4 +391,68 @@ describe('Phase 14 query maintenance', () => {
     exists.stop();
     count.stop();
   });
+
+  it('recounts an inline whole-collection replacement in JS and falls back after later writes', async () => {
+    const { run, adapter, queries, observe, counts } = await setup();
+    const open = await observe(queries.count({ done: false }));
+    const all = await observe(queries.count());
+    const ranked = await observe(queries.exists({ rank: { gte: 7 } }));
+    const rows = (n: number, offset = 0): Item[] =>
+      Array.from({ length: n }, (_, i) => ({ key: i + offset, done: i % 4 === 0, title: `R${i}`, rank: i % 9 }));
+    counts.trace.length = 0;
+    await run((tx) => adapter.setAll(tx, rows(40)));
+    expect([open.value, all.value, ranked.value]).toEqual([30, 40, true]);
+    expect(counts.trace.some((sql) => sql.includes('nss_entity') && /COUNT\(/i.test(sql))).toBe(false);
+    // A later write to the replaced collection in the same transaction needs SQL.
+    counts.trace.length = 0;
+    await run(async (tx) => {
+      await adapter.setAll(tx, rows(12, 100));
+      await adapter.updateOne(tx, { id: 100, changes: { done: false } });
+    });
+    expect([open.value, all.value, ranked.value]).toEqual([10, 12, true]);
+    expect(counts.trace.some((sql) => sql.includes('AS slot'))).toBe(true);
+    // A replacement after other writes is still exact; duplicates count once.
+    await run(async (tx) => {
+      await adapter.removeOne(tx, 100);
+      await adapter.setAll(tx, [...rows(5, 200), ...rows(5, 200)]);
+    });
+    expect([open.value, all.value, ranked.value]).toEqual([3, 5, false]);
+    open.stop();
+    all.stop();
+    ranked.stop();
+    const fresh = await observe(queries.count({ done: false }));
+    expect(fresh.value).toBe(3);
+    fresh.stop();
+  });
+
+  it('reads promoted page rows through the partial promoted index, not a collection scan', async () => {
+    const { queries, observe, counts } = await setup();
+    counts.trace.length = 0;
+    const page = await observe(queries.page({ offset: 0, limit: 5 }));
+    expect(page.value).toHaveLength(5);
+    const statement = counts.trace.find((sql) => sql.includes('WITH promoted AS'))!;
+    const params = (statement.match(/\?/g) ?? []).map(() => 'items');
+    const plan = await engine.read((sql) =>
+      sql.query<{ detail: string }>(`EXPLAIN QUERY PLAN ${statement}`, params),
+    );
+    const details = plan.map((row) => row.detail);
+    expect(details.filter((detail) => detail.includes('nss_entity_sortkey'))).toHaveLength(1);
+    expect(details.some((detail) => detail.includes('USING INDEX nss_entity_promoted'))).toBe(true);
+    page.stop();
+  });
+
+  it('keeps SQL aggregates for replacements with promoted rows', async () => {
+    const { run, adapter, queries, observe, counts } = await setup();
+    const open = await observe(queries.count({ done: false }));
+    counts.trace.length = 0;
+    await run((tx) =>
+      adapter.setAll(tx, [
+        { key: 1, done: false, title: 'x'.repeat(1_100_000), rank: 0 },
+        { key: 2, done: true, title: 'small', rank: 0 },
+      ]),
+    );
+    expect(open.value).toBe(1);
+    expect(counts.trace.some((sql) => sql.includes('AS slot'))).toBe(true);
+    open.stop();
+  });
 });

@@ -96,8 +96,8 @@ export async function floorBenchmark(): Promise<void> {
      * <=256 KiB executeSet groups, one transaction. WAL auto-checkpoint matches the
      * store's configuration; the checkpoint itself runs untimed after each sample.
      */
-    async seedRows(samples = 5) {
-      if (samples < 5) throw new Error('F_seed needs five samples');
+    async seedRows(samples = 5, memoryOnly = false) {
+      if (samples < 5 && !memoryOnly) throw new Error('F_seed needs five samples');
       const data: string[] = [];
       for (let offset = 0; ; offset += 5000) {
         const page = (await plugin.query({ database, statement:

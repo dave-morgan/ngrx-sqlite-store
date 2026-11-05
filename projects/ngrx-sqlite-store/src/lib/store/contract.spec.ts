@@ -70,6 +70,40 @@ const counter = ngrx.createReducer(
 );
 
 describe('phase 4a integration contract', () => {
+  it('keeps first-feature hooks and resetAll for otherwise inactive features', async () => {
+    const dirty = ngrx.createAction('[lazy-handle] dirty');
+    const reset = ngrx.createAction('[lazy-handle] reset');
+    const hook = ngrx.createAction('[lazy-handle] hook');
+    const { store, engine } = await boot({
+      first: createReducer({ value: 0 }),
+      active: createReducer({ value: 0 }, on(reset, (tx) => tx.resetAll())),
+      idle: createReducer({ value: 0 }, on(dirty, (tx) => tx.set('value', 9))),
+    }, { sqlite: { actionHooks: [async (action, tx) => {
+      if (action.type === hook.type) await tx.set('value', 5);
+    }] } });
+    await store.dispatchAsync(hook());
+    expect(await read(engine, 'first')).toEqual({ value: 5 });
+    await store.dispatchAsync(dirty());
+    expect(await read(engine, 'idle')).toEqual({ value: 9 });
+    await store.dispatchAsync(reset());
+    expect(await read(engine, 'first')).toEqual({ value: 0 });
+    expect(await read(engine, 'idle')).toEqual({ value: 0 });
+  });
+
+  it('still invokes foreign fallback reducers for unknown action types', async () => {
+    const seen: string[] = [];
+    const { store } = await boot({
+      idle: createReducer({ value: 0 }),
+      foreign: (state = { value: 0 }, action) => {
+        seen.push(action.type);
+        return state;
+      },
+    });
+    seen.length = 0;
+    await store.dispatchAsync({ type: '[lazy-handle] unknown' });
+    expect(seen).toEqual(['[lazy-handle] unknown']);
+  });
+
   it('seeds reducer state and gives configured initialState precedence', async () => {
     const { engine } = await boot(
       { seeded: counter, overridden: counter },

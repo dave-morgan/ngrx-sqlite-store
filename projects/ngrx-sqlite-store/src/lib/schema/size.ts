@@ -1,19 +1,21 @@
 import { escapeSegment } from '../storage/path';
 import { NonSerializableStateError } from './errors';
 
-const NON_ASCII_OR_CONTROL = /[\u0000-\u001f\u0080-￿]/;
-function occurrences(value: string, char: string): number {
-  let count = 0;
-  for (let i = value.indexOf(char); i !== -1; i = value.indexOf(char, i + 1)) count++;
-  return count;
-}
-
 /** JSON string bytes without allocating the encoded string. */
 export function serializedStringSize(value: string): number {
-  // Printable ASCII only escapes quote and backslash. Native regex/indexOf scans are
-  // several times cheaper than a per-character JS loop on bulk payloads (Phase 15f).
-  if (!NON_ASCII_OR_CONTROL.test(value))
-    return value.length + 2 + occurrences(value, '"') + occurrences(value, '\\');
+  // Printable ASCII (the common case) only escapes quote and backslash: one tight pass,
+  // falling back to the full UTF-8/escape accounting below on the first other character.
+  let extra = 0;
+  let ascii = true;
+  for (let i = 0; i < value.length; i++) {
+    const c = value.charCodeAt(i);
+    if (c === 34 || c === 92) extra++;
+    else if (c < 32 || c > 127) {
+      ascii = false;
+      break;
+    }
+  }
+  if (ascii) return value.length + 2 + extra;
   let bytes = 2;
   for (let i = 0; i < value.length; i++) {
     const c = value.charCodeAt(i);

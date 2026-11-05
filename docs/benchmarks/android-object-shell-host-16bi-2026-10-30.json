@@ -1,0 +1,95 @@
+{
+  "validation": {
+    "started": "2026-10-30T12:29:45.617Z",
+    "pid": 43732,
+    "sourceHashes": {
+      "projects/ngrx-sqlite-store/src/lib/schema/node-reader.ts": "d37c43b395396481c2544fa8a7bd29ea06a03672a434f785b53f7c75ce90dd2d",
+      "projects/ngrx-sqlite-store/src/lib/schema/node-store.ts": "c7457a0dd0d7874f9108566fc12793a9e355d5f3acfa2ff25ab643b4c89aa850",
+      "projects/ngrx-sqlite-store/src/lib/reducer/store-tx.ts": "e09141f26d8ab050c02a31b6375b3f6c552fa39b258f9c0a4bca121515738eab",
+      "projects/ngrx-sqlite-store/src/lib/selectors/path-cache.ts": "6ec3659d8e91e426bf87c0898481e6e319fda9bb63fddf146afab579578c4dec",
+      "projects/ngrx-sqlite-store/src/lib/reducer/cached-object-read.spec.ts": "16a79c7fd0023266c7a6d753740c127477c6cff3dcafb3c6ec68d1cd7ed55b48",
+      "projects/ngrx-sqlite-store/src/lib/store/core.ts": "25ee7708a6cba2378f1325209e4aacd811b129b23d312762375ee96e379be7b4",
+      "projects/ngrx-sqlite-store/src/lib/selectors/selection-engine.ts": "38bea5d24d183a0fc8b2dfb616e265c510cb3a4bf18d0bcfca400d4254503a96",
+      "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.ts": "61b0674f04ddb854038cd942afca7ae984fbd249dfa8d5d8e72fae050dc14350",
+      "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.spec.ts": "54f7f2290b35811e4c3d66cf3d4c50f2fcaa994d50c93f0d0a1b9cdde98c541b"
+    },
+    "checks": [
+      {
+        "name": "library",
+        "command": "npx.cmd ng test ngrx-sqlite-store --watch=false",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bi-library-green3.log",
+        "sha256": "b6aeddef200d78b595826a2a6fd12cfe944585caeafd599aff662d754175694b",
+        "alreadyCompleted": true
+      },
+      {
+        "name": "tools",
+        "command": "node --test tools/*.test.mjs",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bi-validation-tools.log",
+        "sha256": "434b1d7c60ae77006ed8b2aef80024f1dcd3ffe8656385167ffb410f24ef0335"
+      },
+      {
+        "name": "harness",
+        "command": "npx.cmd ng test harness --watch=false",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bi-validation-harness.log",
+        "sha256": "39a05e31501129de3565d790b0154fc9cf3264cdc0b7df207d877a9f4f8b9701"
+      },
+      {
+        "name": "e2e",
+        "command": "npx.cmd playwright test",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bi-validation-e2e.log",
+        "sha256": "6b6bb5e6906ad5f3481b31276d89607f897028a0c3009a69f681561048ed3b04"
+      },
+      {
+        "name": "library-build",
+        "command": "npx.cmd ng build ngrx-sqlite-store",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bi-validation-library-build.log",
+        "sha256": "8d6684da477ded4583c23dae16f2019dd79f28fc0f4692cb75385c13ad25bfe4"
+      },
+      {
+        "name": "apk-build",
+        "command": "node tools/android-bench.mjs --impl sqlite --build-only true",
+        "code": 0,
+        "signal": null,
+        "file": ".tmp/16bi-validation-apk-build.log",
+        "sha256": "91ac77876029f2b8f863ea704a38a5f4370aef63526dd2be02a852e643e8fec7"
+      }
+    ],
+    "sourceHashesAfter": {
+      "projects/ngrx-sqlite-store/src/lib/schema/node-reader.ts": "d37c43b395396481c2544fa8a7bd29ea06a03672a434f785b53f7c75ce90dd2d",
+      "projects/ngrx-sqlite-store/src/lib/schema/node-store.ts": "c7457a0dd0d7874f9108566fc12793a9e355d5f3acfa2ff25ab643b4c89aa850",
+      "projects/ngrx-sqlite-store/src/lib/reducer/store-tx.ts": "e09141f26d8ab050c02a31b6375b3f6c552fa39b258f9c0a4bca121515738eab",
+      "projects/ngrx-sqlite-store/src/lib/selectors/path-cache.ts": "6ec3659d8e91e426bf87c0898481e6e319fda9bb63fddf146afab579578c4dec",
+      "projects/ngrx-sqlite-store/src/lib/reducer/cached-object-read.spec.ts": "16a79c7fd0023266c7a6d753740c127477c6cff3dcafb3c6ec68d1cd7ed55b48",
+      "projects/ngrx-sqlite-store/src/lib/store/core.ts": "25ee7708a6cba2378f1325209e4aacd811b129b23d312762375ee96e379be7b4",
+      "projects/ngrx-sqlite-store/src/lib/selectors/selection-engine.ts": "38bea5d24d183a0fc8b2dfb616e265c510cb3a4bf18d0bcfca400d4254503a96",
+      "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.ts": "61b0674f04ddb854038cd942afca7ae984fbd249dfa8d5d8e72fae050dc14350",
+      "projects/ngrx-sqlite-store/src/lib/driver/capacitor-sqlite-driver.spec.ts": "54f7f2290b35811e4c3d66cf3d4c50f2fcaa994d50c93f0d0a1b9cdde98c541b"
+    },
+    "apkSha256": "3930c23388cbcb3313e8ee8c776198f769ab6304bb97feedf3de90fcd7a4b9da",
+    "classicSha256": "58ad9c2ab62cb9e1ec71004f80bbad22a67edb82b12496698e2ebba5e0526311",
+    "complete": true,
+    "finished": "2026-10-30T12:30:54.320Z"
+  },
+  "validationSha256": "2fa8d5f657b1ba57255703b4632f4bac54051b3fa165709d8293a852d7e13f03",
+  "runnerSha256": "b9f466e94cf4ef2d43443e0cf1e8e2dcbfcb95ca96233396ae569684c7a9d5c6",
+  "helperSha256": "4899ac79fbddfe6fb7708aa1d82cf4ad81a7edf965bff34aa9a8403e20a0cabd",
+  "verifierSha256": "ebe01d41d0a7e013b8e68a0df1d123e29a7a7bb34a4da0af5d4d62817d119f3d",
+  "libraryFull459": "16bi-library-green3.log",
+  "review": "Independent read-only review found no blocking source issue; root added suggested fallback/rollback tests, all459libpass.",
+  "failureHistory": [
+    "16bi-shell-red.log: initial test used transaction.value rather than result; original spec archived",
+    "16bi-shell-red2.log: valid shell identity RED1/2PASS",
+    "16bi-shell-red3.log: valid shell identity+active metadata RED2/3PASS",
+    "16bi-library-green2.log: expanded projection test failed because unleased query stays stale; retained query for valid ready-projection setup; production unchanged; green3 all459PASS"
+  ]
+}

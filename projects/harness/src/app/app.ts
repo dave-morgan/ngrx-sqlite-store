@@ -75,6 +75,8 @@ export class App {
     { path: '/todos', label: 'Todos' },
     { path: '/users', label: 'Users' },
     { path: '/notes', label: 'Notes' },
+    { path: '/shapes/flat', label: 'Flat' },
+    { path: '/shapes/workflow', label: 'Workflow' },
     { path: '/diagnostics', label: 'Diagnostics' },
   ];
 

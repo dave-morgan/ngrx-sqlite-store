@@ -59,14 +59,6 @@ describe('query work during cache refresh', () => {
     expect(query.mock.calls.filter(([sql]) => sql.includes(' AS slot'))).toHaveLength(0);
   });
 
-  it('does not aggregate an empty query list for a physical-only refresh', async () => {
-    const { cache } = await boot();
-    await persistedCounter(1);
-    const all = vi.spyOn(Promise, 'all');
-    await cache.refresh();
-    expect(all.mock.calls.filter(([values]) => Array.isArray(values) && values.length === 0)).toHaveLength(0);
-  });
-
   it('shares one query reader across dirty queries after the physical refresh', async () => {
     const { cache, driver, sources } = await boot(true);
     await persistedCounter(3);

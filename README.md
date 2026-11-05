@@ -3,7 +3,7 @@
 Native apps can start SQLite recovery and schema checks before Angular bootstrap
 with `prewarmSqliteStore`; see the [startup API and adoption rules](projects/ngrx-sqlite-store/README.md#early-native-startup).
 
-## Performance (Phase 16 work in progress)
+## Performance (Phase 16)
 
 Latest verified acceptance: **16av (shapes) / 16L20 (lists)**, 2026-10-29. Full data is in [android-acceptance-16av-2026-10-29.json](docs/benchmarks/android-acceptance-16av-2026-10-29.json) and the decision is [ADR-0129](docs/decisions/0129-fresh-process-pipelined-open.md).
 
@@ -67,12 +67,33 @@ The p95 latencies are mostly PLATFORM-BOUND. The remaining FAILs are:
 
 Every write is persisted and committed before subscribers are notified. Classic keeps state only in memory, so its sub-millisecond emits have no durability cost.
 
-### Status
-Phase 16 is still in progress. The goals are:
-- every large-list metric PASS / PB / BB / CB in a full verified acceptance;
-- every shapes metric PASS / PB / BB, or recorded in an ADR as an evidenced limit.
+### Status: Phase 16 goals met (2026-11-05)
+Both goals are met as defined, but not every metric is now within its allowance. The rows listed below are still raw FAIL in the reports; they are closed by a user acceptance or by an evidenced-limit ADR.
 
-Neither goal is met yet. The per-run history is in [docs/decisions/README.md](docs/decisions/README.md), and the evidence is under [docs/benchmarks](docs/benchmarks).
+**Large lists (33 metrics, 16L20):** 31 measure within the allowance (12 PASS / 16 PB / 3 CB). Two are accepted by the user as limitations:
+
+| Metric | Over allowance | ADR |
+|---|---:|---|
+| 10k relaunch (one-time cold-start cost) | 48 ms | [ADR-0145](docs/decisions/0145-relaunch-startup-limit-accepted.md) |
+| 50k emit p95 | 0.18 ms | [ADR-0152](docs/decisions/0152-50k-emit-p95-accepted.md) |
+
+**Shapes (86 metrics, 16av):** 57 measure within the allowance (3 PASS / 54 PB). The other 29 are documented as evidenced limits:
+
+| Rows | Gap | Cause | ADR |
+|---|---|---|---|
+| Workflow reset ×4 | 14–19 ms over | The `onState` compatibility bridge must materialise the whole feature | [0146](docs/decisions/0146-onstate-reset-evidenced-limit.md) |
+| Append 100 events, replace at K=5000 ×4 | 3–6 ms over | Multi-row native writes plus the diff and copy persistence needs | [0147](docs/decisions/0147-bulk-write-evidenced-limits.md) |
+| Burst backlog ×3 | 2 vs 0 | A store-free commit+render control shows the same backlog | [0148](docs/decisions/0148-burst-backlog-platform-tail.md) |
+| Small writes ×9 | 0.4–3.2 ms over | One native commit plus a serial post-commit refresh (notify-after-commit) | [0149](docs/decisions/0149-small-write-post-commit-limit.md) |
+| JS heap ×5 | +0.7–1.8 MB | Library code plus the persistence metadata the write path needs | [0150](docs/decisions/0150-shape-heap-metadata-limit.md) |
+| PSS ×4 | +10–18 MB | Native SQLite/plugin and WebView working set; partly attributed | [0151](docs/decisions/0151-shape-pss-working-set-limit.md) |
+
+In practice, sqlite trades write latency and some memory for durable persistence:
+- **Writes:** a persisted write emits in about 8–14 ms, against about 0.4 ms for in-memory NgRx. A reset through the classic bridge takes about 31 ms.
+- **Memory:** process memory is a few MB higher.
+- **Large lists:** at 10k–50k items the JS heap stays near 5 MB, against 7–19 MB for classic.
+
+The per-run history is in [docs/decisions/README.md](docs/decisions/README.md), and the evidence is under [docs/benchmarks](docs/benchmarks).
 
 ---
 

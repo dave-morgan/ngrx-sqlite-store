@@ -355,17 +355,15 @@ export class PathCache {
   async refresh(publishChanges = true): Promise<void> {
     if (![...this.entries.values()].some((entry) => entry.refcount && !entry.dirty.isEmpty)) return;
     await this.engine.read(async (sql) => {
-      let queries: Promise<void>[] | undefined;
-      let batched: SqlReader | undefined;
+      const queries: Promise<void>[] = [];
+      const batched = queryBatch(sql);
       for (const [path, entry] of this.entries)
         if (entry.refcount && !entry.dirty.isEmpty && !entry.query)
           await this.refreshEntry(sql, path, entry);
       for (const [path, entry] of this.entries)
-        if (entry.refcount && !entry.dirty.isEmpty && entry.query) {
-          batched ??= queryBatch(sql);
-          (queries ??= []).push(this.refreshEntry(sql, path, entry, batched));
-        }
-      if (queries) await Promise.all(queries);
+        if (entry.refcount && !entry.dirty.isEmpty && entry.query)
+          queries.push(this.refreshEntry(sql, path, entry, batched));
+      await Promise.all(queries);
     });
     if (publishChanges) this.publish();
   }

@@ -1,0 +1,102 @@
+{
+  "diagnosticOnly": true,
+  "boot": "0c05d202-d79e-4a7e-bd45-65a74e73b1a3",
+  "trials": [
+    {
+      "trial": 1,
+      "control": {
+        "maxBacklog": 1,
+        "observed": 90,
+        "lagP50": 7.199999999254942,
+        "lagP95": 19.5,
+        "lagMax": 22.90000000037253,
+        "over33": 0
+      },
+      "store": {
+        "dispatched": 90,
+        "observed": 90,
+        "lagP50": 7.099999999627471,
+        "lagP95": 24.59999999962747,
+        "endLag": 9.600000001490116,
+        "maxBacklog": 2
+      }
+    },
+    {
+      "trial": 2,
+      "control": {
+        "maxBacklog": 1,
+        "observed": 90,
+        "lagP50": 6.300000000745058,
+        "lagP95": 16.199999999254942,
+        "lagMax": 20.40000000037253,
+        "over33": 0
+      },
+      "store": {
+        "dispatched": 90,
+        "observed": 90,
+        "lagP50": 7.099999999627471,
+        "lagP95": 24.59999999962747,
+        "endLag": 5,
+        "maxBacklog": 1
+      }
+    },
+    {
+      "trial": 3,
+      "control": {
+        "maxBacklog": 1,
+        "observed": 90,
+        "lagP50": 6.699999999254942,
+        "lagP95": 18.799999998882413,
+        "lagMax": 34.70000000111759,
+        "over33": 1
+      },
+      "store": {
+        "dispatched": 90,
+        "observed": 90,
+        "lagP50": 6.5,
+        "lagP95": 18.09999999962747,
+        "endLag": 9.599999999627471,
+        "maxBacklog": 1
+      }
+    },
+    {
+      "trial": 4,
+      "control": {
+        "maxBacklog": 2,
+        "observed": 90,
+        "lagP50": 7.799999998882413,
+        "lagP95": 20.199999999254942,
+        "lagMax": 47.20000000111759,
+        "over33": 1
+      },
+      "store": {
+        "dispatched": 90,
+        "observed": 90,
+        "lagP50": 6.699999999254942,
+        "lagP95": 17.90000000037253,
+        "endLag": 4.599999999627471,
+        "maxBacklog": 1
+      }
+    },
+    {
+      "trial": 5,
+      "control": {
+        "maxBacklog": 1,
+        "observed": 90,
+        "lagP50": 6.199999999254942,
+        "lagP95": 20.899999998509884,
+        "lagMax": 23.40000000037253,
+        "over33": 0
+      },
+      "store": {
+        "dispatched": 90,
+        "observed": 90,
+        "lagP50": 6.200000001117587,
+        "lagP95": 15.800000000745058,
+        "endLag": 7,
+        "maxBacklog": 1
+      }
+    }
+  ],
+  "complete": true
+}
